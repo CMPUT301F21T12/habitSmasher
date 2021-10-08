@@ -15,7 +15,7 @@ public class Habit {
      *
      * @return _title : The title of the habit
      */
-    public String get_title() {
+    public String getTitle() {
         return _title;
     }
 
@@ -23,15 +23,15 @@ public class Habit {
      *
      * @param title : The new title to be set
      */
-    public void set_title(String title) {
-        this._title = title;
+    public void setTitle(String title) {
+        _title = title;
     }
 
     /**
      *
      * @return _reason: The reason of the habit
      */
-    public String get_reason() {
+    public String getReason() {
         return _reason;
     }
 
@@ -39,15 +39,15 @@ public class Habit {
      *
      * @param reason : The new reason to be set
      */
-    public void set_reason(String reason) {
-        this._reason = reason;
+    public void setReason(String reason) {
+        _reason = reason;
     }
 
     /**
      *
      * @return _date : The date of the habit
      */
-    public Date get_date() {
+    public Date getDate() {
         return _date;
     }
 
@@ -55,8 +55,8 @@ public class Habit {
      *
      * @param date : The new date to be set
      */
-    public void set_date(Date date) {
-        this._date = date;
+    public void setDate(Date date) {
+        _date = date;
     }
 
     public Habit (String title, String reason, Date date) {

@@ -52,9 +52,9 @@ public class HomeFragment extends Fragment {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.CANADA);
 
         // Updating the text fields of the textviews
-        titleView.setText(testHabit.get_title());
-        reasonView.setText(testHabit.get_reason());
-        dateView.setText(simpleDateFormat.format(testHabit.get_date()));
+        titleView.setText(testHabit.getTitle());
+        reasonView.setText(testHabit.getReason());
+        dateView.setText(simpleDateFormat.format(testHabit.getDate()));
 
 
         return root;
