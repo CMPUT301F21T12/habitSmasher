@@ -3,4 +3,10 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_label">Title:</string>
+    <string name="reason_label">Reason:</string>
+    <string name="date_label">Date:</string>
+    <string name="habit_title">HabitTitle</string>
+    <string name="habit_reason">HabitReason</string>
+    <string name="habit_date">HabitDate</string>
 </resources>
