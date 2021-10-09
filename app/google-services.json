@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "722367559564",
+    "project_id": "habitsmashercmput301",
+    "storage_bucket": "habitsmashercmput301.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722367559564:android:3b109f12ad721038a788a9",
+        "android_client_info": {
+          "package_name": "com.example.habitsmasher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722367559564-orihetidnmp7btt5opql8nsd94mmqd6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEOXZkvt_KDuFjWstDsASf3bemcIYVR8A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722367559564-orihetidnmp7btt5opql8nsd94mmqd6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
