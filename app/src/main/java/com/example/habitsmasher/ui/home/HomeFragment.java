@@ -1,6 +1,5 @@
 package com.example.habitsmasher.ui.home;
 
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,24 +7,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.habitsmasher.Habit;
-import com.example.habitsmasher.R;
 import com.example.habitsmasher.databinding.FragmentHomeBinding;
 
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-
 public class HomeFragment extends Fragment {
-
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
 
@@ -36,8 +29,6 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-
 
         // This is the example habit to be displayed
         Habit testHabit = new Habit("This is a title", "This is my reason", new Date());
