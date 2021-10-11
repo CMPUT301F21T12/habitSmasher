@@ -1,46 +1,80 @@
 package com.example.habitsmasher.ui.dashboard;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.databinding.FragmentDashboardBinding;
+
+import java.util.ArrayList;
 
 public class DashboardFragment extends Fragment {
+    private final HabitList _habitList = new HabitList();
+    private final ArrayList<Habit> _habits = _habitList.getHabitList();
+    private HabitItemAdapter _habitItemAdapter;
 
-    private DashboardViewModel dashboardViewModel;
-    private FragmentDashboardBinding binding;
-
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        Context context = getContext();
+        _habitItemAdapter = new HabitItemAdapter(context, _habits);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context,
+                                                                    LinearLayoutManager.VERTICAL,
+                                                                    false);
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        initializeRecyclerView(layoutManager, view);
+
+        return view;
     }
+
+    private void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_items);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(_habitItemAdapter);
+        new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+    }
+
+    /**
+     * The implementation of the swipe to delete functionality below came from the following URL:
+     * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview
+     *
+     * Name: Rahul Raina
+     * Date: November 2, 2016
+     */
+    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView,
+                              @NonNull RecyclerView.ViewHolder viewHolder,
+                              @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            // if the habit row is swiped to the left, remove it from the list and notify adapter
+            _habits.remove(viewHolder.getAdapterPosition());
+
+            _habitItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+        }
+    };
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

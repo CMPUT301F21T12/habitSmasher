@@ -9,4 +9,5 @@
     <string name="habit_title">HabitTitle</string>
     <string name="habit_reason">HabitReason</string>
     <string name="habit_date">HabitDate</string>
+    <string name="habit_list">Habit List</string>
 </resources>
