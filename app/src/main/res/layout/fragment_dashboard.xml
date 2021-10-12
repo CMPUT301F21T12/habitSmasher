@@ -19,5 +19,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/habit_row" />
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_habit_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="20dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
