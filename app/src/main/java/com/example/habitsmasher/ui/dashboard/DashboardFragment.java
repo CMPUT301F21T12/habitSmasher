@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -66,7 +67,18 @@ public class DashboardFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            // if the habit row is swiped to the left, remove it from the list and notify adapter
+            // if the habit row is swiped to the left, spawn edit and delete buttons
+            View habitView = viewHolder.itemView;
+            Button editButton = habitView.findViewById(R.id.edit_button);
+            Button deleteButton = habitView.findViewById(R.id.delete_button);
+            if (direction == ItemTouchHelper.LEFT) {
+                editButton.setVisibility(View.VISIBLE);
+                deleteButton.setVisibility(View.VISIBLE);
+            }
+            else if (direction == ItemTouchHelper.RIGHT) {
+                editButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.INVISIBLE);
+            }
             /*
             _habits.remove(viewHolder.getAdapterPosition());
 
