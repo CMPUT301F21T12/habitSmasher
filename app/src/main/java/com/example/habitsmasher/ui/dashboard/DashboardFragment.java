@@ -67,9 +67,11 @@ public class DashboardFragment extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             // if the habit row is swiped to the left, remove it from the list and notify adapter
+            /*
             _habits.remove(viewHolder.getAdapterPosition());
 
             _habitItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+             */
         }
     };
 

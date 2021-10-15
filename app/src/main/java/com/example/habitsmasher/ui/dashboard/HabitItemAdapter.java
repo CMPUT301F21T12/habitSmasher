@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,6 +71,8 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
         private final TextView _habitDate;
         private final ImageView _habitImage;
         private final ConstraintLayout _habitRows;
+        private final Button _editButton;
+        private final Button _deleteButton;
 
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +82,8 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
             _habitReason = itemView.findViewById(R.id.habit_reason);
             _habitDate = itemView.findViewById(R.id.habit_date);
             _habitImage = itemView.findViewById(R.id.habit_image);
+            _editButton = itemView.findViewById(R.id.edit_button);
+            _deleteButton = itemView.findViewById(R.id.delete_button);
         }
     }
 }
