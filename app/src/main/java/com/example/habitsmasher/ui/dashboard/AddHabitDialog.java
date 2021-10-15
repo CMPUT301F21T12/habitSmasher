@@ -20,10 +20,20 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Making a dialogfragment from fragment came from the following video:
@@ -35,6 +45,7 @@ import java.util.Date;
 public class AddHabitDialog extends DialogFragment{
 
     private static final String TAG = "AddHabitDialog";
+    FirebaseFirestore db;
 
     public  interface HabitDialogListener {
         void addNewHabit(String title, String reason, Date date);
@@ -62,8 +73,8 @@ public class AddHabitDialog extends DialogFragment{
         confirmNewHabit = view.findViewById(R.id.confirmHabit);
         cancelNewHabit = view.findViewById(R.id.cancelHabit);
 
-
-
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference = db.collection("Habits");
         cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,8 +98,9 @@ public class AddHabitDialog extends DialogFragment{
                     Toast.makeText(getContext(), "Please enter a correct date", Toast.LENGTH_SHORT).show();
                 }
                 /**
-                 * Makes sure user
+                 * Makes sure user does not enter blank fields, and is capped on the number of characters for title and reason.
                  */
+                HashMap<String, Habit> firebaseData = new HashMap<>();
                 int properTitle = 0;
                 int properReason = 0;
                 int properDate = 0;
@@ -103,6 +115,22 @@ public class AddHabitDialog extends DialogFragment{
                 }
                 if ((properTitle==1)&&(properReason==1)&&(properDate==1)){
                     _listener.addNewHabit(habitTitleInput, habitReasonInput, habitDate);
+                    firebaseData.put("Habit Name", new Habit(habitTitleInput, habitReasonInput, habitDate));
+                    collectionReference
+                            .document(habitTitleInput)
+                            .set(firebaseData)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "Data successfully added.");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "Data failed to be added." + e.toString());
+                                }
+                            });
                 } else {
                     getDialog().dismiss();
                     Toast.makeText(getActivity(), "Please make sure all field are correctly entered.", Toast.LENGTH_SHORT).show();
@@ -110,6 +138,7 @@ public class AddHabitDialog extends DialogFragment{
                 getDialog().dismiss();
             }
         });
+
         return view;
     }
 
