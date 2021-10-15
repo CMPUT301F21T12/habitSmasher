@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.HabitSmasher" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/menu_bar</item>
+        <item name="colorPrimaryVariant">@color/menu_bar_variant</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/bottom_nav_color_selector.xml" value="0.561025641025641" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.26420454545454547" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.55" />
         <entry key="app/src/main/res/layout/habit_row.xml" value="0.5" />

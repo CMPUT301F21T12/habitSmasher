@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +20,10 @@ import com.example.habitsmasher.R;
 
 import java.util.ArrayList;
 
-public class DashboardFragment extends Fragment {
+/**
+ * The habit list fragment is a container for the list of habits
+ */
+public class HabitListFragment extends Fragment {
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private HabitItemAdapter _habitItemAdapter;
@@ -34,17 +38,23 @@ public class DashboardFragment extends Fragment {
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
 
-        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
 
         initializeRecyclerView(layoutManager, view);
 
         return view;
     }
 
+    /**
+     * This helper method initializes the RecyclerView
+     * @param layoutManager the associated LinearLayoutManager
+     * @param view the associated View
+     */
     private void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_items);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(_habitItemAdapter);
         new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
