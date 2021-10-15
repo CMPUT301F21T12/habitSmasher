@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AddHabitDialog extends DialogFragment{
@@ -67,9 +70,17 @@ public class AddHabitDialog extends DialogFragment{
                 Log.d(TAG, "Confirm");
                 String habitTitleInput = habitTitleEditText.getText().toString();
                 String habitReasonInput = habitReasonEditText.getText().toString();
-                Date habitDateInput = (Date) habitDateEditText.getText();
+                String habitDateInput = habitDateEditText.getText().toString();
+                SimpleDateFormat inputDateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+                Date habitDate = null;
+                try {
+                    habitDate = inputDateFormatter.parse(habitDateInput);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Please enter a correct date", Toast.LENGTH_SHORT).show();
+                }
                 if (!(habitTitleInput.equals("") && habitReasonInput.equals("") && habitDateInput.equals(""))){
-                    _listener.addNewHabit(habitTitleInput, habitReasonInput, habitDateInput);
+                    _listener.addNewHabit(habitTitleInput, habitReasonInput, habitDate);
                 }
                 getDialog().dismiss();
             }
