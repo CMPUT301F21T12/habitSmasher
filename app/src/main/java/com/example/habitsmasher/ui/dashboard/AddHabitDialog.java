@@ -25,6 +25,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Making a dialogfragment from fragment came from the following video:
+ * https://www.youtube.com/watch?v=LUV_djRHSEY
+ *
+ * Name: Mitch Tabian
+ * Video Date: December 10, 2017
+ */
 public class AddHabitDialog extends DialogFragment{
 
     private static final String TAG = "AddHabitDialog";
@@ -79,8 +86,26 @@ public class AddHabitDialog extends DialogFragment{
                     e.printStackTrace();
                     Toast.makeText(getContext(), "Please enter a correct date", Toast.LENGTH_SHORT).show();
                 }
-                if (!(habitTitleInput.equals("") && habitReasonInput.equals("") && habitDateInput.equals(""))){
+                /**
+                 * Makes sure user
+                 */
+                int properTitle = 0;
+                int properReason = 0;
+                int properDate = 0;
+                if ((habitTitleInput.length()>0)&&(habitTitleInput.length()<=20)){
+                    properTitle+=1;
+                }
+                if((habitReasonInput.length()>0)&&(habitReasonInput.length()<=30)){
+                    properReason+=1;
+                }
+                if(!(habitDateInput.equals(""))){
+                    properDate+=1;
+                }
+                if ((properTitle==1)&&(properReason==1)&&(properDate==1)){
                     _listener.addNewHabit(habitTitleInput, habitReasonInput, habitDate);
+                } else {
+                    getDialog().dismiss();
+                    Toast.makeText(getActivity(), "Please make sure all field are correctly entered.", Toast.LENGTH_SHORT).show();
                 }
                 getDialog().dismiss();
             }

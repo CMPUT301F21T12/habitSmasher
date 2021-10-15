@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.HabitViewHolder> {
-    private static final String DATE_PATTERN = "EEE, MMM d, yyyy";
+    //private static final String DATE_PATTERN = "EEE, MMM d, yyyy";
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final Locale LOCALE = Locale.CANADA;
 
     private final Context _context;
