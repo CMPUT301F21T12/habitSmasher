@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class DashboardFragment extends Fragment implements AddHabitDialog.HabitDialogListener{
+
+    private static final String TAG = "DashboardFragment";
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private HabitItemAdapter _habitItemAdapter;
@@ -38,11 +40,14 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
 
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        FloatingActionButton addHabitFab = (FloatingActionButton) view.findViewById(R.id.add_habit_fab);
+        /**
+         * Creating a new floating action button(fab), call method to open a dialog box when fab is pressed.
+         */
+        FloatingActionButton addHabitFab = view.findViewById(R.id.add_habit_fab);
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //openHabitDialog();
+                openHabitDialog();
             }
         });
 
@@ -50,22 +55,13 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
         return view;
     }
 
-    /*
-    FloatingActionButton addHabitFab = getView().findViewById(R.id.add_habit_fab);
-        addHabitFab.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            //Habit newHabit = new Habit("", "", null);
-            openHabitDialog();
-        }
-    });
-
-     */
-
-
     private void openHabitDialog() {
-        //AddHabitDialog addHabitDialog = new AddHabitDialog();
-        //addHabitDialog.show(get, "");
+        /**
+         * Open the dialog box.
+         */
+        AddHabitDialog addHabitDialog = new AddHabitDialog();
+        addHabitDialog.setTargetFragment(DashboardFragment.this, 1);
+        addHabitDialog.show(getFragmentManager(), "AddHabitDialog");
     }
 
     private void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
@@ -100,8 +96,12 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
         }
     };
 
+
+    /**
+     * Add a new habit to the habit list.
+     */
     @Override
-    public void applyChange(String title, String reason, Date date) {
+    public void addNewHabit(String title, String reason, Date date) {
         Habit newHabit = new Habit(title, reason, date);
         _habits.add(newHabit);
     }
