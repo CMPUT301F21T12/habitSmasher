@@ -2,6 +2,7 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +17,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
-public class DashboardFragment extends Fragment implements AddHabitDialog.HabitDialogListener{
+public class DashboardFragment extends Fragment implements HabitDialogListener{
 
     private static final String TAG = "DashboardFragment";
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private HabitItemAdapter _habitItemAdapter;
+    FirebaseFirestore _db;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -40,9 +47,6 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
 
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        /**
-         * Creates a new floating action button(fab)
-         */
         FloatingActionButton addHabitFab = view.findViewById(R.id.add_habit_fab);
         /**
          * When fab is pressed, method call to open dialog fragment.
@@ -59,10 +63,8 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
     }
 
     private void openHabitDialog() {
-        /**
-         * Opens the dialog box.
-         */
         AddHabitDialog addHabitDialog = new AddHabitDialog();
+        addHabitDialog.setCancelable(true);
         addHabitDialog.setTargetFragment(DashboardFragment.this, 1);
         addHabitDialog.show(getFragmentManager(), "AddHabitDialog");
     }
@@ -99,14 +101,33 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
         }
     };
 
-
-    /**
-     * Adds a new habit to the habit list.
-     */
     @Override
     public void addNewHabit(String title, String reason, Date date) {
         Habit newHabit = new Habit(title, reason, date);
         _habits.add(newHabit);
+
+        /**
+         * Handling of adding a habit to firebase
+         */
+        _db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference = _db.collection("Habits");
+        HashMap<String, Habit> firebaseData = new HashMap<>();
+        firebaseData.put(title, new Habit(title, reason, date));
+        collectionReference
+                .document(title)
+                .set(firebaseData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Data successfully added.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Data failed to be added." + e.toString());
+                    }
+                });
     }
 
     @Override
