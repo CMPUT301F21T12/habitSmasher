@@ -67,7 +67,7 @@ public class DashboardFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            // if the habit row is swiped to the left, spawn edit and delete buttons
+            // if the habit row is swiped to the left, spawn edit and delete buttonn
             View habitView = viewHolder.itemView;
             Button editButton = habitView.findViewById(R.id.edit_button);
             Button deleteButton = habitView.findViewById(R.id.delete_button);
