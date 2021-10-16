@@ -74,7 +74,14 @@ public class AddHabitDialog extends DialogFragment{
         cancelNewHabit = view.findViewById(R.id.cancelHabit);
 
         db = FirebaseFirestore.getInstance();
+        /**
+         * Name of database collection.
+         */
         final CollectionReference collectionReference = db.collection("Habits");
+
+        /**
+         * Closes Dialog box if user presses the cancel button.
+         */
         cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,10 +89,14 @@ public class AddHabitDialog extends DialogFragment{
                 getDialog().dismiss();
             }
         });
+
         confirmNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
+                /**
+                 * Gets user input and saves to string variables.
+                 */
                 String habitTitleInput = habitTitleEditText.getText().toString();
                 String habitReasonInput = habitReasonEditText.getText().toString();
                 String habitDateInput = habitDateEditText.getText().toString();
@@ -95,27 +106,36 @@ public class AddHabitDialog extends DialogFragment{
                     habitDate = inputDateFormatter.parse(habitDateInput);
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Please enter a correct date", Toast.LENGTH_SHORT).show();
                 }
                 /**
-                 * Makes sure user does not enter blank fields, and is capped on the number of characters for title and reason.
+                 * Makes sure user does not enter blank fields,
+                 * and is capped on the number of characters for title and reason.
                  */
                 HashMap<String, Habit> firebaseData = new HashMap<>();
-                int properTitle = 0;
-                int properReason = 0;
-                int properDate = 0;
+                Boolean properTitle = false;
+                Boolean properReason = false;
+                Boolean properDate = false;
                 if ((habitTitleInput.length()>0)&&(habitTitleInput.length()<=20)){
-                    properTitle+=1;
+                    properTitle = true;
                 }
                 if((habitReasonInput.length()>0)&&(habitReasonInput.length()<=30)){
-                    properReason+=1;
+                    properReason = true;
                 }
                 if(!(habitDateInput.equals(""))){
-                    properDate+=1;
+                    properDate = true;
                 }
-                if ((properTitle==1)&&(properReason==1)&&(properDate==1)){
+
+                /**
+                 * When user input meets the requirements for a proper habit title, habit reason, and habit date,
+                 * have the habit be added to the habit list back in dashboard fragment.
+                 *
+                 * Add the habit to our database.
+                 * Name of document in database will be the title of habit inputted by user.
+                 */
+
+                if ((properTitle==true)&&(properReason==true)&&(properDate==true)){
                     _listener.addNewHabit(habitTitleInput, habitReasonInput, habitDate);
-                    firebaseData.put("Habit Name", new Habit(habitTitleInput, habitReasonInput, habitDate));
+                    firebaseData.put(habitTitleInput, new Habit(habitTitleInput, habitReasonInput, habitDate));
                     collectionReference
                             .document(habitTitleInput)
                             .set(firebaseData)
@@ -131,17 +151,29 @@ public class AddHabitDialog extends DialogFragment{
                                     Log.d(TAG, "Data failed to be added." + e.toString());
                                 }
                             });
-                } else {
                     getDialog().dismiss();
-                    Toast.makeText(getActivity(), "Please make sure all field are correctly entered.", Toast.LENGTH_SHORT).show();
+                } else{
+                    if (properTitle==false){
+                        habitTitleEditText.getText().clear();
+                        Toast.makeText(getActivity(), "Please enter a name for your habit (20 characters max).", Toast.LENGTH_SHORT).show();
+                    }
+                    if (properReason==false){
+                        habitReasonEditText.getText().clear();
+                        Toast.makeText(getActivity(), "Please enter a reason for your habit (30 characters max).", Toast.LENGTH_SHORT).show();
+                    }
+                    if (properDate==false){
+                        habitDateEditText.getText().clear();
+                        Toast.makeText(getActivity(), "Habit start date format: dd-mm-yyyy", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getActivity(), "Please make sure all field are correctly entered.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                getDialog().dismiss();
             }
         });
 
         return view;
     }
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

@@ -41,9 +41,12 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         /**
-         * Creating a new floating action button(fab), call method to open a dialog box when fab is pressed.
+         * Creates a new floating action button(fab)
          */
         FloatingActionButton addHabitFab = view.findViewById(R.id.add_habit_fab);
+        /**
+         * When fab is pressed, method call to open dialog fragment.
+         */
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,7 +60,7 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
 
     private void openHabitDialog() {
         /**
-         * Open the dialog box.
+         * Opens the dialog box.
          */
         AddHabitDialog addHabitDialog = new AddHabitDialog();
         addHabitDialog.setTargetFragment(DashboardFragment.this, 1);
@@ -98,7 +101,7 @@ public class DashboardFragment extends Fragment implements AddHabitDialog.HabitD
 
 
     /**
-     * Add a new habit to the habit list.
+     * Adds a new habit to the habit list.
      */
     @Override
     public void addNewHabit(String title, String reason, Date date) {
