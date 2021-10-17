@@ -4,4 +4,6 @@ import java.util.Date;
 
 public interface HabitDialogListener {
     void addNewHabit(String habitTitleInput, String habitReasonInput, Date habitDate);
+
+    void addNewHabitFirebase(String habitTitleInput, String habitReasonInput, Date habitDate);
 }

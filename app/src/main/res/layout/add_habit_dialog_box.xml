@@ -6,62 +6,108 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/habit_title_edittext"
+        android:id="@+id/habit_title_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="50dp"
         android:autofillHints="habit"
-        android:hint="habit"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="148dp" />
-
-    <EditText
-        android:id="@+id/habit_reason_edittext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:autofillHints="reason"
-        android:hint="reason"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/habit_title_edittext"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
     <EditText
-        android:id="@+id/habit_date_edittext"
+        android:id="@+id/habit_reason_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:hint="dd-mm-yyyy"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="50dp"
+        android:autofillHints="reason"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/habit_title_edit_text"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/habit_date_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/habit_reason_edittext"
+        app:layout_constraintTop_toBottomOf="@+id/habit_reason_edit_text"
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/confirmHabit"
+        android:id="@+id/confirm_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
         android:layout_marginTop="30dp"
         android:text="Confirm"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/habit_date_edittext" />
+        app:layout_constraintStart_toStartOf="@+id/habit_date_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/habit_date_edit_text" />
 
     <Button
-        android:id="@+id/cancelHabit"
+        android:id="@+id/cancel_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
         android:layout_marginTop="30dp"
         android:text="Cancel"
-        app:layout_constraintStart_toEndOf="@+id/confirmHabit"
-        app:layout_constraintTop_toBottomOf="@+id/habit_date_edittext" />
+        app:layout_constraintEnd_toEndOf="@+id/habit_date_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/habit_date_edit_text" />
+
+    <TextView
+        android:id="@+id/habit_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Name:"
+        app:layout_constraintEnd_toStartOf="@+id/habit_title_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/habit_title_edit_text" />
+
+    <TextView
+        android:id="@+id/habit_reason_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Reason:"
+        app:layout_constraintEnd_toStartOf="@+id/habit_reason_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/habit_reason_edit_text" />
+
+    <TextView
+        android:id="@+id/habit_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date start: "
+        app:layout_constraintEnd_toStartOf="@+id/habit_date_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/habit_date_edit_text" />
+
+    <TextView
+        android:id="@+id/year_format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(dd-mm-yyyy)"
+        app:layout_constraintBottom_toBottomOf="@+id/habit_date_edit_text"
+        app:layout_constraintEnd_toStartOf="@+id/habit_date_edit_text"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/add_habit_header"
+        android:layout_width="199dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Add Habit"
+        android:textSize="36dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

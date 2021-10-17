@@ -105,7 +105,8 @@ public class DashboardFragment extends Fragment implements HabitDialogListener{
     public void addNewHabit(String title, String reason, Date date) {
         Habit newHabit = new Habit(title, reason, date);
         _habits.add(newHabit);
-
+    }
+    public void addNewHabitFirebase(String title, String reason, Date date){
         /**
          * Handling of adding a habit to firebase
          */
