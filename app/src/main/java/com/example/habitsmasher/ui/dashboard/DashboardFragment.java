@@ -27,11 +27,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class DashboardFragment extends Fragment implements HabitDialogListener{
+public class DashboardFragment extends Fragment{
 
     private static final String TAG = "DashboardFragment";
     private final HabitList _habitList = new HabitList();
-    private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private HabitItemAdapter _habitItemAdapter;
     FirebaseFirestore _db;
 
@@ -39,7 +38,7 @@ public class DashboardFragment extends Fragment implements HabitDialogListener{
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        _habitItemAdapter = new HabitItemAdapter(context, _habits);
+        _habitItemAdapter = new HabitItemAdapter(context, _habitList);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
@@ -95,17 +94,14 @@ public class DashboardFragment extends Fragment implements HabitDialogListener{
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             // if the habit row is swiped to the left, remove it from the list and notify adapter
-            _habits.remove(viewHolder.getAdapterPosition());
+            _habitList.remove(viewHolder.getAdapterPosition());
 
             _habitItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
         }
     };
 
-    @Override
-    public void addNewHabit(String title, String reason, Date date) {
-        Habit newHabit = new Habit(title, reason, date);
-        _habits.add(newHabit);
-        addHabitToDatabase(title, reason, date);
+    public void addNewHabit(Habit habit) {
+        _habitList.addHabit(habit);
     }
     public void addHabitToDatabase(String title, String reason, Date date){
         /**

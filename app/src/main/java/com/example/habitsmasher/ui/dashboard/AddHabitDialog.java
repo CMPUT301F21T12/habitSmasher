@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 
 import java.text.DateFormat;
@@ -34,15 +35,13 @@ import java.util.Date;
 public class AddHabitDialog extends DialogFragment{
 
     private static final String TAG = "AddHabitDialog";
-
-    private HabitDialogListener _listener;
-
     private String DATE_FORMAT = "dd-MM-yyyy";
     private String INCORRECT_TITLE_FORMAT = "Incorrect habit title entered";
     private String INCORRECT_REASON_FORMAT = "Incorrect habit reason entered";
     private String INCORRECT_BLANK_DATE = "Please enter a start date";
     private String INCORRECT_DATE_FORMAT = "Habit start date format: dd-mm-yyyy";
 
+    private DashboardFragment _dashboardFragment;
     private EditText _habitTitleEditText;
     private EditText _habitReasonEditText;
     private EditText _habitDateEditText;
@@ -94,7 +93,8 @@ public class AddHabitDialog extends DialogFragment{
                         (!(habitDateInput.equals("")))&&
                         (!(_invalidDate))
                 ) {
-                    _listener.addNewHabit(habitTitleInput, habitReasonInput, habitDate);
+                    _dashboardFragment.addNewHabit(new Habit(habitTitleInput, habitReasonInput, habitDate));
+                    _dashboardFragment.addHabitToDatabase(habitTitleInput, habitReasonInput, habitDate);
                     getDialog().dismiss();
                 } else{
 
@@ -124,7 +124,7 @@ public class AddHabitDialog extends DialogFragment{
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            _listener = (HabitDialogListener) getTargetFragment();
+            _dashboardFragment = (DashboardFragment) getTargetFragment();
         } catch (ClassCastException e){
             Log.e(TAG, "Exception" + e.getMessage());
         }
