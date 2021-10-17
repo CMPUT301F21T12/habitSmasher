@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.habitsmasher.ui.dashboard.DashboardFragment"
+        android:name="com.example.habitsmasher.ui.dashboard.HabitListFragment"
         android:label="@string/habit_list"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_habit_list" />
 
     <fragment
         android:id="@+id/navigation_notifications"

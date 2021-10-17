@@ -19,6 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * The habit item adapter is the custom adapter for the RecyclerView that holds the habit list
+ */
 public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.HabitViewHolder> {
     private static final String DATE_PATTERN = "EEE, MMM d, yyyy";
     private static final Locale LOCALE = Locale.CANADA;
@@ -44,14 +47,17 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, LOCALE);
 
+        // set necessary elements of the habit
         holder._habitTitle.setText(currentHabit.getTitle());
-        holder._habitReason.setText(currentHabit.getReason());
-        holder._habitDate.setText(simpleDateFormat.format(currentHabit.getDate()));
-        holder._habitImage.setImageResource(R.drawable.habit_temp_img);
 
         setOnClickListenerForHabit(holder, position);
     }
 
+    /**
+     * This method sets the click listener for each habit row
+     * @param holder the ViewHolder that holds each habit
+     * @param position the position of the clicked element
+     */
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
         holder._habitRows.setOnClickListener(view -> {
             // placeholder, just displays a message to indicate the habit has been clicked
@@ -64,11 +70,11 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
         return _habits.size();
     }
 
+    /**
+     * This class holds any necessary elements of the habit on the front-end
+     */
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
-        private final TextView _habitReason;
-        private final TextView _habitDate;
-        private final ImageView _habitImage;
         private final ConstraintLayout _habitRows;
 
         public HabitViewHolder(@NonNull View itemView) {
@@ -76,9 +82,6 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
             _habitRows = itemView.findViewById(R.id.habit_rows);
             _habitTitle = itemView.findViewById(R.id.habit_title);
-            _habitReason = itemView.findViewById(R.id.habit_reason);
-            _habitDate = itemView.findViewById(R.id.habit_date);
-            _habitImage = itemView.findViewById(R.id.habit_image);
         }
     }
 }
