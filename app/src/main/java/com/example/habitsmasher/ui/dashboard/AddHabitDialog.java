@@ -31,20 +31,24 @@ import java.util.Date;
  * Name: Mitch Tabian
  * Video Date: December 10, 2017
  */
-public class AddHabitDialog extends DialogFragment implements HabitDialogListener{
+public class AddHabitDialog extends DialogFragment{
 
     private static final String TAG = "AddHabitDialog";
 
     private HabitDialogListener _listener;
 
     private String DATE_FORMAT = "dd-MM-yyyy";
+    private String INCORRECT_TITLE_FORMAT = "Incorrect habit title entered";
+    private String INCORRECT_REASON_FORMAT = "Incorrect habit reason entered";
+    private String INCORRECT_BLANK_DATE = "Please enter a start date";
+    private String INCORRECT_DATE_FORMAT = "Habit start date format: dd-mm-yyyy";
 
     private EditText _habitTitleEditText;
     private EditText _habitReasonEditText;
     private EditText _habitDateEditText;
     private Button _confirmNewHabit;
     private Button _cancelNewHabit;
-    private boolean _invalidDate;
+    private boolean _invalidDate = false;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,7 +76,6 @@ public class AddHabitDialog extends DialogFragment implements HabitDialogListene
                 String habitReasonInput = _habitReasonEditText.getText().toString();
                 String habitDateInput = _habitDateEditText.getText().toString();
                 DateFormat inputDateFormatter = new SimpleDateFormat(DATE_FORMAT);
-                _invalidDate = false;
                 Date habitDate = null;
                 try {
                     inputDateFormatter.setLenient(false);
@@ -92,25 +95,24 @@ public class AddHabitDialog extends DialogFragment implements HabitDialogListene
                         (!(_invalidDate))
                 ) {
                     _listener.addNewHabit(habitTitleInput, habitReasonInput, habitDate);
-                    _listener.addNewHabitFirebase(habitTitleInput, habitReasonInput, habitDate);
                     getDialog().dismiss();
                 } else{
 
                     //Handle error checking for new habit name/title
                     if ((!(habitTitleInput.length()>0)) || (!(habitTitleInput.length()<=20))){
-                        Toast.makeText(getActivity(), "Incorrect habit title entered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), INCORRECT_TITLE_FORMAT, Toast.LENGTH_SHORT).show();
                     }
 
                     //Handle error checking for new habit reason
                     if ((!(habitReasonInput.length()>0)) || (!(habitReasonInput.length()<=30))){
-                        Toast.makeText(getActivity(), "Incorrect habit reason entered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), INCORRECT_REASON_FORMAT, Toast.LENGTH_SHORT).show();
                     }
 
                     //Handle error checking for new habit date.
                     if ((habitDateInput.equals(""))){
-                        Toast.makeText(getActivity(), "Please enter a start date", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), INCORRECT_BLANK_DATE, Toast.LENGTH_SHORT).show();
                     } else if(_invalidDate==true){
-                        Toast.makeText(getActivity(), "Habit start date format: dd-mm-yyyy", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), INCORRECT_DATE_FORMAT, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -127,8 +129,4 @@ public class AddHabitDialog extends DialogFragment implements HabitDialogListene
             Log.e(TAG, "Exception" + e.getMessage());
         }
     }
-
-    @Override
-    public void addNewHabit(String habitTitleInput, String habitReasonInput, Date habitDate) {    }
-    public void addNewHabitFirebase(String title, String reason, Date date){ }
 }
