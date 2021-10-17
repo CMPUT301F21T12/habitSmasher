@@ -22,7 +22,6 @@ import com.example.habitsmasher.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -41,7 +40,7 @@ public class AddHabitDialog extends DialogFragment{
     private String INCORRECT_BLANK_DATE = "Please enter a start date";
     private String INCORRECT_DATE_FORMAT = "Habit start date format: dd-mm-yyyy";
 
-    private DashboardFragment _dashboardFragment;
+    private HabitListFragment _habitListFragment;
     private EditText _habitTitleEditText;
     private EditText _habitReasonEditText;
     private EditText _habitDateEditText;
@@ -93,8 +92,8 @@ public class AddHabitDialog extends DialogFragment{
                         (!(habitDateInput.equals("")))&&
                         (!(_invalidDate))
                 ) {
-                    _dashboardFragment.addNewHabit(new Habit(habitTitleInput, habitReasonInput, habitDate));
-                    _dashboardFragment.addHabitToDatabase(habitTitleInput, habitReasonInput, habitDate);
+                    _habitListFragment.addNewHabit(new Habit(habitTitleInput, habitReasonInput, habitDate));
+                    _habitListFragment.addHabitToDatabase(habitTitleInput, habitReasonInput, habitDate);
                     getDialog().dismiss();
                 } else{
 
@@ -124,7 +123,7 @@ public class AddHabitDialog extends DialogFragment{
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            _dashboardFragment = (DashboardFragment) getTargetFragment();
+            _habitListFragment = (HabitListFragment) getTargetFragment();
         } catch (ClassCastException e){
             Log.e(TAG, "Exception" + e.getMessage());
         }
