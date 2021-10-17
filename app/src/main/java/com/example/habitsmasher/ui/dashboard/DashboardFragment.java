@@ -54,10 +54,12 @@ public class DashboardFragment extends Fragment {
      * The implementation of the swipe to delete functionality below came from the following URL:
      * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview
      *
+     *
      * Name: Rahul Raina
      * Date: November 2, 2016
      */
-    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+    //this probably won't be the way to do it
+    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView,
                               @NonNull RecyclerView.ViewHolder viewHolder,
@@ -79,6 +81,8 @@ public class DashboardFragment extends Fragment {
                 editButton.setVisibility(View.INVISIBLE);
                 deleteButton.setVisibility(View.INVISIBLE);
             }
+
+            _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
             /*
             _habits.remove(viewHolder.getAdapterPosition());
 
