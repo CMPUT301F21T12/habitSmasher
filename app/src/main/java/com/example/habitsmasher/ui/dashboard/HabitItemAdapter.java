@@ -63,7 +63,7 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
         // Create Habit View Fragment with all required parameters passed in
         HabitViewFragment fragment = HabitViewFragment.newInstance(holder._habitTitle.getText().toString(), holder._habitReason.getText().toString(), holder._habitDate.getText().toString());
         // Replace the current fragment with the habit view
-        FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment);
+        FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);
         // Load new fragment
         transaction.commit();

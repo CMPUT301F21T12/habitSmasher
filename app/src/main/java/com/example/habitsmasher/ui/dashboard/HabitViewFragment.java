@@ -59,7 +59,7 @@ public class HabitViewFragment extends Fragment {
         TextView descriptionHabitTextBox = view.findViewById(R.id.descriptionHabitTextBox);
         TextView dateHabitTextBox = view.findViewById(R.id.dateHabitTextBox);
         descriptionHabitTextBox.setText(_habitReason);
-        dateHabitTextBox.setText(_habitDate);
+        dateHabitTextBox.setText(String.format(dateHabitTextBox.getText().toString(), _habitDate));
         return view;
     }
 }

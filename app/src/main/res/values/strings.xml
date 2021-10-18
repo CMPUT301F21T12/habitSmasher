@@ -11,7 +11,7 @@
     <string name="habit_date">HabitDate</string>
     <string name="habit_list">Habit List</string>
     <string name="historyButtonLabel">HISTORY</string>
-    <string name="dateTextBoxLabel">Date Started: {1}</string>
-    <string name="ratingTextBoxLabel">Follow Rating: {1}</string>
+    <string name="dateTextBoxLabel">Date Started: %s</string>
+    <string name="ratingTextBoxLabel">Follow Rating: %s</string>
     <string name="descriptionTextBoxLabel">Description…</string>
 </resources>
