@@ -19,11 +19,15 @@ import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements EditHabitFragment.EditHabitListener {
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private HabitItemAdapter _habitItemAdapter;
+    Button _editButton;
+    Button _deleteButton;
+    private DashboardFragment fragment = this;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -58,7 +62,7 @@ public class DashboardFragment extends Fragment {
      * Name: Rahul Raina
      * Date: November 2, 2016
      */
-    //this probably won't be the way to do it
+    //this probably won't be the way to do it, looks ugly as hell
     ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView,
@@ -69,25 +73,42 @@ public class DashboardFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            // if the habit row is swiped to the left, spawn edit and delete buttonn
+            // if the habit row is swiped to the left, spawn edit and delete button
+            // if swiped to the right, despawn them
+
             View habitView = viewHolder.itemView;
-            Button editButton = habitView.findViewById(R.id.edit_button);
-            Button deleteButton = habitView.findViewById(R.id.delete_button);
+            int pos = viewHolder.getAdapterPosition();
+            _editButton = habitView.findViewById(R.id.edit_button);
+            _deleteButton = habitView.findViewById(R.id.delete_button);
+
+
+            _editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EditHabitFragment editHabitFragment = new EditHabitFragment(pos, _habits.get(pos), fragment);
+                    editHabitFragment.show(getFragmentManager(), "Edit Habit");
+                }
+            });
+
+            _deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // temp delete code for now
+                    _habits.remove(pos);
+                    _habitItemAdapter.notifyItemRemoved(pos);
+                }
+            });
+
             if (direction == ItemTouchHelper.LEFT) {
-                editButton.setVisibility(View.VISIBLE);
-                deleteButton.setVisibility(View.VISIBLE);
+                _editButton.setVisibility(View.VISIBLE);
+                _deleteButton.setVisibility(View.VISIBLE);
             }
             else if (direction == ItemTouchHelper.RIGHT) {
-                editButton.setVisibility(View.INVISIBLE);
-                deleteButton.setVisibility(View.INVISIBLE);
+                _editButton.setVisibility(View.INVISIBLE);
+                _deleteButton.setVisibility(View.INVISIBLE);
             }
 
-            _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
-            /*
-            _habits.remove(viewHolder.getAdapterPosition());
-
-            _habitItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-             */
+            _habitItemAdapter.notifyItemChanged(pos);
         }
     };
 
@@ -95,4 +116,15 @@ public class DashboardFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
     }
+
+    public void editHabit(String title, String reason, Date date, int pos) {
+        Habit habit = _habits.get(pos);
+        habit.setTitle(title);
+        habit.setReason(reason);
+        habit.setDate(date);
+        _habitItemAdapter.notifyItemChanged(pos);
+        _editButton.setVisibility(View.INVISIBLE);
+        _deleteButton.setVisibility(View.INVISIBLE);
+    }
+
 }
