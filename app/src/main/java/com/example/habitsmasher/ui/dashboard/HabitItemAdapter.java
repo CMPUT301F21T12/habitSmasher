@@ -46,9 +46,6 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, LOCALE);
 
         holder._habitTitle.setText(currentHabit.getTitle());
-        holder._habitReason.setText(currentHabit.getReason());
-        holder._habitDate.setText(simpleDateFormat.format(currentHabit.getDate()));
-        holder._habitImage.setImageResource(R.drawable.habit_temp_img);
 
         setOnClickListenerForHabit(holder, position);
     }
@@ -67,9 +64,6 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
-        private final TextView _habitReason;
-        private final TextView _habitDate;
-        private final ImageView _habitImage;
         private final ConstraintLayout _habitRows;
         private final Button _editButton;
         private final Button _deleteButton;
@@ -79,9 +73,6 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
             _habitRows = itemView.findViewById(R.id.habit_rows);
             _habitTitle = itemView.findViewById(R.id.habit_title);
-            _habitReason = itemView.findViewById(R.id.habit_reason);
-            _habitDate = itemView.findViewById(R.id.habit_date);
-            _habitImage = itemView.findViewById(R.id.habit_image);
             _editButton = itemView.findViewById(R.id.edit_button);
             _deleteButton = itemView.findViewById(R.id.delete_button);
         }
