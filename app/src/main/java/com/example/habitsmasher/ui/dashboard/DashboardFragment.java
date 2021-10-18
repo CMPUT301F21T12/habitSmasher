@@ -28,7 +28,7 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        _habitItemAdapter = new HabitItemAdapter(context, _habits);
+        _habitItemAdapter = new HabitItemAdapter(context, _habits, getActivity());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,

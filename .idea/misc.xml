@@ -6,6 +6,7 @@
         <entry key="app/src/main/res/drawable/frame_layout_border.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/green_text_button.xml" value="0.2984375" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.26420454545454547" />
+        <entry key="app/src/main/res/layout/fragment_habit_view.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.55" />
         <entry key="app/src/main/res/layout/habit_row.xml" value="0.5" />
         <entry key="app/src/main/res/layout/habit_view.xml" value="0.28229166666666666" />

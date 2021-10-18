@@ -6,10 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
@@ -25,10 +26,12 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     private final Context _context;
     private static ArrayList<Habit> _habits;
+    private FragmentActivity _activity;
 
-    public HabitItemAdapter(Context context, ArrayList<Habit> habits) {
+    public HabitItemAdapter(Context context, ArrayList<Habit> habits, FragmentActivity activity) {
         _context = context;
         _habits = habits;
+        _activity = activity;
     }
 
     @NonNull
@@ -53,10 +56,17 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
     }
 
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
-        holder._habitRows.setOnClickListener(view -> {
-            // placeholder, just displays a message to indicate the habit has been clicked
-            Toast.makeText(_context, _habits.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-        });
+        holder._habitRows.setOnClickListener(view -> openHabitView(holder));
+    }
+
+    private void openHabitView(HabitViewHolder holder) {
+        // Create Habit View Fragment with all required parameters passed in
+        HabitViewFragment fragment = HabitViewFragment.newInstance(holder._habitTitle.getText().toString(), holder._habitReason.getText().toString(), holder._habitDate.getText().toString());
+        // Replace the current fragment with the habit view
+        FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment);
+        transaction.addToBackStack(null);
+        // Load new fragment
+        transaction.commit();
     }
 
     @Override
