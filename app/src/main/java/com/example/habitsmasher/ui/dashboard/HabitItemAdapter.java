@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 
 import java.text.SimpleDateFormat;
@@ -23,13 +24,13 @@ import java.util.Locale;
  * The habit item adapter is the custom adapter for the RecyclerView that holds the habit list
  */
 public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.HabitViewHolder> {
-    private static final String DATE_PATTERN = "EEE, MMM d, yyyy";
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final Locale LOCALE = Locale.CANADA;
 
     private final Context _context;
-    private static ArrayList<Habit> _habits;
+    private static HabitList _habits;
 
-    public HabitItemAdapter(Context context, ArrayList<Habit> habits) {
+    public HabitItemAdapter(Context context, HabitList habits) {
         _context = context;
         _habits = habits;
     }
@@ -43,7 +44,8 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     @Override
     public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
-        Habit currentHabit = _habits.get(position);
+        //Habit currentHabit = _habits.get(position);
+        Habit currentHabit = _habits.getHabitList().get(position);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, LOCALE);
 
@@ -61,13 +63,13 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
         holder._habitRows.setOnClickListener(view -> {
             // placeholder, just displays a message to indicate the habit has been clicked
-            Toast.makeText(_context, _habits.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, _habits.getHabitList().get(position).getTitle(), Toast.LENGTH_SHORT).show();
         });
     }
 
     @Override
     public int getItemCount() {
-        return _habits.size();
+        return _habits.getHabitList().size();
     }
 
     /**
