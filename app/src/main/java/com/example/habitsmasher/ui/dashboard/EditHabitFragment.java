@@ -22,6 +22,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class EditHabitFragment extends DialogFragment {
     private EditText _titleText;
     private EditText _reasonText;
@@ -32,7 +35,7 @@ public class EditHabitFragment extends DialogFragment {
     private Button _cancelButton;
 
     // don't want this to be in the front end
-    //private FirebaseFirestore _db;
+    private FirebaseFirestore _db;
 
     private Habit _editHabit;
     private int _index;

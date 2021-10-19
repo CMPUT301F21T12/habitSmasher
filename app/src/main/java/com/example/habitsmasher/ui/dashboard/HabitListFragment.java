@@ -21,13 +21,13 @@ import com.example.habitsmasher.R;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DashboardFragment extends Fragment implements EditHabitFragment.EditHabitListener {
+public class HabitListFragment extends Fragment implements EditHabitFragment.EditHabitListener {
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private HabitItemAdapter _habitItemAdapter;
     Button _editButton;
     Button _deleteButton;
-    private DashboardFragment fragment = this;
+    private HabitListFragment fragment = this;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -39,7 +39,7 @@ public class DashboardFragment extends Fragment implements EditHabitFragment.Edi
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
 
-        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
 
         initializeRecyclerView(layoutManager, view);
 
