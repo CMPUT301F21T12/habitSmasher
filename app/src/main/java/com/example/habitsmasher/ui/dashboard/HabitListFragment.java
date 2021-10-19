@@ -27,7 +27,7 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private final HashMap<Integer, Boolean> swipeMap = new HashMap<>();
     private HabitItemAdapter _habitItemAdapter;
-    Button _editButton;d
+    Button _editButton;
     Button _deleteButton;
     private HabitListFragment fragment = this;
 

@@ -71,8 +71,8 @@ public class EditHabitFragment extends DialogFragment {
         _reasonText.setText(_editHabit.getReason());
         _dateText.setText(parseDateToString(_editHabit.getDate()));
 
-        //_db = FirebaseFirestore.getInstance();
-        //final CollectionReference collectionReference = _db.collection("Habits");
+        _db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference = _db.collection("Habits");
 
         // when ok is clicked
         _okButton.setOnClickListener(new View.OnClickListener() {
@@ -107,9 +107,9 @@ public class EditHabitFragment extends DialogFragment {
                 getDialog().dismiss();
 
                 // update database, dont really want this here
-                // HashMap<String, Habit> habitHashMap = new HashMap<>();
-                //habitHashMap.add((habitTitle, new Habit(habitTitle, reasonTitle, )))
-                //collectionReference.document(habitTitle).set(habitHashMap);
+                HashMap<String, Habit> habitHashMap = new HashMap<>();
+                habitHashMap.put(habitTitle, new Habit(habitTitle, reasonText, habitDate));
+                collectionReference.document(habitTitle).set(habitHashMap);
             }
         });
 
