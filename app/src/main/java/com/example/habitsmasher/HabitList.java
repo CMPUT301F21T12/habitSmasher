@@ -22,4 +22,13 @@ public class HabitList extends ArrayList{
         _habits.add(habit);
         //addHabitToDatabase(title, reason, date);
     }
+
+    public void editHabit(String title, String reason, Date date, int pos) {
+        Habit habit = _habits.get(pos);
+        habit.setTitle(title);
+        habit.setReason(reason);
+        habit.setDate(date);
+    }
+
+
 }

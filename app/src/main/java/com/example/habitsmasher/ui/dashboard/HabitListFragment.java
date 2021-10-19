@@ -160,10 +160,6 @@ public class HabitListFragment extends Fragment {
         HashMap<String, Habit> habitHashMap = new HashMap<>();
         habitHashMap.put(title, new Habit(title, reason, date));
         collectionReference.document(title).set(habitHashMap);
-        Habit habit = _habitList.getHabitList().get(pos);
-        habit.setTitle(title);
-        habit.setReason(reason);
-        habit.setDate(date);
         _habitItemAdapter.notifyItemChanged(pos);
         _editButton.setVisibility(View.INVISIBLE);
         _deleteButton.setVisibility(View.INVISIBLE);
