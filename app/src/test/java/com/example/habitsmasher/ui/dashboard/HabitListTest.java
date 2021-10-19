@@ -29,11 +29,14 @@ public class HabitListTest {
 
     @Test
     public void editHabit_vaildEdit_expectHabitToBeEdited() {
-        Date date = new Date();
-        _habitList.editHabit("Title 2", "Reason 2", date, 0);
+        Date newDate = new Date();
+        int habitToEdit = 0;
+        String newTitle = "Title 2";
+        String newReason = "Reason 2";
+        _habitList.editHabit(newTitle, newReason, newDate, habitToEdit);
 
-        assertEquals("Title 2", _habitList.getHabitList().get(0).getTitle());
-        assertEquals("Reason 2", _habitList.getHabitList().get(0).getReason());
-        assertEquals(date, _habitList.getHabitList().get(0).getDate());
+        assertEquals(newTitle, _habitList.getHabitList().get(habitToEdit).getTitle());
+        assertEquals(newReason, _habitList.getHabitList().get(habitToEdit).getReason());
+        assertEquals(newDate, _habitList.getHabitList().get(0).getDate());
     }
 }
