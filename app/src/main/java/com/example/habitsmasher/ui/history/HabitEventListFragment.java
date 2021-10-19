@@ -8,19 +8,73 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.HabitEventList;
+import com.example.habitsmasher.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HabitEventListFragment extends Fragment {
     private HabitEventList _habitEventList = new HabitEventList();
+    private HabitEventItemAdapter _habitEventItemAdapter;
     FirebaseFirestore _db;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
+        _habitEventItemAdapter = new HabitEventItemAdapter(context, _habitEventList);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        View view = inflater.inflate(R.layout.fragment_habit_event_list, container, false);
+
+        FloatingActionButton addHabitEventFab = view.findViewById(R.id.add_habit_event_fab);
+
+        // TODO: Implement adding new habit event
+
+        initializeRecyclerView(layoutManager, view);
+
+        return view;
     }
+
+    private void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.habit_events_recycler_view);
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(_habitEventItemAdapter);
+        new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+    }
+
+    /**
+     * The implementation of the swipe to delete functionality below came from the following URL:
+     * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview
+     *
+     * Name: Rahul Raina
+     * Date: November 2, 2016
+     */
+    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView,
+                              @NonNull RecyclerView.ViewHolder viewHolder,
+                              @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            // if the habit row is swiped to the left, remove it from the list and notify adapter
+            _habitEventList.remove(viewHolder.getAdapterPosition());
+
+            _habitEventItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+        }
+    };
+
+    @Override
+    public void onDestroyView() { super.onDestroyView();}
 }
