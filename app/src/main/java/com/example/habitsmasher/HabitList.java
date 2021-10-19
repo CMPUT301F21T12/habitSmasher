@@ -23,6 +23,13 @@ public class HabitList extends ArrayList{
         //addHabitToDatabase(title, reason, date);
     }
 
+    /**
+     * Method that edits the habit at position pos
+     * @param title New title of habit
+     * @param reason New reason of habit
+     * @param date New date of habit
+     * @param pos Position of habit in the HabitList
+     */
     public void editHabit(String title, String reason, Date date, int pos) {
         try {
             Habit habit = _habits.get(pos);

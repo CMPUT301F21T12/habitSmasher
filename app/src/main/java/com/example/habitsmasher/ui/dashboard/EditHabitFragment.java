@@ -26,23 +26,24 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EditHabitFragment extends DialogFragment {
+    private static final String HEADER = "Edit Dialog";
+    private static final String PATTERN = "dd-MM-yyyy";
     private EditText _titleText;
     private EditText _reasonText;
     private EditText _dateText;
-    //private TextView _errorText;
     private TextView _header;
 
-    private Button _okButton;
+    private Button _confirmButton;
     private Button _cancelButton;
 
     private Habit _editHabit;
     private int _index;
     private HabitListFragment _listener;
 
-    public EditHabitFragment(int _index, Habit _editHabit, HabitListFragment _listener) {
-        this._index = _index;
-        this._editHabit = _editHabit;
-        this._listener = _listener;
+    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener) {
+        _index = index;
+        _editHabit = editHabit;
+        _listener = listener;
     }
 
 
@@ -57,10 +58,10 @@ public class EditHabitFragment extends DialogFragment {
         _titleText = view.findViewById(R.id.habit_title_edit_text);
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_edit_text);
-        _okButton = view.findViewById(R.id.confirm_habit);
+        _confirmButton = view.findViewById(R.id.confirm_habit);
         _cancelButton = view.findViewById(R.id.cancel_habit);
 
-        _header.setText("Edit Habit");
+        _header.setText(HEADER);
 
         // presetting text to values of habit
         _titleText.setText(_editHabit.getTitle());
@@ -68,7 +69,7 @@ public class EditHabitFragment extends DialogFragment {
         _dateText.setText(parseDateToString(_editHabit.getDate()));
 
         // when ok is clicked
-        _okButton.setOnClickListener(new View.OnClickListener() {
+        _confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //HashMap<String, Habit> habitData = new HashMap<>();
@@ -115,13 +116,13 @@ public class EditHabitFragment extends DialogFragment {
 
     public String parseDateToString(Date date) {
         // replace string constant with a variable
-        DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
         return dateFormatter.format(date);
     }
 
     public Date parseStringToDate(String string) {
         // replace string constant
-        DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
         try {
             return dateFormatter.parse(string);
         } catch(Exception e) {

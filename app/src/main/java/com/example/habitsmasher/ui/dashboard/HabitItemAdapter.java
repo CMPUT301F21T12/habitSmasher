@@ -27,11 +27,11 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     private final Context _context;
     private static HabitList _habits;
-    private static HabitListFragment _fragment;
+    private static HabitListFragment _habitListfragment;
     public HabitItemAdapter(Context context, HabitList habits, HabitListFragment fragment) {
         _context = context;
         _habits = habits;
-        _fragment = fragment;
+        _habitListfragment = fragment;
     }
 
     @NonNull
@@ -83,8 +83,9 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
                 @Override
                 public void onClick(View v) {
                     int buttonPos = getAdapterPosition();
-                    EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos, _habits.getHabitList().get(buttonPos), _fragment);
-                    editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
+                    EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos,
+                            _habits.getHabitList().get(buttonPos), _habitListfragment);
+                    editHabitFragment.show(_habitListfragment.getFragmentManager(), "Edit Habit");
                 }
             });
 
