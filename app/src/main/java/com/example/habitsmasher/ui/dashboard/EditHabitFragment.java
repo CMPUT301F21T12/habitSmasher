@@ -72,7 +72,7 @@ public class EditHabitFragment extends DialogFragment {
         _dateText.setText(parseDateToString(_editHabit.getDate()));
 
         //_db = FirebaseFirestore.getInstance();
-        //final CollectionReference collectionReference = db.collection("Habits");
+        //final CollectionReference collectionReference = _db.collection("Habits");
 
         // when ok is clicked
         _okButton.setOnClickListener(new View.OnClickListener() {

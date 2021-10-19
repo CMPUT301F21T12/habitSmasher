@@ -20,12 +20,14 @@ import com.example.habitsmasher.R;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class HabitListFragment extends Fragment implements EditHabitFragment.EditHabitListener {
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
+    private final HashMap<Integer, Boolean> swipeMap = new HashMap<>();
     private HabitItemAdapter _habitItemAdapter;
-    Button _editButton;
+    Button _editButton;d
     Button _deleteButton;
     private HabitListFragment fragment = this;
 
@@ -83,18 +85,20 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
 
 
             _editButton.setOnClickListener(new View.OnClickListener() {
+                int buttonPos = pos;
                 @Override
                 public void onClick(View v) {
-                    EditHabitFragment editHabitFragment = new EditHabitFragment(pos, _habits.get(pos), fragment);
+                    EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos, _habits.get(pos), fragment);
                     editHabitFragment.show(getFragmentManager(), "Edit Habit");
                 }
             });
 
             _deleteButton.setOnClickListener(new View.OnClickListener() {
+                int buttonPos = pos;
                 @Override
                 public void onClick(View v) {
                     // temp delete code for now
-                    _habits.remove(pos);
+                    _habits.remove(buttonPos);
                     _habitItemAdapter.notifyItemRemoved(pos);
                 }
             });
@@ -102,10 +106,12 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
             if (direction == ItemTouchHelper.LEFT) {
                 _editButton.setVisibility(View.VISIBLE);
                 _deleteButton.setVisibility(View.VISIBLE);
+                swipeMap.put(pos, true);
             }
             else if (direction == ItemTouchHelper.RIGHT) {
                 _editButton.setVisibility(View.INVISIBLE);
                 _deleteButton.setVisibility(View.INVISIBLE);
+                swipeMap.put(pos, false);
             }
 
             _habitItemAdapter.notifyItemChanged(pos);
