@@ -9,6 +9,7 @@
     <color name="grey">#808080</color>
     <color name="white">#FFFFFFFF</color>
     <color name="habit_list_text">#68B0AB</color>
+    <color name="theme_dark_grey">#696D7D</color>
     <color name="habit_add_button">#C8D5B9</color>
     <color name="menu_bar">#8FC0A9</color>
     <color name="menu_bar_variant">#68B0AB</color>

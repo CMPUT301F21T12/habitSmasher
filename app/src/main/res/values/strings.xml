@@ -8,6 +8,8 @@
     <string name="date_label">Date:</string>
     <string name="habit_title">Habit title</string>
     <string name="habit_reason">Habit reason</string>
+    <string name="habit_event_comment">Comment</string>
+    <string name="habit_event_date">Date</string>
     <string name="habit_date">Habit date</string>
     <string name="habit_list">Habit List</string>
     <string name="dd_mm_yyyy">dd-mm-yyyy</string>
