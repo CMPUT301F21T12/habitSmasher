@@ -22,15 +22,13 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.HabitViewHolder> {
-    private static final String DATE_PATTERN = "EEE, MMM d, yyyy";
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final Locale LOCALE = Locale.CANADA;
 
     private final Context _context;
-    private static ArrayList<Habit> _habits;
+    private static HabitList _habits;
     private static HabitListFragment _fragment;
-
-
-    public HabitItemAdapter(Context context, ArrayList<Habit> habits, HabitListFragment fragment) {
+    public HabitItemAdapter(Context context, HabitList habits, HabitListFragment fragment) {
         _context = context;
         _habits = habits;
         _fragment = fragment;
@@ -45,7 +43,8 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     @Override
     public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
-        Habit currentHabit = _habits.get(position);
+        //Habit currentHabit = _habits.get(position);
+        Habit currentHabit = _habits.getHabitList().get(position);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, LOCALE);
 
@@ -57,13 +56,13 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
         holder._habitRows.setOnClickListener(view -> {
             // placeholder, just displays a message to indicate the habit has been clicked
-            Toast.makeText(_context, _habits.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, _habits.getHabitList().get(position).getTitle(), Toast.LENGTH_SHORT).show();
         });
     }
 
     @Override
     public int getItemCount() {
-        return _habits.size();
+        return _habits.getHabitList().size();
     }
 
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
@@ -84,7 +83,7 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
                 @Override
                 public void onClick(View v) {
                     int buttonPos = getAdapterPosition();
-                    EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos, _habits.get(buttonPos), _fragment);
+                    EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos, _habits.getHabitList().get(buttonPos), _fragment);
                     editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
                 }
             });

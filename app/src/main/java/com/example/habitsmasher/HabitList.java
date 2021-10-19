@@ -9,18 +9,17 @@ import java.util.Date;
 public class HabitList extends ArrayList{
     private static final ArrayList<Habit> _habits = new ArrayList<>();
 
-    public HabitList() {
-        // prefilling the habit list with dummy habits for now
-        for (int i = 0; i < 10; i++) {
-            _habits.add(new Habit("Habit " + i, "Reason "+ i, new Date()));
-        }
-    }
-
-    /**
-     * This is a getter for the habit list stored in this class
-     * @return the list of habits
-     */
     public ArrayList<Habit> getHabitList() {
         return _habits;
+    }
+
+    public void addHabit(String title, String reason, Date date) {
+        Habit newHabit = new Habit(title, reason, date);
+        _habits.add(newHabit);
+        //addHabitToDatabase(title, reason, date);
+    }
+    public void addHabit(Habit habit) {
+        _habits.add(habit);
+        //addHabitToDatabase(title, reason, date);
     }
 }
