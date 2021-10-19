@@ -156,7 +156,10 @@ public class HabitListFragment extends Fragment {
     }
 
 
-    public void editHabit(String title, String reason, Date date, int pos) {
+    public void updateAfterEdit(String title, String reason, Date date, int pos) {
+        _habitList.editHabit(title, reason, date, pos);
+
+        // storing in database
         HashMap<String, Habit> habitHashMap = new HashMap<>();
         habitHashMap.put(title, new Habit(title, reason, date));
         collectionReference.document(title).set(habitHashMap);

@@ -41,7 +41,6 @@ public class EditHabitFragment extends DialogFragment {
     private HabitListFragment _listener;
 
     public EditHabitFragment(int _index, Habit _editHabit, HabitListFragment _listener) {
-        super();
         this._index = _index;
         this._editHabit = _editHabit;
         this._listener = _listener;
@@ -95,7 +94,7 @@ public class EditHabitFragment extends DialogFragment {
                     return;
                 }
                 // update local list and display
-                _listener.editHabit(habitTitle, reasonText, habitDate, _index);
+                _listener.updateAfterEdit(habitTitle, reasonText, habitDate, _index);
 
                 getDialog().dismiss();
             }
