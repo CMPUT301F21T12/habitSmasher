@@ -29,12 +29,11 @@ public class EditHabitFragment extends DialogFragment {
     private EditText _titleText;
     private EditText _reasonText;
     private EditText _dateText;
-    private TextView _errorText;
+    //private TextView _errorText;
+    private TextView _header;
 
     private Button _okButton;
     private Button _cancelButton;
-
-
 
     private Habit _editHabit;
     private int _index;
@@ -54,11 +53,14 @@ public class EditHabitFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.add_habit_dialog_box, container, false);
 
         // Connecting elements on UI xml to variables
+        _header = view.findViewById(R.id.add_habit_header);
         _titleText = view.findViewById(R.id.habit_title_edit_text);
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_edit_text);
         _okButton = view.findViewById(R.id.confirm_habit);
         _cancelButton = view.findViewById(R.id.cancel_habit);
+
+        _header.setText("Edit Habit");
 
         // presetting text to values of habit
         _titleText.setText(_editHabit.getTitle());
