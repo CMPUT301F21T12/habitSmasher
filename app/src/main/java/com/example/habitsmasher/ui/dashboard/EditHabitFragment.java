@@ -38,17 +38,13 @@ public class EditHabitFragment extends DialogFragment {
 
     private Habit _editHabit;
     private int _index;
-    private EditHabitListener _listener;
+    private HabitListFragment _listener;
 
-    public EditHabitFragment(int _index, Habit _editHabit, EditHabitListener _listener) {
+    public EditHabitFragment(int _index, Habit _editHabit, HabitListFragment _listener) {
         super();
         this._index = _index;
         this._editHabit = _editHabit;
         this._listener = _listener;
-    }
-
-    public interface EditHabitListener {
-        public void editHabit(String title, String reason, Date date, int pos);
     }
 
 

@@ -28,7 +28,7 @@ import java.util.HashMap;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class HabitListFragment extends Fragment implements EditHabitFragment.EditHabitListener {
+public class HabitListFragment extends Fragment {
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private HabitItemAdapter _habitItemAdapter;
@@ -126,6 +126,4 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
         _editButton.setVisibility(View.INVISIBLE);
         _deleteButton.setVisibility(View.INVISIBLE);
     }
-
-
 }
