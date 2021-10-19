@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,10 +49,16 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
         return view;
     }
 
+    /**
+     * This helper method initializes the RecyclerView
+     * @param layoutManager the associated LinearLayoutManager
+     * @param view the associated View
+     */
     private void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_items);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(_habitItemAdapter);
         new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
