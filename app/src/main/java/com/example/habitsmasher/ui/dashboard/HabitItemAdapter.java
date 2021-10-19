@@ -24,9 +24,6 @@ import java.util.Locale;
  * The habit item adapter is the custom adapter for the RecyclerView that holds the habit list
  */
 public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.HabitViewHolder> {
-    private static final String DATE_PATTERN = "dd-MM-yyyy";
-    private static final Locale LOCALE = Locale.CANADA;
-
     private final Context _context;
     private static HabitList _habits;
 
@@ -44,10 +41,7 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     @Override
     public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
-        //Habit currentHabit = _habits.get(position);
         Habit currentHabit = _habits.getHabitList().get(position);
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, LOCALE);
 
         // set necessary elements of the habit
         holder._habitTitle.setText(currentHabit.getTitle());
