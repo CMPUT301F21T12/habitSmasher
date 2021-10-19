@@ -104,12 +104,12 @@ public class EditHabitFragment extends DialogFragment {
                 }
                 // update local list and display
                 _listener.editHabit(habitTitle, reasonText, habitDate, _index);
-                getDialog().dismiss();
 
                 // update database, dont really want this here
                 HashMap<String, Habit> habitHashMap = new HashMap<>();
                 habitHashMap.put(habitTitle, new Habit(habitTitle, reasonText, habitDate));
                 collectionReference.document(habitTitle).set(habitHashMap);
+                getDialog().dismiss();
             }
         });
 

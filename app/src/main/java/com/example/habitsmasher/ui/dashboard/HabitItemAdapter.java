@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 
 import java.text.SimpleDateFormat;
@@ -26,10 +27,13 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     private final Context _context;
     private static ArrayList<Habit> _habits;
+    private static HabitListFragment _fragment;
 
-    public HabitItemAdapter(Context context, ArrayList<Habit> habits) {
+
+    public HabitItemAdapter(Context context, ArrayList<Habit> habits, HabitListFragment fragment) {
         _context = context;
         _habits = habits;
+        _fragment = fragment;
     }
 
     @NonNull
@@ -65,8 +69,8 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
         private final ConstraintLayout _habitRows;
-        private final Button _editButton;
-        private final Button _deleteButton;
+        private Button _editButton;
+        private Button _deleteButton;
 
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,6 +79,26 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
             _habitTitle = itemView.findViewById(R.id.habit_title);
             _editButton = itemView.findViewById(R.id.edit_button);
             _deleteButton = itemView.findViewById(R.id.delete_button);
+
+            _editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int buttonPos = getAdapterPosition();
+                    EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos, _habits.get(buttonPos), _fragment);
+                    editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
+                }
+            });
+
+            _deleteButton.setOnClickListener(new View.OnClickListener() {
+                int buttonPos = getAdapterPosition();
+                @Override
+                public void onClick(View v) {
+                    /*
+                    Delete logic goes here
+                     */
+                }
+            });
+
         }
     }
 }

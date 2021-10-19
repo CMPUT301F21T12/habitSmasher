@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -25,17 +26,16 @@ import java.util.HashMap;
 public class HabitListFragment extends Fragment implements EditHabitFragment.EditHabitListener {
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
-    private final HashMap<Integer, Boolean> swipeMap = new HashMap<>();
     private HabitItemAdapter _habitItemAdapter;
-    Button _editButton;
-    Button _deleteButton;
+    private Button _editButton;
+    private Button _deleteButton;
     private HabitListFragment fragment = this;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        _habitItemAdapter = new HabitItemAdapter(context, _habits);
+        _habitItemAdapter = new HabitItemAdapter(context, _habits, fragment);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
@@ -83,9 +83,9 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
             _editButton = habitView.findViewById(R.id.edit_button);
             _deleteButton = habitView.findViewById(R.id.delete_button);
 
-
+            /*
             _editButton.setOnClickListener(new View.OnClickListener() {
-                int buttonPos = pos;
+                public int buttonPos = pos;
                 @Override
                 public void onClick(View v) {
                     EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos, _habits.get(pos), fragment);
@@ -94,7 +94,7 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
             });
 
             _deleteButton.setOnClickListener(new View.OnClickListener() {
-                int buttonPos = pos;
+                public int buttonPos = pos;
                 @Override
                 public void onClick(View v) {
                     // temp delete code for now
@@ -102,16 +102,15 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
                     _habitItemAdapter.notifyItemRemoved(pos);
                 }
             });
+             */
 
             if (direction == ItemTouchHelper.LEFT) {
                 _editButton.setVisibility(View.VISIBLE);
                 _deleteButton.setVisibility(View.VISIBLE);
-                swipeMap.put(pos, true);
             }
             else if (direction == ItemTouchHelper.RIGHT) {
                 _editButton.setVisibility(View.INVISIBLE);
                 _deleteButton.setVisibility(View.INVISIBLE);
-                swipeMap.put(pos, false);
             }
 
             _habitItemAdapter.notifyItemChanged(pos);
