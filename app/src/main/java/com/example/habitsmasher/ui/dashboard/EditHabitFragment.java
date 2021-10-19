@@ -34,8 +34,7 @@ public class EditHabitFragment extends DialogFragment {
     private Button _okButton;
     private Button _cancelButton;
 
-    // don't want this to be in the front end
-    private FirebaseFirestore _db;
+
 
     private Habit _editHabit;
     private int _index;
@@ -71,9 +70,6 @@ public class EditHabitFragment extends DialogFragment {
         _reasonText.setText(_editHabit.getReason());
         _dateText.setText(parseDateToString(_editHabit.getDate()));
 
-        _db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = _db.collection("Habits");
-
         // when ok is clicked
         _okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,10 +101,6 @@ public class EditHabitFragment extends DialogFragment {
                 // update local list and display
                 _listener.editHabit(habitTitle, reasonText, habitDate, _index);
 
-                // update database, dont really want this here
-                HashMap<String, Habit> habitHashMap = new HashMap<>();
-                habitHashMap.put(habitTitle, new Habit(habitTitle, reasonText, habitDate));
-                collectionReference.document(habitTitle).set(habitHashMap);
                 getDialog().dismiss();
             }
         });

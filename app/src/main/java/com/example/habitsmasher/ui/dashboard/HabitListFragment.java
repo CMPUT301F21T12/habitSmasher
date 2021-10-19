@@ -19,10 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HabitListFragment extends Fragment implements EditHabitFragment.EditHabitListener {
     private final HabitList _habitList = new HabitList();
@@ -30,13 +34,18 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
     private HabitItemAdapter _habitItemAdapter;
     private Button _editButton;
     private Button _deleteButton;
-    private HabitListFragment fragment = this;
+    private HabitListFragment _fragment = this;
+    private CollectionReference collectionReference;
+    private FirebaseFirestore _db;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        _habitItemAdapter = new HabitItemAdapter(context, _habits, fragment);
+        _habitItemAdapter = new HabitItemAdapter(context, _habits, _fragment);
+        _db = FirebaseFirestore.getInstance();
+        collectionReference = _db.collection("Habits");
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
@@ -84,43 +93,18 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             // if the habit row is swiped to the left, spawn edit and delete button
             // if swiped to the right, despawn them
-
             View habitView = viewHolder.itemView;
-            int pos = viewHolder.getAdapterPosition();
             _editButton = habitView.findViewById(R.id.edit_button);
             _deleteButton = habitView.findViewById(R.id.delete_button);
-
-            /*
-            _editButton.setOnClickListener(new View.OnClickListener() {
-                public int buttonPos = pos;
-                @Override
-                public void onClick(View v) {
-                    EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos, _habits.get(pos), fragment);
-                    editHabitFragment.show(getFragmentManager(), "Edit Habit");
-                }
-            });
-
-            _deleteButton.setOnClickListener(new View.OnClickListener() {
-                public int buttonPos = pos;
-                @Override
-                public void onClick(View v) {
-                    // temp delete code for now
-                    _habits.remove(buttonPos);
-                    _habitItemAdapter.notifyItemRemoved(pos);
-                }
-            });
-             */
 
             if (direction == ItemTouchHelper.LEFT) {
                 _editButton.setVisibility(View.VISIBLE);
                 _deleteButton.setVisibility(View.VISIBLE);
-            }
-            else if (direction == ItemTouchHelper.RIGHT) {
+            } else if (direction == ItemTouchHelper.RIGHT) {
                 _editButton.setVisibility(View.INVISIBLE);
                 _deleteButton.setVisibility(View.INVISIBLE);
             }
-
-            _habitItemAdapter.notifyItemChanged(pos);
+            _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
         }
     };
 
@@ -129,7 +113,11 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
         super.onDestroyView();
     }
 
+
     public void editHabit(String title, String reason, Date date, int pos) {
+        HashMap<String, Habit> habitHashMap = new HashMap<>();
+        habitHashMap.put(title, new Habit(title, reason, date));
+        collectionReference.document(title).set(habitHashMap);
         Habit habit = _habits.get(pos);
         habit.setTitle(title);
         habit.setReason(reason);
@@ -138,5 +126,6 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
         _editButton.setVisibility(View.INVISIBLE);
         _deleteButton.setVisibility(View.INVISIBLE);
     }
+
 
 }
