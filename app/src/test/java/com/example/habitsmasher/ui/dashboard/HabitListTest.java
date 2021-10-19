@@ -34,9 +34,10 @@ public class HabitListTest {
         String newTitle = "Title 2";
         String newReason = "Reason 2";
         _habitList.editHabit(newTitle, newReason, newDate, habitToEdit);
+        Habit editedHabit = _habitList.getHabitList().get(habitToEdit);
 
-        assertEquals(newTitle, _habitList.getHabitList().get(habitToEdit).getTitle());
-        assertEquals(newReason, _habitList.getHabitList().get(habitToEdit).getReason());
-        assertEquals(newDate, _habitList.getHabitList().get(0).getDate());
+        assertEquals(newTitle, editedHabit.getTitle());
+        assertEquals(newReason, editedHabit.getReason());
+        assertEquals(newDate, editedHabit.getDate());
     }
 }
