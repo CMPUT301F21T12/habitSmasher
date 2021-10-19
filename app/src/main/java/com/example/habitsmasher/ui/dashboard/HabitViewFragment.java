@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.habitsmasher.R;
 
+/**
+ * This class handles the Habit View Fragment
+ */
 public class HabitViewFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "habitTitle";
-    private static final String ARG_PARAM2 = "habitReason";
-    private static final String ARG_PARAM3 = "habitDate";
+    private static final String TITLE_PARAM = "habitTitle";
+    private static final String REASON_PARAM = "habitReason";
+    private static final String DATE_PARAM = "habitDate";
 
     private String _habitTitle;
     private String _habitReason;
@@ -34,9 +37,9 @@ public class HabitViewFragment extends Fragment {
     public static HabitViewFragment newInstance(String habitTitle, String habitReason, String habitDate) {
         HabitViewFragment fragment = new HabitViewFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1,habitTitle);
-        args.putString(ARG_PARAM2,habitReason);
-        args.putString(ARG_PARAM3,habitDate);
+        args.putString(TITLE_PARAM,habitTitle);
+        args.putString(REASON_PARAM,habitReason);
+        args.putString(DATE_PARAM,habitDate);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,9 +48,9 @@ public class HabitViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            _habitTitle = getArguments().getString(ARG_PARAM1);
-            _habitReason = getArguments().getString(ARG_PARAM2);
-            _habitDate = getArguments().getString(ARG_PARAM3);
+            _habitTitle = getArguments().getString(TITLE_PARAM);
+            _habitReason = getArguments().getString(REASON_PARAM);
+            _habitDate = getArguments().getString(DATE_PARAM);
         }
     }
 

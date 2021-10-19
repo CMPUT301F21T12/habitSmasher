@@ -26,7 +26,7 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     private final Context _context;
     private static ArrayList<Habit> _habits;
-    private FragmentActivity _activity;
+    private final FragmentActivity _activity;
 
     public HabitItemAdapter(Context context, ArrayList<Habit> habits, FragmentActivity activity) {
         _context = context;
@@ -52,13 +52,18 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
         holder._habitDate.setText(simpleDateFormat.format(currentHabit.getDate()));
         holder._habitImage.setImageResource(R.drawable.habit_temp_img);
 
-        setOnClickListenerForHabit(holder, position);
+        setOnClickListenerForHabit(holder);
     }
 
-    private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
+    private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder) {
         holder._habitRows.setOnClickListener(view -> openHabitView(holder));
     }
 
+    /**
+     * This function opens the habit view
+     * @param holder
+     * This holds the values for the selected habit item
+     */
     private void openHabitView(HabitViewHolder holder) {
         // Create Habit View Fragment with all required parameters passed in
         HabitViewFragment fragment = HabitViewFragment.newInstance(holder._habitTitle.getText().toString(), holder._habitReason.getText().toString(), holder._habitDate.getText().toString());
