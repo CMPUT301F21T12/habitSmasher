@@ -24,7 +24,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -33,7 +32,8 @@ import java.util.HashMap;
  */
 public class HabitListFragment extends Fragment {
     private static final String TAG = "DashboardFragment";
-    public static final HabitList _habitList = new HabitList();
+
+    private static final HabitList _habitList = new HabitList();
     private HabitItemAdapter _habitItemAdapter;
     FirebaseFirestore _db;
 
@@ -55,7 +55,7 @@ public class HabitListFragment extends Fragment {
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openHabitDialog();
+                openAddHabitDialogBox();
             }
         });
 
@@ -63,7 +63,10 @@ public class HabitListFragment extends Fragment {
         return view;
     }
 
-    private void openHabitDialog() {
+    /**
+     * This helper method is responsible for opening the add habit dialog box
+     */
+    private void openAddHabitDialogBox() {
         AddHabitDialog addHabitDialog = new AddHabitDialog();
         addHabitDialog.setCancelable(true);
         addHabitDialog.setTargetFragment(HabitListFragment.this, 1);
@@ -108,9 +111,20 @@ public class HabitListFragment extends Fragment {
         }
     };
 
+    /**
+     * This method is responsible for adding a new habit to the habit list
+     * @param habit the habit to be added
+     */
     public void addNewHabit(Habit habit) {
         _habitList.addHabit(habit);
     }
+
+    /**
+     * This method is responsible for adding a new habit to the database
+     * @param title the habit title
+     * @param reason the habit reason
+     * @param date the habit date
+     */
     public void addHabitToDatabase(String title, String reason, Date date){
         // Handling of adding a habit to firebase
         _db = FirebaseFirestore.getInstance();
