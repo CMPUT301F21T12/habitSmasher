@@ -26,4 +26,14 @@ public class HabitListTest {
         assertEquals(1, _habitList.getHabitList().size());
         assertTrue(_habitList.getHabitList().contains(habit));
     }
+
+    @Test
+    public void editHabit_vaildEdit_expectHabitToBeEdited() {
+        Date date = new Date();
+        _habitList.editHabit("Title 2", "Reason 2", date, 0);
+
+        assertEquals("Title 2", _habitList.getHabitList().get(0).getTitle());
+        assertEquals("Reason 2", _habitList.getHabitList().get(0).getReason());
+        assertEquals(date, _habitList.getHabitList().get(0).getDate());
+    }
 }

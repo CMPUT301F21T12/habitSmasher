@@ -24,10 +24,14 @@ public class HabitList extends ArrayList{
     }
 
     public void editHabit(String title, String reason, Date date, int pos) {
-        Habit habit = _habits.get(pos);
-        habit.setTitle(title);
-        habit.setReason(reason);
-        habit.setDate(date);
+        try {
+            Habit habit = _habits.get(pos);
+            habit.setTitle(title);
+            habit.setReason(reason);
+            habit.setDate(date);
+        } catch (Exception e) {
+            return;
+        }
     }
 
 
