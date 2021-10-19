@@ -22,9 +22,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 public class EditHabitFragment extends DialogFragment {
     private EditText _titleText;
     private EditText _reasonText;
@@ -35,7 +32,7 @@ public class EditHabitFragment extends DialogFragment {
     private Button _cancelButton;
 
     // don't want this to be in the front end
-    private FirebaseFirestore _db;
+    //private FirebaseFirestore _db;
 
     private Habit _editHabit;
     private int _index;
@@ -71,10 +68,8 @@ public class EditHabitFragment extends DialogFragment {
         _reasonText.setText(_editHabit.getReason());
         _dateText.setText(parseDateToString(_editHabit.getDate()));
 
-        /*
-        _db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = _db.collection("Habits");
-         */
+        //_db = FirebaseFirestore.getInstance();
+        //final CollectionReference collectionReference = db.collection("Habits");
 
         // when ok is clicked
         _okButton.setOnClickListener(new View.OnClickListener() {
@@ -106,16 +101,12 @@ public class EditHabitFragment extends DialogFragment {
                 }
                 // update local list and display
                 _listener.editHabit(habitTitle, reasonText, habitDate, _index);
+                getDialog().dismiss();
 
                 // update database, dont really want this here
-                /*
-                HashMap<String, Habit> habitHashMap = new HashMap<>();
-                habitHashMap.put(habitTitle, new Habit(habitTitle, reasonText, habitDate));
-                collectionReference.document(habitTitle)
-                        .set(habitHashMap);
-                 */
-                // close dialog
-                getDialog().dismiss();
+                // HashMap<String, Habit> habitHashMap = new HashMap<>();
+                //habitHashMap.add((habitTitle, new Habit(habitTitle, reasonTitle, )))
+                //collectionReference.document(habitTitle).set(habitHashMap);
             }
         });
 

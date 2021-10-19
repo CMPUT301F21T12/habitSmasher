@@ -10,7 +10,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,16 +21,13 @@ import com.example.habitsmasher.R;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class HabitListFragment extends Fragment implements EditHabitFragment.EditHabitListener {
+public class DashboardFragment extends Fragment implements EditHabitFragment.EditHabitListener {
     private final HabitList _habitList = new HabitList();
     private final ArrayList<Habit> _habits = _habitList.getHabitList();
     private HabitItemAdapter _habitItemAdapter;
-
     Button _editButton;
     Button _deleteButton;
-
-    // ensure that this fragment gets passed into dialog
-    private HabitListFragment fragment = this;
+    private DashboardFragment fragment = this;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -43,7 +39,7 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
 
-        View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         initializeRecyclerView(layoutManager, view);
 
@@ -55,7 +51,6 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(_habitItemAdapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
@@ -80,10 +75,12 @@ public class HabitListFragment extends Fragment implements EditHabitFragment.Edi
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             // if the habit row is swiped to the left, spawn edit and delete button
             // if swiped to the right, despawn them
+
             View habitView = viewHolder.itemView;
             int pos = viewHolder.getAdapterPosition();
             _editButton = habitView.findViewById(R.id.edit_button);
             _deleteButton = habitView.findViewById(R.id.delete_button);
+
 
             _editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
