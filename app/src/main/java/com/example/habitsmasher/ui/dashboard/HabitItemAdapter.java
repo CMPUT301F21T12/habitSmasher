@@ -61,6 +61,7 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
     /**
      * This method sets the click listener for each habit row
      * @param holder the ViewHolder that holds each habit
+     * @param position the position of the clicked element
      */
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
         holder._habitRows.setOnClickListener(view -> openHabitView(holder, position));
@@ -76,7 +77,7 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
     private void openHabitView(HabitViewHolder holder, int position) {
         Habit currentHabit = _habits.getHabitList().get(position);
         // Create Habit View Fragment with all required parameters passed in
-        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getTitle(), currentHabit.getReason(), currentHabit.getDate().toString());
+        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(), currentHabit.getDate().toString());
         // Replace the current fragment with the habit view
         FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);
@@ -94,8 +95,6 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
      */
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
-//        private final TextView _habitReason;
-//        private final TextView _habitDate;
         private final ConstraintLayout _habitRows;
 
         public HabitViewHolder(@NonNull View itemView) {
@@ -103,8 +102,6 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
             _habitRows = itemView.findViewById(R.id.habit_rows);
             _habitTitle = itemView.findViewById(R.id.habit_title);
-//            _habitReason = itemView.findViewById(R.id.habit_reason_edit_text);
-//            _habitDate = itemView.findViewById(R.id.habit_date_edit_text);
         }
     }
 }
