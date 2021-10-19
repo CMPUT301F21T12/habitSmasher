@@ -14,21 +14,25 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * The habit item adapter is the custom adapter for the RecyclerView that holds the habit list
+ */
 public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.HabitViewHolder> {
-    private static final String DATE_PATTERN = "EEE, MMM d, yyyy";
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final Locale LOCALE = Locale.CANADA;
 
     private final Context _context;
-    private static ArrayList<Habit> _habits;
+    private static HabitList _habits;
     private final FragmentActivity _activity;
 
-    public HabitItemAdapter(Context context, ArrayList<Habit> habits, FragmentActivity activity) {
+    public HabitItemAdapter(Context context, HabitList habits, FragmentActivity activity) {
         _context = context;
         _habits = habits;
         _activity = activity;
@@ -43,30 +47,36 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     @Override
     public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
-        Habit currentHabit = _habits.get(position);
+        //Habit currentHabit = _habits.get(position);
+        Habit currentHabit = _habits.getHabitList().get(position);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN, LOCALE);
 
+        // set necessary elements of the habit
         holder._habitTitle.setText(currentHabit.getTitle());
-        holder._habitReason.setText(currentHabit.getReason());
-        holder._habitDate.setText(simpleDateFormat.format(currentHabit.getDate()));
-        holder._habitImage.setImageResource(R.drawable.habit_temp_img);
 
-        setOnClickListenerForHabit(holder);
+        setOnClickListenerForHabit(holder, position);
     }
 
-    private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder) {
-        holder._habitRows.setOnClickListener(view -> openHabitView(holder));
+    /**
+     * This method sets the click listener for each habit row
+     * @param holder the ViewHolder that holds each habit
+     */
+    private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
+        holder._habitRows.setOnClickListener(view -> openHabitView(holder, position));
     }
 
     /**
      * This function opens the habit view
      * @param holder
      * This holds the values for the selected habit item
+     * @param position
+     * This is the position of the selected habit item
      */
-    private void openHabitView(HabitViewHolder holder) {
+    private void openHabitView(HabitViewHolder holder, int position) {
+        Habit currentHabit = _habits.getHabitList().get(position);
         // Create Habit View Fragment with all required parameters passed in
-        HabitViewFragment fragment = HabitViewFragment.newInstance(holder._habitTitle.getText().toString(), holder._habitReason.getText().toString(), holder._habitDate.getText().toString());
+        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getTitle(), currentHabit.getReason(), currentHabit.getDate().toString());
         // Replace the current fragment with the habit view
         FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);
@@ -76,14 +86,16 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     @Override
     public int getItemCount() {
-        return _habits.size();
+        return _habits.getHabitList().size();
     }
 
+    /**
+     * This class holds any necessary elements of the habit on the front-end
+     */
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
-        private final TextView _habitReason;
-        private final TextView _habitDate;
-        private final ImageView _habitImage;
+//        private final TextView _habitReason;
+//        private final TextView _habitDate;
         private final ConstraintLayout _habitRows;
 
         public HabitViewHolder(@NonNull View itemView) {
@@ -91,9 +103,8 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
             _habitRows = itemView.findViewById(R.id.habit_rows);
             _habitTitle = itemView.findViewById(R.id.habit_title);
-            _habitReason = itemView.findViewById(R.id.habit_reason);
-            _habitDate = itemView.findViewById(R.id.habit_date);
-            _habitImage = itemView.findViewById(R.id.habit_image);
+//            _habitReason = itemView.findViewById(R.id.habit_reason_edit_text);
+//            _habitDate = itemView.findViewById(R.id.habit_date_edit_text);
         }
     }
 }
