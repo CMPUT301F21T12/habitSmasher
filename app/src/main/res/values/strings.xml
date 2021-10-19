@@ -6,8 +6,15 @@
     <string name="title_label">Title:</string>
     <string name="reason_label">Reason:</string>
     <string name="date_label">Date:</string>
-    <string name="habit_title">HabitTitle</string>
-    <string name="habit_reason">HabitReason</string>
-    <string name="habit_date">HabitDate</string>
+    <string name="habit_title">Habit title</string>
+    <string name="habit_reason">Habit reason</string>
+    <string name="habit_date">Habit date</string>
     <string name="habit_list">Habit List</string>
+    <string name="dd_mm_yyyy">dd-mm-yyyy</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">Name:</string>
+    <string name="reason">Reason:</string>
+    <string name="date_start">Date start:</string>
+    <string name="add_habit">Add Habit</string>
 </resources>

@@ -47,6 +47,7 @@ public class AddHabitDialog extends DialogFragment{
     private Button _confirmNewHabit;
     private Button _cancelNewHabit;
     private boolean _invalidDate = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,11 +71,14 @@ public class AddHabitDialog extends DialogFragment{
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
+
                 String habitTitleInput = _habitTitleEditText.getText().toString();
                 String habitReasonInput = _habitReasonEditText.getText().toString();
                 String habitDateInput = _habitDateEditText.getText().toString();
+
                 DateFormat inputDateFormatter = new SimpleDateFormat(DATE_FORMAT);
                 Date habitDate = null;
+
                 try {
                     inputDateFormatter.setLenient(false);
                     habitDate = inputDateFormatter.parse(habitDateInput);
