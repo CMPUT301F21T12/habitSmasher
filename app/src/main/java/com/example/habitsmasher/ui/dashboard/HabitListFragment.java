@@ -34,7 +34,7 @@ import java.util.HashMap;
 public class HabitListFragment extends Fragment {
     private static final String TAG = "DashboardFragment";
 
-    private final HabitList _habitList = new HabitList();
+    private static final HabitList _habitList = new HabitList();
     private HabitItemAdapter _habitItemAdapter;
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
@@ -47,7 +47,7 @@ public class HabitListFragment extends Fragment {
         FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
                 .setQuery(_db.collection("Habits"), Habit.class)
                 .build();
-        _habitItemAdapter = new HabitItemAdapter(options);
+        _habitItemAdapter = new HabitItemAdapter(options, getActivity());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
@@ -56,9 +56,8 @@ public class HabitListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
 
         FloatingActionButton addHabitFab = view.findViewById(R.id.add_habit_fab);
-        /**
-         * When fab is pressed, method call to open dialog fragment.
-         */
+
+         // When fab is pressed, method call to open dialog fragment
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,10 +142,8 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      */
-    public void addHabitToDatabase(String title, String reason, Date date) {
-        /**
-         * Handling of adding a habit to firebase
-         */
+    public void addHabitToDatabase(String title, String reason, Date date){
+        // Handling of adding a habit to firebase
         final CollectionReference collectionReference = _db.collection("Habits");
         HashMap<String, Object> habitData = new HashMap<>();
 

@@ -17,4 +17,8 @@
     <string name="reason">Reason:</string>
     <string name="date_start">Date start:</string>
     <string name="add_habit">Add Habit</string>
+    <string name="historyButtonLabel">HISTORY</string>
+    <string name="dateTextBoxLabel">Date Started: %s</string>
+    <string name="ratingTextBoxLabel">Follow Rating: %s</string>
+    <string name="descriptionTextBoxLabel">Description…</string>
 </resources>
