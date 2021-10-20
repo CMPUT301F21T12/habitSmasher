@@ -48,9 +48,9 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     @Override
     protected void onBindViewHolder(@NonNull HabitViewHolder holder,
                                     int position,
-                                    @NonNull Habit model) {
+                                    @NonNull Habit habit) {
         // set necessary elements of the habit
-        holder._habitTitle.setText(model.getTitle());
+        holder._habitTitle.setText(habit.getTitle());
 
         setOnClickListenerForHabit(holder, position);
     }
