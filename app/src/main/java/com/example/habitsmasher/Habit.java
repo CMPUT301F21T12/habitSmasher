@@ -1,5 +1,7 @@
 package com.example.habitsmasher;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.Date;
 
 /**
@@ -11,10 +13,21 @@ public class Habit {
     private String _reason;
     private Date _date;
 
+    public Habit () {
+        // needed for firestore
+    }
+
+    public Habit (String title, String reason, Date date) {
+        _title = title;
+        _reason = reason;
+        _date = date;
+    }
+
     /**
      *
      * @return _title : The title of the habit
      */
+    @PropertyName("title")
     public String getTitle() {
         return _title;
     }
@@ -31,6 +44,7 @@ public class Habit {
      *
      * @return _reason: The reason of the habit
      */
+    @PropertyName("reason")
     public String getReason() {
         return _reason;
     }
@@ -47,6 +61,7 @@ public class Habit {
      *
      * @return _date : The date of the habit
      */
+    @PropertyName("date")
     public Date getDate() {
         return _date;
     }
@@ -56,12 +71,6 @@ public class Habit {
      * @param date : The new date to be set
      */
     public void setDate(Date date) {
-        _date = date;
-    }
-
-    public Habit (String title, String reason, Date date) {
-        _title = title;
-        _reason = reason;
         _date = date;
     }
 }

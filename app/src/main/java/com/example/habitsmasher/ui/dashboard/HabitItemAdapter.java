@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,38 +15,45 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Locale;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.ObservableSnapshotArray;
 
 /**
  * The habit item adapter is the custom adapter for the RecyclerView that holds the habit list
  */
-public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.HabitViewHolder> {
-    private final Context _context;
+public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
+    private Context _context;
     private static HabitList _habits;
     private final FragmentActivity _activity;
+    private final ObservableSnapshotArray<Habit> _snapshots;
 
-    public HabitItemAdapter(Context context, HabitList habits, FragmentActivity activity) {
-        _context = context;
-        _habits = habits;
+    /**
+     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
+     * FirestoreRecyclerOptions} for configuration options.
+     *
+     * @param options the firestore entities
+     */
+    public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options, FragmentActivity activity) {
+        super(options);
+        _snapshots = options.getSnapshots();
         _activity = activity;
     }
 
     @NonNull
     @Override
     public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        _context = parent.getContext();
         View view = LayoutInflater.from(_context).inflate(R.layout.habit_row, parent, false);
         return new HabitViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
-        Habit currentHabit = _habits.getHabitList().get(position);
-
+    protected void onBindViewHolder(@NonNull HabitViewHolder holder,
+                                    int position,
+                                    @NonNull Habit habit) {
         // set necessary elements of the habit
-        holder._habitTitle.setText(currentHabit.getTitle());
+        holder._habitTitle.setText(habit.getTitle());
 
         setOnClickListenerForHabit(holder, position);
     }
@@ -69,7 +75,7 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
      * This is the position of the selected habit item
      */
     private void openHabitView(HabitViewHolder holder, int position) {
-        Habit currentHabit = _habits.getHabitList().get(position);
+        Habit currentHabit = _snapshots.get(position);
         // Create Habit View Fragment with all required parameters passed in
         HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(), currentHabit.getDate().toString());
         // Replace the current fragment with the habit view
@@ -81,7 +87,7 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
 
     @Override
     public int getItemCount() {
-        return _habits.getHabitList().size();
+        return _snapshots.size();
     }
 
     /**
