@@ -6,10 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
@@ -26,10 +27,12 @@ import java.util.Locale;
 public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.HabitViewHolder> {
     private final Context _context;
     private static HabitList _habits;
+    private final FragmentActivity _activity;
 
-    public HabitItemAdapter(Context context, HabitList habits) {
+    public HabitItemAdapter(Context context, HabitList habits, FragmentActivity activity) {
         _context = context;
         _habits = habits;
+        _activity = activity;
     }
 
     @NonNull
@@ -55,10 +58,25 @@ public class HabitItemAdapter extends RecyclerView.Adapter<HabitItemAdapter.Habi
      * @param position the position of the clicked element
      */
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
-        holder._habitRows.setOnClickListener(view -> {
-            // placeholder, just displays a message to indicate the habit has been clicked
-            Toast.makeText(_context, _habits.getHabitList().get(position).getTitle(), Toast.LENGTH_SHORT).show();
-        });
+        holder._habitRows.setOnClickListener(view -> openHabitView(holder, position));
+    }
+
+    /**
+     * This function opens the habit view
+     * @param holder
+     * This holds the values for the selected habit item
+     * @param position
+     * This is the position of the selected habit item
+     */
+    private void openHabitView(HabitViewHolder holder, int position) {
+        Habit currentHabit = _habits.getHabitList().get(position);
+        // Create Habit View Fragment with all required parameters passed in
+        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(), currentHabit.getDate().toString());
+        // Replace the current fragment with the habit view
+        FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
+        transaction.addToBackStack(null);
+        // Load new fragment
+        transaction.commit();
     }
 
     @Override

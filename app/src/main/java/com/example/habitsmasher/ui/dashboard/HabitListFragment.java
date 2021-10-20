@@ -33,7 +33,7 @@ import java.util.HashMap;
 public class HabitListFragment extends Fragment {
     private static final String TAG = "DashboardFragment";
 
-    private final HabitList _habitList = new HabitList();
+    private static final HabitList _habitList = new HabitList();
     private HabitItemAdapter _habitItemAdapter;
     FirebaseFirestore _db;
 
@@ -41,7 +41,7 @@ public class HabitListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        _habitItemAdapter = new HabitItemAdapter(context, _habitList);
+        _habitItemAdapter = new HabitItemAdapter(context, _habitList, getActivity());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
@@ -50,9 +50,8 @@ public class HabitListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
 
         FloatingActionButton addHabitFab = view.findViewById(R.id.add_habit_fab);
-        /**
-         * When fab is pressed, method call to open dialog fragment.
-         */
+
+         // When fab is pressed, method call to open dialog fragment
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,9 +126,7 @@ public class HabitListFragment extends Fragment {
      * @param date the habit date
      */
     public void addHabitToDatabase(String title, String reason, Date date){
-        /**
-         * Handling of adding a habit to firebase
-         */
+        // Handling of adding a habit to firebase
         _db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = _db.collection("Habits");
         HashMap<String, Habit> firebaseData = new HashMap<>();
