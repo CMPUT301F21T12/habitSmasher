@@ -181,15 +181,15 @@ public class HabitListFragment extends Fragment {
 
 
     public void updateAfterEdit(String title, String reason, Date date, int pos) {
-        _habitList.editHabit(title, reason, date, pos);
         final CollectionReference collectionReference = _db.collection("Habits");
-
+        String oldHabitTitle = _habitList.getHabitList().get(pos).getTitle();
+        _habitList.editHabit(title, reason, date, pos);
         // storing in database
         HashMap<String, Object> habitData = new HashMap<>();
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
-        collectionReference.document(title)
+        collectionReference.document(oldHabitTitle)
                 .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -204,7 +204,5 @@ public class HabitListFragment extends Fragment {
                     }
                 });;
         _habitItemAdapter.notifyItemChanged(pos);
-        _editButton.setVisibility(View.INVISIBLE);
-        _deleteButton.setVisibility(View.INVISIBLE);
     }
 }
