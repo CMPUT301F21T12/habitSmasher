@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,13 +36,18 @@ public class HabitListFragment extends Fragment {
 
     private final HabitList _habitList = new HabitList();
     private HabitItemAdapter _habitItemAdapter;
-    FirebaseFirestore _db;
+    FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        _habitItemAdapter = new HabitItemAdapter(context, _habitList);
+
+        // populate the list with existing items in the database
+        FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
+                .setQuery(_db.collection("Habits"), Habit.class)
+                .build();
+        _habitItemAdapter = new HabitItemAdapter(options);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
@@ -62,6 +68,17 @@ public class HabitListFragment extends Fragment {
 
         initializeRecyclerView(layoutManager, view);
         return view;
+    }
+
+    @Override public void onStart() {
+        super.onStart();
+        _habitItemAdapter.startListening();
+    }
+
+    @Override public void onStop()
+    {
+        super.onStop();
+        _habitItemAdapter.stopListening();
     }
 
     /**
@@ -121,22 +138,25 @@ public class HabitListFragment extends Fragment {
     }
 
     /**
-     * This method is responsible for adding a new habit to the database
+     * This method is responsible for adding a new habit to the firestore database
      * @param title the habit title
      * @param reason the habit reason
      * @param date the habit date
      */
-    public void addHabitToDatabase(String title, String reason, Date date){
+    public void addHabitToDatabase(String title, String reason, Date date) {
         /**
          * Handling of adding a habit to firebase
          */
-        _db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = _db.collection("Habits");
-        HashMap<String, Habit> firebaseData = new HashMap<>();
-        firebaseData.put(title, new Habit(title, reason, date));
+        HashMap<String, Object> habitData = new HashMap<>();
+
+        habitData.put("title", title);
+        habitData.put("reason", reason);
+        habitData.put("date", date);
+
         collectionReference
                 .document(title)
-                .set(firebaseData)
+                .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
