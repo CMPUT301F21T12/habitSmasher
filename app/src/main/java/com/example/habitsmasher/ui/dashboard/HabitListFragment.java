@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,16 +36,17 @@ public class HabitListFragment extends Fragment {
     private Button _editButton;
     private Button _deleteButton;
     private HabitListFragment _fragment = this;
-    private CollectionReference collectionReference;
-    private FirebaseFirestore _db;
+    FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        _db = FirebaseFirestore.getInstance();
-        collectionReference = _db.collection("Habits");
-        _habitItemAdapter = new HabitItemAdapter(context, _habitList, _fragment);
+        // populate the list with existing items in the database
+        FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
+                .setQuery(_db.collection("Habits"), Habit.class)
+                .build();
+        _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
@@ -58,7 +60,7 @@ public class HabitListFragment extends Fragment {
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openHabitDialog();
+                openAddHabitDialogBox();
             }
         });
 
@@ -66,7 +68,21 @@ public class HabitListFragment extends Fragment {
         return view;
     }
 
-    private void openHabitDialog() {
+    @Override public void onStart() {
+        super.onStart();
+        _habitItemAdapter.startListening();
+    }
+
+    @Override public void onStop()
+    {
+        super.onStop();
+        _habitItemAdapter.stopListening();
+    }
+
+    /**
+     * This helper method is responsible for opening the add habit dialog box
+     */
+    private void openAddHabitDialogBox() {
         AddHabitDialog addHabitDialog = new AddHabitDialog();
         addHabitDialog.setCancelable(true);
         addHabitDialog.setTargetFragment(HabitListFragment.this, 1);
@@ -126,17 +142,25 @@ public class HabitListFragment extends Fragment {
     public void addNewHabit(Habit habit) {
         _habitList.addHabit(habit);
     }
+
+    /**
+     * This method is responsible for adding a new habit to the firestore database
+     * @param title the habit title
+     * @param reason the habit reason
+     * @param date the habit date
+     */
     public void addHabitToDatabase(String title, String reason, Date date){
-        /**
-         * Handling of adding a habit to firebase
-         */
-        _db = FirebaseFirestore.getInstance();
+        // Handling of adding a habit to firebase
         final CollectionReference collectionReference = _db.collection("Habits");
-        HashMap<String, Habit> firebaseData = new HashMap<>();
-        firebaseData.put(title, new Habit(title, reason, date));
+        HashMap<String, Object> habitData = new HashMap<>();
+
+        habitData.put("title", title);
+        habitData.put("reason", reason);
+        habitData.put("date", date);
+
         collectionReference
                 .document(title)
-                .set(firebaseData)
+                .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -158,11 +182,27 @@ public class HabitListFragment extends Fragment {
 
     public void updateAfterEdit(String title, String reason, Date date, int pos) {
         _habitList.editHabit(title, reason, date, pos);
+        final CollectionReference collectionReference = _db.collection("Habits");
 
         // storing in database
-        HashMap<String, Habit> habitHashMap = new HashMap<>();
-        habitHashMap.put(title, new Habit(title, reason, date));
-        collectionReference.document(title).set(habitHashMap);
+        HashMap<String, Object> habitData = new HashMap<>();
+        habitData.put("title", title);
+        habitData.put("reason", reason);
+        habitData.put("date", date);
+        collectionReference.document(title)
+                .set(habitData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Data successfully added.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Data failed to be added." + e.toString());
+                    }
+                });;
         _habitItemAdapter.notifyItemChanged(pos);
         _editButton.setVisibility(View.INVISIBLE);
         _deleteButton.setVisibility(View.INVISIBLE);
