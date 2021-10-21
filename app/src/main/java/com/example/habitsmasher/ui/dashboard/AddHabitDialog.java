@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
 
 import java.text.DateFormat;
@@ -96,7 +97,7 @@ public class AddHabitDialog extends DialogFragment{
                         (!(habitDateInput.equals("")))&&
                         (!(_invalidDate))
                 ) {
-                    _habitListFragment.addNewHabit(new Habit(habitTitleInput, habitReasonInput, habitDate));
+                    _habitListFragment.addNewHabit(new Habit(habitTitleInput, habitReasonInput, habitDate, new HabitEventList()));
                     _habitListFragment.addHabitToDatabase(habitTitleInput, habitReasonInput, habitDate);
                     getDialog().dismiss();
                 } else{

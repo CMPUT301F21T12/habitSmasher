@@ -13,8 +13,8 @@ public class HabitList extends ArrayList{
         return _habits;
     }
 
-    public void addHabit(String title, String reason, Date date) {
-        Habit newHabit = new Habit(title, reason, date);
+    public void addHabit(String title, String reason, Date date, HabitEventList habitEvents) {
+        Habit newHabit = new Habit(title, reason, date, habitEvents);
         _habits.add(newHabit);
         //addHabitToDatabase(title, reason, date);
     }
