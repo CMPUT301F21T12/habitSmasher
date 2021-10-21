@@ -23,29 +23,52 @@ import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HabitListFragment extends Fragment {
     private static final String TAG = "DashboardFragment";
-    private final HabitList _habitList = new HabitList();
+    private static final HabitList _habitList = new HabitList();
     private HabitItemAdapter _habitItemAdapter;
     private Button _editButton;
     private Button _deleteButton;
     private HabitListFragment _fragment = this;
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
+    final CollectionReference collectionReference = _db.collection("Habits");
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
+
         // populate the list with existing items in the database
         FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
                 .setQuery(_db.collection("Habits"), Habit.class)
                 .build();
+
+        // temp fix
+        Task<QuerySnapshot> querySnapshotTask = _db.collection("Habits").get();
+        while (!querySnapshotTask.isComplete());
+        List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+        for (int i = 0; i < snapshotList.size(); i++) {
+            Map<String, Object> extractMap = snapshotList.get(i).getData();
+            String title = (String) extractMap.get("title");
+            String reason = (String) extractMap.get("reason");
+            Timestamp date = (Timestamp) extractMap.get("date");
+            _habitList.addHabit(title, reason, date.toDate());
+        }
+
         _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
@@ -68,6 +91,7 @@ public class HabitListFragment extends Fragment {
         return view;
     }
 
+    /*
     @Override public void onStart() {
         super.onStart();
         _habitItemAdapter.startListening();
@@ -78,6 +102,7 @@ public class HabitListFragment extends Fragment {
         super.onStop();
         _habitItemAdapter.stopListening();
     }
+    */
 
     /**
      * This helper method is responsible for opening the add habit dialog box
@@ -151,7 +176,6 @@ public class HabitListFragment extends Fragment {
      */
     public void addHabitToDatabase(String title, String reason, Date date){
         // Handling of adding a habit to firebase
-        final CollectionReference collectionReference = _db.collection("Habits");
         HashMap<String, Object> habitData = new HashMap<>();
 
         habitData.put("title", title);
@@ -181,7 +205,6 @@ public class HabitListFragment extends Fragment {
 
 
     public void updateAfterEdit(String title, String reason, Date date, int pos) {
-        final CollectionReference collectionReference = _db.collection("Habits");
         String oldHabitTitle = _habitList.getHabitList().get(pos).getTitle();
         _habitList.editHabit(title, reason, date, pos);
         // storing in database
@@ -203,6 +226,6 @@ public class HabitListFragment extends Fragment {
                         Log.d(TAG, "Data failed to be added." + e.toString());
                     }
                 });;
-        _habitItemAdapter.notifyItemChanged(pos);
+        _habitItemAdapter.notifyDataSetChanged();
     }
 }

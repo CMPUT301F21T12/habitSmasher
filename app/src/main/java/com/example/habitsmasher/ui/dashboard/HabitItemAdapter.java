@@ -72,6 +72,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         setOnClickListenerForHabit(holder, position);
     }
 
+    /*
     @Override
     public void onDataChanged() {
         // populate local List to match database
@@ -80,6 +81,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         }
         super.onDataChanged();
     }
+    */
 
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
         holder._habitRows.setOnClickListener(view -> openHabitView(holder, position));
@@ -93,7 +95,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      * This is the position of the selected habit item
      */
     private void openHabitView(HabitViewHolder holder, int position) {
-        Habit currentHabit = _snapshots.get(position);
+        Habit currentHabit = _habits.getHabitList().get(position);
         // Create Habit View Fragment with all required parameters passed in
         HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(), currentHabit.getDate().toString());
         // Replace the current fragment with the habit view
@@ -105,15 +107,17 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
 
     @Override
     public int getItemCount() {
-        return _snapshots.size();
+        return _habits.getHabitList().size();
     }
 
+    /*
     public void populateHabitList() {
         for (int i = 0; i < _snapshots.size(); i++) {
             Habit addHabit = _snapshots.get(i);
             _habits.getHabitList().add(addHabit);
         }
     }
+     */
 
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
