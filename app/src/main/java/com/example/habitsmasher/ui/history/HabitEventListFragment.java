@@ -14,33 +14,45 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HabitEventListFragment extends Fragment {
     private HabitEventList _habitEventList = new HabitEventList();
     private HabitEventItemAdapter _habitEventItemAdapter;
+    private Habit _parentHabit;
     FirebaseFirestore _db;
+
+    public HabitEventListFragment (Habit parentHabit) {
+        super();
+        this._parentHabit = parentHabit;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
 
-        // TODO: Populate the list with existing items in the database
-
+        // Populate the list with existing items in the database, query term is parent habit name
+        FirestoreRecyclerOptions<HabitEvent> options = new FirestoreRecyclerOptions.Builder<HabitEvent>()
+                .setQuery(_db.collection(_parentHabit.getTitle()), HabitEvent.class)
+                .build();
         _habitEventItemAdapter = new HabitEventItemAdapter(options, getActivity());
 
+        // Inflate habit event list view
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         View view = inflater.inflate(R.layout.fragment_habit_event_list, container, false);
 
+        // Add new habit fab button
         FloatingActionButton addHabitEventFab = view.findViewById(R.id.add_habit_event_fab);
 
         // TODO: Implement adding new habit event
 
         initializeRecyclerView(layoutManager, view);
-
         return view;
     }
 
@@ -73,7 +85,6 @@ public class HabitEventListFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             // if the habit row is swiped to the left, remove it from the list and notify adapter
             _habitEventList.remove(viewHolder.getAdapterPosition());
-
             _habitEventItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
         }
     };
