@@ -77,7 +77,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     private void openHabitView(HabitViewHolder holder, int position) {
         Habit currentHabit = _snapshots.get(position);
         // Create Habit View Fragment with all required parameters passed in
-        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(), currentHabit.getDate().toString());
+        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit);
         // Replace the current fragment with the habit view
         FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);

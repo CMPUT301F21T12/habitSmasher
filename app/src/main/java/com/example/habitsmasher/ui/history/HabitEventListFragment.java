@@ -33,6 +33,23 @@ public class HabitEventListFragment extends Fragment {
         this._parentHabit = parentHabit;
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param parentHabit (Habit): The habit for which the habit events are being displayed
+     * @return A new instance of fragment HabitEventListFragment.
+     */
+    public static HabitEventListFragment newInstance(Habit parentHabit) {
+        HabitEventListFragment fragment = new HabitEventListFragment(parentHabit);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
