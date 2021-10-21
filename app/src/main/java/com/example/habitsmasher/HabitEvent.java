@@ -1,5 +1,7 @@
 package com.example.habitsmasher;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.Date;
 
 /**
@@ -38,6 +40,7 @@ public class HabitEvent {
      * Gets the start date of a habit event
      * @return startDate: The start date of a habit event
      */
+    @PropertyName("startDate")
     public Date getStartDate() {
         return _startDate;
     }
@@ -54,6 +57,7 @@ public class HabitEvent {
      * Gets the comment of a habit event
      * @return comment: The comment of a habit event
      */
+    @PropertyName("comment")
     public String getComment() {
         return _comment;
     }
@@ -70,6 +74,7 @@ public class HabitEvent {
      * Gets the picture URL of a habit event
      * @return pictureURL: The URL of the picture of the habit event
      */
+    @PropertyName("picture")
     public String getPictureURL() {
         return _pictureURL;
     }

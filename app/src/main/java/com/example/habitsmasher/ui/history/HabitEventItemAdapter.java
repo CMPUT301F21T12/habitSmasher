@@ -9,41 +9,47 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.ObservableSnapshotArray;
 
-public class HabitEventItemAdapter extends RecyclerView.Adapter<HabitEventItemAdapter.HabitEventViewHolder> {
-    private final Context _context;
+public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
+    private Context _context;
+    private final FragmentActivity _activity;
+    private final ObservableSnapshotArray<HabitEvent> _snapshots;
     private static HabitEventList _habitEvents;
 
     /**
-     * Default constructor
-     * @param context (Context): The context of the parent initializing the adapter
-     * @param habitEvents (HabitEventList): The list of habit events
+     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
+     * FirestoreRecyclerOptions} for configuration options.
+     *
+     * @param options the firestore entities
      */
-    public HabitEventItemAdapter(Context context, HabitEventList habitEvents) {
-        _context = context;
-        _habitEvents = habitEvents;
+    public HabitEventItemAdapter(@NonNull FirestoreRecyclerOptions<HabitEvent> options, FragmentActivity activity) {
+        super(options);
+        _snapshots = options.getSnapshots();
+        _activity = activity;
     }
 
     @NonNull
     @Override
     public HabitEventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        _context = parent.getContext();
         View view = LayoutInflater.from(_context).inflate(R.layout.habit_event_row, parent, false);
         return new HabitEventViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HabitEventViewHolder holder, int position) {
-        // Get current habit event
-        HabitEvent currentHabitEvent = _habitEvents.getHabitEvents().get(position);
-
+    public void onBindViewHolder(@NonNull HabitEventViewHolder holder, int position, @NonNull HabitEvent habitEvent) {
         // Set UI elements of habit event
-        holder._habitEventDate.setText(currentHabitEvent.getStartDate().toString());
-        holder._habitEventComment.setText(currentHabitEvent.getComment());
+        holder._habitEventDate.setText(habitEvent.getStartDate().toString());
+        holder._habitEventComment.setText(habitEvent.getComment());
 
         // TODO: Implement image setting too
         // TODO: Set on click listener

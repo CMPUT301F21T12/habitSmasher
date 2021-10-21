@@ -27,7 +27,10 @@ public class HabitEventListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        _habitEventItemAdapter = new HabitEventItemAdapter(context, _habitEventList);
+
+        // TODO: Populate the list with existing items in the database
+
+        _habitEventItemAdapter = new HabitEventItemAdapter(options, getActivity());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         View view = inflater.inflate(R.layout.fragment_habit_event_list, container, false);
