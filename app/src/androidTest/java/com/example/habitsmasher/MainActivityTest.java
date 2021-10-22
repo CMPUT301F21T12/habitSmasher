@@ -70,4 +70,16 @@ public class MainActivityTest {
         // ensure that the app has transitioned to the Notifications screen
         assertTrue(solo.waitForText("Notifications", 2, 2000));
     }
+
+    /**
+     * Make sure that the home screen is displayed when the app starts
+     */
+    @Test
+    public void ensureHomeScreenDisplayedOnStart(){
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        // ensure that the app has transitioned to the Notifications screen
+        assertTrue(solo.waitForText("Home", 2, 2000));
+    }
 }
