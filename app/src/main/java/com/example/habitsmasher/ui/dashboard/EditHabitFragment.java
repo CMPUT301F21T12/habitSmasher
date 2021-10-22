@@ -77,6 +77,7 @@ public class EditHabitFragment extends DialogFragment {
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
 
+
                 // check if fields are ok, return and display error message if not
                 if (habitTitle.length() == 0 || reasonText.length() == 0 || dateText.length() == 0) {
                     // empty field case

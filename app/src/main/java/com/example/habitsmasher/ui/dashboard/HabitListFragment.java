@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -58,6 +59,7 @@ public class HabitListFragment extends Fragment {
                 .build();
 
         // temp fix
+        /*
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Habits").get();
         while (!querySnapshotTask.isComplete());
         List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
@@ -68,6 +70,7 @@ public class HabitListFragment extends Fragment {
             Timestamp date = (Timestamp) extractMap.get("date");
             _habitList.addHabit(title, reason, date.toDate());
         }
+        */
 
         _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
@@ -91,7 +94,6 @@ public class HabitListFragment extends Fragment {
         return view;
     }
 
-    /*
     @Override public void onStart() {
         super.onStart();
         _habitItemAdapter.startListening();
@@ -102,7 +104,6 @@ public class HabitListFragment extends Fragment {
         super.onStop();
         _habitItemAdapter.stopListening();
     }
-    */
 
     /**
      * This helper method is responsible for opening the add habit dialog box
@@ -205,13 +206,17 @@ public class HabitListFragment extends Fragment {
 
 
     public void updateAfterEdit(String title, String reason, Date date, int pos) {
-        String oldHabitTitle = _habitList.getHabitList().get(pos).getTitle();
-        _habitList.editHabit(title, reason, date, pos);
+        //String oldHabitTitle = _habitList.getHabitList().get(pos).getTitle();
+        String oldHabitTitle = _habitItemAdapter._snapshots.get(pos).getTitle();
+
+        //_habitList.editHabit(title, reason, date, pos);
         // storing in database
         HashMap<String, Object> habitData = new HashMap<>();
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
+        collectionReference.document(oldHabitTitle).update(habitData);
+        /*
         collectionReference.document(oldHabitTitle)
                 .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -225,7 +230,10 @@ public class HabitListFragment extends Fragment {
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "Data failed to be added." + e.toString());
                     }
-                });;
+                });
+         */
+        _editButton.setVisibility(View.INVISIBLE);
+        _deleteButton.setVisibility(View.INVISIBLE);
         _habitItemAdapter.notifyDataSetChanged();
     }
 }

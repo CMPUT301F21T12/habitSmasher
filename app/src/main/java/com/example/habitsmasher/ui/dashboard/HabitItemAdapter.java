@@ -37,7 +37,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     private static HabitList _habits;
     private static HabitListFragment _habitListFragment;
     private final FragmentActivity _activity;
-    private final ObservableSnapshotArray<Habit> _snapshots;
+    public final ObservableSnapshotArray<Habit> _snapshots;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -58,7 +58,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         _context = parent.getContext();
         View view = LayoutInflater.from(_context).inflate(R.layout.habit_row, parent, false);
-        return new HabitViewHolder(view);
+        return new HabitViewHolder(view, _snapshots);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         }
         super.onDataChanged();
     }
-    */
+     */
 
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
         holder._habitRows.setOnClickListener(view -> openHabitView(holder, position));
@@ -95,7 +95,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      * This is the position of the selected habit item
      */
     private void openHabitView(HabitViewHolder holder, int position) {
-        Habit currentHabit = _habits.getHabitList().get(position);
+        Habit currentHabit = _snapshots.get(position);
         // Create Habit View Fragment with all required parameters passed in
         HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(), currentHabit.getDate().toString());
         // Replace the current fragment with the habit view
@@ -107,7 +107,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
 
     @Override
     public int getItemCount() {
-        return _habits.getHabitList().size();
+        return _snapshots.size();
     }
 
     /*
@@ -125,7 +125,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         private Button _editButton;
         private Button _deleteButton;
 
-        public HabitViewHolder(@NonNull View itemView) {
+        public HabitViewHolder(@NonNull View itemView, ObservableSnapshotArray<Habit> _snapshots) {
             super(itemView);
 
             _habitRows = itemView.findViewById(R.id.habit_rows);
@@ -138,7 +138,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
                 public void onClick(View v) {
                     int buttonPos = getAdapterPosition();
                     EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos,
-                            _habits.getHabitList().get(buttonPos), _habitListFragment);
+                    _snapshots.get(buttonPos), _habitListFragment);
                     editHabitFragment.show(_habitListFragment.getFragmentManager(), "Edit Habit");
                 }
             });
