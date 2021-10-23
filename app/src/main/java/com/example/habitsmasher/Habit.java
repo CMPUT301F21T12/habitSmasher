@@ -13,10 +13,10 @@ public class Habit {
     // very rough implementation of a unique ID used to identify habits in the database
     public static long _habitIdCounter = 0;
     public static HashSet<Long> _habitIdSet = new HashSet<Long>();
-    private long _habitId;
     private String _title;
     private String _reason;
     private Date _date;
+    private long _habitId;
 
     public Habit () {
         // needed for firestore
@@ -84,6 +84,10 @@ public class Habit {
         _date = date;
     }
 
+    /**
+     *
+     * @return _habitId: the ID of the habit
+     */
     @PropertyName("id")
     public long getHabitId() {
         return _habitId;

@@ -58,7 +58,6 @@ public class HabitListFragment extends Fragment {
                 .setQuery(_db.collection("Habits"), Habit.class)
                 .build();
 
-        // weird way to get HabitIdCounter in Habit to match
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Habits").get();
         while (!querySnapshotTask.isComplete());
         List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
