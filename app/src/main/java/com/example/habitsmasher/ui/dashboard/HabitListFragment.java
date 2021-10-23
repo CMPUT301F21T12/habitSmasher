@@ -32,7 +32,7 @@ import java.util.HashMap;
  * The habit list fragment is a container for the list of habits
  */
 public class HabitListFragment extends Fragment {
-    private static final String TAG = "DashboardFragment";
+    private static final String TAG = "HabitListFragment";
 
     private static final HabitList _habitList = new HabitList();
     private HabitItemAdapter _habitItemAdapter;
