@@ -9,6 +9,9 @@ import java.util.Date;
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
  */
 public class Habit {
+    // very rough implementation of a unique ID used to identify habits in the database
+    private static int _habitIdCounter = 0;
+    private int _habitId;
     private String _title;
     private String _reason;
     private Date _date;
@@ -18,9 +21,11 @@ public class Habit {
     }
 
     public Habit (String title, String reason, Date date) {
+        _habitId = _habitIdCounter;
         _title = title;
         _reason = reason;
         _date = date;
+        _habitIdCounter++;
     }
 
     /**
@@ -72,5 +77,9 @@ public class Habit {
      */
     public void setDate(Date date) {
         _date = date;
+    }
+
+    public int getHabitId() {
+        return _habitId;
     }
 }

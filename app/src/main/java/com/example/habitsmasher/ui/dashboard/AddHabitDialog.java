@@ -96,8 +96,10 @@ public class AddHabitDialog extends DialogFragment{
                         (!(habitDateInput.equals("")))&&
                         (!(_invalidDate))
                 ) {
+                    Habit newHabit = new Habit(habitTitleInput, habitReasonInput, habitDate);
                     //_habitListFragment.addNewHabit(new Habit(habitTitleInput, habitReasonInput, habitDate));
-                    _habitListFragment.addHabitToDatabase(habitTitleInput, habitReasonInput, habitDate);
+                    _habitListFragment.addHabitToDatabase(habitTitleInput, habitReasonInput, habitDate,
+                            newHabit.getHabitId());
                     getDialog().dismiss();
                 } else{
 

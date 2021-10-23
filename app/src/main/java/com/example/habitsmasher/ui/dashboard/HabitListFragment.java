@@ -175,7 +175,7 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      */
-    public void addHabitToDatabase(String title, String reason, Date date){
+    public void addHabitToDatabase(String title, String reason, Date date, Integer id){
         // Handling of adding a habit to firebase
         HashMap<String, Object> habitData = new HashMap<>();
 
@@ -184,7 +184,7 @@ public class HabitListFragment extends Fragment {
         habitData.put("date", date);
 
         collectionReference
-                .document(title)
+                .document(id.toString())
                 .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -207,7 +207,7 @@ public class HabitListFragment extends Fragment {
 
     public void updateAfterEdit(String title, String reason, Date date, int pos) {
         //String oldHabitTitle = _habitList.getHabitList().get(pos).getTitle();
-        String oldHabitTitle = _habitItemAdapter._snapshots.get(pos).getTitle();
+        Integer habitId = _habitItemAdapter._snapshots.get(pos).getHabitId();
 
         //_habitList.editHabit(title, reason, date, pos);
         // storing in database
@@ -215,7 +215,7 @@ public class HabitListFragment extends Fragment {
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
-        collectionReference.document(oldHabitTitle).update(habitData);
+        collectionReference.document(habitId.toString()).update(habitData);
         /*
         collectionReference.document(oldHabitTitle)
                 .set(habitData)
