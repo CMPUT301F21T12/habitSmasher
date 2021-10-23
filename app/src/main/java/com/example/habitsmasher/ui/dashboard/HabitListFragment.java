@@ -58,19 +58,15 @@ public class HabitListFragment extends Fragment {
                 .setQuery(_db.collection("Habits"), Habit.class)
                 .build();
 
-        // temp fix
-        /*
+        // weird way to get HabitIdCounter in Habit to match
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Habits").get();
         while (!querySnapshotTask.isComplete());
         List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
         for (int i = 0; i < snapshotList.size(); i++) {
             Map<String, Object> extractMap = snapshotList.get(i).getData();
-            String title = (String) extractMap.get("title");
-            String reason = (String) extractMap.get("reason");
-            Timestamp date = (Timestamp) extractMap.get("date");
-            _habitList.addHabit(title, reason, date.toDate());
+            Long id = (Long) extractMap.get("id");
+            Habit._habitIdSet.add(id);
         }
-        */
 
         _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
@@ -175,13 +171,14 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      */
-    public void addHabitToDatabase(String title, String reason, Date date, Integer id){
+    public void addHabitToDatabase(String title, String reason, Date date, Long id){
         // Handling of adding a habit to firebase
         HashMap<String, Object> habitData = new HashMap<>();
 
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
+        habitData.put("id", id);
 
         collectionReference
                 .document(id.toString())
@@ -207,7 +204,7 @@ public class HabitListFragment extends Fragment {
 
     public void updateAfterEdit(String title, String reason, Date date, int pos) {
         //String oldHabitTitle = _habitList.getHabitList().get(pos).getTitle();
-        Integer habitId = _habitItemAdapter._snapshots.get(pos).getHabitId();
+        Long habitId = _habitItemAdapter._snapshots.get(pos).getHabitId();
 
         //_habitList.editHabit(title, reason, date, pos);
         // storing in database
@@ -215,9 +212,8 @@ public class HabitListFragment extends Fragment {
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
-        collectionReference.document(habitId.toString()).update(habitData);
-        /*
-        collectionReference.document(oldHabitTitle)
+        //collectionReference.document(habitId.toString()).update(habitData);
+        collectionReference.document(habitId.toString())
                 .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -231,7 +227,6 @@ public class HabitListFragment extends Fragment {
                         Log.d(TAG, "Data failed to be added." + e.toString());
                     }
                 });
-         */
         _editButton.setVisibility(View.INVISIBLE);
         _deleteButton.setVisibility(View.INVISIBLE);
         _habitItemAdapter.notifyDataSetChanged();

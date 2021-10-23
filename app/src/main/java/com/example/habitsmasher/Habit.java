@@ -3,6 +3,7 @@ package com.example.habitsmasher;
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  * This is the Habit class
@@ -10,8 +11,9 @@ import java.util.Date;
  */
 public class Habit {
     // very rough implementation of a unique ID used to identify habits in the database
-    private static int _habitIdCounter = 0;
-    private int _habitId;
+    public static long _habitIdCounter = 0;
+    public static HashSet<Long> _habitIdSet = new HashSet<Long>();
+    private long _habitId;
     private String _title;
     private String _reason;
     private Date _date;
@@ -21,11 +23,14 @@ public class Habit {
     }
 
     public Habit (String title, String reason, Date date) {
+        while (_habitIdSet.contains(_habitIdCounter)) {
+            _habitIdCounter++;
+        }
+        _habitIdSet.add(_habitIdCounter);
         _habitId = _habitIdCounter;
         _title = title;
         _reason = reason;
         _date = date;
-        _habitIdCounter++;
     }
 
     /**
@@ -79,7 +84,8 @@ public class Habit {
         _date = date;
     }
 
-    public int getHabitId() {
+    @PropertyName("id")
+    public long getHabitId() {
         return _habitId;
     }
 }
