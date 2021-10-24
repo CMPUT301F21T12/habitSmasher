@@ -160,9 +160,11 @@ public class HabitListFragment extends Fragment {
             _deleteButton = habitView.findViewById(R.id.delete_button);
 
             if (direction == ItemTouchHelper.LEFT) {
-               habitViewHolder.setButtonsVisible();
+                _editButton.setVisibility(View.VISIBLE);
+                _deleteButton.setVisibility(View.VISIBLE);
             } else if (direction == ItemTouchHelper.RIGHT) {
-                habitViewHolder.setButtonsInvisible();
+                _editButton.setVisibility(View.INVISIBLE);
+                _deleteButton.setVisibility(View.INVISIBLE);
             }
             _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
         }
