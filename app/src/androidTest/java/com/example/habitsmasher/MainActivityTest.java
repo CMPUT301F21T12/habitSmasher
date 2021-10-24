@@ -57,18 +57,18 @@ public class MainActivityTest {
     }
 
     /**
-     * Navigate to the notifications using the bottom navigation
+     * Navigate to the profile page using the bottom navigation
      */
     @Test
-    public void navigateToNotifications(){
+    public void navigateToUserProfile(){
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // click on the Notifications tab in the bottom navigation bar
-        solo.clickOnText("Notifications");
+        solo.clickOnText("Profile");
 
         // ensure that the app has transitioned to the Notifications screen
-        assertTrue(solo.waitForText("Notifications", 2, 2000));
+        assertTrue(solo.waitForText("Profile", 2, 2000));
     }
 
     /**
