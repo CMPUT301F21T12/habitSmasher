@@ -49,7 +49,7 @@ public class HabitListFragment extends Fragment {
     private HabitListFragment _fragment = this;
 
     // list to store all habitIds for all habits in database
-    private List<Long> _habitIdList = new ArrayList<>();
+    private HashSet<Long> _habitIdSet = new HashSet<>();
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
     final CollectionReference collectionReference = _db.collection("Habits");
 
@@ -71,7 +71,7 @@ public class HabitListFragment extends Fragment {
         for (int i = 0; i < snapshotList.size(); i++) {
             Map<String, Object> extractMap = snapshotList.get(i).getData();
             Long id = (Long) extractMap.get("habitId");
-            _habitIdList.add(id);
+            _habitIdSet.add(id);
         }
 
         _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
@@ -183,10 +183,10 @@ public class HabitListFragment extends Fragment {
 
         // find lowest positive non zero habitId that is not used by a habit currently
         long habitIdCounter = 1;
-        while (_habitIdList.contains(habitIdCounter)) {
+        while (_habitIdSet.contains(habitIdCounter)) {
             habitIdCounter++;
         }
-        _habitIdList.add(habitIdCounter);
+        _habitIdSet.add(habitIdCounter);
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
