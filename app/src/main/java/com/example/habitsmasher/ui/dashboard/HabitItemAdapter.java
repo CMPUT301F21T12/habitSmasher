@@ -154,6 +154,15 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
             });
 
         }
+        public void setButtonsVisible() {
+            _editButton.setVisibility(View.VISIBLE);
+            _deleteButton.setVisibility(View.VISIBLE);
+        }
+
+        public void setButtonsInvisible() {
+            _editButton.setVisibility(View.INVISIBLE);
+            _deleteButton.setVisibility(View.INVISIBLE);
+        }
     }
 }
 

@@ -153,15 +153,15 @@ public class HabitListFragment extends Fragment {
             // if the habit row is swiped to the left, spawn edit and delete button
             // if swiped to the right, despawn them
             View habitView = viewHolder.itemView;
+            HabitItemAdapter.HabitViewHolder habitViewHolder = (HabitItemAdapter.HabitViewHolder)
+                    viewHolder;
             _editButton = habitView.findViewById(R.id.edit_button);
             _deleteButton = habitView.findViewById(R.id.delete_button);
 
             if (direction == ItemTouchHelper.LEFT) {
-                _editButton.setVisibility(View.VISIBLE);
-                _deleteButton.setVisibility(View.VISIBLE);
+               habitViewHolder.setButtonsVisible();
             } else if (direction == ItemTouchHelper.RIGHT) {
-                _editButton.setVisibility(View.INVISIBLE);
-                _deleteButton.setVisibility(View.INVISIBLE);
+                habitViewHolder.setButtonsInvisible();
             }
             _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
         }
