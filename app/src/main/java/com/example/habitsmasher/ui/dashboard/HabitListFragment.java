@@ -33,8 +33,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,9 @@ public class HabitListFragment extends Fragment {
     private Button _editButton;
     private Button _deleteButton;
     private HabitListFragment _fragment = this;
+
+    // list to store all habitIds for all habits in database
+    private List<Long> _habitIdList = new ArrayList<>();
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
     final CollectionReference collectionReference = _db.collection("Habits");
 
@@ -58,13 +63,15 @@ public class HabitListFragment extends Fragment {
                 .setQuery(_db.collection("Habits"), Habit.class)
                 .build();
 
+        /* this code stores the habitId of the existing habits in a list, since snapshots
+        weirdly has the habitId 0 for all habits        */
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Habits").get();
         while (!querySnapshotTask.isComplete());
         List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
         for (int i = 0; i < snapshotList.size(); i++) {
             Map<String, Object> extractMap = snapshotList.get(i).getData();
-            Long id = (Long) extractMap.get("id");
-            Habit._habitIdSet.add(id);
+            Long id = (Long) extractMap.get("habitId");
+            _habitIdList.add(id);
         }
 
         _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
@@ -170,17 +177,25 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      */
-    public void addHabitToDatabase(String title, String reason, Date date, Long id){
+    public void addHabitToDatabase(String title, String reason, Date date){
         // Handling of adding a habit to firebase
         HashMap<String, Object> habitData = new HashMap<>();
 
+        // find lowest positive non zero habitId that is not used by a habit currently
+        long habitIdCounter = 1;
+        while (_habitIdList.contains(habitIdCounter)) {
+            habitIdCounter++;
+        }
+        _habitIdList.add(habitIdCounter);
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
-        habitData.put("id", id);
+        habitData.put("habitId", habitIdCounter);
+
+        Long habitIdDoc = habitIdCounter;
 
         collectionReference
-                .document(id.toString())
+                .document(habitIdDoc.toString())
                 .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -204,13 +219,13 @@ public class HabitListFragment extends Fragment {
     public void updateAfterEdit(String title, String reason, Date date, int pos) {
         //String oldHabitTitle = _habitList.getHabitList().get(pos).getTitle();
         Long habitId = _habitItemAdapter._snapshots.get(pos).getHabitId();
-
-        //_habitList.editHabit(title, reason, date, pos);
+        //_habitList.editHabit(title, reason, date, pos)
         // storing in database
         HashMap<String, Object> habitData = new HashMap<>();
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
+        habitData.put("habitId", habitId);
         //collectionReference.document(habitId.toString()).update(habitData);
         collectionReference.document(habitId.toString())
                 .set(habitData)

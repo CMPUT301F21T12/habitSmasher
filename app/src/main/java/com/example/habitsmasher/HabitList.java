@@ -14,7 +14,7 @@ public class HabitList extends ArrayList{
     }
 
     public void addHabit(String title, String reason, Date date) {
-        Habit newHabit = new Habit(title, reason, date);
+        Habit newHabit = new Habit(title, reason, date, 0);
         _habits.add(newHabit);
         //addHabitToDatabase(title, reason, date);
     }

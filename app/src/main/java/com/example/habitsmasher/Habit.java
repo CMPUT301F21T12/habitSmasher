@@ -11,8 +11,6 @@ import java.util.HashSet;
  */
 public class Habit {
     // very rough implementation of a unique ID used to identify habits in the database
-    public static long _habitIdCounter = 0;
-    public static HashSet<Long> _habitIdSet = new HashSet<Long>();
     private String _title;
     private String _reason;
     private Date _date;
@@ -22,12 +20,8 @@ public class Habit {
         // needed for firestore
     }
 
-    public Habit (String title, String reason, Date date) {
-        while (_habitIdSet.contains(_habitIdCounter)) {
-            _habitIdCounter++;
-        }
-        _habitIdSet.add(_habitIdCounter);
-        _habitId = _habitIdCounter;
+    public Habit (String title, String reason, Date date, long habitId) {
+        _habitId = habitId;
         _title = title;
         _reason = reason;
         _date = date;
@@ -88,8 +82,13 @@ public class Habit {
      *
      * @return _habitId: the ID of the habit
      */
-    @PropertyName("id")
+    @PropertyName("habitId")
     public long getHabitId() {
         return _habitId;
+    }
+
+    // should NEVER be used in practice, adding since it might be needed for _snapshots
+    public void setHabitId(long habitId) {
+        _habitId = habitId;
     }
 }
