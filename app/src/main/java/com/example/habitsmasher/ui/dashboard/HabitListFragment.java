@@ -41,7 +41,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HabitListFragment extends Fragment {
-    private static final String TAG = "DashboardFragment";
+
+    private static final String TAG = "HabitListFragment";
     private static final HabitList _habitList = new HabitList();
     private HabitItemAdapter _habitItemAdapter;
     private Button _editButton;
