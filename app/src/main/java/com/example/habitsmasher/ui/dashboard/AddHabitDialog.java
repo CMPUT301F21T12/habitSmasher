@@ -31,22 +31,25 @@ import java.util.Date;
  * Name: Mitch Tabian
  * Video Date: December 10, 2017
  */
-public class AddHabitDialog extends DialogFragment{
+public class AddHabitDialog extends DialogFragment {
 
     private static final String TAG = "AddHabitDialog";
-    private String DATE_FORMAT = "dd-MM-yyyy";
-    private String INCORRECT_TITLE_FORMAT = "Incorrect habit title entered";
-    private String INCORRECT_REASON_FORMAT = "Incorrect habit reason entered";
-    private String INCORRECT_BLANK_DATE = "Please enter a start date";
-    private String INCORRECT_DATE_FORMAT = "Habit start date format: dd-mm-yyyy";
+    private final String DATE_FORMAT = "dd-MM-yyyy";
+    private final String INCORRECT_TITLE_FORMAT = "Incorrect habit title entered";
+    private final String INCORRECT_REASON_FORMAT = "Incorrect habit reason entered";
+    private final String INCORRECT_BLANK_DATE = "Please enter a start date";
+    private final String INCORRECT_DATE_FORMAT = "Habit start date format: dd-mm-yyyy";
 
     private HabitListFragment _habitListFragment;
     private EditText _habitTitleEditText;
     private EditText _habitReasonEditText;
     private EditText _habitDateEditText;
-    private Button _confirmNewHabit;
-    private Button _cancelNewHabit;
     private boolean _invalidDate = false;
+    private final String _username;
+
+    public AddHabitDialog(String username) {
+        _username = username;
+    }
 
     @Nullable
     @Override
@@ -55,8 +58,8 @@ public class AddHabitDialog extends DialogFragment{
         _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
         _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
         _habitDateEditText = view.findViewById(R.id.habit_date_edit_text);
-        _confirmNewHabit = view.findViewById(R.id.confirm_habit);
-        _cancelNewHabit = view.findViewById(R.id.cancel_habit);
+        Button _confirmNewHabit = view.findViewById(R.id.confirm_habit);
+        Button _cancelNewHabit = view.findViewById(R.id.cancel_habit);
 
         _cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +100,7 @@ public class AddHabitDialog extends DialogFragment{
                         (!(_invalidDate))
                 ) {
                     _habitListFragment.addNewHabit(new Habit(habitTitleInput, habitReasonInput, habitDate));
-                    _habitListFragment.addHabitToDatabase(habitTitleInput, habitReasonInput, habitDate);
+                    _habitListFragment.addHabitToDatabase(habitTitleInput, habitReasonInput, habitDate, _username);
                     getDialog().dismiss();
                 } else{
 

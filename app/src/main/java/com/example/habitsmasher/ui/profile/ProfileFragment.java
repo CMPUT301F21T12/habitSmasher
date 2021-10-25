@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.User;
 
 public class ProfileFragment extends Fragment {
 
@@ -17,13 +18,15 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        User user = new User("TestUser", "123");
+
         TextView username = view.findViewById(R.id.username);
         TextView followers = view.findViewById(R.id.number_followers);
         TextView following = view.findViewById(R.id.number_following);
 
-        username.setText("@yourUsername");
-        followers.setText("0");
-        following.setText("0");
+        username.setText("@" + user.getUsername());
+        followers.setText(String.valueOf(user.getFollowerCount()));
+        following.setText(String.valueOf(user.getFollowingCount()));
 
         return view;
     }
