@@ -1,5 +1,6 @@
 package com.example.habitsmasher.ui.dashboard;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import com.example.habitsmasher.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -31,7 +35,7 @@ import java.util.Date;
  * Name: Mitch Tabian
  * Video Date: December 10, 2017
  */
-public class AddHabitDialog extends DialogFragment{
+public class AddHabitDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = "AddHabitDialog";
     private String DATE_FORMAT = "dd-MM-yyyy";
@@ -46,6 +50,7 @@ public class AddHabitDialog extends DialogFragment{
     private EditText _habitDateEditText;
     private Button _confirmNewHabit;
     private Button _cancelNewHabit;
+    private TextView _habitDateTextView;
     private boolean _invalidDate = false;
 
     @Nullable
@@ -54,10 +59,17 @@ public class AddHabitDialog extends DialogFragment{
         View view = inflater.inflate(R.layout.add_habit_dialog_box, container, false);
         _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
         _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
-        _habitDateEditText = view.findViewById(R.id.habit_date_edit_text);
+        //_habitDateEditText = view.findViewById(R.id.habit_date_edit_text);
+        _habitDateTextView = view.findViewById(R.id.habit_date_selection);
         _confirmNewHabit = view.findViewById(R.id.confirm_habit);
         _cancelNewHabit = view.findViewById(R.id.cancel_habit);
 
+        _habitDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDatePickerDialog();
+            }
+        });
         _cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,6 +135,25 @@ public class AddHabitDialog extends DialogFragment{
 
         return view;
     }
+
+    private void openDatePickerDialog(){
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(),
+                this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        int correctedMonth = month + 1;
+        String date = day + "/" + correctedMonth + "/" + year;
+        _habitDateTextView.setText(date);
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
