@@ -46,6 +46,7 @@ public class HabitListFragment extends Fragment {
 
     // dont need this, will delete if ok
     private static final HabitList _habitList = new HabitList();
+
     private HabitItemAdapter _habitItemAdapter;
     private HabitListFragment _fragment = this;
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
@@ -63,7 +64,7 @@ public class HabitListFragment extends Fragment {
 
         /*
          this extracts the habit IDs of the existing habits and puts it into a set of existing
-         habit IDs to ensure only unique habit IDs are produced
+         habit IDs to ensure only unique habit IDs are produced when adding new habits
          */
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Habits").get();
         while (!querySnapshotTask.isComplete());
@@ -158,7 +159,6 @@ public class HabitListFragment extends Fragment {
             cast into HabitViewHolder so we can use setButtonVisible and
             setButtonsInvisible methods
              */
-
             HabitItemAdapter.HabitViewHolder habitViewHolder = (HabitItemAdapter.HabitViewHolder)
                     viewHolder;
 
@@ -196,6 +196,7 @@ public class HabitListFragment extends Fragment {
         habitData.put("date", date);
         habitData.put("habitId", habitId);
 
+        // add habit to database, using it's habit ID as the document name
         _collectionReference
                 .document(habitId.toString())
                 .set(habitData)
@@ -247,6 +248,7 @@ public class HabitListFragment extends Fragment {
                     }
                 });
 
+        // will need to fix
         viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyDataSetChanged();
     }

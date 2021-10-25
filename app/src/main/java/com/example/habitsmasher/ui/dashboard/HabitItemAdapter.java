@@ -40,7 +40,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     private final FragmentActivity _activity;
     public final ObservableSnapshotArray<Habit> _snapshots;
 
-    // set of IDs used by Habits
+    // set of IDs used by existing Habits in the database
     public static HashSet<Long> _habitIdSet = new HashSet<>();
 
     /**
@@ -101,9 +101,9 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
 
     /**
      * Function that generates a habitID for a newly created habit
-     * Algothirm:
+     * Algorithm:
      * -Begin at 1 and check if value is in set of habit IDs in use by other habits
-     * -If value is in set, increment and check again
+     * -If value is in set, increment by 1 and check again
      * -If value is not in set, return as new HabitID
      * @return ID
      */
