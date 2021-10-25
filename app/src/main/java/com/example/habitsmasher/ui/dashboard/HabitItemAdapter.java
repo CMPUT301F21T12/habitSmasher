@@ -34,14 +34,13 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
 
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final Locale LOCALE = Locale.CANADA;
-    private Context _context;
-    private static HabitList _habits;
-    private static HabitListFragment _habitListFragment;
-    private final FragmentActivity _activity;
-    public final ObservableSnapshotArray<Habit> _snapshots;
-
     // set of IDs used by existing Habits in the database
     public static HashSet<Long> _habitIdSet = new HashSet<>();
+    private static HabitList _habits;
+    private static HabitListFragment _habitListFragment;
+    public final ObservableSnapshotArray<Habit> _snapshots;
+    private final FragmentActivity _activity;
+    private Context _context;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -49,12 +48,31 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      *
      * @param options the firestore entities
      */
-    public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options, FragmentActivity activity,HabitList habits,HabitListFragment fragment) {
+    public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options, FragmentActivity activity,
+                            HabitList habits, HabitListFragment fragment) {
         super(options);
         _snapshots = options.getSnapshots();
         _activity = activity;
         _habits = habits;
         _habitListFragment = fragment;
+    }
+
+    /**
+     * Function that generates a habitID for a newly created habit
+     * Algorithm:
+     * -Begin at 1 and check if value is in set of habit IDs in use by other habits
+     * -If value is in set, increment by 1 and check again
+     * -If value is not in set, return as new HabitID
+     *
+     * @return ID
+     */
+    public static long generateHabitId() {
+        long habitIdCounter = 1;
+        while (_habitIdSet.contains(habitIdCounter)) {
+            habitIdCounter++;
+        }
+        _habitIdSet.add(habitIdCounter);
+        return habitIdCounter;
     }
 
     @NonNull
@@ -76,43 +94,26 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         setOnClickListenerForHabit(holder, position);
     }
 
-
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
         holder._habitRows.setOnClickListener(view -> openHabitView(holder, position));
     }
 
     /**
      * This function opens the habit view
-     * @param holder
-     * This holds the values for the selected habit item
-     * @param position
-     * This is the position of the selected habit item
+     *
+     * @param holder   This holds the values for the selected habit item
+     * @param position This is the position of the selected habit item
      */
     private void openHabitView(HabitViewHolder holder, int position) {
         Habit currentHabit = _snapshots.get(position);
         // Create Habit View Fragment with all required parameters passed in
-        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(), currentHabit.getDate().toString());
+        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(),
+                currentHabit.getDate().toString());
         // Replace the current fragment with the habit view
         FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);
         // Load new fragment
         transaction.commit();
-    }
-
-    /**
-     * Function that generates a habitID for a newly created habit
-     * Algorithm:
-     * -Begin at 1 and check if value is in set of habit IDs in use by other habits
-     * -If value is in set, increment by 1 and check again
-     * -If value is not in set, return as new HabitID
-     * @return ID
-     */
-    public static long generateHabitId() {
-        long habitIdCounter = 1;
-        while (_habitIdSet.contains(habitIdCounter)) {
-            habitIdCounter++;
-        }
-        return habitIdCounter;
     }
 
     @Override
@@ -125,6 +126,8 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         private final ConstraintLayout _habitRows;
         private Button _editButton;
         private Button _deleteButton;
+
+        // stores itself as an instance variable so it can be passed into EditHabitFragment
         private HabitViewHolder _habitViewHolder = this;
 
         public HabitViewHolder(@NonNull View itemView, ObservableSnapshotArray<Habit> _snapshots) {
@@ -140,13 +143,16 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
                 public void onClick(View v) {
                     int buttonPos = getAdapterPosition();
                     EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos,
-                    _snapshots.get(buttonPos), _habitListFragment, _habitViewHolder);
+                                                                                _snapshots.get(buttonPos),
+                                                                                _habitListFragment,
+                                                                                _habitViewHolder);
                     editHabitFragment.show(_habitListFragment.getFragmentManager(), "Edit Habit");
                 }
             });
 
             _deleteButton.setOnClickListener(new View.OnClickListener() {
                 int buttonPos = getAdapterPosition();
+
                 @Override
                 public void onClick(View v) {
                     /*
@@ -158,7 +164,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         }
 
         /**
-         * Sets the buttons in the ViewHolder to be visible
+         * Sets the Edit/Delete buttons in the ViewHolder of the Habit to be visible
          */
         public void setButtonsVisible() {
             _editButton.setVisibility(View.VISIBLE);
@@ -166,7 +172,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         }
 
         /**
-         * Sets the buttons in the Viewholder to be invisible
+         * Sets the Edit/Delete buttons in the ViewHolder of the Habit to be invisible
          */
         public void setButtonsInvisible() {
             _editButton.setVisibility(View.INVISIBLE);

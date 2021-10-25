@@ -63,7 +63,7 @@ public class HabitListFragment extends Fragment {
                 .build();
 
         /*
-         this extracts the habit IDs of the existing habits and puts it into a set of existing
+         This extracts the habit IDs of the existing habits and puts it into a set of existing
          habit IDs to ensure only unique habit IDs are produced when adding new habits
          */
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Habits").get();
@@ -156,7 +156,7 @@ public class HabitListFragment extends Fragment {
             View habitView = viewHolder.itemView;
 
             /*
-            cast into HabitViewHolder so we can use setButtonVisible and
+            Cast into HabitViewHolder so we can use setButtonVisible and
             setButtonsInvisible methods
              */
             HabitItemAdapter.HabitViewHolder habitViewHolder = (HabitItemAdapter.HabitViewHolder)
@@ -232,7 +232,7 @@ public class HabitListFragment extends Fragment {
         habitData.put("date", date);
         habitData.put("habitId", habitId);
 
-        // replaces the old fields of the Habit with the new fields
+        // replaces the old fields of the Habit with the new fields, using Habit ID to find document
         _collectionReference.document(habitId.toString())
                 .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -248,8 +248,8 @@ public class HabitListFragment extends Fragment {
                     }
                 });
 
-        // will need to fix
+        // will need to fix, should in theory despawn the buttons of the habit that is edited
         viewHolder.setButtonsInvisible();
-        _habitItemAdapter.notifyDataSetChanged();
+        _habitItemAdapter.notifyItemChanged(pos);
     }
 }
