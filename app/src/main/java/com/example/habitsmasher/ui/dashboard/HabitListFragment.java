@@ -43,16 +43,13 @@ import java.util.Map;
 public class HabitListFragment extends Fragment {
 
     private static final String TAG = "HabitListFragment";
+
+    // dont need this, will delete if ok
     private static final HabitList _habitList = new HabitList();
     private HabitItemAdapter _habitItemAdapter;
-    private Button _editButton;
-    private Button _deleteButton;
     private HabitListFragment _fragment = this;
-
-    // list to store all habitIds for all habits in database
-    private HashSet<Long> _habitIdSet = new HashSet<>();
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
-    final CollectionReference collectionReference = _db.collection("Habits");
+    final CollectionReference _collectionReference = _db.collection("Habits");
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,15 +61,17 @@ public class HabitListFragment extends Fragment {
                 .setQuery(_db.collection("Habits"), Habit.class)
                 .build();
 
-        /* this code stores the habitId of the existing habits in a list, since snapshots
-        weirdly has the habitId 0 for all habits        */
+        /*
+         this extracts the habit IDs of the existing habits and puts it into a set of existing
+         habit IDs to ensure only unique habit IDs are produced
+         */
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Habits").get();
         while (!querySnapshotTask.isComplete());
         List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
         for (int i = 0; i < snapshotList.size(); i++) {
             Map<String, Object> extractMap = snapshotList.get(i).getData();
             Long id = (Long) extractMap.get("habitId");
-            _habitIdSet.add(id);
+            HabitItemAdapter._habitIdSet.add(id);
         }
 
         _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
@@ -154,22 +153,25 @@ public class HabitListFragment extends Fragment {
             // if the habit row is swiped to the left, spawn edit and delete button
             // if swiped to the right, despawn them
             View habitView = viewHolder.itemView;
+
+            /*
+            cast into HabitViewHolder so we can use setButtonVisible and
+            setButtonsInvisible methods
+             */
+
             HabitItemAdapter.HabitViewHolder habitViewHolder = (HabitItemAdapter.HabitViewHolder)
                     viewHolder;
-            _editButton = habitView.findViewById(R.id.edit_button);
-            _deleteButton = habitView.findViewById(R.id.delete_button);
 
             if (direction == ItemTouchHelper.LEFT) {
-                _editButton.setVisibility(View.VISIBLE);
-                _deleteButton.setVisibility(View.VISIBLE);
+                habitViewHolder.setButtonsVisible();
             } else if (direction == ItemTouchHelper.RIGHT) {
-                _editButton.setVisibility(View.INVISIBLE);
-                _deleteButton.setVisibility(View.INVISIBLE);
+                habitViewHolder.setButtonsInvisible();
             }
             _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
         }
     };
 
+    // deprecated function, will delete if ok
     public void addNewHabit(Habit habit) {
         _habitList.addHabit(habit);
     }
@@ -181,24 +183,21 @@ public class HabitListFragment extends Fragment {
      * @param date the habit date
      */
     public void addHabitToDatabase(String title, String reason, Date date){
+
         // Handling of adding a habit to firebase
         HashMap<String, Object> habitData = new HashMap<>();
 
-        // find lowest positive non zero habitId that is not used by a habit currently
-        long habitIdCounter = 1;
-        while (_habitIdSet.contains(habitIdCounter)) {
-            habitIdCounter++;
-        }
-        _habitIdSet.add(habitIdCounter);
+        //generate the habit ID for the added Habit
+        Long habitId = HabitItemAdapter.generateHabitId();
+
+        // initialize fields
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
-        habitData.put("habitId", habitIdCounter);
+        habitData.put("habitId", habitId);
 
-        Long habitIdDoc = habitIdCounter;
-
-        collectionReference
-                .document(habitIdDoc.toString())
+        _collectionReference
+                .document(habitId.toString())
                 .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -219,18 +218,21 @@ public class HabitListFragment extends Fragment {
     }
 
 
-    public void updateAfterEdit(String title, String reason, Date date, int pos) {
-        //String oldHabitTitle = _habitList.getHabitList().get(pos).getTitle();
+    public void updateAfterEdit(String title, String reason, Date date, int pos,
+                                HabitItemAdapter.HabitViewHolder viewHolder) {
+
+        // this acquires the unique habit ID of the habit to be edited
         Long habitId = _habitItemAdapter._snapshots.get(pos).getHabitId();
-        //_habitList.editHabit(title, reason, date, pos)
-        // storing in database
+
+        // stores the new fields of the Habit into a hashmap
         HashMap<String, Object> habitData = new HashMap<>();
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
         habitData.put("habitId", habitId);
-        //collectionReference.document(habitId.toString()).update(habitData);
-        collectionReference.document(habitId.toString())
+
+        // replaces the old fields of the Habit with the new fields
+        _collectionReference.document(habitId.toString())
                 .set(habitData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -244,8 +246,8 @@ public class HabitListFragment extends Fragment {
                         Log.d(TAG, "Data failed to be added." + e.toString());
                     }
                 });
-        _editButton.setVisibility(View.INVISIBLE);
-        _deleteButton.setVisibility(View.INVISIBLE);
+
+        viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyDataSetChanged();
     }
 }

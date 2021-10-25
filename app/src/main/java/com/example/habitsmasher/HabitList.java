@@ -5,6 +5,7 @@ import java.util.Date;
 
 /**
  * The habit list class is a container for the list of habits
+ * Note: this class is no longer needed with _snapshots, so will delete it if ok
  */
 public class HabitList extends ArrayList{
     private static final ArrayList<Habit> _habits = new ArrayList<>();
@@ -14,13 +15,13 @@ public class HabitList extends ArrayList{
     }
 
     public void addHabit(String title, String reason, Date date) {
+
+        // zero to prevent compilation errors, addHabit is never used in practice
         Habit newHabit = new Habit(title, reason, date, 0);
         _habits.add(newHabit);
-        //addHabitToDatabase(title, reason, date);
     }
     public void addHabit(Habit habit) {
         _habits.add(habit);
-        //addHabitToDatabase(title, reason, date);
     }
 
     /**

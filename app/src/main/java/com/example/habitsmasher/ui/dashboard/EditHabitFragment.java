@@ -39,11 +39,15 @@ public class EditHabitFragment extends DialogFragment {
     private Habit _editHabit;
     private int _index;
     private HabitListFragment _listener;
+    // viewHolder of edited Habit
+    private HabitItemAdapter.HabitViewHolder _viewHolder;
 
-    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener) {
+    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener,
+                                HabitItemAdapter.HabitViewHolder habitViewHolder) {
         _index = index;
         _editHabit = editHabit;
         _listener = listener;
+        _viewHolder = habitViewHolder;
     }
 
 
@@ -98,7 +102,7 @@ public class EditHabitFragment extends DialogFragment {
                     return;
                 }
                 // update local list and display
-                _listener.updateAfterEdit(habitTitle, reasonText, habitDate, _index);
+                _listener.updateAfterEdit(habitTitle, reasonText, habitDate, _index, _viewHolder);
 
                 getDialog().dismiss();
             }
@@ -115,13 +119,13 @@ public class EditHabitFragment extends DialogFragment {
         return view;
     }
 
-    public String parseDateToString(Date date) {
+    private String parseDateToString(Date date) {
         // replace string constant with a variable
         DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
         return dateFormatter.format(date);
     }
 
-    public Date parseStringToDate(String string) {
+    private Date parseStringToDate(String string) {
         // replace string constant
         DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
         try {

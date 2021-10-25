@@ -10,7 +10,6 @@ import java.util.HashSet;
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
  */
 public class Habit {
-    // very rough implementation of a unique ID used to identify habits in the database
     private String _title;
     private String _reason;
     private Date _date;
@@ -91,4 +90,5 @@ public class Habit {
     public void setHabitId(long habitId) {
         _habitId = habitId;
     }
+
 }
