@@ -116,6 +116,7 @@
         android:onClick="onClick"
         android:text="@string/habit_date"
         android:textSize="18dp"
+        android:textColor="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/habit_reason_edit_text"
         app:layout_constraintTop_toBottomOf="@+id/habit_reason_edit_text" />
