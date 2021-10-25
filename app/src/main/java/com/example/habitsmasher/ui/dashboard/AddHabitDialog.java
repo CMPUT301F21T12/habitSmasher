@@ -58,10 +58,10 @@ public class AddHabitDialog extends DialogFragment {
         _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
         _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
         _habitDateEditText = view.findViewById(R.id.habit_date_edit_text);
-        Button _confirmNewHabit = view.findViewById(R.id.confirm_habit);
-        Button _cancelNewHabit = view.findViewById(R.id.cancel_habit);
+        Button confirmNewHabit = view.findViewById(R.id.confirm_habit);
+        Button cancelNewHabit = view.findViewById(R.id.cancel_habit);
 
-        _cancelNewHabit.setOnClickListener(new View.OnClickListener() {
+        cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Cancel");
@@ -69,7 +69,7 @@ public class AddHabitDialog extends DialogFragment {
             }
         });
 
-        _confirmNewHabit.setOnClickListener(new View.OnClickListener() {
+        confirmNewHabit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
