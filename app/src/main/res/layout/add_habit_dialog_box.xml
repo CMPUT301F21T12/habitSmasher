@@ -114,7 +114,7 @@
         android:background="@color/white"
         android:clickable="true"
         android:onClick="onClick"
-        android:text="@string/habit_date"
+        android:hint="@string/habit_date"
         android:textSize="18dp"
         android:textColor="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
