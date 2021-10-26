@@ -35,7 +35,6 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final Locale LOCALE = Locale.CANADA;
     // set of IDs used by existing Habits in the database
-    public static HashSet<Long> _habitIdSet = new HashSet<>();
     private static HabitList _habits;
     private static HabitListFragment _habitListFragment;
     public final ObservableSnapshotArray<Habit> _snapshots;
@@ -57,23 +56,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         _habitListFragment = fragment;
     }
 
-    /**
-     * Function that generates a habitID for a newly created habit
-     * Algorithm:
-     * -Begin at 1 and check if value is in set of habit IDs in use by other habits
-     * -If value is in set, increment by 1 and check again
-     * -If value is not in set, return as new HabitID
-     *
-     * @return ID
-     */
-    public static long generateHabitId() {
-        long habitIdCounter = 1;
-        while (_habitIdSet.contains(habitIdCounter)) {
-            habitIdCounter++;
-        }
-        _habitIdSet.add(habitIdCounter);
-        return habitIdCounter;
-    }
+
 
     @NonNull
     @Override

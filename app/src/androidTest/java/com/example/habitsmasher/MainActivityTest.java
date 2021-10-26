@@ -82,4 +82,12 @@ public class MainActivityTest {
         // ensure that the app has transitioned to the Notifications screen
         assertTrue(solo.waitForText("Home", 2, 2000));
     }
+
+    /**
+     *
+     */
+    @Test
+    public void ensureEditIsFunctioning() {
+
+    }
 }
