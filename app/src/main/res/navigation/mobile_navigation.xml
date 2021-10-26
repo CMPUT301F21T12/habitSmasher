@@ -15,11 +15,20 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.habitsmasher.ui.dashboard.HabitListFragment"
         android:label="@string/habit_list"
-        tools:layout="@layout/fragment_habit_list" />
+        tools:layout="@layout/fragment_habit_list" >
+        <action
+            android:id="@+id/action_navigation_dashboard_to_habitViewFragment"
+            app:destination="@id/habitViewFragment"
+            app:popUpTo="@id/navigation_dashboard"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.habitsmasher.ui.profile.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/habitViewFragment"
+        android:name="com.example.habitsmasher.ui.dashboard.HabitViewFragment"
+        android:label="HabitViewFragment" />
 </navigation>

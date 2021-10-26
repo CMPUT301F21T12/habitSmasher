@@ -12,6 +12,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Test class for MainActivity. All the UI tests are written here. Robotium test framework is
  used
@@ -50,10 +54,10 @@ public class MainActivityTest {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnText("Habit List");
+        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
 
         // ensure that the app has transitioned to the Habit List screen
-        assertTrue(solo.waitForText("Habit List", 2, 2000));
+        assertTrue(solo.waitForText("Habit List", 1, 2000));
     }
 
     /**
@@ -65,10 +69,10 @@ public class MainActivityTest {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // click on the Notifications tab in the bottom navigation bar
-        solo.clickOnText("Profile");
+        solo.clickOnView(solo.getView(R.id.navigation_notifications));
 
         // ensure that the app has transitioned to the Notifications screen
-        assertTrue(solo.waitForText("Profile", 2, 2000));
+        assertTrue(solo.waitForText("Profile", 1, 2000));
     }
 
     /**
@@ -80,6 +84,57 @@ public class MainActivityTest {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // ensure that the app has transitioned to the Notifications screen
-        assertTrue(solo.waitForText("Home", 2, 2000));
+        assertTrue(solo.waitForText("Home", 1, 2000));
+    }
+
+    @Test
+    public void navigateToHabitViewFragment() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+
+        // Create test habit
+        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date());
+
+        // Format the date
+        String pattern = "dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+        // Enter title
+        solo.enterText(solo.getEditText("Habit title"), testHabit.getTitle());
+
+        // Enter reason
+        solo.enterText(solo.getEditText("Habit reason"), testHabit.getReason());
+
+        // Enter date
+        solo.enterText(solo.getEditText("dd-mm-yyyy"), simpleDateFormat.format(testHabit.getDate()));
+
+        // Click confirm
+        solo.clickOnView(solo.getView(R.id.confirm_habit));
+
+        // Click on added Habit
+        solo.clickOnText(testHabit.getTitle());
+
+        // Check that the viewHabitFragment has loaded
+        assertTrue(solo.waitForText("HabitViewFragment", 1, 2000));
+
+        // Check that reason is correct
+        assertTrue(solo.waitForText(testHabit.getReason(), 1, 2000));
+
+        // Check that the date is correct
+        assertTrue(solo.waitForText(simpleDateFormat.format(testHabit.getDate()), 1, 2000));
+
+        // Click up/back button
+        solo.goBack();
+
+        // Check that the current fragment is the habit list
+        assertTrue(solo.waitForText("Habit List", 1, 2000));
+
+
     }
 }

@@ -53,7 +53,7 @@ public class HabitListFragment extends Fragment {
         FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
                 .setQuery(query, Habit.class)
                 .build();
-        _habitItemAdapter = new HabitItemAdapter(options, getActivity());
+        _habitItemAdapter = new HabitItemAdapter(options, getActivity(), this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
