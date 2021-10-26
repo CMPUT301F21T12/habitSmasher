@@ -90,7 +90,12 @@ public class HabitEventListFragment extends Fragment {
         // Add new habit fab button
         FloatingActionButton addHabitEventFab = view.findViewById(R.id.add_habit_event_fab);
 
-        // TODO: Implement adding new habit event
+        addHabitEventFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAddHabitEventDialogBox();
+            }
+        });
 
         initializeRecyclerView(layoutManager, view);
         return view;
@@ -125,6 +130,12 @@ public class HabitEventListFragment extends Fragment {
         super.onStop();
         _habitEventItemAdapter.stopListening();
     }
+
+    private void openAddHabitEventDialogBox() {
+        AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog(_user.getUsername());
+        addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
+    }
+
 
     public void addNewHabitEvent(HabitEvent habitEvent) { _habitEventList.addHabitEvent(habitEvent); }
 

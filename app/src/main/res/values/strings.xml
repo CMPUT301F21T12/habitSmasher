@@ -23,6 +23,7 @@
     <string name="habit_event_comment_label">Comment:</string>
     <string name="add_habit_event_comment">Enter Comment...</string>
     <string name="add_habit_event_location_label">ADD LOCATION</string>
+    <string name="add_habit_photo_label">ADD PHOTO</string>
     <string name="historyButtonLabel">HISTORY</string>
     <string name="dateTextBoxLabel">Date Started: %s</string>
     <string name="ratingTextBoxLabel">Follow Rating: %s</string>
