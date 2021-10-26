@@ -23,7 +23,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
     private Context _context;
     private final FragmentActivity _activity;
     private final ObservableSnapshotArray<HabitEvent> _snapshots;
-    private static HabitEventList _habitEvents;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -56,7 +55,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
     }
 
     @Override
-    public int getItemCount() { return _habitEvents.getHabitEvents().size(); }
+    public int getItemCount() { return _snapshots.size(); }
 
     /**
      * This class holds any necessary elements of the habit event on the front-end
