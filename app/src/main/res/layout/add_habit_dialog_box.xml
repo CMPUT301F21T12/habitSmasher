@@ -39,24 +39,6 @@
         app:layout_constraintTop_toBottomOf="@+id/habit_title_edit_text"
         tools:ignore="MissingConstraints" />
 
-    <EditText
-        android:id="@+id/habit_date_edit_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="24dp"
-        android:focusable="true"
-        android:background="@color/white"
-        android:clickable="false"
-        android:ems="10"
-        android:hint="@string/dd_mm_yyyy"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/habit_reason_edit_text"
-        app:layout_constraintTop_toBottomOf="@+id/habit_reason_edit_text"
-        tools:ignore="MissingConstraints" />
-
     <Button
         android:id="@+id/confirm_habit"
         android:layout_width="wrap_content"
@@ -66,8 +48,8 @@
         android:background="@color/habit_list_text"
         android:text="@string/confirm"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/habit_date_edit_text"
-        app:layout_constraintTop_toBottomOf="@+id/habit_date_edit_text" />
+        app:layout_constraintStart_toStartOf="@+id/habit_date_selection"
+        app:layout_constraintTop_toBottomOf="@+id/habit_date_selection" />
 
     <Button
         android:id="@+id/cancel_habit"
@@ -79,9 +61,8 @@
         android:background="@color/habit_list_text"
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/habit_date_edit_text"
         app:layout_constraintStart_toEndOf="@+id/confirm_habit"
-        app:layout_constraintTop_toBottomOf="@+id/habit_date_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/habit_date_selection" />
 
     <TextView
         android:id="@+id/habit_name_text_view"
@@ -90,7 +71,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/name"
         app:layout_constraintEnd_toStartOf="@+id/habit_title_edit_text"
-        app:layout_constraintHorizontal_bias="0.047"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/habit_title_edit_text" />
 
@@ -109,10 +90,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/date_start"
-        app:layout_constraintEnd_toStartOf="@+id/habit_date_edit_text"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="@+id/habit_reason_text_view"
         app:layout_constraintStart_toStartOf="@+id/habit_reason_text_view"
-        app:layout_constraintTop_toTopOf="@+id/habit_date_edit_text" />
+        app:layout_constraintTop_toTopOf="@+id/habit_date_selection" />
 
     <TextView
         android:id="@+id/add_habit_header"
@@ -124,4 +104,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/habit_date_selection"
+        android:layout_width="208dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/white"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:hint="@string/habit_date"
+        android:textSize="18dp"
+        android:textColor="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/habit_reason_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/habit_reason_edit_text" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 package com.example.habitsmasher;
 
+import static android.content.ContentValues.TAG;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,24 +17,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
- * The habit list class is a container for the list of habits. This class is now a wrapper
- * class for the _snapshots array, which reflects the state of the database
+ * The habit list class is a container for the list of habits.
  */
-// since HabitList is now a wrapper of snapshots, no longer needs to extend ArrayList
-public class HabitList {
+public class HabitList extends ArrayList<Habit>{
 
-    // array of snapshots which reflect state of database, wrapped within HabitList
-    private ObservableSnapshotArray<Habit> _habits;
+    // array of Habits which reflect the database wrapped within HabitList
+    private ObservableSnapshotArray<Habit> _snapshots;
+
+    // arraylist of habits, auto-updates whenever Habit added or edited
+    private ArrayList<Habit> _habits = new ArrayList<>();
 
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
-    final CollectionReference _collectionReference = _db.collection("Habits");
-
-
-    public HabitList(ObservableSnapshotArray snapshotArray) {
-        _habits = snapshotArray;
-    }
 
     /**
      * Getter method to access Habit at pos
@@ -42,18 +40,35 @@ public class HabitList {
         return _habits.get(pos);
     }
 
+    public ArrayList<Habit> getHabitList() {
+        return _habits;
+    }
+
+    /**
+     * Wraps a snapshots array within the HabitList
+     * @param snapshots
+     */
+    public void wrapSnapshots(ObservableSnapshotArray<Habit> snapshots) {
+        _snapshots = snapshots;
+    }
+
     /**
      * Method that adds a habit with specified fields to database
      * @param title
      * @param reason
      * @param date
      */
-    public void addHabit(String title, String reason, Date date) {
+    public void addHabit(String title, String reason, Date date, String username) {
+
+        // get collection of specified user
+        final CollectionReference _collectionReference = _db.collection("users")
+                                                            .document(username)
+                                                            .collection("habits");
         // Handling of adding a habit to firebase
         HashMap<String, Object> habitData = new HashMap<>();
 
-        //generate the habit ID for the added Habit
-        Long habitId = generateHabitId();
+        // generate a random ID for HabitID
+        UUID habitId = UUID.randomUUID();
 
         // initialize fields
         habitData.put("title", title);
@@ -86,9 +101,15 @@ public class HabitList {
      * @param date New date of habit
      * @param pos Position of habit in the HabitList
      */
-    public void editHabit(String title, String reason, Date date, int pos) {
+    public void editHabit(String title, String reason, Date date, int pos, String username) {
+
+        // get collection of specified user
+        final CollectionReference _collectionReference = _db.collection("users")
+                .document(username)
+                .collection("habits");
+
         // this acquires the unique habit ID of the habit to be edited
-        Long habitId = _habits.get(pos).getHabitId();
+        UUID habitId = _habits.get(pos).getHabitId();
 
         // stores the new fields of the Habit into a hashmap
         HashMap<String, Object> habitData = new HashMap<>();
@@ -113,6 +134,4 @@ public class HabitList {
                     }
                 });
     }
-
-
 }

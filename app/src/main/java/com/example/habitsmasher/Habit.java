@@ -2,24 +2,26 @@ package com.example.habitsmasher;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * This is the Habit class
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
  */
-public class Habit {
+public class Habit implements Serializable {
     private String _title;
     private String _reason;
     private Date _date;
-    private long _habitId;
+    private UUID _habitId;
 
     public Habit () {
         // needed for firestore
     }
 
-    public Habit (String title, String reason, Date date, long habitId) {
+    public Habit (String title, String reason, Date date, UUID habitId) {
         _habitId = habitId;
         _title = title;
         _reason = reason;
@@ -82,12 +84,12 @@ public class Habit {
      * @return _habitId: the ID of the habit
      */
     @PropertyName("habitId")
-    public long getHabitId() {
+    public UUID getHabitId() {
         return _habitId;
     }
 
     // should NEVER be used in practice, adding since it might be needed for _snapshots
-    public void setHabitId(long habitId) {
+    public void setHabitId(UUID habitId) {
         _habitId = habitId;
     }
 
