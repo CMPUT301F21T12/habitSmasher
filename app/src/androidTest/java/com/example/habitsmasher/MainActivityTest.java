@@ -120,8 +120,8 @@ public class MainActivityTest {
         // Click on added Habit
         solo.clickOnText(testHabit.getTitle());
 
-        // Check that the viewHabitFragment has loaded
-        assertTrue(solo.waitForText("HabitViewFragment", 1, 2000));
+        // Check the title is correct
+        assertTrue(solo.waitForText(testHabit.getTitle(), 1, 2000));
 
         // Check that reason is correct
         assertTrue(solo.waitForText(testHabit.getReason(), 1, 2000));
