@@ -23,4 +23,10 @@
     <string name="dateTextBoxLabel">Date Started: %s</string>
     <string name="ratingTextBoxLabel">Follow Rating: %s</string>
     <string name="descriptionTextBoxLabel">Description…</string>
+    <string name="profile">Profile</string>
+    <string name="username">username</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="zero">0</string>
+    <string name="you_have_no_recent_activity">You have no recent activity!</string>
 </resources>

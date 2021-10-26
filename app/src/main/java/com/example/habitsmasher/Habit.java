@@ -2,6 +2,7 @@ package com.example.habitsmasher;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
  * This is the Habit class
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
  */
-public class Habit {
+public class Habit implements Serializable {
     private String _title;
     private String _reason;
     private Date _date;
