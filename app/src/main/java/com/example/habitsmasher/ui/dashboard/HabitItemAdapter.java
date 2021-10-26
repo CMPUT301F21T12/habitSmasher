@@ -1,6 +1,7 @@
 package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
@@ -46,6 +48,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      * FirestoreRecyclerOptions} for configuration options.
      *
      * @param options the firestore entities
+     * @param fragment the habitListFragment
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options, FragmentActivity activity,
                             HabitList habits, HabitListFragment fragment) {
@@ -88,15 +91,33 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      * @param position This is the position of the selected habit item
      */
     private void openHabitView(HabitViewHolder holder, int position) {
+        // Get the selected habit
         Habit currentHabit = _snapshots.get(position);
-        // Create Habit View Fragment with all required parameters passed in
-        HabitViewFragment fragment = HabitViewFragment.newInstance(currentHabit.getReason(),
-                currentHabit.getDate().toString());
-        // Replace the current fragment with the habit view
-        FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
-        transaction.addToBackStack(null);
-        // Load new fragment
-        transaction.commit();
+        // Create a bundle to be passed into the habitViewFragment
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("habit", currentHabit);
+        NavController controller = NavHostFragment.findNavController(_habitListFragment);
+        // Navigate to the habitViewFragment
+        controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
+    }
+
+    /**
+     * Function that updates HabitList whenever database is updated.
+     */
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        for (int i = 0; i < _snapshots.size(); i++) {
+            // sets ith habit in snapshots to ith position in HabitList
+            if (i < _habits.getHabitList().size()) {
+                _habits.getHabitList().add(i, _snapshots.get(i));
+            }
+
+            // do this only if there is more habits in snapshots then HabitList
+            else {
+                _habits.getHabitList().add(_snapshots.get(i));
+            }
+        }
     }
 
     @Override

@@ -2,14 +2,11 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -20,31 +17,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Query;
 
-import java.sql.Time;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+
 
 public class HabitListFragment extends Fragment {
 
     private static final String TAG = "HabitListFragment";
 
-    private static HabitList _habitList;
+    private final User _user = new User("TestUser", "123");
+    private final HabitList _habitList = _user.getHabits();
     private HabitItemAdapter _habitItemAdapter;
     private HabitListFragment _fragment = this;
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
@@ -57,13 +45,15 @@ public class HabitListFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
 
+        // query firebase for all habits that correspond to the current user
+        Query query = getListOfHabitsFromFirebase(_user.getUsername());
+
         // populate the list with existing items in the database
         FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
-                .setQuery(_db.collection("Habits"), Habit.class)
+                .setQuery(query, Habit.class)
                 .build();
-
-        // construct a new HabitList that wraps the snapshots of the Habits
-        _habitList = new HabitList(options.getSnapshots());
+        //wraps the snapshots representing the HabitList of the user in the HabitList
+        _habitList.wrapSnapshots(options.getSnapshots());
         _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
@@ -84,6 +74,19 @@ public class HabitListFragment extends Fragment {
 
         initializeRecyclerView(layoutManager, view);
         return view;
+    }
+
+    /**
+     * This method queries the database for all habits that correspond to the specified user
+     * @param username the user to get the habits for
+     * @return resulting firebase query
+     */
+    @NonNull
+    private Query getListOfHabitsFromFirebase(String username) {
+        Query query = _db.collection("Users")
+                         .document(username)
+                         .collection("Habits");
+        return query;
     }
 
     @Override public void onStart() {
@@ -160,29 +163,32 @@ public class HabitListFragment extends Fragment {
         }
     };
 
-    // deprecated function, will delete if ok
-    public void addNewHabit(Habit habit) {
-        _habitList.addHabit(habit);
-    }
-
     /**
-     * This method is responsible for adding a new habit to the firestore database
+     * This method is responsible for adding a new habit to the user's HabitList
      * @param title the habit title
      * @param reason the habit reason
      * @param date the habit date
-     */
+     * */
     public void addHabitToDatabase(String title, String reason, Date date){
-
+       _habitList.addHabit(title, reason, date, _user.getUsername());
     }
 
     @Override
     public void onDestroyView() { super.onDestroyView();
     }
 
-
+    /**
+     * This method is responsible for editing a certain habit at position pos
+     * in the user's habit list
+     * @param title habit's new title
+     * @param reason habit's new reason
+     * @param date habit's new date
+     * @param pos position of edited habit
+     * @param viewHolder viewholder of associated habit in the RecyclerView
+     */
     public void updateAfterEdit(String title, String reason, Date date, int pos,
                                 HabitItemAdapter.HabitViewHolder viewHolder) {
-        _habitList.editHabit(title, reason, date, pos);
+        _habitList.editHabit(title, reason, date, pos, _user.getUsername());
         viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyItemChanged(pos);
     }

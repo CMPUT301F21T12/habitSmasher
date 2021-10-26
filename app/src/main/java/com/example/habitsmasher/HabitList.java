@@ -40,6 +40,10 @@ public class HabitList extends ArrayList<Habit>{
         return _habits.get(pos);
     }
 
+    /**
+     * Returns the list of habits as an ArrayList
+     * @return
+     */
     public ArrayList<Habit> getHabitList() {
         return _habits;
     }
@@ -53,7 +57,7 @@ public class HabitList extends ArrayList<Habit>{
     }
 
     /**
-     * Method that adds a habit with specified fields to database
+     * Method that adds a habit with specified fields
      * @param title
      * @param reason
      * @param date
@@ -64,13 +68,11 @@ public class HabitList extends ArrayList<Habit>{
         final CollectionReference _collectionReference = _db.collection("users")
                                                             .document(username)
                                                             .collection("habits");
-        // Handling of adding a habit to firebase
-        HashMap<String, Object> habitData = new HashMap<>();
-
         // generate a random ID for HabitID
         UUID habitId = UUID.randomUUID();
 
         // initialize fields
+        HashMap<String, Object> habitData = new HashMap<>();
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
@@ -103,10 +105,10 @@ public class HabitList extends ArrayList<Habit>{
      */
     public void editHabit(String title, String reason, Date date, int pos, String username) {
 
-        // get collection of specified user
-        final CollectionReference _collectionReference = _db.collection("users")
-                .document(username)
-                .collection("habits");
+        // get collection of Habits for a specified user
+        final CollectionReference _collectionReference = _db.collection("Users")
+                                                            .document(username)
+                                                            .collection("habits");
 
         // this acquires the unique habit ID of the habit to be edited
         UUID habitId = _habits.get(pos).getHabitId();
