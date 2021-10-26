@@ -94,7 +94,7 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
                 if (checkNewHabitIsValid()){
-                    _habitListFragment.addNewHabit(new Habit(_habitTitleInput, _habitReasonInput, _habitDate));
+                    _habitListFragment.addNewHabit(new Habit(_habitTitleInput, _habitReasonInput, _habitDate, new HabitEventList()));
                     _habitListFragment.addHabitToDatabase(_habitTitleInput, _habitReasonInput, _habitDate, _username);
                     getDialog().dismiss();
                 }

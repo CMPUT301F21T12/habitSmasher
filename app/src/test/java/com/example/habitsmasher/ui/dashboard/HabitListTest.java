@@ -20,7 +20,7 @@ public class HabitListTest {
 
     @Test
     public void addHabit_validHabitAddition_expectHabitAddedToList(){
-        Habit habit = new Habit("Title 1", "Reason 1", new Date());
+        Habit habit = new Habit("Title 1", "Reason 1", new Date(), new HabitEventList());
 
         _habitList.addHabit(habit);
 

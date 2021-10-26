@@ -3,6 +3,7 @@ package com.example.habitsmasher;
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * This is the Habit Event class
@@ -12,6 +13,7 @@ public class HabitEvent {
     private Date _startDate;
     private String _comment;
     private String _pictureURL;
+    private UUID _id = UUID.randomUUID();
 
     // TODO: Eventually add location
 
@@ -86,4 +88,7 @@ public class HabitEvent {
     public void setPictureURL(String pictureURL) {
         this._pictureURL = pictureURL;
     }
+
+    @PropertyName("id")
+    public UUID getId() { return _id; }
 }

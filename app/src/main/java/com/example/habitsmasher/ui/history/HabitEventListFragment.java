@@ -2,6 +2,7 @@ package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +21,24 @@ import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.UUID;
+
 public class HabitEventListFragment extends Fragment {
-    private HabitEventList _habitEventList = new HabitEventList();
+    private static final String TAG = "HabitEventListFragment";
+
     private HabitEventItemAdapter _habitEventItemAdapter;
     private Habit _parentHabit;
     private User _user;
+    private HabitEventList _habitEventList;
 
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
@@ -67,6 +77,7 @@ public class HabitEventListFragment extends Fragment {
                     .setQuery(query, HabitEvent.class)
                     .build();
             _habitEventItemAdapter = new HabitEventItemAdapter(options, getActivity());
+            _habitEventList = _parentHabit.getHabitEvents();
         }
         catch (Error e){
             // TODO: Add no events catch
@@ -105,6 +116,46 @@ public class HabitEventListFragment extends Fragment {
         new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
+    @Override public void onStart() {
+        super.onStart();
+        _habitEventItemAdapter.startListening();
+    }
+
+    @Override public void onStop() {
+        super.onStop();
+        _habitEventItemAdapter.stopListening();
+    }
+
+    public void addNewHabitEvent(HabitEvent habitEvent) { _habitEventList.addHabitEvent(habitEvent); }
+
+    public void addHabitEventToDatabase(Date date, String comment, UUID id, String username) {
+        final CollectionReference collectionReference = _db.collection("Users")
+                                                        .document(username)
+                                                        .collection("Habits")
+                                                        .document(_parentHabit.getTitle())
+                                                        .collection("Events");
+        HashMap<String, Object> eventData = new HashMap<>();
+
+        eventData.put("date", date);
+        eventData.put("comment", comment);
+        eventData.put("id", id);
+
+        collectionReference
+                .document(id.toString())
+                .set(eventData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Data successfully added.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Data failed to be added." + e.toString());
+                    }
+                });
+    }
     /**
      * The implementation of the swipe to delete functionality below came from the following URL:
      * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview

@@ -14,17 +14,19 @@ public class Habit implements Serializable {
     private String _title;
     private String _reason;
     private Date _date;
+    private HabitEventList _habitEvents;
     private UUID _id;
 
     public Habit () {
         // needed for firestore
     }
 
-    public Habit (String title, String reason, Date date) {
+    public Habit (String title, String reason, Date date, HabitEventList habitEvents) {
         _title = title;
         _reason = reason;
         _date = date;
         _id = UUID.randomUUID();
+        _habitEvents = habitEvents;
     }
 
     /**
@@ -78,16 +80,18 @@ public class Habit implements Serializable {
         _date = date;
     }
 
-//    *
-//     * Gets habit event list of a habit
-//     * @return habbitEvents (HabitEventList): The habit events associated with a habit
-//    public HabitEventList getHabitEvents()  { return _habitEvents; }
-//
-//    /**
-//     * Sets the habit events of a habit
-//     * @param habitEvents (HabitEventList): The list of habit events to set
-//     */
-//    public void setHabbitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
+    /**
+     * Gets habit event list of a habit
+     * @return habbitEvents (HabitEventList): The habit events associated with a habit
+     */
+    @PropertyName("Events")
+    public HabitEventList getHabitEvents()  { return _habitEvents; }
+
+    /**
+     * Sets the habit events of a habit
+     * @param habitEvents (HabitEventList): The list of habit events to set
+     */
+    public void setHabitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
 
     @PropertyName("id")
     public UUID getId() {

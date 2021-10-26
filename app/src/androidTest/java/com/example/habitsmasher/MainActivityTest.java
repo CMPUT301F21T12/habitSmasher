@@ -99,7 +99,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date());
+        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date(), new HabitEventList());
 
         // Format the date
         String pattern = "dd-MM-yyyy";
