@@ -26,7 +26,7 @@ public class HabitEventListFragment extends Fragment {
     private HabitEventList _habitEventList = new HabitEventList();
     private HabitEventItemAdapter _habitEventItemAdapter;
     private Habit _parentHabit;
-    FirebaseFirestore _db;
+    FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
     public HabitEventListFragment (Habit parentHabit) {
         super();
@@ -56,7 +56,7 @@ public class HabitEventListFragment extends Fragment {
 
         // Populate the list with existing items in the database, query term is parent habit name
         FirestoreRecyclerOptions<HabitEvent> options = new FirestoreRecyclerOptions.Builder<HabitEvent>()
-                .setQuery(_db.collection(_parentHabit.getTitle()), HabitEvent.class)
+                .setQuery(_db.collection("Habits").whereEqualTo("title", _parentHabit.getTitle()), HabitEvent.class)
                 .build();
         _habitEventItemAdapter = new HabitEventItemAdapter(options, getActivity());
 

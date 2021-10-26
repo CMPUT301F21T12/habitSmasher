@@ -3,6 +3,7 @@ package com.example.habitsmasher;
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * This is the Habit class
@@ -13,6 +14,7 @@ public class Habit {
     private String _reason;
     private Date _date;
     private HabitEventList _habitEvents;
+    private UUID _id;
 
     public Habit () {
         // needed for firestore
@@ -23,6 +25,7 @@ public class Habit {
         _reason = reason;
         _date = date;
         _habitEvents = habitEvents;
+        _id = UUID.randomUUID();
     }
 
     /**
@@ -76,15 +79,19 @@ public class Habit {
         _date = date;
     }
 
-    /**
-     * Gets habit event list of a habit
-     * @return habbitEvents (HabitEventList): The habit events associated with a habit
-     */
-    public HabitEventList getHabitEvents()  { return _habitEvents; }
+//    *
+//     * Gets habit event list of a habit
+//     * @return habbitEvents (HabitEventList): The habit events associated with a habit
+//    public HabitEventList getHabitEvents()  { return _habitEvents; }
+//
+//    /**
+//     * Sets the habit events of a habit
+//     * @param habitEvents (HabitEventList): The list of habit events to set
+//     */
+//    public void setHabbitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
 
-    /**
-     * Sets the habit events of a habit
-     * @param habitEvents (HabitEventList): The list of habit events to set
-     */
-    public void setHabbitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
+    @PropertyName("id")
+    public UUID getId() {
+        return _id;
+    }
 }

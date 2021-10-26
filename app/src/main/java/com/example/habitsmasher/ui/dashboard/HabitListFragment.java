@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -142,7 +143,7 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      */
-    public void addHabitToDatabase(String title, String reason, Date date){
+    public void addHabitToDatabase(String title, String reason, Date date, HabitEventList events){
         // Handling of adding a habit to firebase
         final CollectionReference collectionReference = _db.collection("Habits");
         HashMap<String, Object> habitData = new HashMap<>();
@@ -150,6 +151,8 @@ public class HabitListFragment extends Fragment {
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
+
+        // habitData.put("events", events);
 
         collectionReference
                 .document(title)
