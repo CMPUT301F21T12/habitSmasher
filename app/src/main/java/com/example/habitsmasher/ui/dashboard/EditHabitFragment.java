@@ -61,7 +61,7 @@ public class EditHabitFragment extends DialogFragment {
         _header = view.findViewById(R.id.add_habit_header);
         _titleText = view.findViewById(R.id.habit_title_edit_text);
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
-        _dateText = view.findViewById(R.id.habit_date_edit_text);
+        _dateText = view.findViewById(R.id.habit_date_text_view);
         _confirmButton = view.findViewById(R.id.confirm_habit);
         _cancelButton = view.findViewById(R.id.cancel_habit);
 
