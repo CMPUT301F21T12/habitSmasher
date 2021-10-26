@@ -18,12 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -34,7 +36,8 @@ import java.util.HashMap;
 public class HabitListFragment extends Fragment {
     private static final String TAG = "HabitListFragment";
 
-    private static final HabitList _habitList = new HabitList();
+    private final User _user = new User("TestUser", "123");
+    private final HabitList _habitList = _user.getHabits();
     private HabitItemAdapter _habitItemAdapter;
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
@@ -43,9 +46,12 @@ public class HabitListFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
 
+        // query firebase for all habits that correspond to the current user
+        Query query = getListOfHabitsFromFirebase(_user.getUsername());
+
         // populate the list with existing items in the database
         FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
-                .setQuery(_db.collection("Habits"), Habit.class)
+                .setQuery(query, Habit.class)
                 .build();
         _habitItemAdapter = new HabitItemAdapter(options, getActivity());
 
@@ -69,6 +75,19 @@ public class HabitListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This method queries the database for all habits that correspond to the specified user
+     * @param username the user to get the habits for
+     * @return resulting firebase query
+     */
+    @NonNull
+    private Query getListOfHabitsFromFirebase(String username) {
+        Query query = _db.collection("Users")
+                         .document(username)
+                         .collection("Habits");
+        return query;
+    }
+
     @Override public void onStart() {
         super.onStart();
         _habitItemAdapter.startListening();
@@ -84,7 +103,7 @@ public class HabitListFragment extends Fragment {
      * This helper method is responsible for opening the add habit dialog box
      */
     private void openAddHabitDialogBox() {
-        AddHabitDialog addHabitDialog = new AddHabitDialog();
+        AddHabitDialog addHabitDialog = new AddHabitDialog(_user.getUsername());
         addHabitDialog.setCancelable(true);
         addHabitDialog.setTargetFragment(HabitListFragment.this, 1);
         addHabitDialog.show(getFragmentManager(), "AddHabitDialog");
@@ -142,9 +161,11 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      */
-    public void addHabitToDatabase(String title, String reason, Date date){
+    public void addHabitToDatabase(String title, String reason, Date date, String username) {
         // Handling of adding a habit to firebase
-        final CollectionReference collectionReference = _db.collection("Habits");
+        final CollectionReference collectionReference = _db.collection("Users")
+                                                           .document(username)
+                                                           .collection("Habits");
         HashMap<String, Object> habitData = new HashMap<>();
 
         habitData.put("title", title);

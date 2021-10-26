@@ -52,13 +52,15 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
     private HabitListFragment _habitListFragment;
     private EditText _habitTitleEditText;
     private EditText _habitReasonEditText;
-    private Button _confirmNewHabit;
-    private Button _cancelNewHabit;
     private TextView _habitDateTextView;
-    private boolean _invalidDate = false;
     private String _habitTitleInput;
     private String _habitReasonInput;
     private Date _habitDate;
+    private final String _username;
+
+    public AddHabitDialog(String username) {
+        _username = username;
+    }
 
     @Nullable
     @Override
@@ -67,8 +69,8 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
         _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
         _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
         _habitDateTextView = view.findViewById(R.id.habit_date_selection);
-        _confirmNewHabit = view.findViewById(R.id.confirm_habit);
-        _cancelNewHabit = view.findViewById(R.id.cancel_habit);
+        Button confirmNewHabit = view.findViewById(R.id.confirm_habit);
+        Button cancelNewHabit = view.findViewById(R.id.cancel_habit);
 
         _habitDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +79,7 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             }
         });
 
-        _cancelNewHabit.setOnClickListener(new View.OnClickListener() {
+        cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Cancel");
@@ -85,14 +87,14 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             }
         });
 
-        _confirmNewHabit.setOnClickListener(new View.OnClickListener() {
+        confirmNewHabit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
                 if (checkNewHabitIsValid()){
                     _habitListFragment.addNewHabit(new Habit(_habitTitleInput, _habitReasonInput, _habitDate));
-                    _habitListFragment.addHabitToDatabase(_habitTitleInput, _habitReasonInput, _habitDate);
+                    _habitListFragment.addHabitToDatabase(_habitTitleInput, _habitReasonInput, _habitDate, _username);
                     getDialog().dismiss();
                 }
             }
@@ -128,7 +130,7 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
      * @return true if all fields are entered correctly, false otherwise.
      */
     private boolean checkNewHabitIsValid(){
-        _invalidDate = false;
+        boolean invalidDate = false;
         _habitTitleInput = _habitTitleEditText.getText().toString();
         _habitReasonInput = _habitReasonEditText.getText().toString();
 
@@ -139,7 +141,7 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             inputDateFormatter.setLenient(false);
             _habitDate = inputDateFormatter.parse(_habitDateTextView.getText().toString());
         } catch (ParseException e) {
-            _invalidDate = true;
+            invalidDate = true;
             e.printStackTrace();
         }
 
@@ -150,7 +152,7 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
         if (
                 ((_habitTitleInput.length()>0)&&(_habitTitleInput.length()<=20))&&
                 ((_habitReasonInput.length()>0)&&(_habitReasonInput.length()<=30))&&
-                (_invalidDate==false)
+                (!invalidDate)
         ) {
             return true;
         } else {
@@ -166,7 +168,7 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             }
 
             //Handle error checking for new habit date.
-            if (_invalidDate==true){
+            if (invalidDate){
                 Toast.makeText(getActivity(), INCORRECT_BLANK_DATE, Toast.LENGTH_SHORT).show();
             }
             return false;
