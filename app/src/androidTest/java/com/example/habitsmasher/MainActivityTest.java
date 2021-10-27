@@ -32,7 +32,7 @@ public class MainActivityTest {
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
-
+    private static final long HABIT_ID = 1;
     private Solo solo;
 
     @Rule
@@ -111,7 +111,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date(), 1);
+        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -156,7 +156,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), 1);
+        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -189,7 +189,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), 1);
+        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID);
 
         // Enter reason
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
@@ -228,7 +228,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), 1);
+        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -272,7 +272,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "AnExampleHabitReasonThatIsTooLong", new Date(), 1);
+        Habit testHabit = new Habit("addHabitTest", "AnExampleHabitReasonThatIsTooLong", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -316,7 +316,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "", new Date(), 1);
+        Habit testHabit = new Habit("addHabitTest", "", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -359,7 +359,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), 1);
+        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -435,15 +435,16 @@ public class MainActivityTest {
         solo.drag(fromX, location[0], fromY, fromY, 10);
         solo.clickOnView(view.findViewById(R.id.edit_button));
         // clear Edit Text fields
-        solo.enterText(0, "");
-        solo.enterText(1, "");
+        solo.clearEditText(0);
+        solo.clearEditText(1);
 
+        Habit testEditHabit = new Habit("testTitle", "testReason", new Date(), HABIT_ID);
         // enter new values
-        solo.enterText(0, "testTitle");
-        solo.enterText(1, "testReason");
+        solo.enterText(0, testEditHabit.getTitle());
+        solo.enterText(1, testEditHabit.getReason());
         enterCurrentDateInAddHabitDialogBox();
         clickConfirmButtonInAddHabitDialogBox();
         assertTextOnScreen(HABIT_LIST_TEXT);
-        assertTextOnScreen("testTitle");
+        assertTextOnScreen(testEditHabit.getTitle());
     }
 }
