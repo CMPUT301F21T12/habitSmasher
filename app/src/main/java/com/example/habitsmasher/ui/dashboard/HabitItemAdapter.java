@@ -101,28 +101,19 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
     }
 
-    /**
-     * Function that updates HabitList whenever database is updated.
-     */
-    @Override
-    public void onDataChanged() {
-        super.onDataChanged();
-        for (int i = 0; i < _snapshots.size(); i++) {
-            // sets ith habit in snapshots to ith position in HabitList
-            if (i < _habits.getHabitList().size()) {
-                _habits.getHabitList().add(i, _snapshots.get(i));
-            }
-
-            // do this only if there is more habits in snapshots then HabitList
-            else {
-                _habits.getHabitList().add(_snapshots.get(i));
-            }
-        }
-    }
-
     @Override
     public int getItemCount() {
         return _snapshots.size();
+    }
+
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (_habits.getHabitList().isEmpty()) {
+            for (int i = 0; i < _snapshots.size(); i++) {
+                _habits.getHabitList().add(_snapshots.get(i));
+            }
+        }
     }
 
     public static class HabitViewHolder extends RecyclerView.ViewHolder {

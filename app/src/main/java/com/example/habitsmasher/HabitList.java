@@ -31,8 +31,6 @@ public class HabitList extends ArrayList<Habit>{
     private ArrayList<Habit> _habits = new ArrayList<>();
     public static HashSet<Long> habitIdSet = new HashSet<>();
 
-    FirebaseFirestore _db = FirebaseFirestore.getInstance();
-
     /**
      * Getter method to access Habit at pos
      * @return
@@ -50,7 +48,8 @@ public class HabitList extends ArrayList<Habit>{
     }
 
     /**
-     * Wraps a snapshots array within the HabitList
+     * Wraps a snapshots array within the HabitList, and initialize HabitList
+     * if emptu
      * @param snapshots
      */
     public void wrapSnapshots(ObservableSnapshotArray<Habit> snapshots) {
@@ -58,7 +57,7 @@ public class HabitList extends ArrayList<Habit>{
     }
 
     /**
-     * Method that adds a habit with specified fields
+     * Method that adds a habit with specified fields to the database
      * @param title
      * @param reason
      * @param date
@@ -66,6 +65,7 @@ public class HabitList extends ArrayList<Habit>{
     public void addHabit(String title, String reason, Date date, String username) {
 
         // get collection of specified user
+        FirebaseFirestore _db = FirebaseFirestore.getInstance();
         final CollectionReference _collectionReference = _db.collection("Users")
                                                             .document(username)
                                                             .collection("Habits");
@@ -95,10 +95,32 @@ public class HabitList extends ArrayList<Habit>{
                         Log.d(TAG, "Data failed to be added." + e.toString());
                     }
                 });
+        addHabitLocal(new Habit(title, reason, date, habitId));
     }
 
     /**
-     * Method that edits the habit at position pos
+     * Method that adds a Habit to the local habitList
+     */
+    public void addHabitLocal(Habit habit) {
+        _habits.add(habit);
+    }
+
+    /**
+     * Method that edits a Habit in the specified pos in the local HabitList
+     * @param title new title of habit
+     * @param reason new reason of habit
+     * @param date new date of habit
+     * @param pos position of habit
+     */
+    public void editHabitLocal(String title, String reason, Date date, int pos) {
+        Habit habit = _habits.get(pos);
+        habit.setTitle(title);
+        habit.setReason(reason);
+        habit.setDate(date);
+    }
+
+    /**
+     * Method that edits the habit at position pos in the database
      * @param title New title of habit
      * @param reason New reason of habit
      * @param date New date of habit
@@ -107,6 +129,7 @@ public class HabitList extends ArrayList<Habit>{
     public void editHabit(String title, String reason, Date date, int pos, String username) {
 
         // get collection of Habits for a specified user
+        FirebaseFirestore _db = FirebaseFirestore.getInstance();
         final CollectionReference _collectionReference = _db.collection("Users")
                                                             .document(username)
                                                             .collection("Habits");
