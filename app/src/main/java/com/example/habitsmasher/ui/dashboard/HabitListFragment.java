@@ -64,7 +64,8 @@ public class HabitListFragment extends Fragment {
 
         /*
         populate HabitList with current Habits and habit IDs to initialize state to match
-        database
+        database, fills when habitList is empty and snapshot is not, which is only
+        when app is initially launched
         */
         if (_habitList.getHabitList().isEmpty()) {
             while (!querySnapshotTask.isComplete());
