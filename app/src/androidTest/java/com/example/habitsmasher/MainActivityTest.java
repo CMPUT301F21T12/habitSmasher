@@ -463,8 +463,8 @@ public class MainActivityTest {
 
         Habit testEditHabit = new Habit("testTitle1", "testReason1", new Date(), HABIT_ID);
         // enter new values
-        solo.enterText(0, testEditHabit.getTitle());
-        solo.enterText(1, testEditHabit.getReason());
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testEditHabit.getTitle());
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testEditHabit.getReason());
         enterCurrentDateInAddHabitDialogBox();
         clickConfirmButtonInAddHabitDialogBox();
         assertTextOnScreen(HABIT_LIST_TEXT);
