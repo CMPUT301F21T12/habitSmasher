@@ -193,7 +193,7 @@ public class HabitListFragment extends Fragment {
      * @param date the habit date
      * */
     public void addHabitToDatabase(String title, String reason, Date date){
-       _habitList.addHabit(title, reason, date, _user.getUsername());
+       _habitList.addHabitToDatabase(title, reason, date, _user.getUsername());
     }
 
     @Override
@@ -211,7 +211,7 @@ public class HabitListFragment extends Fragment {
      */
     public void updateAfterEdit(String title, String reason, Date date, int pos,
                                 HabitItemAdapter.HabitViewHolder viewHolder) {
-        _habitList.editHabit(title, reason, date, pos, _user.getUsername());
+        _habitList.editHabitInDatabase(title, reason, date, pos, _user.getUsername());
         viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyItemChanged(pos);
     }

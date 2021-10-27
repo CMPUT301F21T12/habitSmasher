@@ -63,7 +63,7 @@ public class HabitList extends ArrayList<Habit>{
      * @param reason
      * @param date
      */
-    public void addHabit(String title, String reason, Date date, String username) {
+    public void addHabitToDatabase(String title, String reason, Date date, String username) {
 
         // get collection of specified user
         FirebaseFirestore _db = FirebaseFirestore.getInstance();
@@ -113,7 +113,7 @@ public class HabitList extends ArrayList<Habit>{
      * @param date New date of habit
      * @param pos Position of habit in the HabitList
      */
-    public void editHabit(String title, String reason, Date date, int pos, String username) {
+    public void editHabitInDatabase(String title, String reason, Date date, int pos, String username) {
 
         // this acquires the unique habit ID of the habit to be edited
         Long habitId = _habits.get(pos).getHabitId();
