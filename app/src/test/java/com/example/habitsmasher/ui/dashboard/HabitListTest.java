@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
-import com.google.firebase.firestore.FirebaseFirestore;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Date;
