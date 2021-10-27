@@ -66,17 +66,19 @@ public class HabitListFragment extends Fragment {
         populate HabitList with current Habits and habit IDs to initialize state to match
         database
         */
-        while (!querySnapshotTask.isComplete());
-        List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
-        for (int i = 0; i < snapshotList.size(); i++) {
-            Map<String, Object> extractMap = snapshotList.get(i).getData();
-            String title = (String) extractMap.get("title");
-            String reason = (String) extractMap.get("reason");
-            Timestamp date = (Timestamp) extractMap.get("date");
-            Long id = (Long) extractMap.get("habitId");
-            Habit addHabit = new Habit(title, reason, date.toDate() ,id);
-            _habitList.addHabitLocal(addHabit);
-            HabitList.habitIdSet.add(id);
+        if (_habitList.getHabitList().isEmpty()) {
+            while (!querySnapshotTask.isComplete());
+            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+            for (int i = 0; i < snapshotList.size(); i++) {
+                Map<String, Object> extractMap = snapshotList.get(i).getData();
+                String title = (String) extractMap.get("title");
+                String reason = (String) extractMap.get("reason");
+                Timestamp date = (Timestamp) extractMap.get("date");
+                Long id = (Long) extractMap.get("habitId");
+                Habit addHabit = new Habit(title, reason, date.toDate() ,id);
+                _habitList.addHabitLocal(addHabit);
+                HabitList.habitIdSet.add(id);
+            }
         }
         //wraps the snapshots representing the HabitList of the user in the HabitList
         _habitList.setSnapshots(options.getSnapshots());
