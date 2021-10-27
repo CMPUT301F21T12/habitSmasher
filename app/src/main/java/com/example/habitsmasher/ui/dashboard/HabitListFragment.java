@@ -59,6 +59,8 @@ public class HabitListFragment extends Fragment {
                                                     .document(_user.getUsername())
                                                     .collection("Habits")
                                                     .get();
+
+        // populate HabitList with current Habit IDs in database to prevent duplicates
         while (!querySnapshotTask.isComplete());
         List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
         for (int i = 0; i < snapshotList.size(); i++) {

@@ -29,11 +29,13 @@ public class HabitList extends ArrayList<Habit>{
 
     // arraylist of habits, auto-updates whenever Habit added or edited
     private ArrayList<Habit> _habits = new ArrayList<>();
+
+    // set of IDs of existing Habits
     public static HashSet<Long> habitIdSet = new HashSet<>();
 
     /**
      * Getter method to access Habit at pos
-     * @return
+     * @return habit
      */
     public Habit getHabit(int pos) {
         return _habits.get(pos);
@@ -41,15 +43,14 @@ public class HabitList extends ArrayList<Habit>{
 
     /**
      * Returns the list of habits as an ArrayList
-     * @return
+     * @return _habits
      */
     public ArrayList<Habit> getHabitList() {
         return _habits;
     }
 
     /**
-     * Wraps a snapshots array within the HabitList, and initialize HabitList
-     * if emptu
+     * Wraps a snapshots array within the HabitList
      * @param snapshots
      */
     public void wrapSnapshots(ObservableSnapshotArray<Habit> snapshots) {
@@ -161,7 +162,7 @@ public class HabitList extends ArrayList<Habit>{
                 });
     }
 
-    // this is a temporary implementation of habitIDs
+    // this is a temporary implementation of generating unique habitIDs
     private long generateHabitId() {
         long habitIdCounter = 1;
         while(habitIdSet.contains(habitIdCounter)) {

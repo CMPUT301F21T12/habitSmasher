@@ -36,7 +36,6 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
 
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final Locale LOCALE = Locale.CANADA;
-    // set of IDs used by existing Habits in the database
     private static HabitList _habits;
     private static HabitListFragment _habitListFragment;
     public final ObservableSnapshotArray<Habit> _snapshots;
@@ -109,6 +108,9 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     @Override
     public void onDataChanged() {
         super.onDataChanged();
+        /* this is called when the user first accesses their habit list and
+        populates the local list to match the database
+        */
         if (_habits.getHabitList().isEmpty()) {
             for (int i = 0; i < _snapshots.size(); i++) {
                 _habits.getHabitList().add(_snapshots.get(i));
