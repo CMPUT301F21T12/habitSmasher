@@ -142,6 +142,13 @@ public class HabitList extends ArrayList<Habit>{
         return habitIdCounter;
     }
 
+    /**
+     * Sets the fields of habit belonging the user username with the habit ID id
+     * to the ones specified by data
+     * @param username name of user
+     * @param id id of habit
+     * @param data fields of habit
+     */
     private void setHabitDataInDatabase(String username, String id, HashMap<String, Object> data) {
         // get collection of Habits for a specified user
         FirebaseFirestore _db = FirebaseFirestore.getInstance();
