@@ -21,12 +21,14 @@ import com.example.habitsmasher.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +67,12 @@ public class HabitListFragment extends Fragment {
         List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
         for (int i = 0; i < snapshotList.size(); i++) {
             Map<String, Object> extractMap = snapshotList.get(i).getData();
+            String title = (String) extractMap.get("title");
+            String reason = (String) extractMap.get("reason");
+            Timestamp date = (Timestamp) extractMap.get("date");
             Long id = (Long) extractMap.get("habitId");
+            Habit addHabit = new Habit(title, reason, date.toDate() ,id);
+            _habitList.addHabitLocal(addHabit);
             HabitList.habitIdSet.add(id);
         }
         //wraps the snapshots representing the HabitList of the user in the HabitList

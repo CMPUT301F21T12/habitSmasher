@@ -79,6 +79,10 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         setOnClickListenerForHabit(holder, position);
     }
 
+    /** This method sets the click listener for each habit row
+     * @param holder the ViewHolder that holds each habit
+     * @param position the position of the clicked element
+     */
     private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
         holder._habitRows.setOnClickListener(view -> openHabitView(holder, position));
     }
@@ -105,18 +109,6 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         return _snapshots.size();
     }
 
-    @Override
-    public void onDataChanged() {
-        super.onDataChanged();
-        /* this is called when the user first accesses their habit list and
-        populates the local list to match the database
-        */
-        if (_habits.getHabitList().isEmpty()) {
-            for (int i = 0; i < _snapshots.size(); i++) {
-                _habits.getHabitList().add(_snapshots.get(i));
-            }
-        }
-    }
 
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
