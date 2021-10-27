@@ -160,7 +160,7 @@ public class HabitListFragment extends Fragment {
      * Name: Rahul Raina
      * Date: November 2, 2016
      */
-    //this probably won't be the way to do it, looks ugly as hell
+    // find a better way of doing this
     ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView,
@@ -208,15 +208,15 @@ public class HabitListFragment extends Fragment {
     /**
      * This method is responsible for editing a certain habit at position pos
      * in the user's habit list
-     * @param title habit's new title
-     * @param reason habit's new reason
-     * @param date habit's new date
+     * @param newTitle habit's new title
+     * @param newReason habit's new reason
+     * @param newDate habit's new date
      * @param pos position of edited habit
      * @param viewHolder viewholder of associated habit in the RecyclerView
      */
-    public void updateAfterEdit(String title, String reason, Date date, int pos,
+    public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
                                 HabitItemAdapter.HabitViewHolder viewHolder) {
-        _habitList.editHabitInDatabase(title, reason, date, pos, _user.getUsername());
+        _habitList.editHabitInDatabase(newTitle, newReason, newDate, pos, _user.getUsername());
         viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyItemChanged(pos);
     }

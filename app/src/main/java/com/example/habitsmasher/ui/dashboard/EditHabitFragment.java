@@ -127,6 +127,9 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
         return view;
     }
 
+    /**
+     * Opens the calendar dialog used for date selection
+     */
     private void openDatePickerDialog(){
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getActivity(),
@@ -138,7 +141,13 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
         datePickerDialog.show();
     }
 
-
+    /**
+     * Sets the text of the date select view to reflect selected date
+     * @param view
+     * @param year year of selected date
+     * @param month month of selected date (integer from 0 to 11)
+     * @param day day of month of selected date
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         //1 is added to the month we get from the DatePickerDialog
@@ -149,14 +158,24 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
         _dateText.setText(date);
     }
 
+    /**
+     * Takes in a Date object and converts it into a string representation
+     * of the date
+     * @param date Date object
+     * @return string representation of the date
+     */
     private String parseDateToString(Date date) {
-        // replace string constant with a variable
         DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
         return dateFormatter.format(date);
     }
 
+    /**
+     * Parses a string and returns a Date Object reflecting the date
+     * represented by the string, or null if an invalid string input
+     * @param string String to be parsed
+     * @return date object of date represented in string
+     */
     private Date parseStringToDate(String string) {
-        // replace string constant
         DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
         dateFormatter.setLenient(false);
         try {

@@ -58,11 +58,12 @@ public class HabitList extends ArrayList<Habit>{
     }
 
     /**
-     * Method that adds a habit with specified fields to the database
-     * @param title
-     * @param reason
-     * @param date
-     * @param username
+     * Method that adds a habit with specified fields to the habit list of a specified
+     * user in the database
+     * @param title title of added habit
+     * @param reason reason of added habit
+     * @param date date of added habit
+     * @param username user of the habit list habit is being added to
      */
     public void addHabitToDatabase(String title, String reason, Date date, String username) {
 
@@ -96,36 +97,36 @@ public class HabitList extends ArrayList<Habit>{
 
     /**
      * Method that edits a Habit in the specified pos in the local HabitList
-     * @param title new title of habit
-     * @param reason new reason of habit
-     * @param date new date of habit
+     * @param newTitle new title of habit
+     * @param newReason new reason of habit
+     * @param newDate new date of habit
      * @param pos position of habit
      */
-    public void editHabitLocal(String title, String reason, Date date, int pos) {
+    public void editHabitLocal(String newTitle, String newReason, Date newDate, int pos) {
         Habit habit = _habits.get(pos);
-        habit.setTitle(title);
-        habit.setReason(reason);
-        habit.setDate(date);
+        habit.setTitle(newTitle);
+        habit.setReason(newReason);
+        habit.setDate(newDate);
     }
 
     /**
      * Method that edits the habit at position pos in the database
-     * @param title New title of habit
-     * @param reason New reason of habit
-     * @param date New date of habit
+     * @param newTitle New title of habit
+     * @param newReason New reason of habit
+     * @param newDate New date of habit
      * @param pos Position of habit in the HabitList
      * @param username Username of user whose habits we are editing
      */
-    public void editHabitInDatabase(String title, String reason, Date date, int pos, String username) {
+    public void editHabitInDatabase(String newTitle, String newReason, Date newDate, int pos, String username) {
 
         // this acquires the unique habit ID of the habit to be edited
         Long habitId = _habits.get(pos).getHabitId();
 
         // stores the new fields of the Habit into a hashmap
         HashMap<String, Object> habitData = new HashMap<>();
-        habitData.put("title", title);
-        habitData.put("reason", reason);
-        habitData.put("date", date);
+        habitData.put("title", newTitle);
+        habitData.put("reason", newReason);
+        habitData.put("date", newDate);
         habitData.put("habitId", habitId);
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
