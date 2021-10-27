@@ -3,8 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/jas98/AndroidStudioProjects/habitSmasher/app/src/main/res/layout/add_habit_dialog_box.xml" value="0.1" />
-        <entry key="..\:/Users/jas98/AndroidStudioProjects/habitSmasher/app/src/main/res/layout/habit_row.xml" value="0.264" />
         <entry key="app/src/main/res/drawable/frame_layout_border.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/green_text_button.xml" value="0.2984375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.28229166666666666" />
