@@ -3,7 +3,9 @@ package com.example.habitsmasher;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.view.View;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import com.robotium.solo.Solo;
@@ -99,10 +101,10 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date());
+        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date(), 0);
 
         // Format the date
-        String pattern = "dd-MM-yyyy";
+        String pattern = "dd/MM/yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
         // Enter title
@@ -112,7 +114,7 @@ public class MainActivityTest {
         solo.enterText(solo.getEditText("Habit reason"), testHabit.getReason());
 
         // Enter date
-        solo.enterText(solo.getEditText("dd-mm-yyyy"), simpleDateFormat.format(testHabit.getDate()));
+        solo.enterText(solo.getEditText("Habit date"), simpleDateFormat.format(testHabit.getDate()));
 
         // Click confirm
         solo.clickOnView(solo.getView(R.id.confirm_habit));
@@ -139,10 +141,32 @@ public class MainActivityTest {
     }
 
     /**
-     *
+     * Tests edit function
      */
     @Test
     public void ensureEditIsFunctioning() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+
+        // gets the recycler view in question
+        RecyclerView recyclerView = (RecyclerView) solo.getView(R.id.recycler_view_items);
+
+        // get the item in question
+        View view = recyclerView.getChildAt(0);
+
+        // locate row
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        int fromX = location[0] + 100;
+        int fromY = location[1];
+        solo.drag(fromX, location[0], fromY, fromY, 10);
+
+
+
 
     }
 }
