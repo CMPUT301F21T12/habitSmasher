@@ -53,7 +53,7 @@ public class HabitList extends ArrayList<Habit>{
      * Wraps a snapshots array within the HabitList
      * @param snapshots
      */
-    public void wrapSnapshots(ObservableSnapshotArray<Habit> snapshots) {
+    public void setSnapshots(ObservableSnapshotArray<Habit> snapshots) {
         _snapshots = snapshots;
     }
 
@@ -62,6 +62,7 @@ public class HabitList extends ArrayList<Habit>{
      * @param title
      * @param reason
      * @param date
+     * @param username
      */
     public void addHabitToDatabase(String title, String reason, Date date, String username) {
 
@@ -87,6 +88,7 @@ public class HabitList extends ArrayList<Habit>{
 
     /**
      * Method that adds a Habit to the local habitList
+     * @param habit Habit to be added
      */
     public void addHabitLocal(Habit habit) {
         _habits.add(habit);
@@ -112,6 +114,7 @@ public class HabitList extends ArrayList<Habit>{
      * @param reason New reason of habit
      * @param date New date of habit
      * @param pos Position of habit in the HabitList
+     * @param username Username of user whose habits we are editing
      */
     public void editHabitInDatabase(String title, String reason, Date date, int pos, String username) {
 

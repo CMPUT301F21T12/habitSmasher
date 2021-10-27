@@ -62,7 +62,10 @@ public class HabitListFragment extends Fragment {
                                                     .collection("Habits")
                                                     .get();
 
-        // populate HabitList with current Habit IDs in database to prevent duplicates
+        /*
+        populate HabitList with current Habits and habit IDs to initialize state to match
+        database
+        */
         while (!querySnapshotTask.isComplete());
         List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
         for (int i = 0; i < snapshotList.size(); i++) {
@@ -76,7 +79,7 @@ public class HabitListFragment extends Fragment {
             HabitList.habitIdSet.add(id);
         }
         //wraps the snapshots representing the HabitList of the user in the HabitList
-        _habitList.wrapSnapshots(options.getSnapshots());
+        _habitList.setSnapshots(options.getSnapshots());
         _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
