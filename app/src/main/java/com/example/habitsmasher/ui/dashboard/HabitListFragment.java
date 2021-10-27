@@ -37,9 +37,6 @@ public class HabitListFragment extends Fragment {
     private HabitListFragment _fragment = this;
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
-    // need to change collection to reflect restructure of database
-    final CollectionReference _collectionReference = _db.collection("Habits");
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

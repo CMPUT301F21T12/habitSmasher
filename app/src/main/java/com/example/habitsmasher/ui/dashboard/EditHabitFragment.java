@@ -1,11 +1,13 @@
 package com.example.habitsmasher.ui.dashboard;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import com.example.habitsmasher.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,7 +28,7 @@ import java.util.HashMap;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class EditHabitFragment extends DialogFragment {
+public class EditHabitFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
     private static final String HEADER = "Edit Dialog";
     private static final String PATTERN = "dd-MM-yyyy";
     private EditText _titleText;
@@ -61,7 +64,7 @@ public class EditHabitFragment extends DialogFragment {
         _header = view.findViewById(R.id.add_habit_header);
         _titleText = view.findViewById(R.id.habit_title_edit_text);
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
-        _dateText = view.findViewById(R.id.habit_date_text_view);
+        _dateText = view.findViewById(R.id.habit_date_selection);
         _confirmButton = view.findViewById(R.id.confirm_habit);
         _cancelButton = view.findViewById(R.id.cancel_habit);
 
@@ -72,6 +75,13 @@ public class EditHabitFragment extends DialogFragment {
         _reasonText.setText(_editHabit.getReason());
         _dateText.setText(parseDateToString(_editHabit.getDate()));
 
+        _dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDatePickerDialog();
+            }
+        });
+
         // when ok is clicked
         _confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +90,6 @@ public class EditHabitFragment extends DialogFragment {
                 String habitTitle = _titleText.getText().toString();
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
-
 
                 // check if fields are ok, return and display error message if not
                 if (habitTitle.length() == 0 || reasonText.length() == 0 || dateText.length() == 0) {
@@ -117,6 +126,28 @@ public class EditHabitFragment extends DialogFragment {
         });
 
         return view;
+    }
+
+    private void openDatePickerDialog(){
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(),
+                this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
+    }
+
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        //1 is added to the month we get from the DatePickerDialog
+        // because DatePickerDialog returns values between 0 and 11,
+        // which is not really helpful for users.
+        int correctedMonth = month + 1;
+        String date = day + "/" + correctedMonth + "/" + year;
+        _dateText.setText(date);
     }
 
     private String parseDateToString(Date date) {

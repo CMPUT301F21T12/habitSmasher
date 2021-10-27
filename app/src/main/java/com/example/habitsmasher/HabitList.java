@@ -29,6 +29,7 @@ public class HabitList extends ArrayList<Habit>{
 
     // arraylist of habits, auto-updates whenever Habit added or edited
     private ArrayList<Habit> _habits = new ArrayList<>();
+    public static HashSet<Long> habitIdSet = new HashSet<>();
 
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
@@ -65,11 +66,11 @@ public class HabitList extends ArrayList<Habit>{
     public void addHabit(String title, String reason, Date date, String username) {
 
         // get collection of specified user
-        final CollectionReference _collectionReference = _db.collection("users")
+        final CollectionReference _collectionReference = _db.collection("Users")
                                                             .document(username)
-                                                            .collection("habits");
+                                                            .collection("Habits");
         // generate a random ID for HabitID
-        UUID habitId = UUID.randomUUID();
+        Long habitId = generateHabitId();
 
         // initialize fields
         HashMap<String, Object> habitData = new HashMap<>();
@@ -108,10 +109,10 @@ public class HabitList extends ArrayList<Habit>{
         // get collection of Habits for a specified user
         final CollectionReference _collectionReference = _db.collection("Users")
                                                             .document(username)
-                                                            .collection("habits");
+                                                            .collection("Habits");
 
         // this acquires the unique habit ID of the habit to be edited
-        UUID habitId = _habits.get(pos).getHabitId();
+        Long habitId = _habits.get(pos).getHabitId();
 
         // stores the new fields of the Habit into a hashmap
         HashMap<String, Object> habitData = new HashMap<>();
@@ -135,5 +136,15 @@ public class HabitList extends ArrayList<Habit>{
                         Log.d(TAG, "Data failed to be added." + e.toString());
                     }
                 });
+    }
+
+    // this is a temporary implementation of habitIDs
+    private long generateHabitId() {
+        long habitIdCounter = 1;
+        while(habitIdSet.contains(habitIdCounter)) {
+            habitIdCounter++;
+        }
+        habitIdSet.add(habitIdCounter);
+        return habitIdCounter;
     }
 }
