@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -32,6 +33,7 @@ public class MainActivityTest {
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
+    private static final String EDIT_BUTTON = "EDIT";
     private static final long HABIT_ID = 1;
     private Solo solo;
 
@@ -414,16 +416,36 @@ public class MainActivityTest {
     @Test
     public void ensureEditIsFunctioning() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
         solo.clickOnView(solo.getView(R.id.navigation_dashboard));
 
-        // gets the recycler view in question
-        RecyclerView recyclerView = (RecyclerView) solo.getView(R.id.recycler_view_items);
+        // click on add habit floating action button to add habit
+        solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
-        // get the item in question
-        View view = recyclerView.getChildAt(0);
+        // Create test habit
+        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        TextView view = solo.getText(testHabit.getTitle());
 
         // locate row
         int[] location = new int[2];
@@ -433,12 +455,13 @@ public class MainActivityTest {
         int fromY = location[1];
         solo.drag(fromX, location[0], fromY, fromY, 10);
         solo.drag(fromX, location[0], fromY, fromY, 10);
-        solo.clickOnView(view.findViewById(R.id.edit_button));
+        solo.waitForView(R.id.edit_button);
+        solo.clickOnButton(EDIT_BUTTON);
         // clear Edit Text fields
         solo.clearEditText(0);
         solo.clearEditText(1);
 
-        Habit testEditHabit = new Habit("testTitle", "testReason", new Date(), HABIT_ID);
+        Habit testEditHabit = new Habit("testTitle1", "testReason1", new Date(), HABIT_ID);
         // enter new values
         solo.enterText(0, testEditHabit.getTitle());
         solo.enterText(1, testEditHabit.getReason());
