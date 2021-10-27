@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +32,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class EditHabitFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
     private static final String HEADER = "Edit Dialog";
     private static final String PATTERN = "dd/MM/yyyy";
+    private final String INCORRECT_TITLE_FORMAT = "Incorrect habit title entered";
+    private final String INCORRECT_REASON_FORMAT = "Incorrect habit reason entered";
+    private final String INCORRECT_BLANK_DATE = "Please enter a start date";
     private EditText _titleText;
     private EditText _reasonText;
     private TextView _dateText;
@@ -91,23 +95,18 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
 
-                // check if fields are ok, return and display error message if not
-                if (habitTitle.length() == 0 || reasonText.length() == 0 || dateText.length() == 0) {
-                    // empty field case
-                    return;
-                }
                 // need to set to constant later
-                if (habitTitle.length() > 30){
-                    // habit title too long
+                if (habitTitle.length() > 30 || habitTitle.length() == 0){
+                    Toast.makeText(getActivity(), INCORRECT_TITLE_FORMAT, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (reasonText.length() > 30) {
-                    // reason too long
+                if (reasonText.length() > 30 || reasonText.length() == 0) {
+                    Toast.makeText(getActivity(), INCORRECT_REASON_FORMAT, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Date habitDate = parseStringToDate(dateText);
                 if (habitDate == null) {
-                    // date in incorrect format
+                    Toast.makeText(getActivity(), INCORRECT_BLANK_DATE, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 // update local list and display
@@ -159,6 +158,7 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
     private Date parseStringToDate(String string) {
         // replace string constant
         DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
+        dateFormatter.setLenient(false);
         try {
             return dateFormatter.parse(string);
         } catch(Exception e) {
