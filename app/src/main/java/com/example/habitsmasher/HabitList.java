@@ -81,21 +81,7 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("habitId", habitId);
 
         // add habit to database, using it's habit ID as the document name
-        _collectionReference
-                .document(habitId.toString())
-                .set(habitData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Data successfully added.");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Data failed to be added." + e.toString());
-                    }
-                });
+        setHabitDataInDatabase(username, habitId.toString(), habitData);
         addHabitLocal(new Habit(title, reason, date, habitId));
     }
 
@@ -129,12 +115,6 @@ public class HabitList extends ArrayList<Habit>{
      */
     public void editHabit(String title, String reason, Date date, int pos, String username) {
 
-        // get collection of Habits for a specified user
-        FirebaseFirestore _db = FirebaseFirestore.getInstance();
-        final CollectionReference _collectionReference = _db.collection("Users")
-                                                            .document(username)
-                                                            .collection("Habits");
-
         // this acquires the unique habit ID of the habit to be edited
         Long habitId = _habits.get(pos).getHabitId();
 
@@ -146,8 +126,28 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("habitId", habitId);
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
-        _collectionReference.document(habitId.toString())
-                .set(habitData)
+        setHabitDataInDatabase(username, habitId.toString(), habitData);
+    }
+
+    // this is a temporary implementation of generating unique habitIDs
+    private long generateHabitId() {
+        long habitIdCounter = 1;
+        while(habitIdSet.contains(habitIdCounter)) {
+            habitIdCounter++;
+        }
+        habitIdSet.add(habitIdCounter);
+        return habitIdCounter;
+    }
+
+    private void setHabitDataInDatabase(String username, String id, HashMap<String, Object> data) {
+        // get collection of Habits for a specified user
+        FirebaseFirestore _db = FirebaseFirestore.getInstance();
+        final CollectionReference _collectionReference = _db.collection("Users")
+                .document(username)
+                .collection("Habits");
+
+        _collectionReference.document(id)
+                .set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -160,15 +160,5 @@ public class HabitList extends ArrayList<Habit>{
                         Log.d(TAG, "Data failed to be added." + e.toString());
                     }
                 });
-    }
-
-    // this is a temporary implementation of generating unique habitIDs
-    private long generateHabitId() {
-        long habitIdCounter = 1;
-        while(habitIdSet.contains(habitIdCounter)) {
-            habitIdCounter++;
-        }
-        habitIdSet.add(habitIdCounter);
-        return habitIdCounter;
     }
 }

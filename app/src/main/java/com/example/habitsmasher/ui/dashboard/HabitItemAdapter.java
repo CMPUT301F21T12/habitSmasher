@@ -48,6 +48,9 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      *
      * @param options the firestore entities
      * @param fragment the habitListFragment
+     * @param activity
+     * @param habits the habit list
+     * @param options 
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options, FragmentActivity activity,
                             HabitList habits, HabitListFragment fragment) {
