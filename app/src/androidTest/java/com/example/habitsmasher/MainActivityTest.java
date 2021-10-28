@@ -3,7 +3,10 @@ package com.example.habitsmasher;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.view.View;
+import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import com.robotium.solo.Solo;
@@ -30,7 +33,8 @@ public class MainActivityTest {
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
-
+    private static final String EDIT_BUTTON = "EDIT";
+    private static final long HABIT_ID = 1;
     private Solo solo;
 
     @Rule
@@ -109,7 +113,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date());
+        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -154,7 +158,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date());
+        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -187,7 +191,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date());
+        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID);
 
         // Enter reason
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
@@ -226,7 +230,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date());
+        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -270,7 +274,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "AnExampleHabitReasonThatIsTooLong", new Date());
+        Habit testHabit = new Habit("addHabitTest", "AnExampleHabitReasonThatIsTooLong", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -314,7 +318,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "", new Date());
+        Habit testHabit = new Habit("addHabitTest", "", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -357,7 +361,7 @@ public class MainActivityTest {
         solo.clickOnView(solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date());
+        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -399,5 +403,71 @@ public class MainActivityTest {
 
     private void assertTextOnScreen(String text) {
         assertTrue(solo.waitForText(text, 1, 2000));
+    }
+
+
+    /**
+     * Tests edit function is working correctly
+     * Testing swipe code found here:
+     * URL: https://stackoverflow.com/questions/24664730/writing-a-robotium-test-to-swipe-open-an-item-on-a-swipeable-listview
+     * Name: C0D3LIC1OU5
+     * Date: July 9, 2014
+     */
+    @Test
+    public void ensureEditIsFunctioning() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+
+        // Create test habit
+        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        TextView view = solo.getText(testHabit.getTitle());
+
+        // locate row
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        int fromX = location[0] + 200;
+        int fromY = location[1];
+        solo.drag(fromX, location[0], fromY, fromY, 10);
+        solo.drag(fromX, location[0], fromY, fromY, 10);
+        solo.waitForView(R.id.edit_button);
+        solo.clickOnButton(EDIT_BUTTON);
+        // clear Edit Text fields
+        solo.clearEditText(0);
+        solo.clearEditText(1);
+
+        Habit testEditHabit = new Habit("testTitle1", "testReason1", new Date(), HABIT_ID);
+        // enter new values
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testEditHabit.getTitle());
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testEditHabit.getReason());
+        enterCurrentDateInAddHabitDialogBox();
+        clickConfirmButtonInAddHabitDialogBox();
+        assertTextOnScreen(HABIT_LIST_TEXT);
+        assertTextOnScreen(testEditHabit.getTitle());
     }
 }

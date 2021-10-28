@@ -27,4 +27,6 @@
     <string name="following">Following</string>
     <string name="zero">0</string>
     <string name="you_have_no_recent_activity">You have no recent activity!</string>
+    <string name="edit_button_label">EDIT</string>
+    <string name="delete_button_label">DELETE</string>
 </resources>

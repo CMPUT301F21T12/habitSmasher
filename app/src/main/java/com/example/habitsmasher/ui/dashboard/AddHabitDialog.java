@@ -56,11 +56,6 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
     private String _habitTitleInput;
     private String _habitReasonInput;
     private Date _habitDate;
-    private final String _username;
-
-    public AddHabitDialog(String username) {
-        _username = username;
-    }
 
     @Nullable
     @Override
@@ -93,8 +88,7 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
                 if (checkNewHabitIsValid()){
-                    _habitListFragment.addNewHabit(new Habit(_habitTitleInput, _habitReasonInput, _habitDate));
-                    _habitListFragment.addHabitToDatabase(_habitTitleInput, _habitReasonInput, _habitDate, _username);
+                    _habitListFragment.addHabitToDatabase(_habitTitleInput, _habitReasonInput, _habitDate);
                     getDialog().dismiss();
                 }
             }
