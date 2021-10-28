@@ -113,6 +113,12 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
     }
 
 
+    /**
+     * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
+     * @param requestCode
+     * @param resultCode
+     * @param imageReturnedIntent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);

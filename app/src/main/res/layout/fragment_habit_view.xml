@@ -12,13 +12,12 @@
         android:id="@+id/descriptionHabitTextBox"
         android:layout_width="359dp"
         android:layout_height="171dp"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="72dp"
         android:background="@drawable/text_view_background"
         android:ems="10"
         android:text="@string/descriptionTextBoxLabel"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

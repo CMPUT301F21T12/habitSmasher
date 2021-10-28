@@ -114,29 +114,11 @@
         android:gravity="start"
         android:inputType="textMultiLine"
         android:singleLine="false"
-        android:text="@string/add_habit_event_comment"
         android:textColor="@color/theme_dark_grey"
+        android:hint="Enter Comment..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/add_habit_header" />
-
-    <!--<EditText
-        android:id="@+id/habit_event_add_photo"
-        android:layout_width="140dp"
-        android:layout_height="135dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="32dp"
-        android:background="@color/menu_bar"
-        android:ems="10"
-        android:gravity="center|start"
-        android:inputType="textMultiLine"
-        android:selectAllOnFocus="false"
-        android:singleLine="false"
-        android:text="@string/add_habit_photo_label"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_habit_header" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_location_button"
@@ -177,10 +159,10 @@
         android:id="@+id/habit_event_add_photo"
         android:layout_width="141dp"
         android:layout_height="134dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="32dp"
+        android:src="@drawable/add_photo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_habit_header"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/add_habit_header" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
