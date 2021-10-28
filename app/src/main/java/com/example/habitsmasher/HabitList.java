@@ -2,11 +2,12 @@ package com.example.habitsmasher;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.UUID;
 
 /**
  * The habit list class is a container for the list of habits.
@@ -171,5 +171,60 @@ public class HabitList extends ArrayList<Habit>{
                         Log.d(TAG, "Data failed to be added." + e.toString());
                     }
                 });
+    }
+
+    /**
+     * This method is responsible for deleting a habit from both locally and the db
+     * @param context the current application context
+     * @param username the current user's username
+     * @param habitToDelete the habit to delete
+     * @param habitPosition the position of the habit to delete
+     */
+    public void deleteHabit(Context context,
+                            String username,
+                            Habit habitToDelete,
+                            int habitPosition) {
+        // delete locally
+        deleteHabitLocally(habitPosition);
+
+        // delete from firebase
+        deleteHabitFromDatabase(context, username, habitToDelete);
+    }
+
+    /**
+     * This method deletes a habit from the local habit list
+     * @param habitPosition the index of the habit to delete
+     */
+    public void deleteHabitLocally(int habitPosition) {
+        _habits.remove(habitPosition);
+    }
+
+    /**
+     * This method deletes a habit from the database
+     * @param context the current application context
+     * @param username the current user's username
+     * @param habitToDelete the habit to delete
+     */
+    private void deleteHabitFromDatabase(Context context, String username, Habit habitToDelete) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Users")
+          .document(username)
+          .collection("Habits")
+          .document(String.valueOf(habitToDelete.getHabitId()))
+          .delete()
+          .addOnSuccessListener(new OnSuccessListener<Void>() {
+              @Override
+              public void onSuccess(Void unused) {
+                  Log.d("deleteHabit", "Data successfully deleted.");
+                  Toast.makeText(context, "Habit deleted!", Toast.LENGTH_SHORT).show();
+              }
+          }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("deleteHabit", "Data failed to be deleted.");
+                Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

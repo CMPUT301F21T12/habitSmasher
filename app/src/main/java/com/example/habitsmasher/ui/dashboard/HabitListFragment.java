@@ -83,7 +83,7 @@ public class HabitListFragment extends Fragment {
         }
         //wraps the snapshots representing the HabitList of the user in the HabitList
         _habitList.setSnapshots(options.getSnapshots());
-        _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment);
+        _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment, _user.getUsername());
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
