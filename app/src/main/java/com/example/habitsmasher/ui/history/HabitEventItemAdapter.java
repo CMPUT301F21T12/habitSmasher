@@ -24,9 +24,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * The HabitEventItemAdapter class
+ * Based on HabitItemAdapter, extension of FirestoreRecycler that shows habit events list with live updates
+ */
 public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
+    // Initialize variables
     private Context _context;
-    private final FragmentActivity _activity;
     private final String DATE_FORMAT = "dd/MM/yyyy";
     private final ObservableSnapshotArray<HabitEvent> _snapshots;
 
@@ -36,15 +40,15 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
      *
      * @param options the firestore entities
      */
-    public HabitEventItemAdapter(@NonNull FirestoreRecyclerOptions<HabitEvent> options, FragmentActivity activity) {
+    public HabitEventItemAdapter(@NonNull FirestoreRecyclerOptions<HabitEvent> options) {
         super(options);
         _snapshots = options.getSnapshots();
-        _activity = activity;
     }
 
     @NonNull
     @Override
     public HabitEventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate view based on HabitEventViewHolder
         _context = parent.getContext();
         View view = LayoutInflater.from(_context).inflate(R.layout.habit_event_row, parent, false);
         return new HabitEventViewHolder(view);
@@ -57,9 +61,12 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         holder._habitEventComment.setText(habitEvent.getComment());
 
         // TODO: Implement image setting too
-        // TODO: Set on click listener
     }
 
+    /**
+     * Necessary function for firestore recycler view
+     * @return number of elements in snapshots
+     */
     @Override
     public int getItemCount() { return _snapshots.size(); }
 
@@ -71,7 +78,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         private final TextView _habitEventDate;
         private final TextView _habitEventComment;
         // private final ImageView _habitEventImage;
-        // private final ConstraintLayout _habitEventRow;
 
         /**
          * Default constructor
@@ -83,7 +89,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
             _habitEventDate = itemView.findViewById(R.id.habit_event_date);
             _habitEventComment = itemView.findViewById(R.id.habit_event_comment);
             // _habitEventImage = itemView.findViewById(R.id.habit_event_image);
-            // _habitEventRow = itemView.findViewById(R.id.habit_event_row);
         }
     }
 

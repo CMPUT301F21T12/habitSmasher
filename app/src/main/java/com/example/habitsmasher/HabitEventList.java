@@ -5,6 +5,10 @@ import android.net.Uri;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This is the Habit Event List Class.
+ * It's purpose is to store habit events
+ */
 public class HabitEventList extends ArrayList{
     private ArrayList<HabitEvent> _habitEvents = new ArrayList<>();
 
@@ -26,8 +30,6 @@ public class HabitEventList extends ArrayList{
         // Create habit event and add it to the list
         HabitEvent eventToAdd = new HabitEvent(startDate, comment, pictureUri);
         _habitEvents.add(eventToAdd);
-
-        // TODO: Add habit event to Database
     }
 
     /**
@@ -37,7 +39,5 @@ public class HabitEventList extends ArrayList{
     public void addHabitEvent(HabitEvent eventToAdd) {
         // Add event to list
         _habitEvents.add(eventToAdd);
-
-        // TODO: Add habit event to Database
     }
 }

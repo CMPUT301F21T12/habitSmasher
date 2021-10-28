@@ -36,15 +36,22 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * The AddHabitEventDialog
+ * Deals with UI and information handling of the add habit event popup
+ */
 public class AddHabitEventDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     private static final String TAG = "AddHabitEventDialog";
 
+    // Relevant variables
     private final String INCORRECT_COMMENT_FORMAT = "Incorrect comment entered";
     private final String DATE_FORMAT = "dd/MM/yyyy";
     private final String INCORRECT_BLANK_DATE = "Please enter a start date";
-
     private String _username;
+    private String _eventCommentInput;
+    private Date _eventDate;
 
+    // UI elements
     private HabitEventListFragment _habitEventListFragment;
     private EditText _eventCommentText;
     private TextView _eventDateText;
@@ -53,9 +60,10 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
     private ImageView _eventPictureView;
     private Uri _selectedImage;
 
-    private String _eventCommentInput;
-    private Date _eventDate;
-
+    /**
+     * Default constructor
+     * @param username (String) The username of the user who is adding events
+     */
     public AddHabitEventDialog(String username) {
         _username = username;
     }
@@ -63,13 +71,17 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate view
         View view = inflater.inflate(R.layout.add_habit_event_dialog, container, false);
+
+        // Attach UI elements
         _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
         _eventDateText = view.findViewById(R.id.habit_event_date_selection);
         _cancelNewEvent = view.findViewById(R.id.cancel_habit_event);
         _confirmNewEvent = view.findViewById(R.id.confirm_habit_event);
         _eventPictureView = view.findViewById(R.id.habit_event_add_photo);
 
+        // Add listener to date text to open date picker
         _eventDateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +89,7 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
             }
         });
 
+        // Add listener to cancel button which closes dialog
         _cancelNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,13 +98,14 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
             }
         });
 
+        // Add listener to confirm button that adds events to database and closed dialog
         _confirmNewEvent.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "Confirm");
+                // Check if event data is valid
                 if (checkNewHabitEventIsValid()) {
-                    Log.d(TAG, _habitEventListFragment.toString());
+                    // If everything is valid, add event to database, events list, and close dialog
                     HabitEvent newEvent = new HabitEvent(_eventDate, _eventCommentInput, _selectedImage);
                     _habitEventListFragment.addNewHabitEvent(newEvent);
                     _habitEventListFragment.addHabitEventToDatabase(newEvent.getStartDate(), newEvent.getComment(), newEvent.getId(), newEvent.getPictureUri(), _username);
@@ -101,9 +115,11 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
             }
         });
 
+        // Add listener to image view
         _eventPictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Open gallery to let user pick photo
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(pickPhoto, 1);
             }
@@ -115,6 +131,7 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
 
     /**
      * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
+     * Override onActivityResult to handle when user has selected image
      * @param requestCode
      * @param resultCode
      * @param imageReturnedIntent
@@ -126,6 +143,7 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
             case 0:
             case 1:
                 if (resultCode == RESULT_OK) {
+                    // Set selected picture
                     _selectedImage = imageReturnedIntent.getData();
                     _eventPictureView.setImageURI(_selectedImage);
                 }
@@ -134,7 +152,9 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
 
     }
 
-
+    /**
+     * Opens date picker
+     */
     private void openDatePickerDialog(){
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getActivity(),
@@ -146,6 +166,13 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
         datePickerDialog.show();
     }
 
+    /**
+     * Handles when a date is selected
+     * @param view
+     * @param year
+     * @param month
+     * @param day
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         //1 is added to the month we get from the DatePickerDialog
@@ -156,25 +183,36 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
         _eventDateText.setText(date);
     }
 
+    /**
+     * Function to check if data of a potential new habit event is valid
+     * @return true or false depending on data validity
+     */
     private boolean checkNewHabitEventIsValid() {
+        // Variable to store date success
         boolean invalidDate = false;
 
-        _eventCommentInput = _eventCommentText.getText().toString();
-
+        // Create date formatter
         DateFormat inputDateFormatter = new SimpleDateFormat(DATE_FORMAT);
         _eventDate = null;
 
         try {
+            // Try formatting date
             inputDateFormatter.setLenient(false);
             _eventDate = inputDateFormatter.parse(_eventDateText.getText().toString());
         } catch (ParseException e) {
+            // Handle if formatting is not successful
             invalidDate = true;
             e.printStackTrace();
         }
 
+        // Get comment input
+        _eventCommentInput = _eventCommentText.getText().toString();
+
+        // Check that comment is 0-20 characters, and date is valid
         if ((_eventCommentInput.length() >0) && (_eventCommentInput.length() <= 20) && !invalidDate) {
             return true;
         } else {
+            // Create toast messages for invalid input
             if (invalidDate) {
                 Toast.makeText(getActivity(), INCORRECT_BLANK_DATE, Toast.LENGTH_SHORT).show();
             } else {
@@ -189,6 +227,7 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
+            // Get habit event fragment for later use
             _habitEventListFragment = (HabitEventListFragment) getTargetFragment();
         }
         catch (ClassCastException e) {
