@@ -19,9 +19,15 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
     private Context _context;
     private final FragmentActivity _activity;
+    private final String DATE_FORMAT = "dd/MM/yyyy";
     private final ObservableSnapshotArray<HabitEvent> _snapshots;
 
     /**
@@ -47,7 +53,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
     @Override
     public void onBindViewHolder(@NonNull HabitEventViewHolder holder, int position, @NonNull HabitEvent habitEvent) {
         // Set UI elements of habit event
-        holder._habitEventDate.setText(habitEvent.getStartDate().toString());
+        holder._habitEventDate.setText(new SimpleDateFormat(DATE_FORMAT).format(habitEvent.getStartDate()));
         holder._habitEventComment.setText(habitEvent.getComment());
 
         // TODO: Implement image setting too
