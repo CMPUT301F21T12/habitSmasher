@@ -202,7 +202,7 @@ public class HabitEventListFragment extends Fragment {
         StorageReference storageReference = storage.getReference();
 
         // Create path for image
-        String storageUrl = "img/" + _user.getUsername() + "/" + _parentHabit.getId() + "/" + id;
+        String storageUrl = "img/" + _user.getUsername() + "/" + _parentHabit.getHabitId() + "/" + id;
 
         // Create reference with new path and attempt upload
         StorageReference imageStorageRef = storageReference.child(storageUrl);

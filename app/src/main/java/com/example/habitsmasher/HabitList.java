@@ -84,7 +84,7 @@ public class HabitList extends ArrayList<Habit>{
 
         // add habit to database, using it's habit ID as the document name
         setHabitDataInDatabase(username, habitId.toString(), habitData);
-        addHabitLocal(new Habit(title, reason, date, habitId));
+        addHabitLocal(new Habit(title, reason, date, habitId, new HabitEventList()));
     }
 
     /**

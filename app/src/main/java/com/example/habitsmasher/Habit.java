@@ -27,7 +27,6 @@ public class Habit implements Serializable {
         _title = title;
         _reason = reason;
         _date = date;
-        _id = UUID.randomUUID();
         _habitEvents = habitEvents;
     }
 
