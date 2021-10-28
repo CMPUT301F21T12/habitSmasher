@@ -4,6 +4,7 @@ import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -15,13 +16,14 @@ public class Habit implements Serializable {
     private String _reason;
     private Date _date;
     private HabitEventList _habitEvents;
-    private UUID _id;
+    private long _habitId;
 
     public Habit () {
         // needed for firestore
     }
 
-    public Habit (String title, String reason, Date date, HabitEventList habitEvents) {
+    public Habit (String title, String reason, Date date, long habitId, HabitEventList habitEvents) {
+        _habitId = habitId;
         _title = title;
         _reason = reason;
         _date = date;
@@ -93,8 +95,14 @@ public class Habit implements Serializable {
      */
     public void setHabitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
 
-    @PropertyName("id")
-    public UUID getId() {
-        return _id;
+    @PropertyName("habitId")
+    public long getHabitId() {
+        return _habitId;
     }
+
+    // should NEVER be used in practice, adding since it might be needed for _snapshots
+    public void setHabitId(long habitId) {
+        _habitId = habitId;
+    }
+
 }
