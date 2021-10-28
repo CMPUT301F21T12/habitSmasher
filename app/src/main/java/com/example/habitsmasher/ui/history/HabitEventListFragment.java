@@ -20,6 +20,7 @@ import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
+import com.example.habitsmasher.ui.dashboard.HabitListFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -133,11 +134,18 @@ public class HabitEventListFragment extends Fragment {
 
     private void openAddHabitEventDialogBox() {
         AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog(_user.getUsername());
+        addHabitEventDialog.setTargetFragment(HabitEventListFragment.this, 1);
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
 
 
-    public void addNewHabitEvent(HabitEvent habitEvent) { _habitEventList.addHabitEvent(habitEvent); }
+    public void addNewHabitEvent(HabitEvent habitEvent) {
+        if (_habitEventList == null) {
+            _parentHabit.setHabitEvents(new HabitEventList());
+            this._habitEventList = _parentHabit.getHabitEvents();
+        }
+        _habitEventList.addHabitEvent(habitEvent);
+    }
 
     public void addHabitEventToDatabase(Date date, String comment, UUID id, String username) {
         final CollectionReference collectionReference = _db.collection("Users")
