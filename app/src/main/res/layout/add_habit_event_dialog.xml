@@ -120,7 +120,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/add_habit_header" />
 
-    <EditText
+    <!--<EditText
         android:id="@+id/habit_event_add_photo"
         android:layout_width="140dp"
         android:layout_height="135dp"
@@ -136,7 +136,7 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_habit_header" />
+        app:layout_constraintTop_toBottomOf="@+id/add_habit_header" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_location_button"
@@ -172,5 +172,15 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/new_habit_date_label"
         app:layout_constraintTop_toBottomOf="@+id/add_habit_event_comment" />
+
+    <ImageView
+        android:id="@+id/habit_event_add_photo"
+        android:layout_width="141dp"
+        android:layout_height="134dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_habit_header"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

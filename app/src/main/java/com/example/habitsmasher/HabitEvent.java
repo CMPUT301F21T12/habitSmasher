@@ -1,5 +1,7 @@
 package com.example.habitsmasher;
 
+import android.net.Uri;
+
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.Date;
@@ -12,7 +14,7 @@ import java.util.UUID;
 public class HabitEvent {
     private Date _startDate;
     private String _comment;
-    private String _pictureURL;
+    private Uri _pictureUri;
     private UUID _id = UUID.randomUUID();
 
     // TODO: Eventually add location
@@ -23,19 +25,19 @@ public class HabitEvent {
     public HabitEvent() {
         this._startDate = new Date();
         this._comment = "";
-        this._pictureURL = "";
+        // TODO: Set default image
     }
 
     /**
      * Default constructor, creates new HabitEvent
      * @param startDate (Date): The start date of the habit event
      * @param comment (String): The comment of the habit event
-     * @param pictureURL (String): The URL of the picture of the habit event
+     * @param pictureUri (String): The URL of the picture of the habit event
      */
-    public HabitEvent(Date startDate, String comment, String pictureURL) {
+    public HabitEvent(Date startDate, String comment, Uri pictureUri) {
         this._startDate = startDate;
         this._comment = comment;
-        this._pictureURL = pictureURL;
+        this._pictureUri = pictureUri;
     }
 
     /**
@@ -77,16 +79,16 @@ public class HabitEvent {
      * @return pictureURL: The URL of the picture of the habit event
      */
     @PropertyName("picture")
-    public String getPictureURL() {
-        return _pictureURL;
+    public Uri getPictureUri() {
+        return _pictureUri;
     }
 
     /**
      * Sets the URL of the picture of a habit event
-     * @param pictureURL (String): The URL of the picture of the habit event
+     * @param pictureUri (Uri): The URL of the picture of the habit event
      */
-    public void setPictureURL(String pictureURL) {
-        this._pictureURL = pictureURL;
+    public void setPictureURL(Uri pictureUri) {
+        this._pictureUri = pictureUri;
     }
 
     @PropertyName("id")

@@ -1,5 +1,7 @@
 package com.example.habitsmasher;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,11 +20,11 @@ public class HabitEventList extends ArrayList{
      * Creates a new habit event and add its to the habit event list
      * @param startDate (Date): The start date of the habit event to add
      * @param comment (String): The comment of the habit event to add
-     * @param pictureURL (String): The URL of the picture of the habit event to add
+     * @param pictureUri (String): The URL of the picture of the habit event to add
      */
-    public void addHabitEvent(Date startDate, String comment, String pictureURL) {
+    public void addHabitEvent(Date startDate, String comment, Uri pictureUri) {
         // Create habit event and add it to the list
-        HabitEvent eventToAdd = new HabitEvent(startDate, comment, pictureURL);
+        HabitEvent eventToAdd = new HabitEvent(startDate, comment, pictureUri);
         _habitEvents.add(eventToAdd);
 
         // TODO: Add habit event to Database

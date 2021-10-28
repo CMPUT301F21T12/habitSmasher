@@ -48,7 +48,7 @@ dependencies {
 
     // dependency for cloud firebase support
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
-
+    implementation 'com.google.firebase:firebase-storage'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.firebase:firebase-firestore:23.0.4'
     testImplementation 'junit:junit:4.+'

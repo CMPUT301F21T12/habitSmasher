@@ -1,6 +1,7 @@
 package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -147,7 +151,30 @@ public class HabitEventListFragment extends Fragment {
         _habitEventList.addHabitEvent(habitEvent);
     }
 
-    public void addHabitEventToDatabase(Date date, String comment, UUID id, String username) {
+    private void addImageToDatabase(Uri image, UUID id) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        StorageReference storageReference = storage.getReference();
+        String storageUrl = "img/" + _user.getUsername() + "/" + _parentHabit.getId() + "/" + id;
+
+        StorageReference imageStorageRef = storageReference.child(storageUrl);
+        UploadTask uploadTask = imageStorageRef.putFile(image);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Data failed to be added." + e.toString());
+            }
+        });
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "Data successfully added.");
+            }
+        });
+    }
+
+    public void addHabitEventToDatabase(Date date, String comment, UUID id, Uri pictureUri, String username) {
         final CollectionReference collectionReference = _db.collection("Users")
                                                         .document(username)
                                                         .collection("Habits")
