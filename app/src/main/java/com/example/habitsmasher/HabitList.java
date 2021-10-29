@@ -80,7 +80,7 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("title", title);
         habitData.put("reason", reason);
         habitData.put("date", date);
-        habitData.put("habitId", habitId);
+        habitData.put("id", habitId);
 
         // add habit to database, using it's habit ID as the document name
         setHabitDataInDatabase(username, habitId.toString(), habitData);
@@ -120,14 +120,14 @@ public class HabitList extends ArrayList<Habit>{
     public void editHabitInDatabase(String newTitle, String newReason, Date newDate, int pos, String username) {
 
         // this acquires the unique habit ID of the habit to be edited
-        Long habitId = _habits.get(pos).getHabitId();
+        Long habitId = _habits.get(pos).getId();
 
         // stores the new fields of the Habit into a hashmap
         HashMap<String, Object> habitData = new HashMap<>();
         habitData.put("title", newTitle);
         habitData.put("reason", newReason);
         habitData.put("date", newDate);
-        habitData.put("habitId", habitId);
+        habitData.put("id", habitId);
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
         setHabitDataInDatabase(username, habitId.toString(), habitData);
@@ -211,7 +211,7 @@ public class HabitList extends ArrayList<Habit>{
         db.collection("Users")
           .document(username)
           .collection("Habits")
-          .document(String.valueOf(habitToDelete.getHabitId()))
+          .document(String.valueOf(habitToDelete.getId()))
           .delete()
           .addOnSuccessListener(new OnSuccessListener<Void>() {
               @Override

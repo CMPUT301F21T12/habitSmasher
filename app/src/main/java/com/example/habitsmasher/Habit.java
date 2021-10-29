@@ -4,25 +4,22 @@ import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.UUID;
 
 /**
  * This is the Habit class
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
  */
-public class Habit implements Serializable {
+public class Habit extends DatabaseEntity implements Serializable {
     private String _title;
     private String _reason;
     private Date _date;
-    private long _habitId;
 
     public Habit () {
         // needed for firestore
     }
 
     public Habit (String title, String reason, Date date, long habitId) {
-        _habitId = habitId;
+        super(habitId);
         _title = title;
         _reason = reason;
         _date = date;
@@ -78,19 +75,4 @@ public class Habit implements Serializable {
     public void setDate(Date date) {
         _date = date;
     }
-
-    /**
-     *
-     * @return _habitId: the ID of the habit
-     */
-    @PropertyName("habitId")
-    public long getHabitId() {
-        return _habitId;
-    }
-
-    // should NEVER be used in practice, adding since it might be needed for _snapshots
-    public void setHabitId(long habitId) {
-        _habitId = habitId;
-    }
-
 }
