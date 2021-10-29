@@ -29,10 +29,15 @@ public class HabitListTest {
         assertTrue(_habitList.getHabitList().contains(habit));
     }
 
-    // test for add habit failing
+    @Test
+    public void generateHabitId_withExistingIdSet_expectIdAddedToIdSet(){
+        HabitList habitList = new HabitList();
 
+        Long habitId = habitList.generateHabitId();
 
-    // generate habit id
+        assertEquals(1, HabitList.habitIdSet.size());
+        assertEquals(1, habitId.intValue());
+    }
 
     @Test
     public void deleteHabitLocally_withValidHabitPosition_expectHabitDeletedFromList() {
