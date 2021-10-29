@@ -17,6 +17,7 @@ import com.example.habitsmasher.databinding.FragmentHomeBinding;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
@@ -31,7 +32,8 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         // This is the example habit to be displayed
-        Habit testHabit = new Habit("This is a title", "This is my reason", new Date());
+        Habit testHabit = new Habit("This is a title", "This is my reason", new Date(),
+                                        0);
 
         // Getting the corresponding textviews in the fragment_home.xml
         TextView titleView = binding.habitTitle;
