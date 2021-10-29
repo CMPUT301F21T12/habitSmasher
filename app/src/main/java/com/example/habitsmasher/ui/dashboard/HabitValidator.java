@@ -53,6 +53,10 @@ public class HabitValidator {
 
     /**
      * This helper method displays a message to the screen
+     * Implementation from:
+     * https://stackoverflow.com/questions/3875184/cant-create-handler-inside-thread-that-has-not-called-looper-prepare
+     * User: Ayaz Alifov
+     * Date: January 24, 2016
      * @param message the message to display
      */
     private void showToastMessage(String message) {
