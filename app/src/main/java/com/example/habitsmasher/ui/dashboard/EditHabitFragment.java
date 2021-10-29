@@ -26,7 +26,7 @@ import java.util.Date;
 
 
 public class EditHabitFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
-    private static final String HEADER = "Edit Dialog";
+    private final String HEADER = getResources().getString(R.string.edit_habit);
     private static final String PATTERN = "dd/MM/yyyy";
     private EditText _titleText;
     private EditText _reasonText;

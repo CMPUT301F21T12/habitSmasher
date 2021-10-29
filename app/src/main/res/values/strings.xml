@@ -29,4 +29,5 @@
     <string name="you_have_no_recent_activity">You have no recent activity!</string>
     <string name="edit_button_label">EDIT</string>
     <string name="delete_button_label">DELETE</string>
+    <string name="edit_habit">Edit Habit</string>
 </resources>
