@@ -31,25 +31,6 @@ public class HabitListTest {
 
     // test for add habit failing
 
-    @Test
-    public void editHabit_validEdit_expectHabitToBeEdited() {
-        long habitId = 0;
-        Habit habit = new Habit("Title 1", "Reason 1", new Date(), habitId);
-        _habitList.addHabitLocal(habit);
-        Date newDate = new Date();
-        int habitToEdit = 0;
-        String newTitle = "Title 2";
-        String newReason = "Reason 2";
-        _habitList.editHabitLocal(newTitle, newReason, newDate, habitToEdit);
-        Habit editedHabit = _habitList.getHabitList().get(habitToEdit);
-
-        assertEquals(newTitle, editedHabit.getTitle());
-        assertEquals(newReason, editedHabit.getReason());
-        assertEquals(newDate, editedHabit.getDate());
-        assertEquals(habitId, editedHabit.getHabitId());
-    }
-
-    // test for edit habit failing
 
     // generate habit id
 

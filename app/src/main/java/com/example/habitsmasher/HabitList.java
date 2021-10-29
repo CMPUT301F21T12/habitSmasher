@@ -95,19 +95,19 @@ public class HabitList extends ArrayList<Habit>{
         _habits.add(habit);
     }
 
-    /**
-     * Method that edits a Habit in the specified pos in the local HabitList
-     * @param newTitle new title of habit
-     * @param newReason new reason of habit
-     * @param newDate new date of habit
-     * @param pos position of habit
-     */
-    public void editHabitLocal(String newTitle, String newReason, Date newDate, int pos) {
-        Habit habit = _habits.get(pos);
-        habit.setTitle(newTitle);
-        habit.setReason(newReason);
-        habit.setDate(newDate);
-    }
+//    /**
+//     * Method that edits a Habit in the specified pos in the local HabitList
+//     * @param newTitle new title of habit
+//     * @param newReason new reason of habit
+//     * @param newDate new date of habit
+//     * @param pos position of habit
+//     */
+//    public void editHabitLocal(String newTitle, String newReason, Date newDate, int pos) {
+//        Habit habit = _habits.get(pos);
+//        habit.setTitle(newTitle);
+//        habit.setReason(newReason);
+//        habit.setDate(newDate);
+//    }
 
     /**
      * Method that edits the habit at position pos in the database
