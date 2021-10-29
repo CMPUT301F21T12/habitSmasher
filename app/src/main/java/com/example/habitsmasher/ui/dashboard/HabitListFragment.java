@@ -112,10 +112,9 @@ public class HabitListFragment extends Fragment {
      */
     @NonNull
     private Query getListOfHabitsFromFirebase(String username) {
-        Query query = _db.collection("Users")
-                         .document(username)
-                         .collection("Habits");
-        return query;
+        return _db.collection("Users")
+                  .document(username)
+                  .collection("Habits");
     }
 
     @Override public void onStart() {
