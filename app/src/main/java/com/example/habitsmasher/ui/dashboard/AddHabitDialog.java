@@ -19,14 +19,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Making a dialogfragment from fragment came from the following video:
@@ -44,18 +39,11 @@ import java.util.Date;
 public class AddHabitDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = "AddHabitDialog";
-    private final String DATE_FORMAT = "dd/MM/yyyy";
-    private final String INCORRECT_TITLE_FORMAT = "Incorrect habit title entered";
-    private final String INCORRECT_REASON_FORMAT = "Incorrect habit reason entered";
-    private final String INCORRECT_BLANK_DATE = "Please enter a start date";
 
     private HabitListFragment _habitListFragment;
     private EditText _habitTitleEditText;
     private EditText _habitReasonEditText;
     private TextView _habitDateTextView;
-    private String _habitTitleInput;
-    private String _habitReasonInput;
-    private Date _habitDate;
 
     @Nullable
     @Override
@@ -87,8 +75,19 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
-                if (checkNewHabitIsValid()){
-                    _habitListFragment.addHabitToDatabase(_habitTitleInput, _habitReasonInput, _habitDate);
+
+                HabitValidator habitValidator = new HabitValidator(getActivity());
+
+                String habitTitle = _habitTitleEditText.getText().toString();
+                String habitReason = _habitReasonEditText.getText().toString();
+                String habitDate = _habitDateTextView.getText().toString();
+
+                if (habitValidator.isHabitValid(habitTitle,
+                                                habitReason,
+                                                habitDate)){
+                    _habitListFragment.addHabitToDatabase(habitTitle,
+                                                          habitReason,
+                                                          habitValidator.checkHabitDateValid(habitDate));
                     getDialog().dismiss();
                 }
             }
@@ -117,56 +116,6 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
         int correctedMonth = month + 1;
         String date = day + "/" + correctedMonth + "/" + year;
         _habitDateTextView.setText(date);
-    }
-
-    /**
-     * Returns boolean so habit can be added to habit list or not.
-     * @return true if all fields are entered correctly, false otherwise.
-     */
-    private boolean checkNewHabitIsValid(){
-        boolean invalidDate = false;
-        _habitTitleInput = _habitTitleEditText.getText().toString();
-        _habitReasonInput = _habitReasonEditText.getText().toString();
-
-        DateFormat inputDateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        _habitDate = null;
-
-        try {
-            inputDateFormatter.setLenient(false);
-            _habitDate = inputDateFormatter.parse(_habitDateTextView.getText().toString());
-        } catch (ParseException e) {
-            invalidDate = true;
-            e.printStackTrace();
-        }
-
-        /**
-         * When user input meets the requirements for a proper habit title, habit reason, and habit date,
-         * have the habit be added to the habit list back in dashboard fragment.
-         */
-        if (
-                ((_habitTitleInput.length()>0)&&(_habitTitleInput.length()<=20))&&
-                ((_habitReasonInput.length()>0)&&(_habitReasonInput.length()<=30))&&
-                (!invalidDate)
-        ) {
-            return true;
-        } else {
-
-            //Handle error checking for new habit name/title
-            if ((!(_habitTitleInput.length()>0)) || (!(_habitTitleInput.length()<=20))){
-                Toast.makeText(getActivity(), INCORRECT_TITLE_FORMAT, Toast.LENGTH_SHORT).show();
-            }
-
-            //Handle error checking for new habit reason
-            if ((!(_habitReasonInput.length()>0)) || (!(_habitReasonInput.length()<=30))){
-                Toast.makeText(getActivity(), INCORRECT_REASON_FORMAT, Toast.LENGTH_SHORT).show();
-            }
-
-            //Handle error checking for new habit date.
-            if (invalidDate){
-                Toast.makeText(getActivity(), INCORRECT_BLANK_DATE, Toast.LENGTH_SHORT).show();
-            }
-            return false;
-        }
     }
 
     @Override
