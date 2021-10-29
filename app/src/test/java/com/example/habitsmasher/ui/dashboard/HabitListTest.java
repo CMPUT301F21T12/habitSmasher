@@ -29,6 +29,8 @@ public class HabitListTest {
         assertTrue(_habitList.getHabitList().contains(habit));
     }
 
+    // test for add habit failing
+
     @Test
     public void editHabit_validEdit_expectHabitToBeEdited() {
         long habitId = 0;
@@ -46,6 +48,10 @@ public class HabitListTest {
         assertEquals(newDate, editedHabit.getDate());
         assertEquals(habitId, editedHabit.getHabitId());
     }
+
+    // test for edit habit failing
+
+    // generate habit id
 
     @Test
     public void deleteHabitLocally_withValidHabitPosition_expectHabitDeletedFromList() {
