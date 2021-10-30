@@ -12,16 +12,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.R;
-
-import java.util.Calendar;
 
 /**
  * Making a dialogfragment from fragment came from the following video:
@@ -36,7 +34,7 @@ import java.util.Calendar;
  * Name: Mitch Tabian
  * Video Date: March 11, 2019
  */
-public class AddHabitDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class AddHabitDialog extends DialogFragment {
 
     private static final String TAG = "AddHabitDialog";
 
@@ -97,25 +95,15 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
     }
 
     private void openDatePickerDialog(){
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(),
-                this,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
-    }
-
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        //1 is added to the month we get from the DatePickerDialog
-        // because DatePickerDialog returns values between 0 and 11,
-        // which is not really helpful for users.
-        int correctedMonth = month + 1;
-        String date = day + "/" + correctedMonth + "/" + year;
-        _habitDateTextView.setText(date);
+        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                int correctedMonth = month + 1;
+                String date =  day + "/" + correctedMonth + "/" + year;
+                _habitDateTextView.setText(date);
+            }
+        });
+        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 
     @Override
