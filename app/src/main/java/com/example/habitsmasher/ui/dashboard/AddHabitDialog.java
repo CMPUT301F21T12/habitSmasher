@@ -96,6 +96,13 @@ public class AddHabitDialog extends DialogFragment {
 
     private void openDatePickerDialog(){
         DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
+            /**
+             * Sets the text of the date select view to reflect selected date
+             * @param view
+             * @param year year of selected date
+             * @param month month of selected date (integer from 0 to 11)
+             * @param day day of month of selected date
+             */
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 int correctedMonth = month + 1;
