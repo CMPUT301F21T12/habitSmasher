@@ -476,7 +476,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), HABIT_ID);
+        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());

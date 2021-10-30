@@ -27,6 +27,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.ui.dashboard.HabitValidator;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -103,10 +104,15 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+                HabitEventValidator habitEventValidator = new HabitEventValidator(getActivity());
+
+                String habitEventComment = _eventCommentText.getText().toString();
+                String habitEventDate = _eventDateText.getText().toString();
+
                 // Check if event data is valid
-                if (checkNewHabitEventIsValid()) {
+                if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
-                    HabitEvent newEvent = new HabitEvent(_eventDate, _eventCommentInput, _selectedImage);
+                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage);
                     _habitEventListFragment.addNewHabitEvent(newEvent);
                     _habitEventListFragment.addHabitEventToDatabase(newEvent.getStartDate(), newEvent.getComment(), newEvent.getId(), newEvent.getPictureUri(), _username);
                     getDialog().dismiss();
@@ -128,7 +134,6 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
         return view;
     }
 
-
     /**
      * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
      * Override onActivityResult to handle when user has selected image
@@ -149,7 +154,6 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
                 }
                 break;
         }
-
     }
 
     /**
@@ -181,46 +185,6 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
         int correctedMonth = month + 1;
         String date = day + "/" + correctedMonth + "/" + year;
         _eventDateText.setText(date);
-    }
-
-    /**
-     * Function to check if data of a potential new habit event is valid
-     * @return true or false depending on data validity
-     */
-    private boolean checkNewHabitEventIsValid() {
-        // Variable to store date success
-        boolean invalidDate = false;
-
-        // Create date formatter
-        DateFormat inputDateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        _eventDate = null;
-
-        try {
-            // Try formatting date
-            inputDateFormatter.setLenient(false);
-            _eventDate = inputDateFormatter.parse(_eventDateText.getText().toString());
-        } catch (ParseException e) {
-            // Handle if formatting is not successful
-            invalidDate = true;
-            e.printStackTrace();
-        }
-
-        // Get comment input
-        _eventCommentInput = _eventCommentText.getText().toString();
-
-        // Check that comment is 0-20 characters, and date is valid
-        if ((_eventCommentInput.length() >0) && (_eventCommentInput.length() <= 20) && !invalidDate) {
-            return true;
-        } else {
-            // Create toast messages for invalid input
-            if (invalidDate) {
-                Toast.makeText(getActivity(), INCORRECT_BLANK_DATE, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity(), INCORRECT_COMMENT_FORMAT, Toast.LENGTH_SHORT).show();
-            }
-            // TODO: IMAGE CHECKING
-            return false;
-        }
     }
 
     @Override
