@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="day_button" parent="@style/Widget.AppCompat.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:background">@drawable/day_button</item>
+    </style>
+</resources>
