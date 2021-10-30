@@ -23,8 +23,8 @@ public class HabitEvent {
      * Empty constructor
      */
     public HabitEvent() {
-        this._startDate = new Date();
-        this._comment = "";
+        _startDate = new Date();
+        _comment = "";
         // TODO: Set default image
     }
 
@@ -35,9 +35,9 @@ public class HabitEvent {
      * @param pictureUri (String): The URL of the picture of the habit event
      */
     public HabitEvent(Date startDate, String comment, Uri pictureUri) {
-        this._startDate = startDate;
-        this._comment = comment;
-        this._pictureUri = pictureUri;
+        _startDate = startDate;
+        _comment = comment;
+        _pictureUri = pictureUri;
     }
 
     /**

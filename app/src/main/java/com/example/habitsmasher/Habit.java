@@ -83,7 +83,7 @@ public class Habit implements Serializable {
 
     /**
      * Gets habit event list of a habit
-     * @return habbitEvents (HabitEventList): The habit events associated with a habit
+     * @return habitEvents (HabitEventList): The habit events associated with a habit
      */
     @PropertyName("Events")
     public HabitEventList getHabitEvents()  { return _habitEvents; }
