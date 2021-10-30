@@ -1,12 +1,11 @@
 package com.example.habitsmasher;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import com.robotium.solo.Solo;
@@ -35,8 +34,10 @@ public class MainActivityTest {
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
+    private static final String DELETE_BUTTON = "DELETE";
     private static final long HABIT_ID = 1;
-    private Solo solo;
+
+    private Solo _solo;
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -47,8 +48,8 @@ public class MainActivityTest {
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
+    public void setUp() throws Exception {
+        _solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
     }
     
     /**
@@ -66,10 +67,10 @@ public class MainActivityTest {
     @Test
     public void navigateToHabitList(){
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // ensure that the app has transitioned to the Habit List screen
         assertTextOnScreen(HABIT_LIST_TEXT);
@@ -81,10 +82,10 @@ public class MainActivityTest {
     @Test
     public void navigateToUserProfile(){
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Notifications tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_notifications));
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
 
         // ensure that the app has transitioned to the Notifications screen
         assertTextOnScreen(PROFILE_TEXT);
@@ -96,7 +97,7 @@ public class MainActivityTest {
     @Test
     public void ensureHomeScreenDisplayedOnStart(){
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // ensure that the app has transitioned to the Notifications screen
         assertTextOnScreen(HOME_TEXT);
@@ -105,16 +106,16 @@ public class MainActivityTest {
     @Test
     public void navigateToHabitViewFragment() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // click on add habit floating action button to add habit
-        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitToListTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("viewHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -129,7 +130,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Click on added Habit
-        solo.clickOnText(testHabit.getTitle());
+        _solo.clickOnText(testHabit.getTitle());
 
         // Check the title is correct
         assertTextOnScreen(testHabit.getTitle());
@@ -141,25 +142,27 @@ public class MainActivityTest {
         assertTextOnScreen(new SimpleDateFormat(DATE_PATTERN).format(testHabit.getDate()));
 
         // Click up/back button
-        solo.goBack();
+        _solo.goBack();
 
         // Check that the current fragment is the habit list
         assertTextOnScreen(HABIT_LIST_TEXT);
+
+        deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitAddedSuccessfully() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // click on add habit floating action button to add habit
-        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -178,21 +181,23 @@ public class MainActivityTest {
 
         // Ensure added Habit is present in the list
         assertTextOnScreen(testHabit.getTitle());
+
+        deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitAdditionFails_emptyTitle() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // click on add habit floating action button to add habit
-        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyTitle", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter reason
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
@@ -217,18 +222,20 @@ public class MainActivityTest {
 
         // Ensure added Habit is present in the list
         assertTextOnScreen(testHabit.getTitle());
+
+        deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitAdditionFails_titleTooLong() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // click on add habit floating action button to add habit
-        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
         Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
@@ -249,7 +256,7 @@ public class MainActivityTest {
         assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add shorter habit title
-        solo.clearEditText(solo.getEditText(testHabit.getTitle()));
+        _solo.clearEditText(_solo.getEditText(testHabit.getTitle()));
         testHabit.setTitle("shorterTitle");
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
 
@@ -261,21 +268,23 @@ public class MainActivityTest {
 
         // Ensure added Habit is present in the list
         assertTextOnScreen(testHabit.getTitle());
+
+        deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitAdditionFails_reasonTooLong() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // click on add habit floating action button to add habit
-        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "AnExampleHabitReasonThatIsTooLong", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitReasonLong", "AnExampleHabitReasonThatIsTooLong", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -293,7 +302,7 @@ public class MainActivityTest {
         assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
 
         // Add shorter habit title
-        solo.clearEditText(solo.getEditText(testHabit.getReason()));
+        _solo.clearEditText(_solo.getEditText(testHabit.getReason()));
         testHabit.setReason("shorterReason");
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
 
@@ -305,21 +314,23 @@ public class MainActivityTest {
 
         // Ensure added Habit is present in the list
         assertTextOnScreen(testHabit.getTitle());
+
+        deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitAdditionFails_reasonEmpty() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // click on add habit floating action button to add habit
-        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyReason", "", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -348,21 +359,23 @@ public class MainActivityTest {
 
         // Ensure added Habit is present in the list
         assertTextOnScreen(testHabit.getTitle());
+
+        deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitAdditionFails_dateEmpty() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // click on add habit floating action button to add habit
-        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyDate", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -387,23 +400,8 @@ public class MainActivityTest {
 
         // Ensure added Habit is present in the list
         assertTextOnScreen(testHabit.getTitle());
-    }
 
-    private void clickConfirmButtonInAddHabitDialogBox() {
-        solo.clickOnView(solo.getView(R.id.confirm_habit));
-    }
-
-    private void enterCurrentDateInAddHabitDialogBox() {
-        solo.clickOnView(solo.getView(R.id.habit_date_selection));
-        solo.clickOnText("OK");
-    }
-
-    private void setFieldInAddHabitDialogBox(String fieldToSet, String text) {
-        solo.enterText(solo.getEditText(fieldToSet), text);
-    }
-
-    private void assertTextOnScreen(String text) {
-        assertTrue(solo.waitForText(text, 1, 2000));
+        deleteTestHabit(testHabit);
     }
 
 
@@ -417,16 +415,16 @@ public class MainActivityTest {
     @Test
     public void ensureEditIsFunctioning() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
         // click on the Habit List tab in the bottom navigation bar
-        solo.clickOnView(solo.getView(R.id.navigation_dashboard));
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
 
         // click on add habit floating action button to add habit
-        solo.clickOnView(solo.getView(R.id.add_habit_fab));
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("editHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -446,23 +444,14 @@ public class MainActivityTest {
         // Ensure added Habit is present in the list
         assertTextOnScreen(testHabit.getTitle());
 
-        TextView view = solo.getText(testHabit.getTitle());
-
-        // locate row
-        int[] location = new int[2];
-        view.getLocationOnScreen(location);
-
-        int fromX = location[0] + 200;
-        int fromY = location[1];
-        solo.drag(fromX, location[0], fromY, fromY, 10);
-        solo.drag(fromX, location[0], fromY, fromY, 10);
-        solo.waitForView(R.id.edit_button);
-        solo.clickOnButton(EDIT_BUTTON);
+        swipeLeftOnHabit(testHabit);
+        _solo.waitForView(R.id.edit_button);
+        _solo.clickOnButton(EDIT_BUTTON);
         // clear Edit Text fields
-        solo.clearEditText(0);
-        solo.clearEditText(1);
+        _solo.clearEditText(0);
+        _solo.clearEditText(1);
 
-        Habit testEditHabit = new Habit("testTitle1", "testReason1", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testEditHabit = new Habit("editHabitWorked", "testReason1", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
         // enter new values
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testEditHabit.getTitle());
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testEditHabit.getReason());
@@ -470,5 +459,86 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
         assertTextOnScreen(HABIT_LIST_TEXT);
         assertTextOnScreen(testEditHabit.getTitle());
+
+        deleteTestHabit(testEditHabit);
+    }
+
+    @Test
+    public void ensureHabitDeletedSuccessfully() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create test habit
+        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), HABIT_ID);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        deleteTestHabit(testHabit);
+    }
+
+    private void deleteTestHabit(Habit habitToDelete) {
+        swipeLeftOnHabit(habitToDelete);
+        _solo.waitForView(R.id.delete_button);
+        _solo.clickOnButton(DELETE_BUTTON);
+
+        assertFalse(isTextOnScreen(habitToDelete.getTitle()));
+    }
+
+    private void swipeLeftOnHabit(Habit habitToDelete) {
+        TextView view = _solo.getText(habitToDelete.getTitle());
+
+        // locate row
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        int displayWidth = _solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
+
+        int fromX = displayWidth - 10;
+        int fromY = location[1];
+        _solo.drag(fromX, 0, fromY, fromY, 10);
+        _solo.drag(fromX, location[0], fromY, fromY, 10);
+    }
+
+    private void clickConfirmButtonInAddHabitDialogBox() {
+        _solo.clickOnView(_solo.getView(R.id.confirm_habit));
+    }
+
+    private void enterCurrentDateInAddHabitDialogBox() {
+        _solo.clickOnView(_solo.getView(R.id.habit_date_selection));
+        _solo.clickOnText("OK");
+    }
+
+    private void setFieldInAddHabitDialogBox(String fieldToSet, String text) {
+        _solo.enterText(_solo.getEditText(fieldToSet), text);
+    }
+
+    private void assertTextOnScreen(String text) {
+        assertTrue(isTextOnScreen(text));
+    }
+
+    private boolean isTextOnScreen(String text) {
+        return _solo.waitForText(text, 1, 2000);
     }
 }
