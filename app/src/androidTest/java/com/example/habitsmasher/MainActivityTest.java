@@ -1,5 +1,6 @@
 package com.example.habitsmasher;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -209,7 +210,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
+        checkForToastMessage(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add habit title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -253,7 +254,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
+        checkForToastMessage(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add shorter habit title
         _solo.clearEditText(_solo.getEditText(testHabit.getTitle()));
@@ -299,7 +300,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
+        checkForToastMessage(HABIT_REASON_ERROR_MESSAGE);
 
         // Add shorter habit title
         _solo.clearEditText(_solo.getEditText(testHabit.getReason()));
@@ -345,7 +346,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
+        checkForToastMessage(HABIT_REASON_ERROR_MESSAGE);
 
         // Add habit reason
         testHabit.setReason("acceptable reason");
@@ -387,7 +388,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        assertTextOnScreen(EMPTY_DATE_ERROR_MESSAGE);
+        checkForToastMessage(EMPTY_DATE_ERROR_MESSAGE);
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
@@ -532,6 +533,11 @@ public class MainActivityTest {
 
     private void setFieldInAddHabitDialogBox(String fieldToSet, String text) {
         _solo.enterText(_solo.getEditText(fieldToSet), text);
+    }
+
+    private void checkForToastMessage(String errorMessage) {
+        TextView toast = (TextView) _solo.getView(android.R.id.message);
+        assertEquals(errorMessage, toast.getText().toString(),errorMessage);
     }
 
     private void assertTextOnScreen(String text) {
