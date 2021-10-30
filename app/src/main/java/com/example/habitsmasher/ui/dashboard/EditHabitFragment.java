@@ -21,7 +21,6 @@ import com.example.habitsmasher.R;
 
 public class EditHabitFragment extends DialogFragment{
     private static final String HEADER = "Edit Dialog";
-    private static final String PATTERN = "dd/MM/yyyy";
     private EditText _titleText;
     private EditText _reasonText;
     private TextView _dateText;

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import java.text.DateFormat;
@@ -21,7 +22,6 @@ import java.util.Date;
 
 public class DatePickerDialogFragment extends DialogFragment {
 
-    private static final String TAG = "DatePickerDialogFragment";
     private static final String PATTERN = "dd/MM/yyyy";
 
     private DatePickerDialog.OnDateSetListener _dateSetListener;
@@ -30,6 +30,7 @@ public class DatePickerDialogFragment extends DialogFragment {
         _dateSetListener = callback;
     }
 
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getActivity(),
