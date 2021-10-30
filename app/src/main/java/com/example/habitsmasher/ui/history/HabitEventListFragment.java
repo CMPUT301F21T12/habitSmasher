@@ -98,6 +98,7 @@ public class HabitEventListFragment extends Fragment {
         }
         catch (Error e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
+            Log.d(TAG, "No habit events to show");
         }
 
         // Inflate habit event list view

@@ -147,7 +147,7 @@
         android:ems="10"
         android:gravity="center"
         android:onClick="onClick"
-        android:text="@string/dd_mm_yyyy"
+        android:hint="@string/dd_mm_yyyy"
         android:textColor="@color/theme_dark_grey"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
