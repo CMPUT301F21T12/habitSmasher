@@ -5,7 +5,7 @@
         android:drawable="@drawable/day_button_selected" />
 
     <item
-        android:drawable="@drawable/day_button_enabled" />
+        android:drawable="@drawable/day_button_unselected" />
 
 
 </selector>

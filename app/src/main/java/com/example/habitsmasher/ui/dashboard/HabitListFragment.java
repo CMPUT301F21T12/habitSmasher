@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
@@ -197,8 +198,8 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      * */
-    public void addHabitToDatabase(String title, String reason, Date date){
-       _habitList.addHabitToDatabase(title, reason, date, _user.getUsername());
+    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker){
+       _habitList.addHabitToDatabase(title, reason, date, tracker, _user.getUsername());
     }
 
     @Override
