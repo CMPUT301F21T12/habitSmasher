@@ -1,5 +1,6 @@
 package com.example.habitsmasher;
 
+import com.example.habitsmasher.test.DatePickerDialogFragmentTest;
 import com.example.habitsmasher.test.UserUnitTest;
 import com.example.habitsmasher.ui.dashboard.HabitListTest;
 import com.example.habitsmasher.ui.dashboard.HabitValidatorTest;
@@ -10,6 +11,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({HabitListTest.class,
                      UserUnitTest.class,
-                     HabitValidatorTest.class})
+                     HabitValidatorTest.class,
+        DatePickerDialogFragmentTest.class})
 public class HabitSmasherTestSuite {
 }

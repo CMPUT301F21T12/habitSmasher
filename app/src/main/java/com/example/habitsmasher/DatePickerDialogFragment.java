@@ -32,12 +32,13 @@ public class DatePickerDialogFragment extends DialogFragment {
 
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getActivity(),
                 this._dateSetListener,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                calendar.get(Calendar.YEAR),
+                calendar.getInstance().get(Calendar.MONTH),
+                calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         );
         datePickerDialog.show();
         return datePickerDialog;
