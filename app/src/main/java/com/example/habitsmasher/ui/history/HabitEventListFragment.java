@@ -47,7 +47,7 @@ public class HabitEventListFragment extends Fragment {
 
     private HabitEventItemAdapter _habitEventItemAdapter;
     private Habit _parentHabit;
-    private User _user;
+    private String _username;
     private HabitEventList _habitEventList;
 
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
@@ -57,10 +57,10 @@ public class HabitEventListFragment extends Fragment {
      * @param parentHabit The habit for which the habit event list is
      * @param parentUser The user for which the habit event list is
      */
-    public HabitEventListFragment (Habit parentHabit, User parentUser) {
+    public HabitEventListFragment (Habit parentHabit, String parentUser) {
         super();
-        this._parentHabit = parentHabit;
-        this._user = parentUser;
+        _parentHabit = parentHabit;
+        _username = parentUser;
     }
 
     /**
@@ -70,7 +70,7 @@ public class HabitEventListFragment extends Fragment {
      * @param parentHabit (Habit): The habit for which the habit events are being displayed
      * @return A new instance of fragment HabitEventListFragment.
      */
-    public static HabitEventListFragment newInstance(Habit parentHabit, User parentUser) {
+    public static HabitEventListFragment newInstance(Habit parentHabit, String parentUser) {
         HabitEventListFragment fragment = new HabitEventListFragment(parentHabit, parentUser);
         return fragment;
     }
@@ -84,7 +84,7 @@ public class HabitEventListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Get context and query
         Context context = getContext();
-        Query query = getListOfHabitEventsFromFirebase(_user.getUsername());
+        Query query = getListOfHabitEventsFromFirebase(_username);
 
         try {
             // Populate the list with existing items in the database
@@ -171,7 +171,7 @@ public class HabitEventListFragment extends Fragment {
      */
     private void openAddHabitEventDialogBox() {
         // Create new AddHabitEventDialog and show it
-        AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog(_user.getUsername());
+        AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog(_username);
         addHabitEventDialog.setTargetFragment(HabitEventListFragment.this, 1);
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
@@ -203,7 +203,7 @@ public class HabitEventListFragment extends Fragment {
         StorageReference storageReference = storage.getReference();
 
         // Create path for image
-        String storageUrl = "img/" + _user.getUsername() + "/" + _parentHabit.getHabitId() + "/" + id;
+        String storageUrl = "img/" + _username + "/" + _parentHabit.getHabitId() + "/" + id;
 
         // Create reference with new path and attempt upload
         StorageReference imageStorageRef = storageReference.child(storageUrl);

@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 public class HabitViewFragment extends Fragment {
 
     private Habit _habit;
-    private final User _user = new User("TestUser", "123");
+    private String _username;
 
     public HabitViewFragment() {
         // Required empty public constructor
@@ -40,6 +40,7 @@ public class HabitViewFragment extends Fragment {
         // Get passed in habit
         if(getArguments() != null) {
             _habit = (Habit) getArguments().getSerializable("habit");
+            _username = (String) getArguments().getSerializable("user");
         }
 
         // Date formatter
@@ -74,7 +75,7 @@ public class HabitViewFragment extends Fragment {
 
     private void openHabitEventsView() {
         // Create Habit Event List view with needed parameters
-        HabitEventListFragment fragment = HabitEventListFragment.newInstance(_habit, _user);
+        HabitEventListFragment fragment = HabitEventListFragment.newInstance(_habit, _username);
 
         // Replace current fragment with habit view
         FragmentTransaction transaction = this.getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
