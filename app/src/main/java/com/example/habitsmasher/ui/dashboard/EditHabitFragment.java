@@ -26,7 +26,6 @@ import java.util.Date;
 
 
 public class EditHabitFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
-    private final String HEADER = getResources().getString(R.string.edit_habit);
     private static final String PATTERN = "dd/MM/yyyy";
     private EditText _titleText;
     private EditText _reasonText;
@@ -61,7 +60,8 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_selection);
 
-        header.setText(HEADER);
+        // Get header from resource file and set it
+        header.setText(getResources().getString(R.string.edit_habit));
 
         // presetting text to values of habit
         _titleText.setText(_editHabit.getTitle());
