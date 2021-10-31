@@ -2,6 +2,8 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,8 +19,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.R;
 
 import java.util.Calendar;
@@ -55,6 +59,18 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
         Button confirmNewHabit = view.findViewById(R.id.confirm_habit);
         Button cancelNewHabit = view.findViewById(R.id.cancel_habit);
 
+        //buttons for the days of the week, apologies for so many of them
+        Button mondayButton = view.findViewById(R.id.monday_button);
+        Button tuesdayButton = view.findViewById(R.id.tuesday_button);
+        Button wednesdayButton = view.findViewById(R.id.wednesday_button);
+        Button thursdayButton = view.findViewById(R.id.thursday_button);
+        Button fridayButton = view.findViewById(R.id.friday_button);
+        Button saturdayButton = view.findViewById(R.id.saturday_button);
+        Button sundayButton =view.findViewById(R.id.sunday_button);
+
+        //logic handler for tracking all those days
+        DaysTracker tracker = new DaysTracker();
+
         _habitDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +106,26 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
                                                           habitValidator.checkHabitDateValid(habitDate));
                     getDialog().dismiss();
                 }
+            }
+        });
+
+        //button onClick methods follow below
+        //TODO: Buttons don't change color when pressed, it's rather annoying to fix it.
+
+        mondayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //if monday is already selected, set it to false
+                if (tracker.getMonday()){
+                    tracker.setMonday(false);
+                    mondayButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.day_button_selected));
+                }
+                //if monday wasn't already selected, select it
+                else{
+                    tracker.setMonday(true);
+                    mondayButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.day_button_enabled));
+                }
+                Log.d("Tracker Status", tracker.getDays());
             }
         });
 
