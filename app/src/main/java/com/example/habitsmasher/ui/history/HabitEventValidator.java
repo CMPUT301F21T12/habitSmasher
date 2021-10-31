@@ -35,6 +35,7 @@ public class HabitEventValidator extends HabitValidator {
 
         if (parsedDate == null) {
             showToastMessage("Please enter a start date");
+            return false;
         }
 
         return true;
