@@ -74,7 +74,6 @@ public class DatePickerDialogFragmentTest {
 
     @Test
     public void parseStringToDate_validDateString_expectsStringToBeValidDate() {
-        //assertEquals(_date.getClass(), DatePickerDialogFragment.parseStringToDate(stringDateToDate).getClass());
         assertEquals(_dateStringToDate, DatePickerDialogFragment.parseStringToDate(_stringStringToDate));
     }
 
