@@ -12,17 +12,24 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DatePickerDialogFragmentTest {
+    //For testing parseStringToDate
     private Date _dateStringToDate;
-    private Date _dateDateToStringToday;
-    private Date _dateDateToStringPast;
-    private Date _dateDateToStringFuture;
     private String _stringStringToDate;
-    private String _stringDateToStringToday;
-    private String _stringDateToStringPast;
-    private String _stringDateToStringFuture;
     private Calendar _calendarForStringToDate = Calendar.getInstance();
+
+    //For testing parseDateToString for current date
+    private Date _dateDateToStringToday;
+    private String _stringDateToStringToday;
     private Calendar _calendarForDateToStringToday = Calendar.getInstance();
+
+    //For testing parseDateToString for past date
+    private Date _dateDateToStringPast;
+    private String _stringDateToStringPast;
     private Calendar _calendarForDateToStringPast = Calendar.getInstance();
+
+    //For testing parseDateToString for future date
+    private Date _dateDateToStringFuture;
+    private String _stringDateToStringFuture;
     private Calendar _calendarForDateToStringFuture = Calendar.getInstance();
 
 
