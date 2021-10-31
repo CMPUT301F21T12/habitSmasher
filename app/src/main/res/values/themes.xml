@@ -14,6 +14,6 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="DayButton" parent="android:style/Theme.NoTitleBar">
-        <item name="android:buttonStyle">@style/day_button</item>
+        <item name="android:checkboxStyle">@style/day_button</item>
     </style>
 </resources>

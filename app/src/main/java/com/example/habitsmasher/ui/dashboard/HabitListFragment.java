@@ -77,7 +77,8 @@ public class HabitListFragment extends Fragment {
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
                 Long id = (Long) extractMap.get("habitId");
-                Habit addHabit = new Habit(title, reason, date.toDate() ,id);
+                String days = (String) extractMap.get("days");
+                Habit addHabit = new Habit(title, reason, date.toDate(), days, id);
                 _habitList.addHabitLocal(addHabit);
                 HabitList.habitIdSet.add(id);
             }
@@ -216,8 +217,9 @@ public class HabitListFragment extends Fragment {
      * @param viewHolder viewholder of associated habit in the RecyclerView
      */
     public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
-                                HabitItemAdapter.HabitViewHolder viewHolder) {
-        _habitList.editHabitInDatabase(newTitle, newReason, newDate, pos, _user.getUsername());
+                                DaysTracker tracker, HabitItemAdapter.HabitViewHolder viewHolder) {
+        _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, pos, _user.getUsername());
+        _habitList.editHabitLocal(newTitle, newReason, newDate, tracker, pos);
         viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyItemChanged(pos);
     }

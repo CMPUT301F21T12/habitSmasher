@@ -22,7 +22,7 @@ public class Habit implements Serializable {
         // needed for firestore
     }
 
-    public Habit (String title, String reason, Date date, String days long habitId) {
+    public Habit (String title, String reason, Date date, String days, long habitId) {
         _habitId = habitId;
         _title = title;
         _reason = reason;
