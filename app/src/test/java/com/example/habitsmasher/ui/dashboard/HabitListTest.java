@@ -3,7 +3,6 @@ package com.example.habitsmasher.ui.dashboard;
 import static org.junit.Assert.*;
 
 import com.example.habitsmasher.Habit;
-import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.HabitList;
 import org.junit.Before;
