@@ -161,11 +161,13 @@ public class HabitListFragment extends Fragment {
                             switch (viewID){
                                 case R.id.edit_button:
                                     EditHabitFragment editHabitFragment = new EditHabitFragment(position,
-                                            _habitList.get(position),
+                                            _habitItemAdapter._snapshots.get(position),
                                             _fragment);
                                     editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
                                     break;
                                 case R.id.delete_button:
+                                    Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+                                    _habitList.deleteHabit(_fragment.getActivity(), _user.getUsername(), habitToDelete, position);
                                     break;
                             }
 

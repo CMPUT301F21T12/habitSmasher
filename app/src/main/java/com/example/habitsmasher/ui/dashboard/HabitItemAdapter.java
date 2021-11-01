@@ -156,8 +156,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
                 @Override
                 public void onClick(View v) {
                     int habitPosition = getAdapterPosition();
-                    Habit habitToDelete = _snapshots.get(habitPosition);
-                    _habits.deleteHabit(context, username, habitToDelete, habitPosition);
+
                 }
             });
              */
