@@ -4,8 +4,6 @@ import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.UUID;
 
 /**
  * This is the Habit class
