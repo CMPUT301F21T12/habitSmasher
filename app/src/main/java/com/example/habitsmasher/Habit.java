@@ -4,8 +4,6 @@ import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.UUID;
 
 /**
  * This is the Habit class
@@ -15,17 +13,19 @@ public class Habit implements Serializable {
     private String _title;
     private String _reason;
     private Date _date;
+    private HabitEventList _habitEvents;
     private long _habitId;
 
     public Habit () {
         // needed for firestore
     }
 
-    public Habit (String title, String reason, Date date, long habitId) {
+    public Habit (String title, String reason, Date date, long habitId, HabitEventList habitEvents) {
         _habitId = habitId;
         _title = title;
         _reason = reason;
         _date = date;
+        _habitEvents = habitEvents;
     }
 
     /**
@@ -80,9 +80,18 @@ public class Habit implements Serializable {
     }
 
     /**
-     *
-     * @return _habitId: the ID of the habit
+     * Gets habit event list of a habit
+     * @return habitEvents (HabitEventList): The habit events associated with a habit
      */
+    @PropertyName("Events")
+    public HabitEventList getHabitEvents()  { return _habitEvents; }
+
+    /**
+     * Sets the habit events of a habit
+     * @param habitEvents (HabitEventList): The list of habit events to set
+     */
+    public void setHabitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
+
     @PropertyName("habitId")
     public long getHabitId() {
         return _habitId;
