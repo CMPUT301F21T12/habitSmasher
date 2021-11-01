@@ -32,7 +32,6 @@ public class DatePickerDialogFragmentTest {
     private String _stringDateToStringFuture;
     private Calendar _calendarForDateToStringFuture = Calendar.getInstance();
 
-
     @Before
     public void setUp(){
 
@@ -57,7 +56,11 @@ public class DatePickerDialogFragmentTest {
         int dayDateToStringToday = _calendarForDateToStringToday.get(Calendar.DAY_OF_MONTH);
         int monthDateToStringToday = _calendarForDateToStringToday.get(Calendar.MONTH) + 1;
         int yearDateToStringToday = _calendarForDateToStringToday.get(Calendar.YEAR);
-        _stringDateToStringToday = dayDateToStringToday + "/" + monthDateToStringToday + "/" + yearDateToStringToday;
+        if (dayDateToStringToday >= 1 && dayDateToStringToday <= 9) {
+            _stringDateToStringToday = "0"+dayDateToStringToday + "/" + monthDateToStringToday + "/" + yearDateToStringToday;
+        } else {
+            _stringDateToStringToday = dayDateToStringToday + "/" + monthDateToStringToday + "/" + yearDateToStringToday;
+        }
 
         //For testing parseDateToString
         //Creating a date to be converted to string for test for date in the past
@@ -67,7 +70,6 @@ public class DatePickerDialogFragmentTest {
         int monthDateToStringPast = _calendarForDateToStringPast.get(Calendar.MONTH) + 1;
         int yearDateToStringPast = _calendarForDateToStringPast.get(Calendar.YEAR);
         _stringDateToStringPast = dayDateToStringPast + "/" + monthDateToStringPast + "/" + yearDateToStringPast;
-
 
         //For testing parseDateToString
         //Creating a date to be converted to string for test for date in the future
