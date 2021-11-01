@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
@@ -75,8 +76,15 @@ public class HabitListFragment extends Fragment {
                 String title = (String) extractMap.get("title");
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
-                Long id = (Long) extractMap.get("id");
-                Habit addHabit = new Habit(title, reason, date.toDate() ,id);
+                Long id;
+                // TODO: This is a temp fix to allow both versions in the db to work
+                if (extractMap.get("id") != null) {
+                    id = (Long) extractMap.get("id");
+                } else {
+                    id = (Long) extractMap.get("habitId");
+                }
+
+                Habit addHabit = new Habit(title, reason, date.toDate() ,id, new HabitEventList());
                 _habitList.addHabitLocal(addHabit);
                 HabitList.habitIdSet.add(id);
             }
