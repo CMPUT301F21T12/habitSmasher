@@ -20,7 +20,6 @@ import com.example.habitsmasher.R;
 
 
 public class EditHabitFragment extends DialogFragment{
-    private static final String HEADER = "Edit Dialog";
     private EditText _titleText;
     private EditText _reasonText;
     private TextView _dateText;
@@ -54,7 +53,8 @@ public class EditHabitFragment extends DialogFragment{
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_selection);
 
-        header.setText(HEADER);
+        // Get header from resource file and set it
+        header.setText(getResources().getString(R.string.edit_habit));
 
         // presetting text to values of habit
         _titleText.setText(_editHabit.getTitle());

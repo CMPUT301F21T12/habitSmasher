@@ -681,7 +681,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
+        checkForToastMessage(EMPTY_DATE_ERROR_MESSAGE);
 
         // Enter date
         enterCurrentDateInAddHabitEventDialogBox();

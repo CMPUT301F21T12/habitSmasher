@@ -46,7 +46,7 @@ public class HabitListTest {
         assertEquals(newTitle, editedHabit.getTitle());
         assertEquals(newReason, editedHabit.getReason());
         assertEquals(newDate, editedHabit.getDate());
-        assertEquals(habitId, editedHabit.getHabitId());
+        assertEquals(habitId, editedHabit.getId());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class HabitListTest {
         assertTrue(localHabitList.contains(habitToDelete));
 
         // delete Habit
-        _habitList.deleteHabitLocally(Integer.parseInt(String.valueOf(habitToDelete.getHabitId())));
+        _habitList.deleteHabitLocally(Integer.parseInt(String.valueOf(habitToDelete.getId())));
 
         assertFalse(localHabitList.contains(habitToDelete));
         assertEquals(2, localHabitList.size());
