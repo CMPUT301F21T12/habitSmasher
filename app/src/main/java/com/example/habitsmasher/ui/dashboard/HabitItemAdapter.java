@@ -105,6 +105,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         // Create a bundle to be passed into the habitViewFragment
         Bundle bundle = new Bundle();
         bundle.putSerializable("habit", currentHabit);
+        bundle.putSerializable("user", _username);
         NavController controller = NavHostFragment.findNavController(_habitListFragment);
         // Navigate to the habitViewFragment
         controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
