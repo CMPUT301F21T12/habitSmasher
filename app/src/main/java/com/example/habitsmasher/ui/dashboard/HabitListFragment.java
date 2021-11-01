@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -173,11 +172,8 @@ public class HabitListFragment extends Fragment {
 
                         }
                     });
-
-        //new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
-    };
     /**
      * This method is responsible for adding a new habit to the user's HabitList
      * @param title the habit title
@@ -199,7 +195,6 @@ public class HabitListFragment extends Fragment {
      * @param newReason habit's new reason
      * @param newDate habit's new date
      * @param pos position of edited habit
-     * @param viewHolder viewholder of associated habit in the RecyclerView
      */
     public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos) {
         _habitList.editHabitInDatabase(newTitle, newReason, newDate, pos, _user.getUsername());
