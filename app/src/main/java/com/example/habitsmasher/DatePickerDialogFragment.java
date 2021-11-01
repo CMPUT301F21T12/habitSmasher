@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -24,7 +23,7 @@ import java.util.Date;
 
 public class DatePickerDialogFragment extends DialogFragment {
 
-    private static final String TAG = "DatePickerDialogFragment";
+    //private static final String TAG = "DatePickerDialogFragment";
     private static final String PATTERN = "dd/MM/yyyy";
 
     private DatePickerDialog.OnDateSetListener _dateSetListener;
@@ -60,7 +59,7 @@ public class DatePickerDialogFragment extends DialogFragment {
         try {
             return dateFormatter.parse(string);
         } catch(Exception e) {
-            Log.e(TAG, "Exception" + e.getMessage());
+            //Log.e(TAG, "Exception" + e.getMessage());
             return null;
         }
     }
