@@ -22,13 +22,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,7 @@ public class HabitListFragment extends Fragment {
     private final User _user = new User("TestUser", "123");
     private final HabitList _habitList = _user.getHabits();
     private HabitItemAdapter _habitItemAdapter;
-    private HabitListFragment _fragment = this;
+    private final HabitListFragment _fragment = this;
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
     @Override
@@ -164,9 +162,8 @@ public class HabitListFragment extends Fragment {
                                 case R.id.edit_button:
                                     EditHabitFragment editHabitFragment = new EditHabitFragment(position,
                                             _habitList.get(position),
-                                            _habitListFragment,
-                                            _habitViewHolder);
-                                    editHabitFragment.show(_habitListFragment.getFragmentManager(), "Edit Habit");
+                                            _fragment);
+                                    editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
                                     break;
                                 case R.id.delete_button:
                                     break;
@@ -238,8 +235,7 @@ public class HabitListFragment extends Fragment {
      * @param pos position of edited habit
      * @param viewHolder viewholder of associated habit in the RecyclerView
      */
-    public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
-                                HabitItemAdapter.HabitViewHolder viewHolder) {
+    public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos) {
         _habitList.editHabitInDatabase(newTitle, newReason, newDate, pos, _user.getUsername());
         //viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyItemChanged(pos);

@@ -1,7 +1,6 @@
 package com.example.habitsmasher.ui.dashboard;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,15 +33,11 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
     private final Habit _editHabit;
     private final int _index;
     private final HabitListFragment _listener;
-    // viewHolder of edited Habit
-    private final HabitItemAdapter.HabitViewHolder _viewHolder;
 
-    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener,
-                                HabitItemAdapter.HabitViewHolder habitViewHolder) {
+    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener) {
         _index = index;
         _editHabit = editHabit;
         _listener = listener;
-        _viewHolder = habitViewHolder;
     }
 
 
@@ -91,7 +85,7 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
                 }
 
                 // update local list and display
-                _listener.updateAfterEdit(habitTitle, reasonText, parseStringToDate(dateText), _index, _viewHolder);
+                _listener.updateAfterEdit(habitTitle, reasonText, parseStringToDate(dateText), _index);
 
                 getDialog().dismiss();
             }
