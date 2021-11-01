@@ -36,6 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * The AddHabitEventDialog
@@ -112,7 +113,7 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
                 // Check if event data is valid
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
-                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage);
+                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage, UUID.randomUUID());
                     _habitEventListFragment.addNewHabitEvent(newEvent);
                     _habitEventListFragment.addHabitEventToDatabase(newEvent.getStartDate(), newEvent.getComment(), newEvent.getId(), newEvent.getPictureUri(), _username);
                     getDialog().dismiss();

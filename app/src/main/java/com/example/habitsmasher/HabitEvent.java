@@ -34,10 +34,11 @@ public class HabitEvent {
      * @param comment (String): The comment of the habit event
      * @param pictureUri (String): The URL of the picture of the habit event
      */
-    public HabitEvent(Date startDate, String comment, Uri pictureUri) {
+    public HabitEvent(Date startDate, String comment, Uri pictureUri, UUID id) {
         _startDate = startDate;
         _comment = comment;
         _pictureUri = pictureUri;
+        _id = id;
     }
 
     /**

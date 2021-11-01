@@ -19,22 +19,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
+import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.example.habitsmasher.ui.dashboard.HabitListFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -85,6 +92,8 @@ public class HabitEventListFragment extends Fragment {
         // Get context and query
         Context context = getContext();
         Query query = getListOfHabitEventsFromFirebase(_username);
+        _parentHabit.setHabitEvents(new HabitEventList());
+        _habitEventList = _parentHabit.getHabitEvents();
 
         try {
             // Populate the list with existing items in the database
@@ -92,9 +101,27 @@ public class HabitEventListFragment extends Fragment {
                     .setQuery(query, HabitEvent.class)
                     .build();
 
+
+            Task<QuerySnapshot> querySnapshotTask = query.get();
+            /*
+            populate HabitList with current Habits and habit IDs to initialize state to match
+            database, fills when habitList is empty and snapshot is not, which is only
+            when app is initially launched
+            */
+            if (_habitEventList.getHabitEvents().isEmpty()) {
+                while (!querySnapshotTask.isComplete());
+                List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+                for (int i = 0; i < snapshotList.size(); i++) {
+                    Map<String, Object> extractMap = snapshotList.get(i).getData();
+                    String comment = (String) extractMap.get("comment");
+                    Timestamp date = (Timestamp) extractMap.get("date");
+                    UUID id = UUID.fromString(extractMap.get("id").toString());
+                    HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, Uri.EMPTY, id);
+                    _habitEventList.addHabitEvent(addHabitEvent);
+                }
+            }
             // Set item adapter and habit event list
             _habitEventItemAdapter = new HabitEventItemAdapter(options);
-            _habitEventList = _parentHabit.getHabitEvents();
         }
         catch (Error e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
@@ -185,11 +212,12 @@ public class HabitEventListFragment extends Fragment {
         // If there were no previous habit events, initialize habit events list
         if (_habitEventList == null) {
             _parentHabit.setHabitEvents(new HabitEventList());
-            this._habitEventList = _parentHabit.getHabitEvents();
+            _habitEventList = _parentHabit.getHabitEvents();
         }
 
-        // Add input event
+        // Add input event and notify adapter
         _habitEventList.addHabitEvent(habitEvent);
+        _habitEventItemAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -246,7 +274,7 @@ public class HabitEventListFragment extends Fragment {
         HashMap<String, Object> eventData = new HashMap<>();
         eventData.put("date", date);
         eventData.put("comment", comment);
-        eventData.put("id", id);
+        eventData.put("id", id.toString());
 
         // Set data in database
         collectionReference
@@ -284,8 +312,11 @@ public class HabitEventListFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            Log.d("check", Integer.toString(_habitEventList.getHabitEvents().size()));
+            HabitEvent toDelete = _habitEventList.getHabitEvents().get(viewHolder.getAdapterPosition());
+
             // if the habit row is swiped to the left, remove it from the list and notify adapter
-            _habitEventList.remove(viewHolder.getAdapterPosition());
+            _habitEventList.deleteHabitEvent(getContext(),_username, _parentHabit, toDelete);
             _habitEventItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
         }
     };

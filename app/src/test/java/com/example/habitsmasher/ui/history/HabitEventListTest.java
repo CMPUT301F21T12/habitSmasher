@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class HabitEventListTest {
     private HabitEventList _habitEventList;
@@ -21,7 +22,7 @@ public class HabitEventListTest {
 
     @Test
     public void addHabitEvent_validHabitEventAddition_ExpectHabitEventAdded() {
-        HabitEvent habitEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY);
+        HabitEvent habitEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY, UUID.randomUUID());
 
         _habitEventList.addHabitEvent(habitEvent);
 
@@ -35,7 +36,7 @@ public class HabitEventListTest {
         String sampleComment = "Valid comment";
         Uri sampleUri = Uri.EMPTY;
 
-        _habitEventList.addHabitEvent(sampleDate, sampleComment, sampleUri);
+        _habitEventList.addHabitEvent(sampleDate, sampleComment, sampleUri, UUID.randomUUID());
 
         assertEquals(1, _habitEventList.getHabitEvents().size());
         assertEquals(sampleComment, _habitEventList.getHabitEvents().get(0).getComment());
