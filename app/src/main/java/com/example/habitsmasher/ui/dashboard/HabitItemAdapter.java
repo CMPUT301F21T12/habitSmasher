@@ -2,11 +2,13 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -21,7 +23,16 @@ import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+import com.google.android.gms.common.api.Batch;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -152,6 +163,11 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
                 public void onClick(View v) {
                     int habitPosition = getAdapterPosition();
                     Habit habitToDelete = _snapshots.get(habitPosition);
+                    try {
+                        deleteHabitEvents(username, habitToDelete);
+                    } catch(Error e) {
+                        Log.d(TAG, "No events to delete");
+                    }
                     _habits.deleteHabit(context, username, habitToDelete, habitPosition);
                 }
             });
@@ -172,6 +188,39 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         public void setButtonsInvisible() {
             _editButton.setVisibility(View.INVISIBLE);
             _deleteButton.setVisibility(View.INVISIBLE);
+        }
+
+        /**
+         * Deletes all child habit events of a habit
+         * @param username (String) The current user's username
+         * @param parentHabit (Habit) The habit to delete
+         */
+        public void deleteHabitEvents(String username, Habit parentHabit) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
+                    .document(username)
+                    .collection("Habits")
+                    .document(Long.toString(parentHabit.getId()))
+                    .collection("Events")
+                    .get();
+            while (!querySnapshotTask.isComplete());
+            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+            WriteBatch batch = db.batch();
+            for (int i = 0; i < snapshotList.size(); i++) {
+                batch.delete(snapshotList.get(i).getReference());
+            }
+            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.d(TAG, "Deleted habit events");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Failed to delete habit events");
+                }
+            });
         }
     }
 }
