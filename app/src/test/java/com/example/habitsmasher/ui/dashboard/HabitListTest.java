@@ -57,10 +57,10 @@ public class HabitListTest {
     public void generateHabitId_withExistingIdSet_expectIdAddedToIdSet(){
         HabitList habitList = new HabitList();
 
-        Long habitId = habitList.generateHabitId();
+        long habitId = habitList.generateHabitId();
 
-        assertEquals(1, HabitList.habitIdSet.size());
-        assertEquals(1, habitId.intValue());
+        assertEquals(1, habitList.habitIdSet.size());
+        assertEquals(1, habitId);
     }
 
     @Test
