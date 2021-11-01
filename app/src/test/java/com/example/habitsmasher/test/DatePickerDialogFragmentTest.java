@@ -5,85 +5,29 @@ import static org.junit.Assert.assertNull;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Date;
 
 public class DatePickerDialogFragmentTest {
-    //For testing parseStringToDate
-    private Date _dateStringToDate;
-    private String _stringStringToDate;
-    private Calendar _calendarForStringToDate = Calendar.getInstance();
-
-    //For testing parseDateToString for current date
-    private Date _dateDateToStringToday;
-    private String _stringDateToStringToday;
-    private Calendar _calendarForDateToStringToday = Calendar.getInstance();
-
-    //For testing parseDateToString for past date
-    private Date _dateDateToStringPast;
-    private String _stringDateToStringPast;
-    private Calendar _calendarForDateToStringPast = Calendar.getInstance();
-
-    //For testing parseDateToString for future date
-    private Date _dateDateToStringFuture;
-    private String _stringDateToStringFuture;
-    private Calendar _calendarForDateToStringFuture = Calendar.getInstance();
-
-    @Before
-    public void setUp(){
-
-        //For testing parseStringToDate
-        //Creating a string to be converted to date for test
-        _dateStringToDate = new Date(2021, 9, 30);
-        _dateStringToDate.setHours(0);
-        _dateStringToDate.setMinutes(0);
-        _dateStringToDate.setSeconds(0);
-        _calendarForStringToDate.setTime(_dateStringToDate);
-        int dayStringToDate = _calendarForStringToDate.get(Calendar.DAY_OF_MONTH);
-        int monthStringToDate = _calendarForStringToDate.get(Calendar.MONTH) + 1;
-        int yearStringToDate = _calendarForStringToDate.get(Calendar.YEAR);
-        _stringStringToDate = dayStringToDate + "/" + monthStringToDate + "/"  + yearStringToDate;
-
-
-
-        //For testing parseDateToString
-        //Creating a date to be converted to string for test for current date
-        _dateDateToStringToday = new Date();
-        _calendarForDateToStringToday.setTime(_dateDateToStringToday);
-        int dayDateToStringToday = _calendarForDateToStringToday.get(Calendar.DAY_OF_MONTH);
-        int monthDateToStringToday = _calendarForDateToStringToday.get(Calendar.MONTH) + 1;
-        int yearDateToStringToday = _calendarForDateToStringToday.get(Calendar.YEAR);
-        if (dayDateToStringToday >= 1 && dayDateToStringToday <= 9) {
-            _stringDateToStringToday = "0"+dayDateToStringToday + "/" + monthDateToStringToday + "/" + yearDateToStringToday;
-        } else {
-            _stringDateToStringToday = dayDateToStringToday + "/" + monthDateToStringToday + "/" + yearDateToStringToday;
-        }
-
-        //For testing parseDateToString
-        //Creating a date to be converted to string for test for date in the past
-        _dateDateToStringPast = new Date(2000, 10, 30);
-        _calendarForDateToStringPast.setTime(_dateDateToStringPast);
-        int dayDateToStringPast = _calendarForDateToStringPast.get(Calendar.DAY_OF_MONTH);
-        int monthDateToStringPast = _calendarForDateToStringPast.get(Calendar.MONTH) + 1;
-        int yearDateToStringPast = _calendarForDateToStringPast.get(Calendar.YEAR);
-        _stringDateToStringPast = dayDateToStringPast + "/" + monthDateToStringPast + "/" + yearDateToStringPast;
-
-        //For testing parseDateToString
-        //Creating a date to be converted to string for test for date in the future
-        _dateDateToStringFuture = new Date(2100, 10, 30);
-        _calendarForDateToStringFuture.setTime(_dateDateToStringFuture);
-        int dayDateToStringFuture = _calendarForDateToStringFuture.get(Calendar.DAY_OF_MONTH);
-        int monthDateToStringFuture = _calendarForDateToStringFuture.get(Calendar.MONTH) + 1;
-        int yearDateToStringFuture = _calendarForDateToStringFuture.get(Calendar.YEAR);
-        _stringDateToStringFuture = dayDateToStringFuture + "/" + monthDateToStringFuture + "/" + yearDateToStringFuture;
-    }
+    private Date _testDate;
+    private String _testString;
+    private Calendar _testCalendar = Calendar.getInstance();
 
     @Test
     public void parseStringToDate_validDateString_expectsStringToBeValidDate() {
-        assertEquals(_dateStringToDate, DatePickerDialogFragment.parseStringToDate(_stringStringToDate));
+        _testDate = new Date(2021, 9, 30);
+        _testDate.setHours(0);
+        _testDate.setMinutes(0);
+        _testDate.setSeconds(0);
+        _testCalendar.setTime(_testDate);
+        int dayStringToDate = _testCalendar.get(Calendar.DAY_OF_MONTH);
+        int monthStringToDate = _testCalendar.get(Calendar.MONTH) + 1;
+        int yearStringToDate = _testCalendar.get(Calendar.YEAR);
+        _testString = dayStringToDate + "/" + monthStringToDate + "/"  + yearStringToDate;
+
+        assertEquals(_testDate, DatePickerDialogFragment.parseStringToDate(_testString));
     }
 
     @Test
@@ -115,17 +59,39 @@ public class DatePickerDialogFragmentTest {
 
     @Test
     public void parseDateToString_validTodayDate_expectsStringFormatOfDate() {
-        assertEquals(_stringDateToStringToday, DatePickerDialogFragment.parseDateToString(_dateDateToStringToday));
+        _testDate = new Date();
+        _testCalendar.setTime(_testDate);
+        int dayDateToStringToday = _testCalendar.get(Calendar.DAY_OF_MONTH);
+        int monthDateToStringToday = _testCalendar.get(Calendar.MONTH) + 1;
+        int yearDateToStringToday = _testCalendar.get(Calendar.YEAR);
+        if (dayDateToStringToday >= 1 && dayDateToStringToday <= 9) {
+            _testString = "0"+dayDateToStringToday + "/" + monthDateToStringToday + "/" + yearDateToStringToday;
+        } else {
+            _testString = dayDateToStringToday + "/" + monthDateToStringToday + "/" + yearDateToStringToday;
+        }
+        assertEquals(_testString, DatePickerDialogFragment.parseDateToString(_testDate));
     }
 
     @Test
     public void parseDateToString_validPastDate_expectsStringFormatOfDate() {
-        assertEquals(_stringDateToStringPast, DatePickerDialogFragment.parseDateToString(_dateDateToStringPast));
+        _testDate = new Date(2000, 10, 30);
+        _testCalendar.setTime(_testDate);
+        int dayDateToStringPast = _testCalendar.get(Calendar.DAY_OF_MONTH);
+        int monthDateToStringPast = _testCalendar.get(Calendar.MONTH) + 1;
+        int yearDateToStringPast = _testCalendar.get(Calendar.YEAR);
+        _testString = dayDateToStringPast + "/" + monthDateToStringPast + "/" + yearDateToStringPast;
+        assertEquals(_testString, DatePickerDialogFragment.parseDateToString(_testDate));
     }
 
     @Test
     public void parseDateToString_validFutureDate_expectsStringFormatOfDate() {
-        assertEquals(_stringDateToStringFuture, DatePickerDialogFragment.parseDateToString(_dateDateToStringFuture));
+        _testDate = new Date(2100, 10, 30);
+        _testCalendar.setTime(_testDate);
+        int dayDateToStringFuture = _testCalendar.get(Calendar.DAY_OF_MONTH);
+        int monthDateToStringFuture = _testCalendar.get(Calendar.MONTH) + 1;
+        int yearDateToStringFuture = _testCalendar.get(Calendar.YEAR);
+        _testString = dayDateToStringFuture + "/" + monthDateToStringFuture + "/" + yearDateToStringFuture;
+        assertEquals(_testString, DatePickerDialogFragment.parseDateToString(_testDate));
     }
 
 
