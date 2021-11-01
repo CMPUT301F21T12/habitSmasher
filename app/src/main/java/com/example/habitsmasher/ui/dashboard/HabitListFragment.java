@@ -149,9 +149,34 @@ public class HabitListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(_habitItemAdapter);
-        new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-    }
 
+        /* Implementation of swipe menu came from this source
+        Name: Velmurugan
+        Date: March 4, 2021
+        URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
+         */
+        RecyclerTouchListener touchListener = new RecyclerTouchListener(this, recyclerView);
+        touchListener.setSwipeOptionViews(R.id.delete_button, R.id.edit_button)
+                    .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                        @Override
+                        public void onSwipeOptionClicked(int viewID, int position) {
+                            switch (viewID){
+                                case R.id.edit_button:
+                                    EditHabitFragment editHabitFragment = new EditHabitFragment(position,
+                                            _habitList.get(position),
+                                            _habitListFragment,
+                                            _habitViewHolder);
+                                    editHabitFragment.show(_habitListFragment.getFragmentManager(), "Edit Habit");
+                                    break;
+                                case R.id.delete_button:
+                                    break;
+                            }
+
+                        }
+                    });
+
+        //new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+    }
     /**
      * The implementation of the swipe to delete functionality below came from the following URL:
      * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview
@@ -183,14 +208,13 @@ public class HabitListFragment extends Fragment {
                     viewHolder;
 
             if (direction == ItemTouchHelper.LEFT) {
-                habitViewHolder.setButtonsVisible();
+                //habitViewHolder.setButtonsVisible();
             } else if (direction == ItemTouchHelper.RIGHT) {
-                habitViewHolder.setButtonsInvisible();
+                //habitViewHolder.setButtonsInvisible();
             }
             _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
         }
     };
-
     /**
      * This method is responsible for adding a new habit to the user's HabitList
      * @param title the habit title
@@ -217,7 +241,7 @@ public class HabitListFragment extends Fragment {
     public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
                                 HabitItemAdapter.HabitViewHolder viewHolder) {
         _habitList.editHabitInDatabase(newTitle, newReason, newDate, pos, _user.getUsername());
-        viewHolder.setButtonsInvisible();
+        //viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyItemChanged(pos);
     }
 }

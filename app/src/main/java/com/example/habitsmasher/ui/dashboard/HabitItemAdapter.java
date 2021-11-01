@@ -134,6 +134,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
 
             _habitRows = itemView.findViewById(R.id.habit_rows);
             _habitTitle = itemView.findViewById(R.id.habit_title);
+            /*
             _editButton = itemView.findViewById(R.id.edit_button);
             _deleteButton = itemView.findViewById(R.id.delete_button);
 
@@ -159,24 +160,27 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
                     _habits.deleteHabit(context, username, habitToDelete, habitPosition);
                 }
             });
-
+             */
         }
 
         /**
          * Sets the Edit/Delete buttons in the ViewHolder of the Habit to be visible
          */
+        /*
         public void setButtonsVisible() {
             _editButton.setVisibility(View.VISIBLE);
             _deleteButton.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         /**
          * Sets the Edit/Delete buttons in the ViewHolder of the Habit to be invisible
          */
+        /*
         public void setButtonsInvisible() {
             _editButton.setVisibility(View.INVISIBLE);
             _deleteButton.setVisibility(View.INVISIBLE);
-        }
+        }*/
+
     }
 }
 
