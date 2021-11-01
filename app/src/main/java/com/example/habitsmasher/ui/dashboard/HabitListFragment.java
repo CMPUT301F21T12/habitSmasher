@@ -176,43 +176,7 @@ public class HabitListFragment extends Fragment {
 
         //new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
-    /**
-     * The implementation of the swipe to delete functionality below came from the following URL:
-     * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview
-     *
-     *
-     * Name: Rahul Raina
-     * Date: November 2, 2016
-     */
-    // find a better way of doing this
-    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView,
-                              @NonNull RecyclerView.ViewHolder viewHolder,
-                              @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
 
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            // if the habit row is swiped to the left, spawn edit and delete button
-            // if swiped to the right, despawn them
-            View habitView = viewHolder.itemView;
-
-            /*
-            Cast into HabitViewHolder so we can use setButtonVisible and
-            setButtonsInvisible methods
-             */
-            HabitItemAdapter.HabitViewHolder habitViewHolder = (HabitItemAdapter.HabitViewHolder)
-                    viewHolder;
-
-            if (direction == ItemTouchHelper.LEFT) {
-                //habitViewHolder.setButtonsVisible();
-            } else if (direction == ItemTouchHelper.RIGHT) {
-                //habitViewHolder.setButtonsInvisible();
-            }
-            _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
-        }
     };
     /**
      * This method is responsible for adding a new habit to the user's HabitList

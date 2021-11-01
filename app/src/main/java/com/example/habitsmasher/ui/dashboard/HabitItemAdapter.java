@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -72,7 +71,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         _context = parent.getContext();
         View view = LayoutInflater.from(_context).inflate(R.layout.habit_row, parent, false);
-        return new HabitViewHolder(view, _snapshots, _username, _context);
+        return new HabitViewHolder(view);
     }
 
     @Override
@@ -126,60 +125,11 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         // stores itself as an instance variable so it can be passed into EditHabitFragment
         private HabitViewHolder _habitViewHolder = this;
 
-        public HabitViewHolder(@NonNull View itemView,
-                               ObservableSnapshotArray<Habit> _snapshots,
-                               String username,
-                               Context context) {
+        public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
-
             _habitRows = itemView.findViewById(R.id.habit_rows);
             _habitTitle = itemView.findViewById(R.id.habit_title);
-            /*
-            _editButton = itemView.findViewById(R.id.edit_button);
-            _deleteButton = itemView.findViewById(R.id.delete_button);
-
-            _editButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int buttonPos = getAdapterPosition();
-                    EditHabitFragment editHabitFragment = new EditHabitFragment(buttonPos,
-                                                                                _snapshots.get(buttonPos),
-                                                                                _habitListFragment,
-                                                                                _habitViewHolder);
-                    editHabitFragment.show(_habitListFragment.getFragmentManager(), "Edit Habit");
-                }
-            });
-
-            _deleteButton.setOnClickListener(new View.OnClickListener() {
-                int buttonPos = getAdapterPosition();
-
-                @Override
-                public void onClick(View v) {
-                    int habitPosition = getAdapterPosition();
-
-                }
-            });
-             */
         }
-
-        /**
-         * Sets the Edit/Delete buttons in the ViewHolder of the Habit to be visible
-         */
-        /*
-        public void setButtonsVisible() {
-            _editButton.setVisibility(View.VISIBLE);
-            _deleteButton.setVisibility(View.VISIBLE);
-        }*/
-
-        /**
-         * Sets the Edit/Delete buttons in the ViewHolder of the Habit to be invisible
-         */
-        /*
-        public void setButtonsInvisible() {
-            _editButton.setVisibility(View.INVISIBLE);
-            _deleteButton.setVisibility(View.INVISIBLE);
-        }*/
-
     }
 }
 
