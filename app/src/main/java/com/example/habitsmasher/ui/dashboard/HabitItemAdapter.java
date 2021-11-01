@@ -122,9 +122,6 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         private Button _editButton;
         private Button _deleteButton;
 
-        // stores itself as an instance variable so it can be passed into EditHabitFragment
-        private HabitViewHolder _habitViewHolder = this;
-
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
             _habitRows = itemView.findViewById(R.id.habit_rows);

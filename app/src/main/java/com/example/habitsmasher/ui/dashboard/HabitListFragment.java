@@ -152,7 +152,7 @@ public class HabitListFragment extends Fragment {
         Date: March 4, 2021
         URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
          */
-        RecyclerTouchListener touchListener = new RecyclerTouchListener(this, recyclerView);
+        RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
         touchListener.setSwipeOptionViews(R.id.delete_button, R.id.edit_button)
                     .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                         @Override
