@@ -32,6 +32,28 @@ public class HabitListTest {
     }
 
     @Test
+    public void editHabit_validEdit_expectHabitToBeEdited() {
+        long habitId = 0;
+        Habit habit = new Habit("Title 1",
+                                "Reason 1",
+                                new Date(),
+                                habitId,
+                                EMPTY_HABIT_EVENTS_LIST);
+        _habitList.addHabitLocal(habit);
+        Date newDate = new Date();
+        int habitToEdit = 0;
+        String newTitle = "Title 2";
+        String newReason = "Reason 2";
+        _habitList.editHabitLocal(newTitle, newReason, newDate, habitToEdit);
+        Habit editedHabit = _habitList.getHabitList().get(habitToEdit);
+
+        assertEquals(newTitle, editedHabit.getTitle());
+        assertEquals(newReason, editedHabit.getReason());
+        assertEquals(newDate, editedHabit.getDate());
+        assertEquals(habitId, editedHabit.getHabitId());
+    }
+
+    @Test
     public void generateHabitId_withExistingIdSet_expectIdAddedToIdSet(){
         HabitList habitList = new HabitList();
 
