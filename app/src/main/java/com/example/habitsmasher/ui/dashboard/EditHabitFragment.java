@@ -1,7 +1,6 @@
 package com.example.habitsmasher.ui.dashboard;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,23 +9,17 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
-
-public class EditHabitFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
-    private static final String PATTERN = "dd/MM/yyyy";
+public class EditHabitFragment extends DialogFragment{
     private EditText _titleText;
     private EditText _reasonText;
     private TextView _dateText;
@@ -66,7 +59,7 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
         // presetting text to values of habit
         _titleText.setText(_editHabit.getTitle());
         _reasonText.setText(_editHabit.getReason());
-        _dateText.setText(parseDateToString(_editHabit.getDate()));
+        _dateText.setText(DatePickerDialogFragment.parseDateToString(_editHabit.getDate()));
 
         _dateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +84,7 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
                 }
 
                 // update local list and display
-                _listener.updateAfterEdit(habitTitle, reasonText, parseStringToDate(dateText), _index, _viewHolder);
+                _listener.updateAfterEdit(habitTitle, reasonText, DatePickerDialogFragment.parseStringToDate(dateText), _index, _viewHolder);
 
                 getDialog().dismiss();
             }
@@ -111,58 +104,22 @@ public class EditHabitFragment extends DialogFragment implements DatePickerDialo
     /**
      * Opens the calendar dialog used for date selection
      */
-    private void openDatePickerDialog(){
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(),
-                this,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
-    }
-
-    /**
-     * Sets the text of the date select view to reflect selected date
-     * @param view
-     * @param year year of selected date
-     * @param month month of selected date (integer from 0 to 11)
-     * @param day day of month of selected date
-     */
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        //1 is added to the month we get from the DatePickerDialog
-        // because DatePickerDialog returns values between 0 and 11,
-        // which is not really helpful for users.
-        int correctedMonth = month + 1;
-        String date = day + "/" + correctedMonth + "/" + year;
-        _dateText.setText(date);
-    }
-
-    /**
-     * Takes in a Date object and converts it into a string representation
-     * of the date
-     * @param date Date object
-     * @return string representation of the date
-     */
-    private String parseDateToString(Date date) {
-        DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
-        return dateFormatter.format(date);
-    }
-
-    /**
-     * Parses a string and returns a Date Object reflecting the date
-     * represented by the string, or null if an invalid string input
-     * @param string String to be parsed
-     * @return date object of date represented in string
-     */
-    private Date parseStringToDate(String string) {
-        DateFormat dateFormatter = new SimpleDateFormat(PATTERN);
-        dateFormatter.setLenient(false);
-        try {
-            return dateFormatter.parse(string);
-        } catch(Exception e) {
-            return null;
-        }
+    private void openDatePickerDialog() {
+        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
+            /**
+             * Sets the text of the date select view to reflect selected date
+             * @param view
+             * @param year year of selected date
+             * @param month month of selected date (integer from 0 to 11)
+             * @param day day of month of selected date
+             */
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                int correctedMonth = month + 1;
+                String date = day + "/" + correctedMonth + "/" + year;
+                _dateText.setText(date);
+            }
+        });
+        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 }

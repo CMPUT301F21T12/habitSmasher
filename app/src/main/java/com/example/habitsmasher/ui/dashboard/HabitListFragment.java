@@ -23,13 +23,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -76,14 +74,7 @@ public class HabitListFragment extends Fragment {
                 String title = (String) extractMap.get("title");
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
-                Long id;
-                // TODO: This is a temp fix to allow both versions in the db to work
-                if (extractMap.get("id") != null) {
-                    id = (Long) extractMap.get("id");
-                } else {
-                    id = (Long) extractMap.get("habitId");
-                }
-
+                Long id = (Long) extractMap.get("id");
                 Habit addHabit = new Habit(title, reason, date.toDate() ,id, new HabitEventList());
                 _habitList.addHabitLocal(addHabit);
                 HabitList.habitIdSet.add(id);

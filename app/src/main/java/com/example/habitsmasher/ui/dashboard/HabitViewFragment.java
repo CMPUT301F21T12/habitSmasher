@@ -1,23 +1,18 @@
 package com.example.habitsmasher.ui.dashboard;
 
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.User;
-import com.example.habitsmasher.ui.history.HabitEventItemAdapter;
 import com.example.habitsmasher.ui.history.HabitEventListFragment;
 
 import java.text.SimpleDateFormat;
