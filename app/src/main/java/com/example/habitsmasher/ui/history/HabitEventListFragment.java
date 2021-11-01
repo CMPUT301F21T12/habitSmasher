@@ -130,7 +130,7 @@ public class HabitEventListFragment extends Fragment {
         Query query = _db.collection("Users")
                         .document(username)
                         .collection("Habits")
-                        .document(_parentHabit.getTitle())
+                        .document(Long.toString(_parentHabit.getHabitId()))
                         .collection("Events");
         return query;
     }
@@ -239,7 +239,7 @@ public class HabitEventListFragment extends Fragment {
         final CollectionReference collectionReference = _db.collection("Users")
                                                         .document(username)
                                                         .collection("Habits")
-                                                        .document(_parentHabit.getTitle())
+                                                        .document(Long.toString(_parentHabit.getHabitId()))
                                                         .collection("Events");
 
         // Store data in a hash map
