@@ -4,15 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
-
+import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -36,7 +38,7 @@ public class HabitEventList extends ArrayList{
      * @param comment (String): The comment of the habit event to add
      * @param pictureUri (String): The URL of the picture of the habit event to add
      */
-    public void addHabitEvent(Date startDate, String comment, Uri pictureUri, UUID id) {
+    public void addHabitEventLocally(Date startDate, String comment, Uri pictureUri, UUID id) {
         // Create habit event and add it to the list
         HabitEvent eventToAdd = new HabitEvent(startDate, comment, pictureUri, id);
         _habitEvents.add(eventToAdd);
@@ -46,9 +48,38 @@ public class HabitEventList extends ArrayList{
      * Adds a habit event to the habit event list
      * @param eventToAdd (HabitEvent): The event to add to the habit event list
      */
-    public void addHabitEvent(HabitEvent eventToAdd) {
+    public void addHabitEventLocally(HabitEvent eventToAdd) {
         // Add event to list
         _habitEvents.add(eventToAdd);
+    }
+
+    /**
+     * Add a new habit event to the database
+     * @param date Date of the habit event
+     * @param comment Comment of the new habit event
+     * @param id ID of the new habit event
+     * @param pictureUri Picture of the new habit event
+     * @param username Username of the user adding the habit event
+     */
+    public void addHabitEventToDatabase(Date date, String comment, UUID id, Uri pictureUri, String username, Habit parentHabbit) {
+        // get collection of specified user
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Get reference to habit events collection
+        final CollectionReference collectionReference = db.collection("Users")
+                .document(username)
+                .collection("Habits")
+                .document(Long.toString(parentHabbit.getHabitId()))
+                .collection("Events");
+
+        // Store data in a hash map
+        HashMap<String, Object> eventData = new HashMap<>();
+        eventData.put("date", date);
+        eventData.put("comment", comment);
+        eventData.put("id", id.toString());
+
+        // Set data in database
+        setHabitEventDataInDatabase(db, username, parentHabbit, id.toString(), eventData);
     }
 
     /**
@@ -103,6 +134,33 @@ public class HabitEventList extends ArrayList{
                     public void onFailure(@NonNull Exception e) {
                         Log.d("deleteHabitEvent", "Data failed to be deleted.");
                         Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void setHabitEventDataInDatabase(FirebaseFirestore db, String username, Habit parentHabit, String id, HashMap<String, Object> data) {
+        final CollectionReference collectionReference = db.collection("Users")
+                .document(username)
+                .collection("Habits")
+                .document(Long.toString(parentHabit.getHabitId()))
+                .collection("Events");
+
+        // Set data in database
+        collectionReference
+                .document(id.toString())
+                .set(data)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    // Handle success
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Data successfully added.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    // Handle failure
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Data failed to be added." + e.toString());
                     }
                 });
     }

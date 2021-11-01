@@ -117,7 +117,7 @@ public class HabitEventListFragment extends Fragment {
                     Timestamp date = (Timestamp) extractMap.get("date");
                     UUID id = UUID.fromString(extractMap.get("id").toString());
                     HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, Uri.EMPTY, id);
-                    _habitEventList.addHabitEvent(addHabitEvent);
+                    _habitEventList.addHabitEventLocally(addHabitEvent);
                 }
             }
             // Set item adapter and habit event list
@@ -209,14 +209,9 @@ public class HabitEventListFragment extends Fragment {
      * @param habitEvent The event to add to the list
      */
     public void addNewHabitEvent(HabitEvent habitEvent) {
-        // If there were no previous habit events, initialize habit events list
-        if (_habitEventList == null) {
-            _parentHabit.setHabitEvents(new HabitEventList());
-            _habitEventList = _parentHabit.getHabitEvents();
-        }
-
         // Add input event and notify adapter
-        _habitEventList.addHabitEvent(habitEvent);
+        _habitEventList.addHabitEventLocally(habitEvent);
+        _habitEventList.addHabitEventToDatabase(habitEvent.getStartDate(), habitEvent.getComment(), habitEvent.getId(), Uri.EMPTY, _username, _parentHabit);
         _habitEventItemAdapter.notifyDataSetChanged();
     }
 
@@ -254,47 +249,6 @@ public class HabitEventListFragment extends Fragment {
         });
     }
 
-    /**
-     * Add a new habit event to the database
-     * @param date Date of the habit event
-     * @param comment Comment of the new habit event
-     * @param id ID of the new habit event
-     * @param pictureUri Picture of the new habit event
-     * @param username Username of the user adding the habit event
-     */
-    public void addHabitEventToDatabase(Date date, String comment, UUID id, Uri pictureUri, String username) {
-        // Get reference to habit events collection
-        final CollectionReference collectionReference = _db.collection("Users")
-                                                        .document(username)
-                                                        .collection("Habits")
-                                                        .document(Long.toString(_parentHabit.getHabitId()))
-                                                        .collection("Events");
-
-        // Store data in a hash map
-        HashMap<String, Object> eventData = new HashMap<>();
-        eventData.put("date", date);
-        eventData.put("comment", comment);
-        eventData.put("id", id.toString());
-
-        // Set data in database
-        collectionReference
-                .document(id.toString())
-                .set(eventData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    // Handle success
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Data successfully added.");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    // Handle failure
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Data failed to be added." + e.toString());
-                    }
-                });
-    }
     /**
      * The implementation of the swipe to delete functionality below came from the following URL:
      * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview

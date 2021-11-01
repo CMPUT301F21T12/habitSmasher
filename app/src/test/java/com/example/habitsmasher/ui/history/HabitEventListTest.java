@@ -24,7 +24,7 @@ public class HabitEventListTest {
     public void addHabitEvent_validHabitEventAddition_ExpectHabitEventAdded() {
         HabitEvent habitEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY, UUID.randomUUID());
 
-        _habitEventList.addHabitEvent(habitEvent);
+        _habitEventList.addHabitEventLocally(habitEvent);
 
         assertEquals(1, _habitEventList.getHabitEvents().size());
         assertTrue(_habitEventList.getHabitEvents().contains(habitEvent));
@@ -36,7 +36,7 @@ public class HabitEventListTest {
         String sampleComment = "Valid comment";
         Uri sampleUri = Uri.EMPTY;
 
-        _habitEventList.addHabitEvent(sampleDate, sampleComment, sampleUri, UUID.randomUUID());
+        _habitEventList.addHabitEventLocally(sampleDate, sampleComment, sampleUri, UUID.randomUUID());
 
         assertEquals(1, _habitEventList.getHabitEvents().size());
         assertEquals(sampleComment, _habitEventList.getHabitEvents().get(0).getComment());

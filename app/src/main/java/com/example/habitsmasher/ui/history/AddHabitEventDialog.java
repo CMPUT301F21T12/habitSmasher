@@ -115,7 +115,6 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
                     // If everything is valid, add event to database, events list, and close dialog
                     HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage, UUID.randomUUID());
                     _habitEventListFragment.addNewHabitEvent(newEvent);
-                    _habitEventListFragment.addHabitEventToDatabase(newEvent.getStartDate(), newEvent.getComment(), newEvent.getId(), newEvent.getPictureUri(), _username);
                     getDialog().dismiss();
                 }
 
