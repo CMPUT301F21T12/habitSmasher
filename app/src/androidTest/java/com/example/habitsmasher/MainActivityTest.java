@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Test class for MainActivity. All the UI tests are written here. Robotium test framework is
@@ -538,7 +539,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY);
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY, UUID.randomUUID());
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -577,7 +578,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY);
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY, UUID.randomUUID());
 
         // Enter date
         enterCurrentDateInAddHabitEventDialogBox();
@@ -622,7 +623,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment that is too long, and too many characters", Uri.EMPTY);
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment that is too long, and too many characters", Uri.EMPTY, UUID.randomUUID());
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -672,7 +673,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY);
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY, UUID.randomUUID());
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());

@@ -69,7 +69,7 @@ public class HabitEventList extends ArrayList{
         final CollectionReference collectionReference = db.collection("Users")
                 .document(username)
                 .collection("Habits")
-                .document(Long.toString(parentHabbit.getHabitId()))
+                .document(Long.toString(parentHabbit.getId()))
                 .collection("Events");
 
         // Store data in a hash map
@@ -118,7 +118,7 @@ public class HabitEventList extends ArrayList{
         db.collection("Users")
                 .document(username)
                 .collection("Habits")
-                .document(Long.toString(parentHabit.getHabitId()))
+                .document(Long.toString(parentHabit.getId()))
                 .collection("Events")
                 .document(toDelete.getId().toString())
                 .delete()
@@ -142,7 +142,7 @@ public class HabitEventList extends ArrayList{
         final CollectionReference collectionReference = db.collection("Users")
                 .document(username)
                 .collection("Habits")
-                .document(Long.toString(parentHabit.getHabitId()))
+                .document(Long.toString(parentHabit.getId()))
                 .collection("Events");
 
         // Set data in database
