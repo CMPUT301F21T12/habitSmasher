@@ -2,6 +2,7 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
@@ -23,13 +25,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -73,12 +73,13 @@ public class HabitListFragment extends Fragment {
             List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
             for (int i = 0; i < snapshotList.size(); i++) {
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
+                Log.d(TAG, extractMap.toString());
                 String title = (String) extractMap.get("title");
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
-                Long id = (Long) extractMap.get("habitId");
+                Long id = (Long) extractMap.get("id");
                 String days = (String) extractMap.get("days");
-                Habit addHabit = new Habit(title, reason, date.toDate(), days, id);
+                Habit addHabit = new Habit(title, reason, date.toDate(), days, id, new HabitEventList());
                 _habitList.addHabitLocal(addHabit);
                 HabitList.habitIdSet.add(id);
             }

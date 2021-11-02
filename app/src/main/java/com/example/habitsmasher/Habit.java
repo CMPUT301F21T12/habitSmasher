@@ -4,30 +4,29 @@ import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.UUID;
 
 /**
  * This is the Habit class
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
  */
-public class Habit implements Serializable {
+public class Habit extends DatabaseEntity implements Serializable {
     private String _title;
     private String _reason;
     private Date _date;
-    private long _habitId;
+    private HabitEventList _habitEvents;
     private String _days;
 
     public Habit () {
         // needed for firestore
     }
 
-    public Habit (String title, String reason, Date date, String days, long habitId) {
-        _habitId = habitId;
+    public Habit (String title, String reason, Date date, String days, long habitId, HabitEventList habitEvents) {
+        super(habitId);
         _title = title;
         _reason = reason;
         _date = date;
         _days = days;
+        _habitEvents = habitEvents;
     }
 
     /**
@@ -98,17 +97,16 @@ public class Habit implements Serializable {
     }
 
     /**
-     *
-     * @return _habitId: the ID of the habit
+     * Gets habit event list of a habit
+     * @return habitEvents (HabitEventList): The habit events associated with a habit
      */
-    @PropertyName("habitId")
-    public long getHabitId() {
-        return _habitId;
-    }
+    @PropertyName("Events")
+    public HabitEventList getHabitEvents()  { return _habitEvents; }
 
-    // should NEVER be used in practice, adding since it might be needed for _snapshots
-    public void setHabitId(long habitId) {
-        _habitId = habitId;
-    }
+    /**
+     * Sets the habit events of a habit
+     * @param habitEvents (HabitEventList): The list of habit events to set
+     */
+    public void setHabitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
 
 }

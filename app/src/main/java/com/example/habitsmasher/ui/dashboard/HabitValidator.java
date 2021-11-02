@@ -68,7 +68,7 @@ public class HabitValidator {
      * Date: January 24, 2016
      * @param message the message to display
      */
-    private void showToastMessage(String message) {
+    protected void showToastMessage(String message) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

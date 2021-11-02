@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/add_habit_dialog_box.xml" value="0.2546875" />
+        <entry key="app/src/main/res/layout/add_habit_event_dialog.xml" value="0.268" />
+        <entry key="app/src/main/res/layout/fragment_habit_event_list.xml" value="0.2546875" />
         <entry key="..\:/habitSmasher/app/src/main/res/drawable/day_button.xml" value="0.3828125" />
         <entry key="..\:/habitSmasher/app/src/main/res/drawable/day_button_disabled.xml" value="0.3828125" />
         <entry key="..\:/habitSmasher/app/src/main/res/drawable/day_button_enabled.xml" value="0.3828125" />

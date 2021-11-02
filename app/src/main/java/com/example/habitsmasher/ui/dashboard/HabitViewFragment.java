@@ -1,9 +1,6 @@
 package com.example.habitsmasher.ui.dashboard;
 
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +8,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.habitsmasher.DaysTracker;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.ui.history.HabitEventListFragment;
 
 import java.text.SimpleDateFormat;
 
@@ -22,6 +25,7 @@ import java.text.SimpleDateFormat;
 public class HabitViewFragment extends Fragment {
 
     private Habit _habit;
+    private String _username;
 
     public HabitViewFragment() {
         // Required empty public constructor
@@ -33,6 +37,7 @@ public class HabitViewFragment extends Fragment {
         // Get passed in habit
         if(getArguments() != null) {
             _habit = (Habit) getArguments().getSerializable("habit");
+            _username = (String) getArguments().getSerializable("user");
         }
 
         //set the DaysTracker
@@ -55,6 +60,16 @@ public class HabitViewFragment extends Fragment {
         // Setting text boxes
         descriptionHabitTextBox.setText(_habit.getReason());
         dateHabitTextBox.setText(String.format(dateHabitTextBox.getText().toString(), simpleDateFormat.format(_habit.getDate())));
+
+        // Get history button and add listener
+        AppCompatButton historyButton = view.findViewById(R.id.eventHistoryButton);
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openHabitEventsView();
+            }
+        });
+
 
         //all of the non-clickable buttons
         Button mondayButton = view.findViewById(R.id.monday_button);
@@ -87,5 +102,17 @@ public class HabitViewFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private void openHabitEventsView() {
+        // Create Habit Event List view with needed parameters
+        HabitEventListFragment fragment = HabitEventListFragment.newInstance(_habit, _username);
+
+        // Replace current fragment with habit view
+        FragmentTransaction transaction = this.getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
+        transaction.addToBackStack(null);
+
+        // Load new fragment
+        transaction.commit();
     }
 }
