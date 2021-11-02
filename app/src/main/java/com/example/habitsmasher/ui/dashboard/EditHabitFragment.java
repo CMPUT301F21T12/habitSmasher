@@ -27,15 +27,11 @@ public class EditHabitFragment extends DialogFragment{
     private final Habit _editHabit;
     private final int _index;
     private final HabitListFragment _listener;
-    // viewHolder of edited Habit
-    private final HabitItemAdapter.HabitViewHolder _viewHolder;
 
-    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener,
-                                HabitItemAdapter.HabitViewHolder habitViewHolder) {
+    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener) {
         _index = index;
         _editHabit = editHabit;
         _listener = listener;
-        _viewHolder = habitViewHolder;
     }
 
 
@@ -84,7 +80,7 @@ public class EditHabitFragment extends DialogFragment{
                 }
 
                 // update local list and display
-                _listener.updateAfterEdit(habitTitle, reasonText, DatePickerDialogFragment.parseStringToDate(dateText), _index, _viewHolder);
+                _listener.updateAfterEdit(habitTitle, reasonText, DatePickerDialogFragment.parseStringToDate(dateText), _index);
 
                 getDialog().dismiss();
             }

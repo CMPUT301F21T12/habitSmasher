@@ -173,6 +173,7 @@ public class HabitListFragment extends Fragment {
 
                         }
                     });
+        recyclerView.addOnItemTouchListener(touchListener);
     }
 
     /**

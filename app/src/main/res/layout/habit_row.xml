@@ -7,18 +7,56 @@
     android:layout_margin="5dp"
     android:id="@+id/habit_rows">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/habit_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/swipe_options"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:cardCornerRadius="5dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/delete_button_label"
+                app:cornerRadius="8dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/edit_button"
+                app:layout_constraintEnd_toStartOf="@+id/edit_button"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/edit_button_label"
+                app:cornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/habit_view"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:visibility="visible"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/swipe_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/white">
 
             <TextView
@@ -36,37 +74,5 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/swipe_options"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/delete_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/delete_button_label"
-                android:visibility="visible"
-                app:cornerRadius="8dp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/edit_button"
-                app:layout_constraintEnd_toStartOf="@+id/edit_button" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/edit_button"
-                android:layout_width="88dp"
-                android:layout_height="match_parent"
-                android:text="@string/edit_button_label"
-                android:visibility="visible"
-                app:cornerRadius="8dp"
-                tools:layout_editor_absoluteX="314dp" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

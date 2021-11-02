@@ -720,7 +720,6 @@ public class MainActivityTest {
 
         int fromX = displayWidth - 10;
         int fromY = location[1];
-        _solo.drag(fromX, 0, fromY, fromY, 10);
         _solo.drag(fromX, location[0], fromY, fromY, 10);
     }
 
