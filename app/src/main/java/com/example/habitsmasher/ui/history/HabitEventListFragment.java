@@ -203,18 +203,11 @@ public class HabitEventListFragment extends Fragment {
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
 
-
     /**
-     * Add a new habit event to the list
-     * @param habitEvent The event to add to the list
+     * Add a new habit event to the database
+     * @param date (Date) The date of the new event
+     * @param comment (String) The comment of the new event
      */
-    public void addNewHabitEvent(HabitEvent habitEvent) {
-        // Add input event and notify adapter
-        _habitEventList.addHabitEventToDatabase(habitEvent.getDate(), habitEvent.getComment(), Uri.EMPTY, _username, _parentHabit);
-        _habitEventList.addHabitEventLocally(habitEvent);
-        // _habitEventItemAdapter.notifyDataSetChanged();
-    }
-
     public void addHabitEventToDatabase(Date date, String comment) {
         _habitEventList.addHabitEventToDatabase(date, comment, Uri.EMPTY, _username, _parentHabit);
     }
@@ -260,7 +253,7 @@ public class HabitEventListFragment extends Fragment {
      * Name: Rahul Raina
      * Date: November 2, 2016
      */
-    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView,
                               @NonNull RecyclerView.ViewHolder viewHolder,
@@ -276,11 +269,11 @@ public class HabitEventListFragment extends Fragment {
 
             if (direction == ItemTouchHelper.LEFT) {
                 habitEventViewHolder.setButtonView();
-            } else if (direction == ItemTouchHelper.RIGHT) {
+            } else if (direction == ItemTouchHelper.RIGHT){
                 habitEventViewHolder.setNoButtonView();
             }
 
-            _habitEventItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            _habitEventItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
         }
     };
 

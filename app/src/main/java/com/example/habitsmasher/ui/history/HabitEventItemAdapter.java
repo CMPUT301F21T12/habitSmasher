@@ -65,7 +65,8 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         // Set UI elements of habit event
         holder._habitEventDate.setText(new SimpleDateFormat(DATE_FORMAT).format(habitEvent.getDate()));
         holder._habitEventComment.setText(habitEvent.getComment());
-
+        holder._habitEventDateWithButtons.setText(new SimpleDateFormat(DATE_FORMAT).format(habitEvent.getDate()));
+        holder._get_habitEventCommentWithButtons.setText(habitEvent.getComment());
         // TODO: Implement image setting too
     }
 
@@ -133,6 +134,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
          * Sets view without buttons as visible
          */
         public void setNoButtonView() {
+            Log.d(TAG, "SWIPED RIGHT");
             _layoutWithButtons.setVisibility(View.INVISIBLE);
             _layoutWithoutButtons.setVisibility(View.VISIBLE);
         }
