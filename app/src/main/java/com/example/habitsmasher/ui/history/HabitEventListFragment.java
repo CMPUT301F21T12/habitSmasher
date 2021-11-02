@@ -20,8 +20,6 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.User;
-import com.example.habitsmasher.ui.dashboard.HabitListFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -130,7 +128,7 @@ public class HabitEventListFragment extends Fragment {
         Query query = _db.collection("Users")
                         .document(username)
                         .collection("Habits")
-                        .document(Long.toString(_parentHabit.getHabitId()))
+                        .document(Long.toString(_parentHabit.getId()))
                         .collection("Events");
         return query;
     }
@@ -203,7 +201,7 @@ public class HabitEventListFragment extends Fragment {
         StorageReference storageReference = storage.getReference();
 
         // Create path for image
-        String storageUrl = "img/" + _username + "/" + _parentHabit.getHabitId() + "/" + id;
+        String storageUrl = "img/" + _username + "/" + _parentHabit.getId() + "/" + id;
 
         // Create reference with new path and attempt upload
         StorageReference imageStorageRef = storageReference.child(storageUrl);
@@ -239,7 +237,7 @@ public class HabitEventListFragment extends Fragment {
         final CollectionReference collectionReference = _db.collection("Users")
                                                         .document(username)
                                                         .collection("Habits")
-                                                        .document(Long.toString(_parentHabit.getHabitId()))
+                                                        .document(Long.toString(_parentHabit.getId()))
                                                         .collection("Events");
 
         // Store data in a hash map
