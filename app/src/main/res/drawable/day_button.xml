@@ -7,5 +7,4 @@
     <item
         android:drawable="@drawable/day_button_unselected" />
 
-
 </selector>
