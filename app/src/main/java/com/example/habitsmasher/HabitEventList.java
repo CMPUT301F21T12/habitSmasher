@@ -132,6 +132,22 @@ public class HabitEventList extends ArrayList{
                 });
     }
 
+    public void editHabitEventLocally(String newComment, Date newDate, int pos) {
+        HabitEvent toEdit = _habitEvents.get(pos);
+        toEdit.setComment(newComment);
+        toEdit.setDate(newDate);
+    }
+
+    public void editHabitInDatabase(String newComment, Date newDate, int pos, String toEditId, String username, Habit parentHabit) {
+        HashMap<String, Object> habitEventData = new HashMap<>();
+        habitEventData.put("comment", newComment);
+        habitEventData.put("date", newDate);
+        habitEventData.put("id", toEditId);
+
+        Log.d(TAG, toEditId);
+        setHabitEventDataInDatabase(username,parentHabit, toEditId, habitEventData);
+    }
+
     private void setHabitEventDataInDatabase(String username, Habit parentHabit, String id, HashMap<String, Object> data) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Users")

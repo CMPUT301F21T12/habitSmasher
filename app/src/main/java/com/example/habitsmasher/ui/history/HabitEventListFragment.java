@@ -54,6 +54,7 @@ public class HabitEventListFragment extends Fragment {
     private Habit _parentHabit;
     private String _username;
     private HabitEventList _habitEventList;
+    private HabitEventListFragment _fragment = this;
 
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
@@ -121,7 +122,7 @@ public class HabitEventListFragment extends Fragment {
             }
 
             // Set item adapter and habit event list
-            _habitEventItemAdapter = new HabitEventItemAdapter(options, _parentHabit, _username, _habitEventList);
+            _habitEventItemAdapter = new HabitEventItemAdapter(options, _parentHabit, _username, _habitEventList, _fragment);
         }
         catch (Error e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
@@ -276,6 +277,12 @@ public class HabitEventListFragment extends Fragment {
             _habitEventItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
         }
     };
+
+    public void updateAfterEdit(String newComment, Date newDate, int pos,String id, HabitEventItemAdapter.HabitEventViewHolder viewHolder) {
+        _habitEventList.editHabitInDatabase(newComment, newDate, pos, id, _username, _parentHabit);
+        viewHolder.setNoButtonView();
+        _habitEventItemAdapter.notifyItemChanged(pos);
+    }
 
     @Override
     public void onDestroyView() { super.onDestroyView();}
