@@ -6,7 +6,6 @@ import android.util.Log;
 import android.widget.Toast;
 import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -38,9 +37,9 @@ public class HabitEventList extends ArrayList{
      * @param comment (String): The comment of the habit event to add
      * @param pictureUri (String): The URL of the picture of the habit event to add
      */
-    public void addHabitEventLocally(Date startDate, String comment, Uri pictureUri, UUID id) {
+    public void addHabitEventLocally(Date startDate, String comment, Uri pictureUri, String id) {
         // Create habit event and add it to the list
-        HabitEvent eventToAdd = new HabitEvent(startDate, comment, pictureUri, id);
+        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id);
         _habitEvents.add(eventToAdd);
     }
 
@@ -57,29 +56,22 @@ public class HabitEventList extends ArrayList{
      * Add a new habit event to the database
      * @param date Date of the habit event
      * @param comment Comment of the new habit event
-     * @param id ID of the new habit event
      * @param pictureUri Picture of the new habit event
      * @param username Username of the user adding the habit event
      */
-    public void addHabitEventToDatabase(Date date, String comment, UUID id, Uri pictureUri, String username, Habit parentHabbit) {
+    public void addHabitEventToDatabase(Date date, String comment, Uri pictureUri, String username, Habit parentHabit) {
         // get collection of specified user
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Get reference to habit events collection
-        final CollectionReference collectionReference = db.collection("Users")
-                .document(username)
-                .collection("Habits")
-                .document(Long.toString(parentHabbit.getId()))
-                .collection("Events");
+        String eventId = UUID.randomUUID().toString();
 
         // Store data in a hash map
         HashMap<String, Object> eventData = new HashMap<>();
         eventData.put("date", date);
         eventData.put("comment", comment);
-        eventData.put("id", id.toString());
+        eventData.put("id", eventId);
 
         // Set data in database
-        setHabitEventDataInDatabase(db, username, parentHabbit, id.toString(), eventData);
+        setHabitEventDataInDatabase(username, parentHabit, eventId, eventData);
+        addHabitEventLocally(new HabitEvent(date, comment, eventId));
     }
 
     /**
@@ -115,12 +107,14 @@ public class HabitEventList extends ArrayList{
     private void deleteHabitEventFromDatabase(Context context, String username, Habit parentHabit, HabitEvent toDelete) {
         FirebaseFirestore db =  FirebaseFirestore.getInstance();
 
+        Log.d(TAG, toDelete.getId());
+
         db.collection("Users")
                 .document(username)
                 .collection("Habits")
                 .document(Long.toString(parentHabit.getId()))
                 .collection("Events")
-                .document(toDelete.getId().toString())
+                .document(toDelete.getId())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -138,7 +132,8 @@ public class HabitEventList extends ArrayList{
                 });
     }
 
-    private void setHabitEventDataInDatabase(FirebaseFirestore db, String username, Habit parentHabit, String id, HashMap<String, Object> data) {
+    private void setHabitEventDataInDatabase(String username, Habit parentHabit, String id, HashMap<String, Object> data) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Users")
                 .document(username)
                 .collection("Habits")
@@ -147,7 +142,7 @@ public class HabitEventList extends ArrayList{
 
         // Set data in database
         collectionReference
-                .document(id.toString())
+                .document(id)
                 .set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     // Handle success

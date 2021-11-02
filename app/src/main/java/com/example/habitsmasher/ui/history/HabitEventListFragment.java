@@ -113,13 +113,15 @@ public class HabitEventListFragment extends Fragment {
                     Map<String, Object> extractMap = snapshotList.get(i).getData();
                     String comment = (String) extractMap.get("comment");
                     Timestamp date = (Timestamp) extractMap.get("date");
-                    UUID id = UUID.fromString(extractMap.get("id").toString());
-                    HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, Uri.EMPTY, id);
+                    String id = extractMap.get("id").toString();
+                    HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id);
+                    Log.d(TAG, addHabitEvent.getId());
                     _habitEventList.addHabitEventLocally(addHabitEvent);
                 }
             }
+
             // Set item adapter and habit event list
-            _habitEventItemAdapter = new HabitEventItemAdapter(options);
+            _habitEventItemAdapter = new HabitEventItemAdapter(options, _parentHabit, _username, _habitEventList);
         }
         catch (Error e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
@@ -208,9 +210,13 @@ public class HabitEventListFragment extends Fragment {
      */
     public void addNewHabitEvent(HabitEvent habitEvent) {
         // Add input event and notify adapter
+        _habitEventList.addHabitEventToDatabase(habitEvent.getDate(), habitEvent.getComment(), Uri.EMPTY, _username, _parentHabit);
         _habitEventList.addHabitEventLocally(habitEvent);
-        _habitEventList.addHabitEventToDatabase(habitEvent.getStartDate(), habitEvent.getComment(), habitEvent.getId(), Uri.EMPTY, _username, _parentHabit);
-        _habitEventItemAdapter.notifyDataSetChanged();
+        // _habitEventItemAdapter.notifyDataSetChanged();
+    }
+
+    public void addHabitEventToDatabase(Date date, String comment) {
+        _habitEventList.addHabitEventToDatabase(date, comment, Uri.EMPTY, _username, _parentHabit);
     }
 
     /**
@@ -265,10 +271,15 @@ public class HabitEventListFragment extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             Log.d("check", Integer.toString(_habitEventList.getHabitEvents().size()));
-            HabitEvent toDelete = _habitEventList.getHabitEvents().get(viewHolder.getAdapterPosition());
 
-            // if the habit row is swiped to the left, remove it from the list and notify adapter
-            _habitEventList.deleteHabitEvent(getContext(),_username, _parentHabit, toDelete);
+            HabitEventItemAdapter.HabitEventViewHolder habitEventViewHolder = (HabitEventItemAdapter.HabitEventViewHolder) viewHolder;
+
+            if (direction == ItemTouchHelper.LEFT) {
+                habitEventViewHolder.setButtonView();
+            } else if (direction == ItemTouchHelper.RIGHT) {
+                habitEventViewHolder.setNoButtonView();
+            }
+
             _habitEventItemAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
         }
     };

@@ -24,18 +24,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.habitsmasher.HabitEvent;
+import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.R;
-
-import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * The AddHabitEventDialog
  * Deals with UI and information handling of the add habit event popup
  */
-public class AddHabitEventDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class AddHabitEventDialog extends DialogFragment {
     private static final String TAG = "AddHabitEventDialog";
 
     // Relevant variables
@@ -106,8 +103,8 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
                 // Check if event data is valid
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
-                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage, UUID.randomUUID());
-                    _habitEventListFragment.addNewHabitEvent(newEvent);
+                    // HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage, UUID.randomUUID().toString());
+                    _habitEventListFragment.addHabitEventToDatabase(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment);
                     getDialog().dismiss();
                 }
 
@@ -152,32 +149,24 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
     /**
      * Opens date picker
      */
-    private void openDatePickerDialog(){
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(),
-                this,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
-    }
 
-    /**
-     * Handles when a date is selected
-     * @param view
-     * @param year
-     * @param month
-     * @param day
-     */
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        //1 is added to the month we get from the DatePickerDialog
-        // because DatePickerDialog returns values between 0 and 11,
-        // which is not really helpful for users.
-        int correctedMonth = month + 1;
-        String date = day + "/" + correctedMonth + "/" + year;
-        _eventDateText.setText(date);
+    private void openDatePickerDialog(){
+        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
+            /**
+             * Sets the text of the date select view to reflect selected date
+             * @param view
+             * @param year year of selected date
+             * @param month month of selected date (integer from 0 to 11)
+             * @param day day of month of selected date
+             */
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                int correctedMonth = month + 1;
+                String date =  day + "/" + correctedMonth + "/" + year;
+                _eventDateText.setText(date);
+            }
+        });
+        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 
     @Override
