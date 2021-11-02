@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
-import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,7 +26,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -37,7 +35,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -199,7 +196,7 @@ public class HabitEventListFragment extends Fragment {
      */
     private void openAddHabitEventDialogBox() {
         // Create new AddHabitEventDialog and show it
-        AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog(_username);
+        AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog();
         addHabitEventDialog.setTargetFragment(HabitEventListFragment.this, 1);
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
@@ -264,22 +261,31 @@ public class HabitEventListFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            Log.d("check", Integer.toString(_habitEventList.getHabitEvents().size()));
-
+            // Get the habit event view holder
             HabitEventItemAdapter.HabitEventViewHolder habitEventViewHolder = (HabitEventItemAdapter.HabitEventViewHolder) viewHolder;
 
+            // Switch to buttons or no buttons view depending on swipe direction
             if (direction == ItemTouchHelper.LEFT) {
                 habitEventViewHolder.setButtonView();
             } else if (direction == ItemTouchHelper.RIGHT){
                 habitEventViewHolder.setNoButtonView();
             }
 
+            // Alert item adapter that there was a change
             _habitEventItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
         }
     };
 
+    /**
+     * Update a habit event after it has been edited
+     * @param newComment (String) The edited comment
+     * @param newDate (Date) The edited date
+     * @param pos (int) The position of the habit event in the list
+     * @param id (String) The ID of the habit event to edit
+     * @param viewHolder (HabitEventItemAdapter.HabitEventViewHolder) The view associated with current habit
+     */
     public void updateAfterEdit(String newComment, Date newDate, int pos,String id, HabitEventItemAdapter.HabitEventViewHolder viewHolder) {
-        _habitEventList.editHabitInDatabase(newComment, newDate, pos, id, _username, _parentHabit);
+        _habitEventList.editHabitInDatabase(newComment, newDate, id, _username, _parentHabit);
         viewHolder.setNoButtonView();
         _habitEventItemAdapter.notifyItemChanged(pos);
     }

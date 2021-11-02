@@ -26,7 +26,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.R;
-import java.util.Date;
 
 /**
  * The AddHabitEventDialog
@@ -34,14 +33,6 @@ import java.util.Date;
  */
 public class AddHabitEventDialog extends DialogFragment {
     private static final String TAG = "AddHabitEventDialog";
-
-    // Relevant variables
-    private final String INCORRECT_COMMENT_FORMAT = "Incorrect comment entered";
-    private final String DATE_FORMAT = "dd/MM/yyyy";
-    private final String INCORRECT_BLANK_DATE = "Please enter a start date";
-    private String _username;
-    private String _eventCommentInput;
-    private Date _eventDate;
 
     // UI elements
     private HabitEventListFragment _habitEventListFragment;
@@ -54,10 +45,8 @@ public class AddHabitEventDialog extends DialogFragment {
 
     /**
      * Default constructor
-     * @param username (String) The username of the user who is adding events
      */
-    public AddHabitEventDialog(String username) {
-        _username = username;
+    public AddHabitEventDialog() {
     }
 
     @Nullable

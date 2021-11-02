@@ -1,13 +1,11 @@
 package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -111,6 +109,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
                                     Context context) {
             super(itemView);
 
+            // Connect UI elements
             _habitEventDate = itemView.findViewById(R.id.habit_event_date);
             _habitEventComment = itemView.findViewById(R.id.habit_event_comment);
             _habitEventDateWithButtons = itemView.findViewById(R.id.habit_event_date_with_buttons);
@@ -119,24 +118,30 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
             _deleteHabitEventButton = itemView.findViewById(R.id.delete_habit_event_button);
             _layoutWithButtons = itemView.findViewById(R.id.habit_event_row_button_view);
             _layoutWithoutButtons = itemView.findViewById(R.id.habit_event_row_normal_view);
-
             // _habitEventImage = itemView.findViewById(R.id.habit_event_image);
 
+            // Add listener to delete button
             _deleteHabitEventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // Get habit event for which button was clicked
                     int eventPosition = getAdapterPosition();
                     HabitEvent toDelete = _snapshots.get(eventPosition);
-                    Log.d(TAG, toDelete.getId().toString());
+
+                    // Delete the habit event
                     _habitEvents.deleteHabitEvent(context, username, parentHabit, toDelete);
                 }
             });
 
+            // Add listener to edit button
             _editHabitEventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // Get position of click, and corresponding habit event
                     int eventPosition = getAdapterPosition();
                     HabitEvent toEdit = _snapshots.get(eventPosition);
+
+                    // Open edit habit event dialog
                     EditHabitEventFragment editHabitEventFragment = new EditHabitEventFragment(eventPosition,
                                                                             toEdit,
                                                                             _habitEventListFragment,
@@ -158,7 +163,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
          * Sets view without buttons as visible
          */
         public void setNoButtonView() {
-            Log.d(TAG, "SWIPED RIGHT");
             _layoutWithButtons.setVisibility(View.INVISIBLE);
             _layoutWithoutButtons.setVisibility(View.VISIBLE);
         }

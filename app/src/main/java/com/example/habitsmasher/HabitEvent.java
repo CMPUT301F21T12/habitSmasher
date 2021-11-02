@@ -14,6 +14,7 @@ public class HabitEvent {
     private String _id;
 
     // TODO: Eventually add location
+    // TODO: Fully integrate pictures
 
     /**
      * Empty constructor
@@ -30,8 +31,8 @@ public class HabitEvent {
     public HabitEvent(Date startDate, String comment, String id) {
         _date = startDate;
         _comment = comment;
-        // _pictureUri = pictureUri;
         _id = id;
+        // _pictureUri = pictureUri;
     }
 
     /**
@@ -85,8 +86,16 @@ public class HabitEvent {
         this._pictureUri = pictureUri;
     }
 
+    /**
+     * Gets the ID of the current habit event
+     * @return
+     */
     @PropertyName("id")
     public String getId() { return _id; }
 
+    /**
+     * This function SHOULD not be used
+     * @param id
+     */
     public void setId(String id) {_id = id; }
 }

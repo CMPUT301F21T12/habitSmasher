@@ -107,8 +107,6 @@ public class HabitEventList extends ArrayList{
     private void deleteHabitEventFromDatabase(Context context, String username, Habit parentHabit, HabitEvent toDelete) {
         FirebaseFirestore db =  FirebaseFirestore.getInstance();
 
-        Log.d(TAG, toDelete.getId());
-
         db.collection("Users")
                 .document(username)
                 .collection("Habits")
@@ -132,24 +130,49 @@ public class HabitEventList extends ArrayList{
                 });
     }
 
+    /**
+     * This method is responsible for editing a habit locally
+     * @param newComment (String) The edited comment
+     * @param newDate (Date) The edited date
+     * @param pos (int) The position of the habit in the list
+     */
     public void editHabitEventLocally(String newComment, Date newDate, int pos) {
         HabitEvent toEdit = _habitEvents.get(pos);
         toEdit.setComment(newComment);
         toEdit.setDate(newDate);
     }
 
-    public void editHabitInDatabase(String newComment, Date newDate, int pos, String toEditId, String username, Habit parentHabit) {
+    /**
+     * This method is responsible for editing a habit in the database
+     * @param newComment (String) The edited comment
+     * @param newDate (Date) The edited date
+     * @param toEditId (String) The ID of the habit event to edit
+     * @param username (String) The username of the current user
+     * @param parentHabit (Habit) The current habit
+     */
+    public void editHabitInDatabase(String newComment, Date newDate, String toEditId, String username, Habit parentHabit) {
+        // Create hashmap to hold data
         HashMap<String, Object> habitEventData = new HashMap<>();
         habitEventData.put("comment", newComment);
         habitEventData.put("date", newDate);
         habitEventData.put("id", toEditId);
 
-        Log.d(TAG, toEditId);
+        // Set edited data in the database
         setHabitEventDataInDatabase(username,parentHabit, toEditId, habitEventData);
     }
 
+    /**
+     * This method is responsible for setting habit event data in the database
+     * @param username (String) The current user's username
+     * @param parentHabit (Habit) The current habit
+     * @param id (String) The id of the habit event for which data is being set
+     * @param data The data to set
+     */
     private void setHabitEventDataInDatabase(String username, Habit parentHabit, String id, HashMap<String, Object> data) {
+        // Get firestore database reference
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Get path to events collection
         final CollectionReference collectionReference = db.collection("Users")
                 .document(username)
                 .collection("Habits")
