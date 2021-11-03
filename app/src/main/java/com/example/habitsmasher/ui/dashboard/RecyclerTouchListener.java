@@ -51,10 +51,8 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
     private long ANIMATION_CLOSE = 150;
     // Fixed properties
     private RecyclerView rView;
-    // private SwipeListener mSwipeListener;
     private int bgWidth = 1, bgWidthLeft = 1; // 1 and not 0 to prevent dividing by zero
     // Transient properties
-    // private List<PendingDismissData> mPendingDismisses = new ArrayList<>();
     private int mDismissAnimationRefCount = 0;
     private float touchedX;
     private float touchedY;
@@ -75,15 +73,15 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
     private View bgView;
     //view ID
     private int fgViewID;
-    private int bgViewID, bgViewIDLeft;
+    private int bgViewID;
     private ArrayList<Integer> fadeViews;
     private OnRowClickListener mRowClickListener;
     private OnRowLongClickListener mRowLongClickListener;
-    private OnSwipeOptionsClickListener mBgClickListener, mBgClickListenerLeft;
+    private OnSwipeOptionsClickListener mBgClickListener;
     // user choices
     private boolean clickable = false;
     private boolean longClickable = false;
-    private boolean swipeable = false, swipeableLeftOptions = false;
+    private boolean swipeable = false;
     private int LONG_CLICK_DELAY = 800;
     private boolean longClickVibrate;
     Runnable mLongPressed = new Runnable() {
@@ -94,10 +92,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
             mLongClickPerformed = true;
 
             if (!bgVisible && touchedPosition >= 0 && !unClickableRows.contains(touchedPosition) && !isRViewScrolling) {
-                if (longClickVibrate) {
-//                    Vibrator vibe = (Vibrator) act.getSystemService(Context.VIBRATOR_SERVICE);
-//                    vibe.vibrate(100); // do we really need to add vibrate service
-                }
                 mRowLongClickListener.onRowLongClicked(touchedPosition);
             }
         }
@@ -795,11 +789,11 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                     // if fg is being swiped left
                     if (deltaX < touchSlop && !bgVisible) {
                         float translateAmount = deltaX - mSwipingSlop;
-//                        if ((Math.abs(translateAmount) > bgWidth ? -bgWidth : translateAmount) <= 0) {
+                        {
                         // swipe fg till width of bg. If swiped further, nothing happens (stalls at width of bg)
                         fgView.setTranslationX(Math.abs(translateAmount) > bgWidth ? -bgWidth : translateAmount);
                         if (fgView.getTranslationX() > 0) fgView.setTranslationX(0);
-//                        }
+                        }
 
                         // fades all the fadeViews gradually to 0 alpha as dragged
                         if (fadeViews != null) {
@@ -854,13 +848,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                         // swipe fg till width of bg. If swiped further, nothing happens (stalls at width of bg)
                         fgView.setTranslationX(translateAmount / 5);
                         if (fgView.getTranslationX() > 0) fgView.setTranslationX(0);
-
-                        // fades all the fadeViews gradually to 0 alpha as dragged
-//                        if (fadeViews != null) {
-//                            for (int viewID : fadeViews) {
-//                                touchedView.findViewById(viewID).setAlpha(1 - (Math.abs(translateAmount) / bgWidth));
-//                            }
-//                        }
                     }
                     return true;
                 }
@@ -888,10 +875,9 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
         OPEN, CLOSE
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////  Interfaces  /////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Interfaces of different listeners
+     */
     public interface OnRowClickListener {
         void onRowClicked(int position);
 

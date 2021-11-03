@@ -720,7 +720,10 @@ public class MainActivityTest {
         // locate row
         int[] location = new int[2];
         view.getLocationOnScreen(location);
-        int fromX = location[0];
+
+        // larger padding from righthand side of screen to ensure swipe functions
+        int displayWidth = _solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int fromX = displayWidth - 100;
         int fromY = location[1];
 
         // 0 so Robotium swipes to leftmost side of screen
