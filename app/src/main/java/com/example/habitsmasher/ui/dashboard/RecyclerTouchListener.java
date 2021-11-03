@@ -122,8 +122,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
         fadeViews = new ArrayList<>();
         isRViewScrolling = false;
 
-//        mSwipeListener = listener;
-
         rView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -462,7 +460,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
 
     private boolean handleTouchEvent(MotionEvent motionEvent) {
         if (swipeable && bgWidth < 2) {
-//            bgWidth = rView.getWidth();
             if (act.findViewById(bgViewID) != null)
                 bgWidth = act.findViewById(bgViewID).getWidth();
 
@@ -519,7 +516,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                         mVelocityTracker.addMovement(motionEvent);
                         fgView = touchedView.findViewById(fgViewID);
                         bgView = touchedView.findViewById(bgViewID);
-//                        bgView.getLayoutParams().height = fgView.getHeight();
                         bgView.setMinimumHeight(fgView.getHeight());
 
                         /*
