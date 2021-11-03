@@ -8,10 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -57,43 +56,27 @@ public class HabitEventListFragment extends Fragment {
 
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
-    /**
-     * Default constructor
-     * @param parentHabit The habit for which the habit event list is
-     * @param parentUser The user for which the habit event list is
-     */
-    public HabitEventListFragment (Habit parentHabit, String parentUser) {
-        super();
-        _parentHabit = parentHabit;
-        _username = parentUser;
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param parentHabit (Habit): The habit for which the habit events are being displayed
-     * @return A new instance of fragment HabitEventListFragment.
-     */
-    public static HabitEventListFragment newInstance(Habit parentHabit, String parentUser) {
-        HabitEventListFragment fragment = new HabitEventListFragment(parentHabit, parentUser);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public HabitEventListFragment () {
+        // Required empty constructor
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Get context and query
-        Context context = getContext();
-        Query query = getListOfHabitEventsFromFirebase(_username);
+        if (getArguments() != null) {
+            _parentHabit = (Habit) getArguments().getSerializable("parentHabit");
+            _username = (String) getArguments().getSerializable("parentUser");
+        }
+
         _parentHabit.setHabitEvents(new HabitEventList());
         _habitEventList = _parentHabit.getHabitEvents();
 
+        // Get context
+        Context context = getContext();
+
         try {
+            // Get query
+            Query query = getListOfHabitEventsFromFirebase(_username);
+
             // Populate the list with existing items in the database
             FirestoreRecyclerOptions<HabitEvent> options = new FirestoreRecyclerOptions.Builder<HabitEvent>()
                     .setQuery(query, HabitEvent.class)
@@ -123,7 +106,7 @@ public class HabitEventListFragment extends Fragment {
             // Set item adapter and habit event list
             _habitEventItemAdapter = new HabitEventItemAdapter(options, _parentHabit, _username, _habitEventList, _fragment);
         }
-        catch (Error e){
+        catch (NullPointerException e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
             Log.d(TAG, "No habit events to show");
         }
@@ -131,6 +114,9 @@ public class HabitEventListFragment extends Fragment {
         // Inflate habit event list view
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         View view = inflater.inflate(R.layout.fragment_habit_event_list, container, false);
+
+        // Set header title
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit Event List");
 
         // Connect new habit fab button, add listener which opens new event dialog
         FloatingActionButton addHabitEventFab = view.findViewById(R.id.add_habit_event_fab);

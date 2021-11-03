@@ -30,5 +30,15 @@
     <fragment
         android:id="@+id/habitViewFragment"
         android:name="com.example.habitsmasher.ui.dashboard.HabitViewFragment"
-        android:label="HabitViewFragment" />
+        android:label="HabitViewFragment">
+        <action
+            android:id="@+id/action_navigation_habitView_to_habitEventListFragment"
+            app:destination="@id/habitEventListFragment"
+            app:popUpTo="@id/habitViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/habitEventListFragment"
+        android:name="com.example.habitsmasher.ui.history.HabitEventListFragment"
+        android:label="HabitEventListFragment" />
+
 </navigation>

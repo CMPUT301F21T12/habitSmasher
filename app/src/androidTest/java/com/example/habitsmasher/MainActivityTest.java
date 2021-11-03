@@ -520,6 +520,7 @@ public class MainActivityTest {
 
         // Go back and delete habit
         _solo.goBack();
+        _solo.goBack();
         deleteTestHabit(testHabit);
     }
 
@@ -558,6 +559,7 @@ public class MainActivityTest {
         assertTextOnScreen(testEvent.getComment());
 
         // Go back and delete habit
+        _solo.goBack();
         _solo.goBack();
         deleteTestHabit(testHabit);
     }
@@ -603,6 +605,7 @@ public class MainActivityTest {
         assertTextOnScreen(testEvent.getComment());
 
         // Go back and delete habit
+        _solo.goBack();
         _solo.goBack();
         deleteTestHabit(testHabit);
     }
@@ -654,6 +657,7 @@ public class MainActivityTest {
 
         // Go back and delete habit
         _solo.goBack();
+        _solo.goBack();
         deleteTestHabit(testHabit);
     }
 
@@ -699,6 +703,7 @@ public class MainActivityTest {
 
         // Go back and delete habit
         _solo.goBack();
+        _solo.goBack();
         deleteTestHabit(testHabit);
     }
 
@@ -740,6 +745,7 @@ public class MainActivityTest {
         deleteTestHabitEvent(testEvent);
 
         // Go back and delete habit
+        _solo.goBack();
         _solo.goBack();
         deleteTestHabit(testHabit);
     }
@@ -791,6 +797,7 @@ public class MainActivityTest {
         assertTextOnScreen(testEvent.getComment());
 
         // Go back and delete habit
+        _solo.goBack();
         _solo.goBack();
         deleteTestHabit(testHabit);
     }
@@ -846,6 +853,7 @@ public class MainActivityTest {
         assertTextOnScreen("New comment!");
 
         // Go back and delete habit
+        _solo.goBack();
         _solo.goBack();
         deleteTestHabit(testHabit);
     }
