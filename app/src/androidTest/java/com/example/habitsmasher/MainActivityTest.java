@@ -452,7 +452,7 @@ public class MainActivityTest {
         assertTextOnScreen(testHabit.getTitle());
 
         swipeLeftOnHabit(testHabit);
-        _solo.waitForView(R.id.edit_button);
+        _solo.waitForView(R.id.delete_button);
         _solo.clickOnButton(EDIT_BUTTON);
         // clear Edit Text fields
         _solo.clearEditText(0);
@@ -703,7 +703,7 @@ public class MainActivityTest {
 
     private void deleteTestHabit(Habit habitToDelete) {
         swipeLeftOnHabit(habitToDelete);
-        _solo.waitForView(R.id.delete_button);
+        _solo.waitForView(R.id.edit_button);
         _solo.clickOnButton(DELETE_BUTTON);
 
         assertFalse(isTextOnScreen(habitToDelete.getTitle()));

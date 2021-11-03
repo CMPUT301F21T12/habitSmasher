@@ -154,18 +154,18 @@ public class HabitListFragment extends Fragment {
         URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
          */
         RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
-        touchListener.setSwipeOptionViews(R.id.delete_button, R.id.edit_button)
+        touchListener.setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
                     .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                         @Override
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID){
-                                case R.id.edit_button:
+                                case R.id.delete_button:
                                     EditHabitFragment editHabitFragment = new EditHabitFragment(position,
                                             _habitItemAdapter._snapshots.get(position),
                                             _fragment);
                                     editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
                                     break;
-                                case R.id.delete_button:
+                                case R.id.edit_button:
                                     Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
                                     _habitList.deleteHabit(_fragment.getActivity(), _user.getUsername(), habitToDelete, position);
                                     break;
