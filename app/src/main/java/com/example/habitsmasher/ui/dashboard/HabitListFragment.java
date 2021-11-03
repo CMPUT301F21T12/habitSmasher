@@ -207,7 +207,6 @@ public class HabitListFragment extends Fragment {
      */
     public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos) {
         _habitList.editHabitInDatabase(newTitle, newReason, newDate, pos, _user.getUsername());
-        //viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyItemChanged(pos);
     }
 }
