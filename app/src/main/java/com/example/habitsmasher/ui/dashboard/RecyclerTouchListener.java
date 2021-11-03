@@ -368,6 +368,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                 int childCount = rView.getChildCount();
                 int[] listViewCoords = new int[2];
                 rView.getLocationOnScreen(listViewCoords);
+
                 // x and y values respective to the recycler view
                 int x = (int) motionEvent.getRawX() - listViewCoords[0];
                 int y = (int) motionEvent.getRawY() - listViewCoords[1];
@@ -391,7 +392,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                     touchedY = motionEvent.getRawY();
                     touchedPosition = rView.getChildAdapterPosition(touchedView);
 
-                    if (shouldIgnoreAction(touchedPosition)) {
+                    if (shouldIgnoreAction()) {
                         touchedPosition = ListView.INVALID_POSITION;
                         return false;   // <-- guard here allows for ignoring events, allowing more than one view type and preventing NPE
                     }
@@ -721,7 +722,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                 && y < heightOutsideRView) closeVisibleBG(null);
     }
 
-    private boolean shouldIgnoreAction(int touchedPosition) {
+    private boolean shouldIgnoreAction() {
         return rView == null;
     }
 
