@@ -54,16 +54,6 @@ public class HabitListTest {
     }
 
     @Test
-    public void generateHabitId_withExistingIdSet_expectIdAddedToIdSet(){
-        HabitList habitList = new HabitList();
-
-        long habitId = habitList.generateHabitId();
-
-        assertEquals(1, habitList.habitIdSet.size());
-        assertEquals(1, habitId);
-    }
-
-    @Test
     public void deleteHabitLocally_withValidHabitPosition_expectHabitDeletedFromList() {
         Date today = new Date();
         ArrayList<Habit> localHabitList = _habitList.getHabitList();

@@ -134,7 +134,7 @@ public class HabitList extends ArrayList<Habit>{
     }
 
     // this is a temporary implementation of generating unique habitIDs
-    public static long generateHabitId() {
+    private long generateHabitId() {
         long habitIdCounter = 1;
         while(habitIdSet.contains(habitIdCounter)) {
             habitIdCounter++;
