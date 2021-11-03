@@ -1,6 +1,7 @@
 package com.example.habitsmasher.ui.history;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import android.net.Uri;
@@ -40,5 +41,63 @@ public class HabitEventListTest {
 
         assertEquals(1, _habitEventList.getHabitEvents().size());
         assertEquals(sampleComment, _habitEventList.getHabitEvents().get(0).getComment());
+    }
+
+    @Test
+    public void deleteHabitEvent_existingEvent_ExpectHabitEventDeleted() {
+        HabitEvent event1 = new HabitEvent(new Date(), "Habit 1", UUID.randomUUID().toString());
+        HabitEvent event2 = new HabitEvent(new Date(), "Habit 1", UUID.randomUUID().toString());
+        HabitEvent event3 = new HabitEvent(new Date(), "Habit 1", UUID.randomUUID().toString());
+
+        _habitEventList.addHabitEventLocally(event1);
+        _habitEventList.addHabitEventLocally(event2);
+        _habitEventList.addHabitEventLocally(event3);
+
+        assertEquals(3, _habitEventList.getHabitEvents().size());
+        assertTrue(_habitEventList.getHabitEvents().contains(event1));
+        assertTrue(_habitEventList.getHabitEvents().contains(event2));
+        assertTrue(_habitEventList.getHabitEvents().contains(event3));
+
+        _habitEventList.deleteHabitEventLocally(event2);
+
+        assertFalse(_habitEventList.getHabitEvents().contains(event2));
+        assertEquals(2, _habitEventList.getHabitEvents().size());
+
+        _habitEventList.deleteHabitEventLocally(event1);
+        _habitEventList.deleteHabitEventLocally(event3);
+
+        assertFalse(_habitEventList.getHabitEvents().contains(event1));
+        assertFalse(_habitEventList.getHabitEvents().contains(event3));
+        assertEquals(0, _habitEventList.getHabitEvents().size());
+    }
+
+    @Test
+    public void deleteHabitEvent_nonExistentEvent_ExpectListUnchanged() {
+        HabitEvent event1 = new HabitEvent(new Date(), "Habit 1", UUID.randomUUID().toString());
+        HabitEvent event2 = new HabitEvent(new Date(), "Habit 1", UUID.randomUUID().toString());
+
+        _habitEventList.addHabitEventLocally(event1);
+        _habitEventList.addHabitEventLocally(event2);
+        assertEquals(2, _habitEventList.getHabitEvents().size());
+
+        _habitEventList.deleteHabitEventLocally(new HabitEvent(new Date(), "I don't exist", UUID.randomUUID().toString()));
+        assertEquals(2, _habitEventList.getHabitEvents().size());
+    }
+
+    @Test
+    public void editHabitEvent_validEdit_expectEventToBeEdited() {
+        HabitEvent toEdit = new HabitEvent(new Date(), "Habit 1", UUID.randomUUID().toString());
+        _habitEventList.addHabitEventLocally(toEdit);
+        String editID = toEdit.getId();
+        String newComment = "New comment!";
+        Date newDate = new Date();
+        int editPosition = 0;
+
+        _habitEventList.editHabitEventLocally(newComment, newDate, editPosition);
+
+        HabitEvent edited = _habitEventList.getHabitEvents().get(editPosition);
+        assertEquals(newComment, edited.getComment());
+        assertEquals(newDate, edited.getDate());
+        assertEquals(editID, edited.getId());
     }
 }

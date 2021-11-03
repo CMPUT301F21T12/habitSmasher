@@ -93,7 +93,7 @@ public class HabitEventList extends ArrayList{
      * This method is responsible for deleting a habit event locally
      * @param toDelete (HabitEvent) the habit event to delete
      */
-    private void deleteHabitEventLocally(HabitEvent toDelete) {
+    public void deleteHabitEventLocally(HabitEvent toDelete) {
         _habitEvents.remove(toDelete);
     }
 
