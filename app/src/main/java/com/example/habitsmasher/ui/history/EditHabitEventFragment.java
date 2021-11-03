@@ -56,6 +56,9 @@ public class EditHabitEventFragment extends DialogFragment {
         // Connect UI elements
         Button confirmButton = view.findViewById(R.id.confirm_habit_event);
         Button cancelButton = view.findViewById(R.id.cancel_habit_event);
+        TextView header = view.findViewById(R.id.add_habit_event_header);
+
+        header.setText("Edit Habit Event");
         _commentText = view.findViewById(R.id.add_habit_event_comment);
         _dateText = view.findViewById(R.id.habit_event_date_selection);
 

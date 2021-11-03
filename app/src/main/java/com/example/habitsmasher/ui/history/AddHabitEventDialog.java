@@ -61,6 +61,9 @@ public class AddHabitEventDialog extends DialogFragment {
         _cancelNewEvent = view.findViewById(R.id.cancel_habit_event);
         _confirmNewEvent = view.findViewById(R.id.confirm_habit_event);
         _eventPictureView = view.findViewById(R.id.habit_event_add_photo);
+        TextView header = view.findViewById(R.id.add_habit_event_header);
+
+        header.setText("Add Habit Event");
 
         // Add listener to date text to open date picker
         _eventDateText.setOnClickListener(new View.OnClickListener() {
