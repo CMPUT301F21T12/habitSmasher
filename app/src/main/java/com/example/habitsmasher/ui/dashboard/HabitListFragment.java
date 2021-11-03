@@ -148,23 +148,28 @@ public class HabitListFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(_habitItemAdapter);
 
-        /* Implementation of swipe menu came from this source
+        /* Implementation of swipe menu functionality came from this source:
         Name: Velmurugan
         Date: March 4, 2021
         URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
          */
+        // create a touch listener which handles the swipe function of the RecyclerView
         RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+
+        // set the different clickable options in swipe menu
         touchListener.setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
                     .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                         @Override
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID){
+                                // if edit clicked
                                 case R.id.edit_button:
                                     EditHabitFragment editHabitFragment = new EditHabitFragment(position,
                                             _habitItemAdapter._snapshots.get(position),
                                             _fragment);
                                     editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
                                     break;
+                                // if delete clicked
                                 case R.id.delete_button:
                                     Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
                                     _habitList.deleteHabit(_fragment.getActivity(), _user.getUsername(), habitToDelete, position);
@@ -173,6 +178,8 @@ public class HabitListFragment extends Fragment {
 
                         }
                     });
+
+        // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
     }
 

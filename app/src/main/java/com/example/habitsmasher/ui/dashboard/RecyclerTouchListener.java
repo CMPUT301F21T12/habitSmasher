@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Class required to implement the ability for user to swipe and spawn buttons cleanly on a individual view
+ * Listener class required to implement the ability for user to swipe and spawn a swipe menu
+ * containing clickable elements
  * Implementation of this class came from this source:
  * Name: Velmurugan
  * Date: March 4, 2021
