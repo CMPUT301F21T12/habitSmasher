@@ -705,7 +705,7 @@ public class MainActivityTest {
     @Test
     public void ensureHabitEventDeletedSuccessfully() {
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("AddEventTest");
+        Habit testHabit = goToViewHabit("DeleteEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
