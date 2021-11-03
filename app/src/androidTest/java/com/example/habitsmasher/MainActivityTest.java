@@ -42,6 +42,7 @@ public class MainActivityTest {
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
     private static final String DELETE_BUTTON = "DELETE";
+    private static final String EDIT_HABIT_DIALOG = "Edit Habit";
     private static final long HABIT_ID = 1;
 
     private Solo _solo;
@@ -452,8 +453,12 @@ public class MainActivityTest {
         assertTextOnScreen(testHabit.getTitle());
 
         swipeLeftOnHabit(testHabit);
-        _solo.waitForView(R.id.delete_button);
+        _solo.waitForView(R.id.edit_button);
         _solo.clickOnButton(EDIT_BUTTON);
+
+        // wait for edit habit dialog to spawn after edit is clicked
+        _solo.waitForText(EDIT_HABIT_DIALOG);
+
         // clear Edit Text fields
         _solo.clearEditText(0);
         _solo.clearEditText(1);
@@ -703,7 +708,7 @@ public class MainActivityTest {
 
     private void deleteTestHabit(Habit habitToDelete) {
         swipeLeftOnHabit(habitToDelete);
-        _solo.waitForView(R.id.edit_button);
+        _solo.waitForView(R.id.delete_button);
         _solo.clickOnButton(DELETE_BUTTON);
 
         assertFalse(isTextOnScreen(habitToDelete.getTitle()));
@@ -715,12 +720,11 @@ public class MainActivityTest {
         // locate row
         int[] location = new int[2];
         view.getLocationOnScreen(location);
-
-        int displayWidth = _solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
-
-        int fromX = displayWidth - 10;
+        int fromX = location[0];
         int fromY = location[1];
-        _solo.drag(fromX, location[0], fromY, fromY, 10);
+
+        // 0 so Robotium swipes to leftmost side of screen
+        _solo.drag(fromX, 0, fromY, fromY, 10);
     }
 
 
