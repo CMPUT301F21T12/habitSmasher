@@ -39,7 +39,6 @@ import java.util.Locale;
  * The habit item adapter is the custom adapter for the RecyclerView that holds the habit list
  */
 public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
-
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final Locale LOCALE = Locale.CANADA;
     private static HabitList _habits;
@@ -87,35 +86,6 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
                                     @NonNull Habit habit) {
         // set necessary elements of the habit
         holder._habitTitle.setText(habit.getTitle());
-
-
-        setOnClickListenerForHabit(holder, position);
-    }
-
-    /** This method sets the click listener for each habit row
-     * @param holder the ViewHolder that holds each habit
-     * @param position the position of the clicked element
-     */
-    private void setOnClickListenerForHabit(@NonNull HabitViewHolder holder, int position) {
-        holder._habitRows.setOnClickListener(view -> openHabitView(holder, position));
-    }
-
-    /**
-     * This function opens the habit view
-     *
-     * @param holder   This holds the values for the selected habit item
-     * @param position This is the position of the selected habit item
-     */
-    private void openHabitView(HabitViewHolder holder, int position) {
-        // Get the selected habit
-        Habit currentHabit = _snapshots.get(position);
-        // Create a bundle to be passed into the habitViewFragment
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("habit", currentHabit);
-        bundle.putSerializable("user", _username);
-        NavController controller = NavHostFragment.findNavController(_habitListFragment);
-        // Navigate to the habitViewFragment
-        controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
     }
 
     @Override

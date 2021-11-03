@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -155,9 +157,28 @@ public class HabitListFragment extends Fragment {
          */
         // create a touch listener which handles the swipe function of the RecyclerView
         RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+        touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+            @Override
+            // if row at the specified position is clicked
+            public void onRowClicked(int position) {
+                // Get the selected habit
+                Habit currentHabit = _habitItemAdapter._snapshots.get(position);
 
-        // set the different clickable options in swipe menu
-        touchListener.setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
+                // Create a bundle to be passed into the habitViewFragment
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("habit", currentHabit);
+                bundle.putSerializable("user", _user.getUsername());
+                NavController controller = NavHostFragment.findNavController(_fragment);
+
+                // Navigate to the habitViewFragment
+                controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
+            }
+            @Override
+            public void onIndependentViewClicked(int independentViewID, int position) {
+
+            }
+        })
+                    .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
                     .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                         @Override
                         public void onSwipeOptionClicked(int viewID, int position) {

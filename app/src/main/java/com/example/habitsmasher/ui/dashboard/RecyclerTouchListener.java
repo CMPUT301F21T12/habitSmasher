@@ -623,7 +623,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                 }
             }
             // if clicked and not swiped
-
             if (swipeable) {
                 mVelocityTracker.recycle();
                 mVelocityTracker = null;
