@@ -3,7 +3,7 @@ package com.example.habitsmasher.ui.dashboard;
 import android.view.MotionEvent;
 
 /**
- * Interface required to implement the swipe menu functionality.
+ * Interface required for RecyclerTouchListener
  * Implementation of interface came from this source:
  * Name: Velmurugan
  * Date: March 4, 2021

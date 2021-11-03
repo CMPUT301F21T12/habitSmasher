@@ -127,8 +127,6 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
         private final ConstraintLayout _habitRows;
-        private Button _editButton;
-        private Button _deleteButton;
 
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
