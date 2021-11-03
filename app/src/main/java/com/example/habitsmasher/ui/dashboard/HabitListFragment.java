@@ -159,13 +159,13 @@ public class HabitListFragment extends Fragment {
                         @Override
                         public void onSwipeOptionClicked(int viewID, int position) {
                             switch (viewID){
-                                case R.id.delete_button:
+                                case R.id.edit_button:
                                     EditHabitFragment editHabitFragment = new EditHabitFragment(position,
                                             _habitItemAdapter._snapshots.get(position),
                                             _fragment);
                                     editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
                                     break;
-                                case R.id.edit_button:
+                                case R.id.delete_button:
                                     Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
                                     _habitList.deleteHabit(_fragment.getActivity(), _user.getUsername(), habitToDelete, position);
                                     break;
