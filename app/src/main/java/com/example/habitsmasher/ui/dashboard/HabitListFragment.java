@@ -2,6 +2,7 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.HabitList;
@@ -75,11 +77,13 @@ public class HabitListFragment extends Fragment {
             List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
             for (int i = 0; i < snapshotList.size(); i++) {
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
+                Log.d(TAG, extractMap.toString());
                 String title = (String) extractMap.get("title");
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
                 Long id = (Long) extractMap.get("id");
-                Habit addHabit = new Habit(title, reason, date.toDate() ,id, new HabitEventList());
+                String days = (String) extractMap.get("days");
+                Habit addHabit = new Habit(title, reason, date.toDate(), days, id, new HabitEventList());
                 _habitList.addHabitLocal(addHabit);
                 HabitList.habitIdSet.add(id);
             }
@@ -209,8 +213,8 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      * */
-    public void addHabitToDatabase(String title, String reason, Date date){
-       _habitList.addHabitToDatabase(title, reason, date, _user.getUsername());
+    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker){
+       _habitList.addHabitToDatabase(title, reason, date, tracker, _user.getUsername());
     }
 
     @Override
@@ -225,8 +229,10 @@ public class HabitListFragment extends Fragment {
      * @param newDate habit's new date
      * @param pos position of edited habit
      */
-    public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos) {
-        _habitList.editHabitInDatabase(newTitle, newReason, newDate, pos, _user.getUsername());
+    public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
+                                DaysTracker tracker) {
+        _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, pos, _user.getUsername());
+        _habitList.editHabitLocal(newTitle, newReason, newDate, tracker, pos);
         _habitItemAdapter.notifyItemChanged(pos);
     }
 }

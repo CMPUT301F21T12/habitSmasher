@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.habitsmasher.DaysTracker;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,11 +28,13 @@ public class HabitValidator {
      * @param habitTitle the habit title
      * @param habitReason the habit reason
      * @param habitDate the habit date
+     * @param tracker the tracker for days of the week
      * @return true, if habit is valid, false otherwise
      */
     public boolean isHabitValid(String habitTitle,
                                 String habitReason,
-                                String habitDate) {
+                                String habitDate,
+                                DaysTracker tracker) {
         Date parsedDate = checkHabitDateValid(habitDate);
 
         if ((habitTitle.length() <= 0) || (habitTitle.length() > 20)) {
@@ -45,6 +49,11 @@ public class HabitValidator {
 
         if (parsedDate == null) {
             showToastMessage("Please enter a start date");
+            return false;
+        }
+
+        if (tracker.getDays().isEmpty()){
+            showToastMessage("Please select a weekly schedule.");
             return false;
         }
 
