@@ -20,6 +20,9 @@ import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.R;
 
 /**
+ * UI Class that represents and specifies the behaviour of the dialog
+ * that is spawned when a user wants to add a habit to their habit list
+ *
  * Making a dialogfragment from fragment came from the following video:
  * https://www.youtube.com/watch?v=LUV_djRHSEY
  *
@@ -92,6 +95,9 @@ public class AddHabitDialog extends DialogFragment {
         return view;
     }
 
+    /**
+     * Opens a DatePickerDialog that is used to select the date of the added habit
+     */
     private void openDatePickerDialog(){
         DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
             /**

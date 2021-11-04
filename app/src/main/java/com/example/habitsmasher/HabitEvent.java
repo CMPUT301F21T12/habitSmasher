@@ -91,6 +91,10 @@ public class HabitEvent {
         this._pictureUri = pictureUri;
     }
 
+    /**
+     * Gets the ID of the habit event
+     * @return habit event's id
+     */
     @PropertyName("id")
     public UUID getId() { return _id; }
 }

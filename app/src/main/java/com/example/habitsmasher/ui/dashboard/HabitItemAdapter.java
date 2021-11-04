@@ -24,8 +24,10 @@ import com.firebase.ui.firestore.ObservableSnapshotArray;
 
 import java.util.Locale;
 
+
 /**
- * The habit item adapter is the custom adapter for the RecyclerView that holds the habit list
+ * Custom adapter class that is used to connect the Firestore database, the local HabitList of a user
+ * and the UI of a user's habit list, which is stored in a Recycler view
  */
 public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
 
@@ -113,6 +115,9 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     }
 
 
+    /**
+     * Class that holds the necessary elements of an individual row in the HabitList
+     */
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
         private final ConstraintLayout _habitRows;
@@ -121,7 +126,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
 
         // stores itself as an instance variable so it can be passed into EditHabitFragment
         private HabitViewHolder _habitViewHolder = this;
-
+        
         public HabitViewHolder(@NonNull View itemView,
                                ObservableSnapshotArray<Habit> _snapshots,
                                String username,

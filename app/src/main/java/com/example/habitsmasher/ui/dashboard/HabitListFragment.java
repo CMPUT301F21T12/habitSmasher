@@ -32,7 +32,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * UI class that represents and specifies the behaviour of
+ * the user interface displayed when a user is accessing its own
+ * habit list
+ */
 public class HabitListFragment extends Fragment {
 
     private static final String TAG = "HabitListFragment";

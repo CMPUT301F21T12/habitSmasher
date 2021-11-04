@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * The habit list class is a container for the list of habits.
+ * The habit list class is a container for the list of habits
  */
 public class HabitList extends ArrayList<Habit>{
 

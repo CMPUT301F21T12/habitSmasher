@@ -18,7 +18,10 @@ import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 
-
+/**
+ *  UI Class that represents and specifies the behaviour of the dialog
+ *  that is spawned when a user wants to edit a habit in their habit list
+ */
 public class EditHabitFragment extends DialogFragment{
     private EditText _titleText;
     private EditText _reasonText;

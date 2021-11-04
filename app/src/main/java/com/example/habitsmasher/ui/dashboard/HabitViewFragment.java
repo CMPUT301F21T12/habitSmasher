@@ -18,7 +18,8 @@ import com.example.habitsmasher.ui.history.HabitEventListFragment;
 import java.text.SimpleDateFormat;
 
 /**
- * This class handles the Habit View Fragment
+ * UI class that represents and specifies the behaviour of the interface
+ * displayed when a user is viewing the details of a certain habit
  */
 public class HabitViewFragment extends Fragment {
 
@@ -68,6 +69,9 @@ public class HabitViewFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Used to open up the list of habit events associated with this habit
+     */
     private void openHabitEventsView() {
         // Create Habit Event List view with needed parameters
         HabitEventListFragment fragment = HabitEventListFragment.newInstance(_habit, _username);

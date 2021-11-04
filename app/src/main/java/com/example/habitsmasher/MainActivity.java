@@ -13,6 +13,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.habitsmasher.databinding.ActivityMainBinding;
 
+/**
+ * UI class represents the main screen of the app
+ */
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;

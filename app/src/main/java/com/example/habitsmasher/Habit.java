@@ -15,10 +15,21 @@ public class Habit extends DatabaseEntity implements Serializable {
     private Date _date;
     private HabitEventList _habitEvents;
 
+    /**
+     * Empty constructor needed for FireStore storage
+     */
     public Habit () {
         // needed for firestore
     }
 
+    /**
+     * Constructs a habit
+     * @param title title of habit
+     * @param reason reason for habit
+     * @param date starting date of habit
+     * @param habitId id of habit
+     * @param habitEvents list holding habit events
+     */
     public Habit (String title, String reason, Date date, long habitId, HabitEventList habitEvents) {
         super(habitId);
         _title = title;
@@ -28,7 +39,7 @@ public class Habit extends DatabaseEntity implements Serializable {
     }
 
     /**
-     *
+     * Gets the title of the habit
      * @return _title : The title of the habit
      */
     @PropertyName("title")
@@ -37,7 +48,7 @@ public class Habit extends DatabaseEntity implements Serializable {
     }
 
     /**
-     *
+     * Sets the title of the habit
      * @param title : The new title to be set
      */
     public void setTitle(String title) {
@@ -45,7 +56,7 @@ public class Habit extends DatabaseEntity implements Serializable {
     }
 
     /**
-     *
+     * Gets the reason of the habit
      * @return _reason: The reason of the habit
      */
     @PropertyName("reason")
@@ -54,7 +65,7 @@ public class Habit extends DatabaseEntity implements Serializable {
     }
 
     /**
-     *
+     * Sets the reason of the habit
      * @param reason : The new reason to be set
      */
     public void setReason(String reason) {
@@ -62,8 +73,8 @@ public class Habit extends DatabaseEntity implements Serializable {
     }
 
     /**
-     *
-     * @return _date : The date of the habit
+     * Gets the starting date of the habit
+     * @return _date : The starting date of the habit
      */
     @PropertyName("date")
     public Date getDate() {
@@ -71,8 +82,8 @@ public class Habit extends DatabaseEntity implements Serializable {
     }
 
     /**
-     *
-     * @param date : The new date to be set
+     * Sets the starting date of the habit
+     * @param date : The new starting date to be set
      */
     public void setDate(Date date) {
         _date = date;
@@ -90,5 +101,4 @@ public class Habit extends DatabaseEntity implements Serializable {
      * @param habitEvents (HabitEventList): The list of habit events to set
      */
     public void setHabitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
-
 }

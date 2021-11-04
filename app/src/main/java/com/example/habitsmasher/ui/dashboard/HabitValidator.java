@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This class serves as a validator for all the habit input fields
+ * This class serves as a validator that checks if habit input fields are valid
  */
 public class HabitValidator {
     private final FragmentActivity _context;

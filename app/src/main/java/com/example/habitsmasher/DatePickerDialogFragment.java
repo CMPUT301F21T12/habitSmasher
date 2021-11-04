@@ -15,12 +15,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
+ * UI class that represents and specifies the behaviour of the dialog box
+ * spawned when the user wishes to select a certain date
+ *
  * Extraction of DatePickerDialog came from the following link:
  *
  * https://stackoverflow.com/a/34589270
  * Post date: January 4, 2016
  */
-
 public class DatePickerDialogFragment extends DialogFragment {
 
     private static final String TAG = "DatePickerDialogFragment";
