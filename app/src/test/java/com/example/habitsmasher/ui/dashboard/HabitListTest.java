@@ -12,7 +12,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 
-
 public class HabitListTest {
     private HabitEventList EMPTY_HABIT_EVENTS_LIST = new HabitEventList();
     private HabitList _habitList;

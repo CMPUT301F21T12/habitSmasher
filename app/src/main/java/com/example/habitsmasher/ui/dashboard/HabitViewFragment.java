@@ -11,11 +11,11 @@ import com.example.habitsmasher.DaysTracker;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.ui.history.HabitEventListFragment;
 
 import java.text.SimpleDateFormat;
 
@@ -88,15 +88,13 @@ public class HabitViewFragment extends Fragment {
     }
 
     private void openHabitEventsView() {
-        // Create Habit Event List view with needed parameters
-        HabitEventListFragment fragment = HabitEventListFragment.newInstance(_habit, _username);
+        // Create a bundle to be passed into the HabitEventListFragment
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("parentHabit", _habit);
+        bundle.putSerializable("parentUser", _username);
 
-        // Replace current fragment with habit view
-        FragmentTransaction transaction = this.getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment);
-        transaction.addToBackStack(null);
-
-        // Load new fragment
-        transaction.commit();
+        NavController controller = NavHostFragment.findNavController(this);
+        controller.navigate(R.id.action_navigation_habitView_to_habitEventListFragment, bundle);
     }
 
 
