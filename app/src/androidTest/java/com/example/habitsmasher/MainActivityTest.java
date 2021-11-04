@@ -2,14 +2,19 @@ package com.example.habitsmasher;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -21,6 +26,7 @@ import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Test class for MainActivity. All the UI tests are written here. Robotium test framework is
@@ -38,6 +44,7 @@ public class MainActivityTest {
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
+    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule.";
     private static final String HABIT_EVENT_COMMENT_ERROR_MESSAGE = "Incorrect habit event comment entered";
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
@@ -122,7 +129,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("viewHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("viewHabitTest", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -132,6 +139,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -147,6 +157,9 @@ public class MainActivityTest {
 
         // Check that the date is correct
         assertTextOnScreen(new SimpleDateFormat(DATE_PATTERN).format(testHabit.getDate()));
+
+        // Check that the days are correct
+        assertCorrectDays();
 
         // Click up/back button
         _solo.goBack();
@@ -169,7 +182,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -179,6 +192,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -204,13 +220,16 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyTitle", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyTitle", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter reason
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -245,7 +264,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -255,6 +274,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -291,7 +313,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitReasonLong", "AnExampleHabitReasonThatIsTooLong", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitReasonLong", "AnExampleHabitReasonThatIsTooLong", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -301,6 +323,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -337,7 +362,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyReason", "", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyReason", "", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -347,6 +372,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -382,13 +410,16 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyDate", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyDate", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
 
         // Enter reason
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -411,6 +442,53 @@ public class MainActivityTest {
         deleteTestHabit(testHabit);
     }
 
+    @Test
+    public void ensureHabitAdditionFails_NoDays(){
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create test habit
+        Habit testHabit = new Habit("addHabitNoDays", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check for toast message
+        checkForToastMessage(NO_DAYS_SELECTED_ERROR_MESSAGE);
+
+        // Select days
+        setDaysInAddHabitDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        deleteTestHabit(testHabit);
+
+    }
+
 
     /**
      * Tests edit function is working correctly
@@ -431,7 +509,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("editHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("editHabitTest", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -441,6 +519,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -458,7 +539,7 @@ public class MainActivityTest {
         _solo.clearEditText(0);
         _solo.clearEditText(1);
 
-        Habit testEditHabit = new Habit("editHabitWorked", "testReason1", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testEditHabit = new Habit("editHabitWorked", "testReason1", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
         // enter new values
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testEditHabit.getTitle());
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testEditHabit.getReason());
@@ -482,7 +563,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -492,6 +573,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -508,16 +592,17 @@ public class MainActivityTest {
     @Test
     public void navigateToHabitEventsList() {
         // Navigate to view habit
-        Habit testHabit = goToViewHabit();
+        Habit testHabit = goToViewHabit("ViewEventsTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
 
         // Check that habit event list fragment is displaying
-        View fragment = _solo.getView(R.id.habit_event_list_container);
-        assertNotNull(fragment);
+        View addHabitEventButton = _solo.getView(R.id.add_habit_event_fab);
+        assertNotNull(addHabitEventButton);
 
         // Go back and delete habit
+        _solo.goBack();
         _solo.goBack();
         deleteTestHabit(testHabit);
     }
@@ -525,7 +610,7 @@ public class MainActivityTest {
     @Test
     public void ensureHabitEventAddedSuccessfully() {
         // Navigate to view habit
-        Habit testHabit = goToViewHabit();
+        Habit testHabit = goToViewHabit("AddEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -538,7 +623,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY);
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -558,13 +643,14 @@ public class MainActivityTest {
 
         // Go back and delete habit
         _solo.goBack();
+        _solo.goBack();
         deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitEventFails_emptyComment() {
         // Navigate to view habit
-        Habit testHabit = goToViewHabit();
+        Habit testHabit = goToViewHabit("EmptyComEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -577,7 +663,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY);
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
 
         // Enter date
         enterCurrentDateInAddHabitEventDialogBox();
@@ -603,13 +689,14 @@ public class MainActivityTest {
 
         // Go back and delete habit
         _solo.goBack();
+        _solo.goBack();
         deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitEventFails_commentTooLong() {
         // Navigate to view habit
-        Habit testHabit = goToViewHabit();
+        Habit testHabit = goToViewHabit("LongCommentEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -622,7 +709,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment that is too long, and too many characters", Uri.EMPTY);
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment that is too long, and too many characters", UUID.randomUUID().toString());
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -653,13 +740,14 @@ public class MainActivityTest {
 
         // Go back and delete habit
         _solo.goBack();
+        _solo.goBack();
         deleteTestHabit(testHabit);
     }
 
     @Test
     public void ensureHabitEventFails_dateEmpty() {
         // Navigate to view habit
-        Habit testHabit = goToViewHabit();
+        Habit testHabit = goToViewHabit("EmptyDateEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -672,7 +760,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", Uri.EMPTY);
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -698,6 +786,158 @@ public class MainActivityTest {
 
         // Go back and delete habit
         _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventDeletedSuccessfully() {
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("DeleteEventTest");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Test deleting the habit event
+        deleteTestHabitEvent(testEvent);
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventEditedSuccessfully_changeDate() {
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("EditDateEvent");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Click on edit button
+        swipeLeftOnHabitEvent(testEvent);
+        _solo.waitForView(R.id.edit_habit_event_button);
+        _solo.clickOnButton(EDIT_BUTTON);
+
+        // Check that dialog opens
+        assertTextOnScreen("Edit Habit Event");
+        enterCurrentDateInAddHabitEventDialogBox();
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        assertTextOnScreen(testEvent.getComment());
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventEditedSuccessfully_changeComment() {
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("EditCommentEvent");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Click on edit button
+        swipeLeftOnHabitEvent(testEvent);
+        _solo.waitForView(R.id.edit_habit_event_button);
+        _solo.clickOnButton(EDIT_BUTTON);
+
+        // Check that dialog opens
+        assertTextOnScreen("Edit Habit Event");
+
+        // Change comment
+        _solo.clearEditText(_solo.getEditText(testEvent.getComment()));
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, "New comment!");
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that new comment is displayed
+        assertTextOnScreen("New comment!");
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
         deleteTestHabit(testHabit);
     }
 
@@ -707,6 +947,18 @@ public class MainActivityTest {
         _solo.clickOnButton(DELETE_BUTTON);
 
         assertFalse(isTextOnScreen(habitToDelete.getTitle()));
+    }
+
+    private void deleteTestHabitEvent(HabitEvent eventToDelete) {
+        swipeLeftOnHabitEvent(eventToDelete);
+
+
+        _solo.waitForView(R.id.delete_habit_event_button);
+
+
+        _solo.clickOnButton(DELETE_BUTTON);
+
+        assertFalse(isTextOnScreen(eventToDelete.getComment()));
     }
 
     private void swipeLeftOnHabit(Habit habitToDelete) {
@@ -724,8 +976,23 @@ public class MainActivityTest {
         _solo.drag(fromX, location[0], fromY, fromY, 10);
     }
 
+    private void swipeLeftOnHabitEvent(HabitEvent eventToDelete) {
+        TextView view = _solo.getText(eventToDelete.getComment());
 
-    private Habit goToViewHabit() {
+        // locate row
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        int displayWidth = _solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
+
+        int fromX = displayWidth - 10;
+        int fromY = location[1];
+        _solo.drag(location[0], 0, fromY, fromY, 10);
+        _solo.drag(location[0], 0, fromY, fromY, 10);
+    }
+
+
+    private Habit goToViewHabit(String testName) {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -736,7 +1003,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("viewHabitTest", "Test Reason", new Date(), HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit(testName, "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -746,6 +1013,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -778,8 +1048,15 @@ public class MainActivityTest {
         _solo.enterText(_solo.getEditText(fieldToSet), text);
     }
 
+    private void setDaysInAddHabitDialogBox(){
+        _solo.clickOnView(_solo.getView(R.id.monday_button));
+        _solo.clickOnView(_solo.getView(R.id.wednesday_button));
+        _solo.clickOnView(_solo.getView(R.id.friday_button));
+    }
+
     private void checkForToastMessage(String errorMessage) {
-        TextView toast = (TextView) _solo.getView(android.R.id.message);
+        TextView toast = (TextView) _solo.getView(R.id.message);
+        Log.d("ToastTest", "Toast test: " + toast.toString());
         assertEquals(errorMessage, toast.getText().toString(),errorMessage);
     }
 
@@ -789,5 +1066,19 @@ public class MainActivityTest {
 
     private boolean isTextOnScreen(String text) {
         return _solo.waitForText(text, 1, 2000);
+    }
+
+    private void assertCorrectDays(){
+        // I'm not entirely sure how to check the state of a button nor get the drawable without context, so
+        // my workaround checks the drawable of the buttons compared to each other, which change based on whether they're checked.
+        assertNotEquals(_solo.getView(R.id.tuesday_button).getBackground(),_solo.getView(R.id.monday_button).getBackground());
+        assertNotEquals(_solo.getView(R.id.wednesday_button).getBackground(), _solo.getView(R.id.thursday_button).getBackground());
+        assertNotEquals(_solo.getView(R.id.friday_button).getBackground(), _solo.getView(R.id.saturday_button).getBackground());
+        assertNotEquals(_solo.getView(R.id.sunday_button).getBackground(), _solo.getView(R.id.monday_button).getBackground());
+
+        // If you include these lines, you'll see that each button has the same background but different hex code, meaning
+        // Different states. This gives the difference between states.
+        //Log.d("Monday Background", _solo.getView(R.id.monday_button).getBackground().toString());
+        //Log.d("Tuesday Background", _solo.getView(R.id.tuesday_button).getBackground().toString());
     }
 }

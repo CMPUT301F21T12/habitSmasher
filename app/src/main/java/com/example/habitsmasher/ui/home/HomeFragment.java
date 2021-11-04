@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.databinding.FragmentHomeBinding;
@@ -34,7 +35,7 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         // This is the example habit to be displayed
-        Habit testHabit = new Habit("This is a title", "This is my reason", new Date(),1, new HabitEventList());
+        Habit testHabit = new Habit("This is a title", "This is my reason", new Date(), "MO",1, new HabitEventList());
 
         // Getting the corresponding textviews in the fragment_home.xml
         TextView titleView = binding.habitTitle;

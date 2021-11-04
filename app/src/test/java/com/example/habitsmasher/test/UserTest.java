@@ -7,7 +7,7 @@ import com.example.habitsmasher.User;
 import org.junit.Before;
 import org.junit.Test;
 
-public class UserUnitTest {
+public class UserTest {
     private User _user;
 
     @Before
