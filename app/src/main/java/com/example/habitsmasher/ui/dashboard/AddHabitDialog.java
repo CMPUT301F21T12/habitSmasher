@@ -115,10 +115,10 @@ public class AddHabitDialog extends DialogFragment {
 
                 if (habitValidator.isHabitValid(habitTitle,
                                                 habitReason,
-                                                habitDate)){
+                                                habitDate, _tracker)){
                     _habitListFragment.addHabitToDatabase(habitTitle,
                                                           habitReason,
-                                                          habitValidator.checkHabitDateValid(habitDate));
+                                                          habitValidator.checkHabitDateValid(habitDate), _tracker);
                     getDialog().dismiss();
                 }
             }
