@@ -31,7 +31,7 @@ public class DaysTracker {
         _days = new ArrayList<Boolean>(Arrays.asList(new Boolean[7]));
 
         //fill with all false
-        Collections.fill(_days, Boolean.FALSE);
+        setFalse();
     }
 
 
@@ -49,42 +49,15 @@ public class DaysTracker {
      */
     public DaysTracker(String days){
 
+        //create the arrayList
         _days = new ArrayList<Boolean>(Arrays.asList(new Boolean[7]));
-        Collections.fill(_days, Boolean.FALSE);
 
-        //take the string and split it up based on what days are present
-        //this will go under the assumption that the string will always be formatted correctly.
-        days = days.toUpperCase();
-        String[] splitDays = days.split(" ");
+        //set all to false
+        setFalse();
 
-        //for each item split from the string
-        for(int i = 0; i < splitDays.length; i++){
-            //get the value, and if any matches with the abbreviations set the corresponding day to true
-            String value = splitDays[i];
-            switch (value){
-                case "MO":
-                    _days.set(0, true);
-                    break;
-                case "TU":
-                    _days.set(1, true);
-                    break;
-                case "WE":
-                    _days.set(2, true);
-                    break;
-                case "TH":
-                    _days.set(3, true);
-                    break;
-                case "FR":
-                    _days.set(4, true);
-                    break;
-                case "SA":
-                    _days.set(5, true);
-                    break;
-                case "SU":
-                    _days.set(6, true);
-                    break;
-            }
-        }
+        //set the specific days
+        setDays(days);
+
 
     }
 
@@ -146,6 +119,49 @@ public class DaysTracker {
         return days;
     }
 
+
+    /**
+     * Takes a string with the days and converts them to days of the week.
+     * The string takes the format "day1 day2 ... day7", where each day is the first 2 letters of that day, separated by a space. The string can be in any order.
+     * EX) "MO FR WE TH"
+     *
+     * @param days The days to select
+     */
+    public void setDays(String days){
+        //take the string and split it up based on what days are present
+        //this will go under the assumption that the string will always be formatted correctly.
+        days = days.toUpperCase();
+        String[] splitDays = days.split(" ");
+
+        //for each item split from the string
+        for(int i = 0; i < splitDays.length; i++){
+            //get the value, and if any matches with the abbreviations set the corresponding day to true
+            String value = splitDays[i];
+            switch (value){
+                case "MO":
+                    _days.set(0, true);
+                    break;
+                case "TU":
+                    _days.set(1, true);
+                    break;
+                case "WE":
+                    _days.set(2, true);
+                    break;
+                case "TH":
+                    _days.set(3, true);
+                    break;
+                case "FR":
+                    _days.set(4, true);
+                    break;
+                case "SA":
+                    _days.set(5, true);
+                    break;
+                case "SU":
+                    _days.set(6, true);
+                    break;
+            }
+        }
+    }
 
     /**
      * Returns the value set to Monday, either true or false.

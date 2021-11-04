@@ -33,6 +33,15 @@ public class EditHabitFragment extends DialogFragment{
     // viewHolder of edited Habit
     private final HabitItemAdapter.HabitViewHolder _viewHolder;
 
+    private Button _mondayButton;
+    private Button _tuesdayButton;
+    private Button _wednesdayButton;
+    private Button _thursdayButton;
+    private Button _fridayButton;
+    private Button _saturdayButton;
+    private Button _sundayButton;
+
+
     public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener,
                                 HabitItemAdapter.HabitViewHolder habitViewHolder) {
         _index = index;
@@ -57,13 +66,13 @@ public class EditHabitFragment extends DialogFragment{
         _dateText = view.findViewById(R.id.habit_date_selection);
         _tracker = new DaysTracker(_editHabit.getDays());
         //buttons for the days of the week, apologies for so many of them
-        Button mondayButton = view.findViewById(R.id.monday_button);
-        Button tuesdayButton = view.findViewById(R.id.tuesday_button);
-        Button wednesdayButton = view.findViewById(R.id.wednesday_button);
-        Button thursdayButton = view.findViewById(R.id.thursday_button);
-        Button fridayButton = view.findViewById(R.id.friday_button);
-        Button saturdayButton = view.findViewById(R.id.saturday_button);
-        Button sundayButton =view.findViewById(R.id.sunday_button);
+        _mondayButton = view.findViewById(R.id.monday_button);
+        _tuesdayButton = view.findViewById(R.id.tuesday_button);
+        _wednesdayButton = view.findViewById(R.id.wednesday_button);
+        _thursdayButton = view.findViewById(R.id.thursday_button);
+        _fridayButton = view.findViewById(R.id.friday_button);
+        _saturdayButton = view.findViewById(R.id.saturday_button);
+        _sundayButton =view.findViewById(R.id.sunday_button);
 
         // Get header from resource file and set it
         header.setText(getResources().getString(R.string.edit_habit));
@@ -112,17 +121,29 @@ public class EditHabitFragment extends DialogFragment{
             }
         });
 
-        //setting day initial states (clicked or not)
-        if (_tracker.getMonday()){mondayButton.performClick();}
-        if (_tracker.getTuesday()){tuesdayButton.performClick();}
-        if (_tracker.getWednesday()){wednesdayButton.performClick();}
-        if (_tracker.getThursday()){thursdayButton.performClick();}
-        if (_tracker.getFriday()){fridayButton.performClick();}
-        if (_tracker.getSaturday()){saturdayButton.performClick();}
-        if (_tracker.getSunday()){sundayButton.performClick();}
+        //set up days of the week buttons
+        setListenersForDaysOfTheWeek();
 
-        //day button onClick methods follow below
-        mondayButton.setOnClickListener(new View.OnClickListener() {
+        return view;
+    }
+
+    /*
+     * Sets up the buttons for the days of the week, including setting the initial states.
+     */
+    private void setListenersForDaysOfTheWeek(){
+
+        //setting day initial states (clicked or not)
+        if (_tracker.getMonday()){_mondayButton.performClick();}
+        if (_tracker.getTuesday()){_tuesdayButton.performClick();}
+        if (_tracker.getWednesday()){_wednesdayButton.performClick();}
+        if (_tracker.getThursday()){_thursdayButton.performClick();}
+        if (_tracker.getFriday()){_fridayButton.performClick();}
+        if (_tracker.getSaturday()){_saturdayButton.performClick();}
+        if (_tracker.getSunday()){_sundayButton.performClick();}
+
+        //button onClick methods follow below
+
+        _mondayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //if monday is already selected, set it to false
@@ -137,7 +158,7 @@ public class EditHabitFragment extends DialogFragment{
             }
         });
 
-        tuesdayButton.setOnClickListener(new View.OnClickListener() {
+        _tuesdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(_tracker.getTuesday()){
@@ -150,7 +171,7 @@ public class EditHabitFragment extends DialogFragment{
             }
         });
 
-        wednesdayButton.setOnClickListener(new View.OnClickListener() {
+        _wednesdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(_tracker.getWednesday()){
@@ -163,7 +184,7 @@ public class EditHabitFragment extends DialogFragment{
             }
         });
 
-        thursdayButton.setOnClickListener(new View.OnClickListener() {
+        _thursdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(_tracker.getThursday()){
@@ -176,7 +197,7 @@ public class EditHabitFragment extends DialogFragment{
             }
         });
 
-        fridayButton.setOnClickListener(new View.OnClickListener() {
+        _fridayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(_tracker.getFriday()){
@@ -189,7 +210,7 @@ public class EditHabitFragment extends DialogFragment{
             }
         });
 
-        saturdayButton.setOnClickListener(new View.OnClickListener() {
+        _saturdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(_tracker.getSaturday()){
@@ -202,7 +223,7 @@ public class EditHabitFragment extends DialogFragment{
             }
         });
 
-        sundayButton.setOnClickListener(new View.OnClickListener() {
+        _sundayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(_tracker.getSunday()){
@@ -214,9 +235,6 @@ public class EditHabitFragment extends DialogFragment{
                 Log.d("Tracker Status", _tracker.getDays());
             }
         });
-
-
-        return view;
     }
 
     /**

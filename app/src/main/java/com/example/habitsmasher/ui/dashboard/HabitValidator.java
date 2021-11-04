@@ -53,7 +53,7 @@ public class HabitValidator {
         }
 
         if (tracker.getDays().isEmpty()){
-            showToastMessage("Please select what days of the week.");
+            showToastMessage("Please select a weekly schedule.");
             return false;
         }
 

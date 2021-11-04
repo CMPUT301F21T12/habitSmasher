@@ -19,8 +19,9 @@ public class DaysTrackerUnitTest {
     }
 
     @Test
-    public void testSetupStringInput(){
+    public void constructor_withAssortedDays_expectMoTuWeThAreTrue(){
         _stringTracker = new DaysTracker("MO TU WE TH");
+        // Monday Tuesday Wednesday Thursday should be true.
         assertTrue(_stringTracker.getMonday());
         assertTrue(_stringTracker.getTuesday());
         assertTrue(_stringTracker.getWednesday());
@@ -30,13 +31,13 @@ public class DaysTrackerUnitTest {
         assertFalse(_stringTracker.getSunday());
     }
     @Test
-    public void testSetupNoStringInput(){
+    public void constructor_withEmptyDaysString_expectAllDaysAreFalse(){
         _stringTracker = new DaysTracker("");
-        assertTrue(allFalse(_stringTracker));
+        assertTrue(areAllDaysUnselected(_stringTracker));
     }
 
     @Test
-    public void testSetupRandomString(){
+    public void constructor_randomStringWithDays_expectWeAndFrAreTrue(){
         _stringTracker = new DaysTracker("hob bobby monday tuesday we friday sa sunday funday");
         assertTrue(_stringTracker.getWednesday());
         assertTrue(_stringTracker.getSaturday());
@@ -47,22 +48,22 @@ public class DaysTrackerUnitTest {
     }
 
     @Test
-    public void testInit(){
+    public void constructor_noStringInput_expectAllDaysFalse(){
         //tests the initialization
-        assertEquals(true, allFalse(_tracker));
+        assertEquals(true, areAllDaysUnselected(_tracker));
     }
 
     @Test
-    public void testSetDay(){
+    public void setMonday_setMondayTrue_MoTrueAndAllOthersFalse(){
         //sake of clarity, gonna assume if monday works every other day works too
         _tracker.setMonday(true);
         assertTrue(_tracker.getMonday());
-        assertFalse(allFalse(_tracker));
+        assertFalse(areAllDaysUnselected(_tracker));
     }
 
     //test sampling of days
     @Test
-    public void testGetDays(){
+    public void getDays_getMoWeFr_MoWeFrAreTrue(){
         _tracker.setMonday(true);
         _tracker.setWednesday(true);
         _tracker.setFriday(true);
@@ -72,23 +73,23 @@ public class DaysTrackerUnitTest {
 
     //test all days
     @Test
-    public void testGetAllDays(){
+    public void getDays_setAllAsSelected_expectAllToBeTrue(){
         _tracker.setTrue();
 
-        assertEquals("MO TU WE TH FR SA SU", _tracker.getDays());
+        assertTrue(areAllDaysSelected(_tracker));
     }
 
     //test no days
     @Test
-    public void testNoDays(){
+    public void getDays_setAllToFalse_expectAllDaysAreFalse(){
         _tracker.setFalse();
 
-        assertEquals("", _tracker.getDays());
+        assertTrue(areAllDaysUnselected(_tracker));
     }
 
     //test changing day twice
     @Test
-    public void testDoubleChange(){
+    public void setDay_setTuesdayToTrueThenFalse_expectTuesdayIsTrueThenFalse(){
         _tracker.setTuesday(true);
         assertTrue(_tracker.getTuesday());
 
@@ -96,18 +97,34 @@ public class DaysTrackerUnitTest {
         assertFalse(_tracker.getTuesday());
     }
 
+    @Test
+    public void setDays_withStringOfDays_expectFrSaSuAreTrue(){
+        _tracker.setDays("FR SA SU");
+
+        assertTrue(_tracker.getFriday());
+        assertTrue(_tracker.getSaturday());
+        assertTrue(_tracker.getSunday());
+    }
+
+    @Test
+    public void setDays_setAllDaysAsSelectedWithStringInput_expectAllDaysSelected(){
+        _tracker.setDays("MO TU WE TH FR SA SU");
+
+        assertTrue(areAllDaysSelected(_tracker));
+    }
+
     //test changing to true then back to false
     @Test
-    public void testChangeTrueAndBack(){
+    public void setDay_setAllDaysToTrueThenFalse_expectAllDaysAreTrueThenAllFalse(){
         _tracker.setTrue();
-        assertEquals("MO TU WE TH FR SA SU", _tracker.getDays());
+        assertTrue(areAllDaysSelected(_tracker));
 
         _tracker.setFalse();
-        assertEquals("", _tracker.getDays());
+        assertTrue(areAllDaysUnselected(_tracker));
     }
 
 
-    private Boolean allFalse(DaysTracker tracker){
+    private Boolean areAllDaysUnselected(DaysTracker tracker){
         if (
                 tracker.getMonday() || tracker.getTuesday() || tracker.getWednesday() ||
                 tracker.getThursday() || tracker.getFriday() || tracker.getSaturday() ||
@@ -116,6 +133,16 @@ public class DaysTrackerUnitTest {
         }
         else {
             return true;
+        }
+    }
+
+    private Boolean areAllDaysSelected(DaysTracker tracker){
+        if (tracker.getMonday() && tracker.getTuesday() &&
+                tracker.getWednesday() && tracker.getThursday() && tracker.getFriday()
+                && tracker.getSaturday() && tracker.getSunday()){
+            return true;
+        } else {
+            return false;
         }
     }
 

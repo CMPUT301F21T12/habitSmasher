@@ -43,7 +43,7 @@ public class MainActivityTest {
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
-    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select what days of the week.";
+    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule.";
     private static final String HABIT_EVENT_COMMENT_ERROR_MESSAGE = "Incorrect habit event comment entered";
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
@@ -470,7 +470,6 @@ public class MainActivityTest {
 
         // Check for toast message
         checkForToastMessage(NO_DAYS_SELECTED_ERROR_MESSAGE);
-        //assertTrue(isTextOnScreen(NO_DAYS_SELECTED_ERROR_MESSAGE));
 
         // Select days
         setDaysInAddHabitDialogBox();

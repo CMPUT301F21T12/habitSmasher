@@ -45,6 +45,16 @@ public class AddHabitDialog extends DialogFragment {
     private EditText _habitReasonEditText;
     private TextView _habitDateTextView;
 
+    private Button _mondayButton;
+    private Button _tuesdayButton;
+    private Button _wednesdayButton;
+    private Button _thursdayButton;
+    private Button _fridayButton;
+    private Button _saturdayButton;
+    private Button _sundayButton;
+
+    private DaysTracker _tracker;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,16 +66,19 @@ public class AddHabitDialog extends DialogFragment {
         Button cancelNewHabit = view.findViewById(R.id.cancel_habit);
 
         //buttons for the days of the week, apologies for so many of them
-        Button mondayButton = view.findViewById(R.id.monday_button);
-        Button tuesdayButton = view.findViewById(R.id.tuesday_button);
-        Button wednesdayButton = view.findViewById(R.id.wednesday_button);
-        Button thursdayButton = view.findViewById(R.id.thursday_button);
-        Button fridayButton = view.findViewById(R.id.friday_button);
-        Button saturdayButton = view.findViewById(R.id.saturday_button);
-        Button sundayButton =view.findViewById(R.id.sunday_button);
+        _mondayButton = view.findViewById(R.id.monday_button);
+        _tuesdayButton = view.findViewById(R.id.tuesday_button);
+        _wednesdayButton = view.findViewById(R.id.wednesday_button);
+        _thursdayButton = view.findViewById(R.id.thursday_button);
+        _fridayButton = view.findViewById(R.id.friday_button);
+        _saturdayButton = view.findViewById(R.id.saturday_button);
+        _sundayButton =view.findViewById(R.id.sunday_button);
 
         //logic handler for tracking all those days
-        DaysTracker tracker = new DaysTracker();
+        _tracker = new DaysTracker();
+
+        // set the listeners for the days of the week buttons
+        setListenersForDaysOfTheWeek();
 
         _habitDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,112 +110,115 @@ public class AddHabitDialog extends DialogFragment {
                 if (habitValidator.isHabitValid(habitTitle,
                                                 habitReason,
                                                 habitDate,
-                                                tracker)){
+                                                _tracker)){
                     _habitListFragment.addHabitToDatabase(habitTitle,
                                                           habitReason,
                                                           habitValidator.checkHabitDateValid(habitDate),
-                                                          tracker);
+                                                          _tracker);
                     getDialog().dismiss();
                 }
             }
         });
 
+
+        return view;
+    }
+
+    private void setListenersForDaysOfTheWeek(){
         //button onClick methods follow below
 
-        mondayButton.setOnClickListener(new View.OnClickListener() {
+        _mondayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //if monday is already selected, set it to false
-                if (tracker.getMonday()){
-                    tracker.setMonday(false);
+                if (_tracker.getMonday()){
+                    _tracker.setMonday(false);
                 }
                 //if monday wasn't already selected, select it
                 else{
-                    tracker.setMonday(true);
+                    _tracker.setMonday(true);
                 }
-                Log.d("Tracker Status", tracker.getDays());
+                Log.d("Tracker Status", _tracker.getDays());
             }
         });
 
-        tuesdayButton.setOnClickListener(new View.OnClickListener() {
+        _tuesdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tracker.getTuesday()){
-                    tracker.setTuesday(false);
+                if(_tracker.getTuesday()){
+                    _tracker.setTuesday(false);
                 }
                 else{
-                    tracker.setTuesday(true);
+                    _tracker.setTuesday(true);
                 }
-                Log.d("Tracker Status", tracker.getDays());
+                Log.d("Tracker Status", _tracker.getDays());
             }
         });
 
-        wednesdayButton.setOnClickListener(new View.OnClickListener() {
+        _wednesdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tracker.getWednesday()){
-                    tracker.setWednesday(false);
+                if(_tracker.getWednesday()){
+                    _tracker.setWednesday(false);
                 }
                 else{
-                    tracker.setWednesday(true);
+                    _tracker.setWednesday(true);
                 }
-                Log.d("Tracker Status", tracker.getDays());
+                Log.d("Tracker Status", _tracker.getDays());
             }
         });
 
-        thursdayButton.setOnClickListener(new View.OnClickListener() {
+        _thursdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tracker.getThursday()){
-                    tracker.setThursday(false);
+                if(_tracker.getThursday()){
+                    _tracker.setThursday(false);
                 }
                 else{
-                    tracker.setThursday(true);
+                    _tracker.setThursday(true);
                 }
-                Log.d("Tracker Status", tracker.getDays());
+                Log.d("Tracker Status", _tracker.getDays());
             }
         });
 
-        fridayButton.setOnClickListener(new View.OnClickListener() {
+        _fridayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tracker.getFriday()){
-                    tracker.setFriday(false);
+                if(_tracker.getFriday()){
+                    _tracker.setFriday(false);
                 }
                 else{
-                    tracker.setFriday(true);
+                    _tracker.setFriday(true);
                 }
-                Log.d("Tracker Status", tracker.getDays());
+                Log.d("Tracker Status", _tracker.getDays());
             }
         });
 
-        saturdayButton.setOnClickListener(new View.OnClickListener() {
+        _saturdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tracker.getSaturday()){
-                    tracker.setSaturday(false);
+                if(_tracker.getSaturday()){
+                    _tracker.setSaturday(false);
                 }
                 else{
-                    tracker.setSaturday(true);
+                    _tracker.setSaturday(true);
                 }
-                Log.d("Tracker Status", tracker.getDays());
+                Log.d("Tracker Status", _tracker.getDays());
             }
         });
 
-        sundayButton.setOnClickListener(new View.OnClickListener() {
+        _sundayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tracker.getSunday()){
-                    tracker.setSunday(false);
+                if(_tracker.getSunday()){
+                    _tracker.setSunday(false);
                 }
                 else{
-                    tracker.setSunday(true);
+                    _tracker.setSunday(true);
                 }
-                Log.d("Tracker Status", tracker.getDays());
+                Log.d("Tracker Status", _tracker.getDays());
             }
         });
-
-        return view;
     }
 
     private void openDatePickerDialog(){

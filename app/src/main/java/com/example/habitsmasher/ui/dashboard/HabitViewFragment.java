@@ -27,6 +27,16 @@ public class HabitViewFragment extends Fragment {
     private Habit _habit;
     private String _username;
 
+    private Button _mondayButton;
+    private Button _tuesdayButton;
+    private Button _wednesdayButton;
+    private Button _thursdayButton;
+    private Button _fridayButton;
+    private Button _saturdayButton;
+    private Button _sundayButton;
+
+    private DaysTracker _tracker;
+
     public HabitViewFragment() {
         // Required empty public constructor
     }
@@ -41,7 +51,7 @@ public class HabitViewFragment extends Fragment {
         }
 
         //set the DaysTracker
-        DaysTracker tracker = new DaysTracker(_habit.getDays());
+        _tracker = new DaysTracker(_habit.getDays());
 
         // Date formatter
         String pattern = "dd-MM-yyyy";
@@ -70,36 +80,8 @@ public class HabitViewFragment extends Fragment {
             }
         });
 
-
-        //all of the non-clickable buttons
-        Button mondayButton = view.findViewById(R.id.monday_button);
-        if (tracker.getMonday()){
-            mondayButton.performClick();
-        }
-        Button tuesdayButton = view.findViewById(R.id.tuesday_button);
-        if (tracker.getTuesday()){
-            tuesdayButton.performClick();
-        }
-        Button wednesdayButton = view.findViewById(R.id.wednesday_button);
-        if (tracker.getWednesday()){
-            wednesdayButton.performClick();
-        }
-        Button thursdayButton = view.findViewById(R.id.thursday_button);
-        if (tracker.getThursday()){
-            thursdayButton.performClick();
-        }
-        Button fridayButton = view.findViewById(R.id.friday_button);
-        if (tracker.getFriday()){
-            fridayButton.performClick();
-        }
-        Button saturdayButton = view.findViewById(R.id.saturday_button);
-        if (tracker.getSaturday()){
-            saturdayButton.performClick();
-        }
-        Button sundayButton = view.findViewById(R.id.sunday_button);
-        if (tracker.getSunday()){
-            sundayButton.performClick();
-        }
+        //set up the buttons for the days of the week
+        setupDaysOfTheWeekButtons(view);
 
         return view;
     }
@@ -114,5 +96,42 @@ public class HabitViewFragment extends Fragment {
 
         // Load new fragment
         transaction.commit();
+    }
+
+
+    /*
+     * Helper function that sets up all of the buttons and sets their state, whether selected or not
+     * The buttons are all non-clickable
+     */
+    private void setupDaysOfTheWeekButtons(View view){
+
+        Button mondayButton = view.findViewById(R.id.monday_button);
+        if (_tracker.getMonday()){
+            mondayButton.performClick();
+        }
+        Button tuesdayButton = view.findViewById(R.id.tuesday_button);
+        if (_tracker.getTuesday()){
+            tuesdayButton.performClick();
+        }
+        Button wednesdayButton = view.findViewById(R.id.wednesday_button);
+        if (_tracker.getWednesday()){
+            wednesdayButton.performClick();
+        }
+        Button thursdayButton = view.findViewById(R.id.thursday_button);
+        if (_tracker.getThursday()){
+            thursdayButton.performClick();
+        }
+        Button fridayButton = view.findViewById(R.id.friday_button);
+        if (_tracker.getFriday()){
+            fridayButton.performClick();
+        }
+        Button saturdayButton = view.findViewById(R.id.saturday_button);
+        if (_tracker.getSaturday()){
+            saturdayButton.performClick();
+        }
+        Button sundayButton = view.findViewById(R.id.sunday_button);
+        if (_tracker.getSunday()){
+            sundayButton.performClick();
+        }
     }
 }
