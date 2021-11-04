@@ -14,11 +14,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This class serves as a validator that checks if habit input fields are valid
+ * Class that as a validator that checks if habit input fields are valid
+ * when adding or editing a habit
  */
 public class HabitValidator {
     private final FragmentActivity _context;
 
+    /**
+     * Creates the validator
+     * @param context fragment that spawned this validator
+     */
     public HabitValidator(FragmentActivity context) {
         _context = context;
     }
@@ -37,21 +42,25 @@ public class HabitValidator {
                                 DaysTracker tracker) {
         Date parsedDate = checkHabitDateValid(habitDate);
 
+        // checking title length
         if ((habitTitle.length() <= 0) || (habitTitle.length() > 20)) {
             showToastMessage("Incorrect habit title entered");
             return false;
         }
 
+        // checking reason length
         if ((habitReason.length() <= 0) || (habitReason.length() > 30)) {
             showToastMessage("Incorrect habit reason entered");
             return false;
         }
 
+        // checking data
         if (parsedDate == null) {
             showToastMessage("Please enter a start date");
             return false;
         }
 
+        // checking days of week
         if (tracker.getDays().isEmpty()){
             showToastMessage("Please select a weekly schedule.");
             return false;

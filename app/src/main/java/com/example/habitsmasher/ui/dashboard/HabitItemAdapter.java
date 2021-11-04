@@ -37,12 +37,10 @@ import java.util.Locale;
 
 
 /**
- * Custom adapter class that is used to connect the Firestore database, the local HabitList of a user
- * and the UI of a user's habit list, which is stored in a Recycler view
+ * Custom adapter class that is used to connect the Firestore database and the
+ * RecyclerView displaying the habits
  */
 public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
-    private static final String DATE_PATTERN = "dd-MM-yyyy";
-    private static final Locale LOCALE = Locale.CANADA;
     private static HabitList _habits;
     private static HabitListFragment _habitListFragment;
     private final String _username;

@@ -8,20 +8,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * This class is used to represent the days of the week a habit takes place, and contains all functionality in
+ * storing, querying, modifying, and returning what days of the week a habit takes place. This class does not currently handle
+ * storing the days in a database, but is capable of taking in information stored in a database and converting to a DaysTracker object.
+ *
+ * @author: Cameron Matthew
+ * @Version: 1.0
+ * @see Habit
+ */
+
 public class DaysTracker {
-    /**
-     * This class is used to represent the days of the week a habit takes place, and contains all functionality in
-     * storing, querying, modifying, and returning what days of the week a habit takes place. This class does not currently handle
-     * storing the days in a database, but is capable of taking in information stored in a database and converting to a DaysTracker object.
-     *
-     * @author: Cameron Matthew
-     * @Version: 1.0
-     * @see Habit
-     */
+
 
     //instance variables to represent days of the week
     private ArrayList<Boolean> _days;
-
 
     /**
      * Creates a DaysTracker object with all values set to false. This constructor is the default constructor.
@@ -33,7 +34,6 @@ public class DaysTracker {
         //fill with all false
         setFalse();
     }
-
 
     /**
      * Creates a DaysTracker with {@link String} input. The string contains all of the days that are to

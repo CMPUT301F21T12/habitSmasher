@@ -43,6 +43,12 @@ public class EditHabitFragment extends DialogFragment{
     private final int _index;
     private final HabitListFragment _listener;
 
+    /**
+     * Constructs a Edit Habit dialog
+     * @param index index of habit being edited by this dialog
+     * @param editHabit habit being edited
+     * @param listener habit list fragment that spawned this dialog
+     */
     public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener) {
         _index = index;
         _editHabit = editHabit;
@@ -93,7 +99,6 @@ public class EditHabitFragment extends DialogFragment{
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //HashMap<String, Habit> habitData = new HashMap<>();
                 String habitTitle = _titleText.getText().toString();
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
@@ -125,8 +130,8 @@ public class EditHabitFragment extends DialogFragment{
         return view;
     }
 
-    /*
-     * Sets up the buttons for the days of the week, including setting the initial states.
+    /**
+     * Sets up the buttons representing the days of the week
      */
     private void initializeDaysOfTheWeekButtons(){
 
@@ -140,7 +145,6 @@ public class EditHabitFragment extends DialogFragment{
         if (_tracker.getSunday()){_sundayButton.performClick();}
 
         //button onClick methods follow below
-
         _mondayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

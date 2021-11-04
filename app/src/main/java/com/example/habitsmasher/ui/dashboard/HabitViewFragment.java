@@ -25,9 +25,13 @@ import java.text.SimpleDateFormat;
  */
 public class HabitViewFragment extends Fragment {
 
+    // habit being displayed
     private Habit _habit;
+
+    // user which owns this habit
     private String _username;
 
+    // buttons representing days of the week
     private Button _mondayButton;
     private Button _tuesdayButton;
     private Button _wednesdayButton;
@@ -102,7 +106,7 @@ public class HabitViewFragment extends Fragment {
     }
 
 
-    /*
+    /**
      * Helper function that sets up all of the buttons and sets their state, whether selected or not
      * The buttons are all non-clickable
      */
