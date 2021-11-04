@@ -37,6 +37,8 @@ public class HabitViewFragment extends Fragment {
 
     private DaysTracker _tracker;
 
+    private static final String PATTERN = "dd-MM-yyyy";
+
     public HabitViewFragment() {
         // Required empty public constructor
     }
@@ -54,8 +56,7 @@ public class HabitViewFragment extends Fragment {
         _tracker = new DaysTracker(_habit.getDays());
 
         // Date formatter
-        String pattern = "dd-MM-yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_habit_view, container, false);

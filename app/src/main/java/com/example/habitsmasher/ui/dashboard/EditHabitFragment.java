@@ -122,7 +122,7 @@ public class EditHabitFragment extends DialogFragment{
         });
 
         //set up days of the week buttons
-        setListenersForDaysOfTheWeek();
+        initializeDaysOfTheWeekButtons();
 
         return view;
     }
@@ -130,7 +130,7 @@ public class EditHabitFragment extends DialogFragment{
     /*
      * Sets up the buttons for the days of the week, including setting the initial states.
      */
-    private void setListenersForDaysOfTheWeek(){
+    private void initializeDaysOfTheWeekButtons(){
 
         //setting day initial states (clicked or not)
         if (_tracker.getMonday()){_mondayButton.performClick();}
