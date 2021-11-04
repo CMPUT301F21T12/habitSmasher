@@ -131,6 +131,7 @@ public class HabitList extends ArrayList<Habit>{
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
         setHabitDataInDatabase(username, habitId.toString(), habitData);
+        editHabitLocal(newTitle,newReason,newDate, pos);
     }
 
     // this is a temporary implementation of generating unique habitIDs
