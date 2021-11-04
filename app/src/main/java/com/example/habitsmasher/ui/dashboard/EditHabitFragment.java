@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DatePickerDialogFragment;
+import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 
@@ -30,12 +31,6 @@ public class EditHabitFragment extends DialogFragment{
     private TextView _dateText;
     private DaysTracker _tracker;
 
-    private final Habit _editHabit;
-    private final int _index;
-    private final HabitListFragment _listener;
-    // viewHolder of edited Habit
-    private final HabitItemAdapter.HabitViewHolder _viewHolder;
-
     private Button _mondayButton;
     private Button _tuesdayButton;
     private Button _wednesdayButton;
@@ -44,13 +39,14 @@ public class EditHabitFragment extends DialogFragment{
     private Button _saturdayButton;
     private Button _sundayButton;
 
+    private final Habit _editHabit;
+    private final int _index;
+    private final HabitListFragment _listener;
 
-    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener,
-                                HabitItemAdapter.HabitViewHolder habitViewHolder) {
+    public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener) {
         _index = index;
         _editHabit = editHabit;
         _listener = listener;
-        _viewHolder = habitViewHolder;
     }
 
 
@@ -68,6 +64,7 @@ public class EditHabitFragment extends DialogFragment{
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_selection);
         _tracker = new DaysTracker(_editHabit.getDays());
+
         //buttons for the days of the week, apologies for so many of them
         _mondayButton = view.findViewById(R.id.monday_button);
         _tuesdayButton = view.findViewById(R.id.tuesday_button);
@@ -101,7 +98,6 @@ public class EditHabitFragment extends DialogFragment{
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
 
-
                 HabitValidator habitValidator = new HabitValidator(getActivity());
 
                 if (!habitValidator.isHabitValid(habitTitle, reasonText, dateText, _tracker)) {
@@ -109,8 +105,7 @@ public class EditHabitFragment extends DialogFragment{
                 }
 
                 // update local list and display
-                _listener.updateAfterEdit(habitTitle, reasonText, DatePickerDialogFragment.parseStringToDate(dateText), _index, _tracker, _viewHolder);
-
+                _listener.updateAfterEdit(habitTitle, reasonText, DatePickerDialogFragment.parseStringToDate(dateText), _index, _tracker);
 
                 getDialog().dismiss();
             }
