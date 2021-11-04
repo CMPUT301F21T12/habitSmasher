@@ -10,9 +10,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,7 +44,7 @@ public class HabitListFragment extends Fragment {
     private final User _user = new User("TestUser", "123");
     private final HabitList _habitList = _user.getHabits();
     private HabitItemAdapter _habitItemAdapter;
-    private HabitListFragment _fragment = this;
+    private final HabitListFragment _fragment = this;
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
     @Override
@@ -155,47 +156,56 @@ public class HabitListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(_habitItemAdapter);
-        new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-    }
 
-    /**
-     * The implementation of the swipe to delete functionality below came from the following URL:
-     * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview
-     *
-     *
-     * Name: Rahul Raina
-     * Date: November 2, 2016
-     */
-    // find a better way of doing this
-    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView,
-                              @NonNull RecyclerView.ViewHolder viewHolder,
-                              @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
+        /* Implementation of swipe menu functionality came from this source:
+        Name: Velmurugan
+        Date: March 4, 2021
+        URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
+         */
+        // create a touch listener which handles the swipe function of the RecyclerView
+        RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+        touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+            @Override
+            // if row at the specified position is clicked
+            public void onRowClicked(int position) {
+                // Get the selected habit
+                Habit currentHabit = _habitItemAdapter._snapshots.get(position);
 
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            // if the habit row is swiped to the left, spawn edit and delete button
-            // if swiped to the right, despawn them
-            View habitView = viewHolder.itemView;
+                // Create a bundle to be passed into the habitViewFragment
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("habit", currentHabit);
+                bundle.putSerializable("user", _user.getUsername());
+                NavController controller = NavHostFragment.findNavController(_fragment);
 
-            /*
-            Cast into HabitViewHolder so we can use setButtonVisible and
-            setButtonsInvisible methods
-             */
-            HabitItemAdapter.HabitViewHolder habitViewHolder = (HabitItemAdapter.HabitViewHolder)
-                    viewHolder;
-
-            if (direction == ItemTouchHelper.LEFT) {
-                habitViewHolder.setButtonsVisible();
-            } else if (direction == ItemTouchHelper.RIGHT) {
-                habitViewHolder.setButtonsInvisible();
+                // Navigate to the habitViewFragment
+                controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
             }
-            _habitItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
-        }
-    };
+        })
+                    .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
+                    .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                        @Override
+                        public void onSwipeOptionClicked(int viewID, int position) {
+                            switch (viewID){
+                                // if edit clicked
+                                case R.id.edit_button:
+                                    EditHabitFragment editHabitFragment = new EditHabitFragment(position,
+                                            _habitItemAdapter._snapshots.get(position),
+                                            _fragment);
+                                    editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
+                                    break;
+                                // if delete clicked
+                                case R.id.delete_button:
+                                    Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+                                    _habitList.deleteHabit(_fragment.getActivity(), _user.getUsername(), habitToDelete, position);
+                                    break;
+                            }
+
+                        }
+                    });
+
+        // connect listener to recycler view
+        recyclerView.addOnItemTouchListener(touchListener);
+    }
 
     /**
      * This method is responsible for adding a new habit to the user's HabitList
@@ -218,13 +228,11 @@ public class HabitListFragment extends Fragment {
      * @param newReason habit's new reason
      * @param newDate habit's new date
      * @param pos position of edited habit
-     * @param viewHolder viewholder of associated habit in the RecyclerView
      */
     public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
-                                DaysTracker tracker, HabitItemAdapter.HabitViewHolder viewHolder) {
+                                DaysTracker tracker) {
         _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, pos, _user.getUsername());
         _habitList.editHabitLocal(newTitle, newReason, newDate, tracker, pos);
-        viewHolder.setButtonsInvisible();
         _habitItemAdapter.notifyItemChanged(pos);
     }
 }
