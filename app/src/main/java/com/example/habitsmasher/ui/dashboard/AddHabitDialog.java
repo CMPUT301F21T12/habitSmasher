@@ -124,9 +124,13 @@ public class AddHabitDialog extends DialogFragment {
         return view;
     }
 
+    /**
+     * Sets the onClickListeners for the different buttons representing the
+     * different days of the week
+     */
     private void setListenersForDaysOfTheWeek(){
-        //button onClick methods follow below
 
+        //button onClick methods follow below
         _mondayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
