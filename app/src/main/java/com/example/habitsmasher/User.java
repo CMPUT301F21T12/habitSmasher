@@ -5,7 +5,8 @@ import android.media.Image;
 import java.util.ArrayList;
 
 /**
- * The User class models a user and holds their credentials and corresponding information
+ * Class that models a user of the app and holds their credentials and corresponding
+ * information, such as their habits, followers and users who they are following
  */
 public class User {
     private String _username;

@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * This is the Habit Event List Class.
- * It's purpose is to store habit events
+ * Class that acts as a container for habit events, allowing for add, edit and delete
+ * operations
  */
 public class HabitEventList extends ArrayList{
     private ArrayList<HabitEvent> _habitEvents = new ArrayList<>();

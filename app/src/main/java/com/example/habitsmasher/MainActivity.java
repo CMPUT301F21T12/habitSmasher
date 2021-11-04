@@ -14,7 +14,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.habitsmasher.databinding.ActivityMainBinding;
 
 /**
- * UI class represents the main screen of the app
+ * UI class that represents and specifies the behaviour of the main screen of the app
+ * Currently, the main screen is in a prototype state where it just displays the details of
+ * a test habit, and allows navigation to other fragments with more complete implementation
  */
 public class MainActivity extends AppCompatActivity {
 

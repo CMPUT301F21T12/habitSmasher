@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * The habit list class is a container for the list of habits
+ * Class that acts as a container for habits, allowing for edit, delete and add operations
  */
 public class HabitList extends ArrayList<Habit>{
 
@@ -135,7 +135,6 @@ public class HabitList extends ArrayList<Habit>{
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
         setHabitDataInDatabase(username, habitId.toString(), habitData);
-        editHabitLocal(newTitle,newReason,newDate, pos);
     }
 
     // this is a temporary implementation of generating unique habitIDs
