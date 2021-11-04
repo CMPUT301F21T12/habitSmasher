@@ -14,7 +14,7 @@ import com.example.habitsmasher.User;
 
 /**
  * UI class that represents and specifies the behaviour of the user's profile screen
- * Currently, only displays information of the user
+ * Currently, only displays information of a test user
  */
 public class ProfileFragment extends Fragment {
 

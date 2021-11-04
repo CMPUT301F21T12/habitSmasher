@@ -110,9 +110,6 @@ public class HabitListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
         FloatingActionButton addHabitFab = view.findViewById(R.id.add_habit_fab);
 
-        /**
-         * When fab is pressed, method call to open dialog fragment.
-         */
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -8,6 +8,7 @@ import android.view.MotionEvent;
  * Name: Velmurugan
  * Date: March 4, 2021
  * URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
+ * @author Velmurgan
  */
 public interface OnActivityTouchListener {
     void getTouchCoordinates(MotionEvent ev);

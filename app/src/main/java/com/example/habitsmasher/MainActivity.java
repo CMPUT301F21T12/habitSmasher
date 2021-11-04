@@ -14,9 +14,10 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.habitsmasher.databinding.ActivityMainBinding;
 
 /**
- * UI class that represents and specifies the behaviour of the main screen of the app
- * Currently, the main screen is in a prototype state where it just displays the details of
- * a test habit, and allows navigation to other fragments with more complete implementation
+ * UI class that represents and specifies the behaviour of the main activity, which at the
+ * moment has three fragments
+ * The Main Activity only acts as a link between the three fragments, and has no real
+ * behaviour
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * This function allows for the user to navigate back/up
+     * This function allows for the user to navigate using the back button
      * @return
      */
     @Override

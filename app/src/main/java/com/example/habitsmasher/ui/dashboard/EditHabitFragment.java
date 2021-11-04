@@ -24,6 +24,8 @@ import com.example.habitsmasher.R;
 /**
  *  UI Class that represents and specifies the behaviour of the dialog
  *  that is spawned when a user wants to edit a habit in their habit list
+ * @author Jason Kim
+ * @version 1.0
  */
 public class EditHabitFragment extends DialogFragment{
     private EditText _titleText;
@@ -134,7 +136,6 @@ public class EditHabitFragment extends DialogFragment{
      * Sets up the buttons representing the days of the week
      */
     private void initializeDaysOfTheWeekButtons(){
-
         //setting day initial states (clicked or not)
         if (_tracker.getMonday()){_mondayButton.performClick();}
         if (_tracker.getTuesday()){_tuesdayButton.performClick();}

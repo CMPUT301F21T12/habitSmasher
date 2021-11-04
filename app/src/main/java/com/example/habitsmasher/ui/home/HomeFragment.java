@@ -20,7 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * UI class that represents and specifies the behaviour of the home screen 
+ * UI class that represents and specifies the behaviour of the home screen
+ * Home screen only displays attributes of test habit for now
  */
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;

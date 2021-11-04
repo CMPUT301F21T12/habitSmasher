@@ -101,6 +101,10 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         private final TextView _habitTitle;
         private final ConstraintLayout _habitRows;
 
+        /**
+         * Constructs a view holder
+         * @param itemView view of row of RecyclerView which is held in ViewHolder
+         */
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
             _habitRows = itemView.findViewById(R.id.habit_rows);

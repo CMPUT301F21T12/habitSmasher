@@ -30,6 +30,10 @@ public class DatePickerDialogFragment extends DialogFragment {
 
     private DatePickerDialog.OnDateSetListener _dateSetListener;
 
+    /**
+     * Creates a date picker dialog
+     * @param callback listener for setting text of date text field
+     */
     public DatePickerDialogFragment(DatePickerDialog.OnDateSetListener callback) {
         _dateSetListener = callback;
     }
