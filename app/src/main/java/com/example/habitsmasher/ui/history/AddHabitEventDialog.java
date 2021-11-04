@@ -24,26 +24,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.habitsmasher.HabitEvent;
+import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.R;
-
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * The AddHabitEventDialog
  * Deals with UI and information handling of the add habit event popup
  */
-public class AddHabitEventDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class AddHabitEventDialog extends DialogFragment {
     private static final String TAG = "AddHabitEventDialog";
-
-    // Relevant variables
-    private final String INCORRECT_COMMENT_FORMAT = "Incorrect comment entered";
-    private final String DATE_FORMAT = "dd/MM/yyyy";
-    private final String INCORRECT_BLANK_DATE = "Please enter a start date";
-    private String _username;
-    private String _eventCommentInput;
-    private Date _eventDate;
 
     // UI elements
     private HabitEventListFragment _habitEventListFragment;
@@ -56,10 +45,8 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
 
     /**
      * Default constructor
-     * @param username (String) The username of the user who is adding events
      */
-    public AddHabitEventDialog(String username) {
-        _username = username;
+    public AddHabitEventDialog() {
     }
 
     @Nullable
@@ -74,6 +61,9 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
         _cancelNewEvent = view.findViewById(R.id.cancel_habit_event);
         _confirmNewEvent = view.findViewById(R.id.confirm_habit_event);
         _eventPictureView = view.findViewById(R.id.habit_event_add_photo);
+        TextView header = view.findViewById(R.id.add_habit_event_header);
+
+        header.setText("Add Habit Event");
 
         // Add listener to date text to open date picker
         _eventDateText.setOnClickListener(new View.OnClickListener() {
@@ -105,9 +95,8 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
                 // Check if event data is valid
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
-                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage);
-                    _habitEventListFragment.addNewHabitEvent(newEvent);
-                    _habitEventListFragment.addHabitEventToDatabase(newEvent.getStartDate(), newEvent.getComment(), newEvent.getId(), newEvent.getPictureUri(), _username);
+                    // HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage, UUID.randomUUID().toString());
+                    _habitEventListFragment.addHabitEventToDatabase(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment);
                     getDialog().dismiss();
                 }
 
@@ -152,32 +141,24 @@ public class AddHabitEventDialog extends DialogFragment implements DatePickerDia
     /**
      * Opens date picker
      */
-    private void openDatePickerDialog(){
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(),
-                this,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
-    }
 
-    /**
-     * Handles when a date is selected
-     * @param view
-     * @param year
-     * @param month
-     * @param day
-     */
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        //1 is added to the month we get from the DatePickerDialog
-        // because DatePickerDialog returns values between 0 and 11,
-        // which is not really helpful for users.
-        int correctedMonth = month + 1;
-        String date = day + "/" + correctedMonth + "/" + year;
-        _eventDateText.setText(date);
+    private void openDatePickerDialog(){
+        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
+            /**
+             * Sets the text of the date select view to reflect selected date
+             * @param view
+             * @param year year of selected date
+             * @param month month of selected date (integer from 0 to 11)
+             * @param day day of month of selected date
+             */
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                int correctedMonth = month + 1;
+                String date =  day + "/" + correctedMonth + "/" + year;
+                _eventDateText.setText(date);
+            }
+        });
+        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 
     @Override
