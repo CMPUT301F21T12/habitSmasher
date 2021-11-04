@@ -457,7 +457,7 @@ public class MainActivityTest {
         _solo.clickOnButton(EDIT_BUTTON);
 
         // wait for edit habit dialog to spawn after edit is clicked
-        _solo.waitForText(EDIT_HABIT_DIALOG);
+        _solo.waitForText(EDIT_HABIT_DIALOG, 1, 5000);
 
         // clear Edit Text fields
         _solo.clearEditText(0);

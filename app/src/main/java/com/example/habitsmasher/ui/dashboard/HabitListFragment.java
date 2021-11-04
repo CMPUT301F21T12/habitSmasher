@@ -173,10 +173,6 @@ public class HabitListFragment extends Fragment {
                 // Navigate to the habitViewFragment
                 controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
             }
-            @Override
-            public void onIndependentViewClicked(int independentViewID, int position) {
-
-            }
         })
                     .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
                     .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {

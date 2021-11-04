@@ -27,79 +27,162 @@ import java.util.List;
  * URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
  */
 public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, OnActivityTouchListener {
+
+    // defined constants
     private static final String TAG = "RecyclerTouchListener";
-    Activity act;
+    private final long ANIMATION_STANDARD = 300;
+    private final long ANIMATION_CLOSE = 150;
+
+    // parent activity of RecyclerView
+    Activity _activity;
 
     /*
-     * independentViews are views on the foreground layer which when clicked, act "independent" from the foreground
-     * ie, they are treated separately from the "row click" action
+     * Option views are the views on the background/swipe menu
+     * layer which acts as the different clickable options
+     * when swipe menu spawned
      */
-    List<Integer> independentViews;
+    List<Integer> _swipeMenuOptions;
 
-    /*
-     * Option views are the views on the background layer which acts as the different
-     * clickable options when swipe menu spawned
-     */
-    List<Integer> optionViews;
+    // amount finger must move in units before swipe is detected
+    private int _touchSlop;
 
-    // Cached ViewConfiguration and system-wide constant values
-    private int touchSlop;
-    private int minFlingVel;
-    private int maxFlingVel;
-    private long ANIMATION_STANDARD = 300;
-    private long ANIMATION_CLOSE = 150;
+    // correction factor used in calculate translation from swipes
+    private int _swipingSlop;
 
-    // Fixed properties
-    private RecyclerView rView;
-    private int bgWidth = 1;
+    // minimum and maximum velocity for proper swiping action
+    private int _minSwipeVelocity;
+    private int _maxSwipeVelocity;
 
-    // Transient properties
-    private float touchedX;
-    private float touchedY;
-    private boolean isFgSwiping;
-    private int mSwipingSlop;
-    private VelocityTracker mVelocityTracker;
-    private int touchedPosition;
-    private View touchedView;
-    private boolean mPaused;
-    private boolean bgVisible, fgPartialViewClicked;
-    private int bgVisiblePosition;
-    private View bgVisibleView;
-    private boolean isRViewScrolling;
-    private int heightOutsideRView, screenHeight;
+    // velocity tracker used calculate velocity of swipe
+    private VelocityTracker _swipeVelocityTracker;
+
+    // recycler view that this TouchListener is listening for
+    private RecyclerView _recyclerView;
+
+    // x and y coordinate of the current touch
+    private float _touchedX;
+    private float _touchedY;
+
+    // view and position of the view touched at the moment
+    private int _touchedPosition;
+    private View _touchedView;
+
+    // flag variable that indicates that row currently in the act of being swiped
+    private boolean _foregroundSwiping;
+
+    // flag variable that indicates that all interactions are to be ignored
+    private boolean _interactionPaused;
+
+    // flag variable indicating if RecyclerView is being scrolled through
+    private boolean _recyclerViewScrolling;
+
+    // flag variable indicting whether swipe menu spawned and visible
+    private boolean _backgroundVisible;
+
+    // position of row in RecyclerView with visible swipe menu
+    private int _backgroundVisiblePosition;
+
+    // view holding current spawned visible swipe menu
+    private View _backgroundVisibleView;
+
+    // flag variable indicating that the foreground view which is partially on the screen is clicked
+    private boolean _foregroundPartialViewClicked;
+
+    // size properties
+    private int _heightOutsideView;
+    private int _heightOfScreen;
+    private int _backgroundWidth = 1;
 
     // Foreground view (to be swiped), Background view (to show)
-    private View fgView;
-    private View bgView;
+    private View _foregroundView;
+    private View _backgroundView;
 
-    //view IDs of foreground and background
-    private int fgViewID;
-    private int bgViewID;
+    //view IDs of foreground and background/swipe menu
+    private int _foregroundID;
+    private int _backgroundID;
 
-    //listeners for clicking and swiping a row
-    private OnRowClickListener mRowClickListener;
-    private OnSwipeOptionsClickListener mBgClickListener;
+    //listeners for clicking a row and clicking an option in swipe menu
+    private OnRowClickListener _RowClickListener;
+    private OnSwipeOptionsClickListener _swipeMenuOptionsClickListener;
 
     //flag variables indicating that RecyclerView is clickable or swipeable
-    private boolean clickable = false;
-    private boolean swipeable = false;
+    private boolean _clickable = false;
+    private boolean _swipeable = false;
 
-    public RecyclerTouchListener(Activity a, RecyclerView recyclerView) {
-        this.act = a;
+    /**
+     * Interface used for listener handling clicking of row
+     */
+    public interface OnRowClickListener {
+        /**
+         * Action carried out when row at the specified position is clicked in Recycler View
+         * @param position position of row
+         */
+        void onRowClicked(int position);
+    }
+
+    /**
+     * Listener used to handle the clicking of the specific clickable
+     * option views in swipe menu
+     */
+    public interface OnSwipeOptionsClickListener {
+
+        /**
+         * Actions carried out when option with the id viewID is clicked
+         * when the row at the specified position is clicked
+         * @param viewID view ID of option view
+         * @param position position of row
+         */
+        void onSwipeOptionClicked(int viewID, int position);
+    }
+
+    /**
+     * Listener used to handle when a row is swiped to spawn/despawn
+     * the swipe menu, spawning clickable options
+     */
+    public interface OnSwipeListener {
+
+        /**
+         * Action carried out when swipe menu is closed
+         */
+        void onSwipeOptionsClosed();
+
+        /**
+         * Action carried out when swipe menu is open
+         */
+        void onSwipeOptionsOpened();
+    }
+
+    /**
+     * Enumeration of open and close animations
+     */
+    private enum Animation {
+        OPEN, CLOSE
+    }
+
+    /**
+     * Constructs the TouchListener for a certain recyclerView
+     * @param activity activity where recycler view resides
+     * @param recyclerView recycler to be connected to listener
+     */
+    public RecyclerTouchListener(Activity activity, RecyclerView recyclerView) {
+        _activity = activity;
+        _recyclerView = recyclerView;
+        _swipeMenuOptions = new ArrayList<>();
+
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
-        touchSlop = vc.getScaledTouchSlop();
-        minFlingVel = vc.getScaledMinimumFlingVelocity() * 16;
-        maxFlingVel = vc.getScaledMaximumFlingVelocity();
-        rView = recyclerView;
-        bgVisible = false;
-        bgVisiblePosition = -1;
-        bgVisibleView = null;
-        fgPartialViewClicked = false;
-        independentViews = new ArrayList<>();
-        optionViews = new ArrayList<>();
-        isRViewScrolling = false;
+        _touchSlop = vc.getScaledTouchSlop();
 
-        rView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        _minSwipeVelocity = vc.getScaledMinimumFlingVelocity() * 16;
+        _maxSwipeVelocity = vc.getScaledMaximumFlingVelocity();
+
+        _backgroundVisible = false;
+        _foregroundPartialViewClicked = false;
+        _recyclerViewScrolling = false;
+
+        _backgroundVisibleView = null;
+        _backgroundVisiblePosition = -1;
+
+        _recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 /**
@@ -112,7 +195,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                 /**
                  * This is used so that clicking a row cannot be done while scrolling
                  */
-                isRViewScrolling = newState != RecyclerView.SCROLL_STATE_IDLE;
+                _recyclerViewScrolling = newState != RecyclerView.SCROLL_STATE_IDLE;
             }
 
             @Override
@@ -124,142 +207,85 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
 
     /**
      * Enables or disables (pauses or resumes) watching for swipe-to-dismiss gestures.
-     *
      * @param enabled Whether or not to watch for gestures.
      */
     public void setEnabled(boolean enabled) {
-        mPaused = !enabled;
+        _interactionPaused = !enabled;
     }
-
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent motionEvent) {
-        return handleTouchEvent(motionEvent);
-    }
-
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent motionEvent) {
-        handleTouchEvent(motionEvent);
-    }
-
 
     /**
-     * Setting listener used for row clicking
+     * Allows elements of the recycler view to be clicked and
+     * sets the listener used to handle row clicking
      * @param listener row click listener
-     * @return
+     * @return itself
      */
     public RecyclerTouchListener setClickable(OnRowClickListener listener) {
-        this.clickable = true;
-        this.mRowClickListener = listener;
+        _clickable = true;
+        this._RowClickListener = listener;
         return this;
     }
 
     /**
-     * Setting listener used for row swiping
-     * @param listener row swipe listener
-     * @return
+     * Allows elements of the recycler view to be swiped and
+     * sets the listener used to handle clicking of options in swipe menu
+     * @param listener row swipe options listener
+     * @return itself
      */
     public RecyclerTouchListener setSwipeable(int foregroundID, int backgroundID, OnSwipeOptionsClickListener listener) {
-        this.swipeable = true;
-        if (fgViewID != 0 && foregroundID != fgViewID)
+        this._swipeable = true;
+        if (_foregroundID != 0 && foregroundID != _foregroundID)
             throw new IllegalArgumentException("foregroundID does not match previously set ID");
-        fgViewID = foregroundID;
-        bgViewID = backgroundID;
-        this.mBgClickListener = listener;
-
-        if (act instanceof RecyclerTouchListenerHelper)
-            ((RecyclerTouchListenerHelper) act).setOnActivityTouchListener(this);
+        _foregroundID = foregroundID;
+        _backgroundID = backgroundID;
+        this._swipeMenuOptionsClickListener = listener;
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        act.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        screenHeight = displaymetrics.heightPixels;
+        _activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        _heightOfScreen = displaymetrics.heightPixels;
 
         return this;
     }
 
     /**
-     * Sets options in swipe menu
-     * @param viewIds
-     * @return
+     * Sets the clickable options in the swipe menu
+     * @param viewIds set of view IDs of the clickable options
+     * @return itself
      */
     public RecyclerTouchListener setSwipeOptionViews(Integer... viewIds) {
-        this.optionViews = new ArrayList<>(Arrays.asList(viewIds));
+        this._swipeMenuOptions = new ArrayList<>(Arrays.asList(viewIds));
         return this;
     }
 
-    //-------------- Checkers for preventing ---------------//
-
-    private boolean isIndependentViewClicked(MotionEvent motionEvent) {
-        for (int i = 0; i < independentViews.size(); i++) {
-            if (touchedView != null) {
-                Rect rect = new Rect();
-                int x = (int) motionEvent.getRawX();
-                int y = (int) motionEvent.getRawY();
-                touchedView.findViewById(independentViews.get(i)).getGlobalVisibleRect(rect);
-                if (rect.contains(x, y)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
+    /**
+     * Returns the view ID of the clickable option that is clicked in an interaction
+     * @param motionEvent motion event representing that interaction
+     * @return view ID of clicked option, -1 if no option was clicked
+     */
     private int getOptionViewID(MotionEvent motionEvent) {
-        for (int i = 0; i < optionViews.size(); i++) {
-            if (touchedView != null) {
+        for (int i = 0; i < _swipeMenuOptions.size(); i++) {
+            if (_touchedView != null) {
                 Rect rect = new Rect();
                 int x = (int) motionEvent.getRawX();
                 int y = (int) motionEvent.getRawY();
-                touchedView.findViewById(optionViews.get(i)).getGlobalVisibleRect(rect);
+                _touchedView.findViewById(_swipeMenuOptions.get(i)).getGlobalVisibleRect(rect);
                 if (rect.contains(x, y)) {
-                    return optionViews.get(i);
+                    return _swipeMenuOptions.get(i);
                 }
             }
         }
         return -1;
     }
 
-    private int getIndependentViewID(MotionEvent motionEvent) {
-        for (int i = 0; i < independentViews.size(); i++) {
-            if (touchedView != null) {
-                Rect rect = new Rect();
-                int x = (int) motionEvent.getRawX();
-                int y = (int) motionEvent.getRawY();
-                touchedView.findViewById(independentViews.get(i)).getGlobalVisibleRect(rect);
-                if (rect.contains(x, y)) {
-                    return independentViews.get(i);
-                }
-            }
-        }
-        return -1;
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-    }
-
-    @Deprecated
-    public void closeVisibleBG() {
-        if (bgVisibleView == null) {
-            Log.e(TAG, "No rows found for which background options are visible");
-            return;
-        }
-        bgVisibleView.animate()
-                .translationX(0)
-                .setDuration(ANIMATION_CLOSE)
-                .setListener(null);
-
-        bgVisible = false;
-        bgVisibleView = null;
-        bgVisiblePosition = -1;
-    }
-
+    /**
+     * Closes the swipe menu
+     * @param mSwipeCloseListener listener handling swipes
+     */
     public void closeVisibleBG(final OnSwipeListener mSwipeCloseListener) {
-        if (bgVisibleView == null) {
+        if (_backgroundVisibleView == null) {
             Log.e(TAG, "No rows found for which background options are visible");
             return;
         }
-        final ObjectAnimator translateAnimator = ObjectAnimator.ofFloat(bgVisibleView,
+        final ObjectAnimator translateAnimator = ObjectAnimator.ofFloat(_backgroundVisibleView,
                 View.TRANSLATION_X, 0f);
         translateAnimator.setDuration(ANIMATION_CLOSE);
         translateAnimator.addListener(new Animator.AnimatorListener() {
@@ -284,38 +310,56 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
         });
         translateAnimator.start();
 
-        bgVisible = false;
-        bgVisibleView = null;
-        bgVisiblePosition = -1;
+        _backgroundVisible = false;
+        _backgroundVisibleView = null;
+        _backgroundVisiblePosition = -1;
     }
 
+    /**
+     * Animates the foreground during a swipe animation
+     * @param animateType type of animation
+     * @param duration duration of animation
+     */
+    private void animateFG(Animation animateType, long duration) {
 
-    private void animateFG(View downView, Animation animateType, long duration) {
+        // move foreground so options menu is OPEN
         if (animateType == Animation.OPEN) {
             ObjectAnimator translateAnimator = ObjectAnimator.ofFloat(
-                    fgView, View.TRANSLATION_X, -bgWidth);
+                    _foregroundView, View.TRANSLATION_X, -_backgroundWidth);
             translateAnimator.setDuration(duration);
             translateAnimator.setInterpolator(new DecelerateInterpolator(1.5f));
             translateAnimator.start();
+
+            // move foreground so options menu is CLOSED
         } else if (animateType == Animation.CLOSE) {
             ObjectAnimator translateAnimator = ObjectAnimator.ofFloat(
-                    fgView, View.TRANSLATION_X, 0f);
+                    _foregroundView, View.TRANSLATION_X, 0f);
             translateAnimator.setDuration(duration);
             translateAnimator.setInterpolator(new DecelerateInterpolator(1.5f));
             translateAnimator.start();
         }
     }
 
-    private void animateFG(View downView, final Animation animateType, long duration,
+    /**
+     * Animates the foreground during a swipe animation
+     * @param animateType type of animation
+     * @param duration duration of animation
+     * @param mSwipeCloseListener listener used to handle swipes
+     */
+    private void animateFG(final Animation animateType, long duration,
                            final OnSwipeListener mSwipeCloseListener) {
         final ObjectAnimator translateAnimator;
+
+        // move foreground so options menu is OPEN
         if (animateType == Animation.OPEN) {
-            translateAnimator = ObjectAnimator.ofFloat(fgView, View.TRANSLATION_X, -bgWidth);
+            translateAnimator = ObjectAnimator.ofFloat(_foregroundView, View.TRANSLATION_X, -_backgroundWidth);
             translateAnimator.setDuration(duration);
             translateAnimator.setInterpolator(new DecelerateInterpolator(1.5f));
             translateAnimator.start();
+
+            // move foreground so options menu is CLOSED
         } else {
-            translateAnimator = ObjectAnimator.ofFloat(fgView, View.TRANSLATION_X, 0f);
+            translateAnimator = ObjectAnimator.ofFloat(_foregroundView, View.TRANSLATION_X, 0f);
             translateAnimator.setDuration(duration);
             translateAnimator.setInterpolator(new DecelerateInterpolator(1.5f));
             translateAnimator.start();
@@ -347,75 +391,91 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
         });
     }
 
-    private boolean handleTouchEvent(MotionEvent motionEvent) {
-        if (swipeable && bgWidth < 2) {
-            if (act.findViewById(bgViewID) != null)
-                bgWidth = act.findViewById(bgViewID).getWidth();
+    /**
+     * Checks if the touch screen interaction should be ignored or not
+     * @return true if it should be ignored
+     */
+    private boolean shouldIgnoreAction() {
+        return _recyclerView == null;
+    }
 
-            heightOutsideRView = screenHeight - rView.getHeight();
+    /**
+     * Handles a touch interaction with the screen
+     * @param motionEvent motion event representing the touch interaction with the screen
+     * @return
+     */
+    private boolean handleTouchEvent(MotionEvent motionEvent) {
+
+        if (_swipeable && _backgroundWidth < 2) {
+            if (_activity.findViewById(_backgroundID) != null)
+                _backgroundWidth = _activity.findViewById(_backgroundID).getWidth();
+            _heightOutsideView = _heightOfScreen - _recyclerView.getHeight();
         }
 
         switch (motionEvent.getActionMasked()) {
-
-            // When finger touches screen
+            // when finger touches screen initially
             case MotionEvent.ACTION_DOWN: {
-                if (mPaused) {
+
+                // stop interaction if paused
+                if (_interactionPaused) {
                     break;
                 }
 
-                // Find the child view that was touched (perform a hit test)
                 Rect rect = new Rect();
-                int childCount = rView.getChildCount();
+                int childCount = _recyclerView.getChildCount();
                 int[] listViewCoords = new int[2];
-                rView.getLocationOnScreen(listViewCoords);
+                _recyclerView.getLocationOnScreen(listViewCoords);
 
-                // x and y values respective to the recycler view
-                int x = (int) motionEvent.getRawX() - listViewCoords[0];
-                int y = (int) motionEvent.getRawY() - listViewCoords[1];
-                View child;
+                int xOfRecyclerView = (int) motionEvent.getRawX() - listViewCoords[0];
+                int yOfRecyclerView = (int) motionEvent.getRawY() - listViewCoords[1];
+                View rowView;
 
                 /*
-                 * check for every child (row) in the recycler view whether the touched co-ordinates belong to that
-                 * respective child and if it does, register that child as the touched view (touchedView)
+                 * check every row in the recycler view whether the touched co-ordinates belong to that
+                 * respective row and if it does, register that row as the touched view
                  */
                 for (int i = 0; i < childCount; i++) {
-                    child = rView.getChildAt(i);
-                    child.getHitRect(rect);
-                    if (rect.contains(x, y)) {
-                        touchedView = child;
+                    rowView = _recyclerView.getChildAt(i);
+                    rowView.getHitRect(rect);
+                    if (rect.contains(xOfRecyclerView, yOfRecyclerView)) {
+                        _touchedView = rowView;
                         break;
                     }
                 }
 
-                if (touchedView != null) {
-                    touchedX = motionEvent.getRawX();
-                    touchedY = motionEvent.getRawY();
-                    touchedPosition = rView.getChildAdapterPosition(touchedView);
+                // if a row was touched
+                if (_touchedView != null) {
+                    _touchedX = motionEvent.getRawX();
+                    _touchedY = motionEvent.getRawY();
+                    _touchedPosition = _recyclerView.getChildAdapterPosition(_touchedView);
 
                     if (shouldIgnoreAction()) {
-                        touchedPosition = ListView.INVALID_POSITION;
-                        return false;   // <-- guard here allows for ignoring events, allowing more than one view type and preventing NPE
+                        _touchedPosition = ListView.INVALID_POSITION;
+                        return false;
                     }
 
-                    if (swipeable) {
-                        mVelocityTracker = VelocityTracker.obtain();
-                        mVelocityTracker.addMovement(motionEvent);
-                        fgView = touchedView.findViewById(fgViewID);
-                        bgView = touchedView.findViewById(bgViewID);
-                        bgView.setMinimumHeight(fgView.getHeight());
+                    // if swipes are allowed
+                    if (_swipeable) {
+                        _swipeVelocityTracker = VelocityTracker.obtain();
+                        _swipeVelocityTracker.addMovement(motionEvent);
+                        _foregroundView = _touchedView.findViewById(_foregroundID);
+                        _backgroundView = _touchedView.findViewById(_backgroundID);
+                        _backgroundView.setMinimumHeight(_foregroundView.getHeight());
 
                         /*
-                         * bgVisible is true when the options menu is opened
-                         * This block is to register fgPartialViewClicked status - Partial view is the view that is still
+                         * backgroundVisible is true when the options menu is opened
+                         * This block is to register foregroundPartialViewClicked status
+                         *
+                         * Partial view is the view that is still
                          * shown on the screen if the options width is < device width
                          */
-                        if (bgVisible && fgView != null) {
-                            x = (int) motionEvent.getRawX();
-                            y = (int) motionEvent.getRawY();
-                            fgView.getGlobalVisibleRect(rect);
-                            fgPartialViewClicked = rect.contains(x, y);
+                        if (_backgroundVisible && _foregroundView != null) {
+                            int x = (int) motionEvent.getRawX();
+                            int y = (int) motionEvent.getRawY();
+                            _foregroundView.getGlobalVisibleRect(rect);
+                            _foregroundPartialViewClicked = rect.contains(x, y);
                         } else {
-                            fgPartialViewClicked = false;
+                            _foregroundPartialViewClicked = false;
                         }
                     }
                 }
@@ -423,45 +483,47 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                 /*
                  * If options menu is shown and the touched position is not the same as the row for which the
                  * options is displayed - close the options menu for the row which is displaying it
-                 * (bgVisibleView and bgVisiblePosition is used for this purpose which registers which view and
+                 * (backgroundVisibleView and backgroundVisiblePosition is used for this purpose which registers which view and
                  * which position has it's options menu opened)
                  */
-                x = (int) motionEvent.getRawX();
-                y = (int) motionEvent.getRawY();
-                rView.getHitRect(rect);
-                if (swipeable && bgVisible && touchedPosition != bgVisiblePosition) {
+                _recyclerView.getHitRect(rect);
+                if (_swipeable && _backgroundVisible && _touchedPosition != _backgroundVisiblePosition) {
                     closeVisibleBG(null);
                 }
                 break;
             }
 
+            // touch interaction is aborted
             case MotionEvent.ACTION_CANCEL: {
-                if (mVelocityTracker == null) {
+                if (_swipeVelocityTracker == null) {
                     break;
                 }
-                if (swipeable) {
-                    if (touchedView != null && isFgSwiping) {
-                        // cancel
-                        animateFG(touchedView, Animation.CLOSE, ANIMATION_STANDARD);
+                if (_swipeable) {
+
+                    // when in middle of swiping
+                    if (_touchedView != null && _foregroundSwiping) {
+                        // cancel animation
+                        animateFG(Animation.CLOSE, ANIMATION_STANDARD);
                     }
-                    mVelocityTracker.recycle();
-                    mVelocityTracker = null;
-                    isFgSwiping = false;
-                    bgView = null;
+                    _swipeVelocityTracker.recycle();
+                    _swipeVelocityTracker = null;
+                    _foregroundSwiping = false;
+                    _backgroundView = null;
                 }
-                touchedX = 0;
-                touchedY = 0;
-                touchedView = null;
-                touchedPosition = ListView.INVALID_POSITION;
+                _touchedX = 0;
+                _touchedY = 0;
+                _touchedView = null;
+                _touchedPosition = ListView.INVALID_POSITION;
                 break;
             }
 
             // When finger is lifted off the screen (after clicking, flinging, swiping, etc..)
             case MotionEvent.ACTION_UP: {
-                if (mVelocityTracker == null && swipeable) {
+
+                if (_swipeVelocityTracker == null && _swipeable) {
                     break;
                 }
-                if (touchedPosition < 0)
+                if (_touchedPosition < 0)
                     break;
 
                 // swipedLeft and swipedRight are true if the user swipes in the respective direction (no conditions)
@@ -475,10 +537,11 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                 boolean swipedLeftProper = false;
                 boolean swipedRightProper = false;
 
-                float mFinalDelta = motionEvent.getRawX() - touchedX;
+                // final translation in x direction of movement
+                float mFinalDelta = motionEvent.getRawX() - _touchedX;
 
                 // if swiped in a direction, make that respective variable true
-                if (isFgSwiping) {
+                if (_foregroundSwiping) {
                     swipedLeft = mFinalDelta < 0;
                     swipedRight = mFinalDelta > 0;
                 }
@@ -488,54 +551,58 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                  * velocity of swiping is between min and max fling values
                  * "proper" variable are set true
                  */
-                if (Math.abs(mFinalDelta) > bgWidth / 2 && isFgSwiping) {
+                if (Math.abs(mFinalDelta) > _backgroundWidth / 2 && _foregroundSwiping) {
                     swipedLeftProper = mFinalDelta < 0;
                     swipedRightProper = mFinalDelta > 0;
-                } else if (swipeable) {
-                    mVelocityTracker.addMovement(motionEvent);
-                    mVelocityTracker.computeCurrentVelocity(1000);
-                    float velocityX = mVelocityTracker.getXVelocity();
+                } else if (_swipeable) {
+                    _swipeVelocityTracker.addMovement(motionEvent);
+                    _swipeVelocityTracker.computeCurrentVelocity(1000);
+                    float velocityX = _swipeVelocityTracker.getXVelocity();
                     float absVelocityX = Math.abs(velocityX);
-                    float absVelocityY = Math.abs(mVelocityTracker.getYVelocity());
-                    if (minFlingVel <= absVelocityX && absVelocityX <= maxFlingVel
-                            && absVelocityY < absVelocityX && isFgSwiping) {
+                    float absVelocityY = Math.abs(_swipeVelocityTracker.getYVelocity());
+                    if (_minSwipeVelocity <= absVelocityX && absVelocityX <= _maxSwipeVelocity
+                            && absVelocityY < absVelocityX && _foregroundSwiping) {
                         // dismiss only if flinging in the same direction as dragging
                         swipedLeftProper = (velocityX < 0) == (mFinalDelta < 0);
                         swipedRightProper = (velocityX > 0) == (mFinalDelta > 0);
                     }
                 }
 
-                ///////// Manipulation of view based on the 4 variables mentioned above ///////////
 
                 // if swiped left properly and options menu isn't already visible, animate the foreground to the left
-                if (swipeable && !swipedRight && swipedLeftProper && touchedPosition != RecyclerView.NO_POSITION
-                        && !bgVisible) {
+                if (_swipeable && !swipedRight && swipedLeftProper && _touchedPosition != RecyclerView.NO_POSITION
+                        && !_backgroundVisible) {
 
-                    final View downView = touchedView; // touchedView gets null'd before animation ends
-                    final int downPosition = touchedPosition;
-                    animateFG(touchedView, Animation.OPEN, ANIMATION_STANDARD);
-                    bgVisible = true;
-                    bgVisibleView = fgView;
-                    bgVisiblePosition = downPosition;
+                    // open swipe menu
+                    animateFG(Animation.OPEN, ANIMATION_STANDARD);
+                    _backgroundVisible = true;
+                    _backgroundVisibleView = _foregroundView;
+                    _backgroundVisiblePosition = _touchedPosition;;
                 }
-                // else if swiped right properly when options menu is visible, close the menu and bring the foreground
-                // to it's original position
-                else if (swipeable && !swipedLeft && swipedRightProper && touchedPosition != RecyclerView.NO_POSITION
-                         && bgVisible) {
-                    // dismiss
-                    final View downView = touchedView; // touchedView gets null'd before animation ends
-                    final int downPosition = touchedPosition;
-                    animateFG(touchedView, Animation.CLOSE, ANIMATION_STANDARD);
-                    bgVisible = false;
-                    bgVisibleView = null;
-                    bgVisiblePosition = -1;
+
+                /*
+                 * if swiped right properly when options menu is visible, close the menu and
+                 * bring the foreground to it's original position
+                 */
+                else if (_swipeable && !swipedLeft && swipedRightProper && _touchedPosition != RecyclerView.NO_POSITION
+                         && _backgroundVisible) {
+
+                    // close swipe menu
+                    animateFG(Animation.CLOSE, ANIMATION_STANDARD);
+                    _backgroundVisible = false;
+                    _backgroundVisibleView = null;
+                    _backgroundVisiblePosition = -1;
                 }
-                // else if swiped left incorrectly (not satisfying the above conditions), animate the foreground back to
-                // it's original position (spring effect)
-                else if (swipeable && swipedLeft && !bgVisible) {
-                    // cancel
-                    final View tempBgView = bgView;
-                    animateFG(touchedView, Animation.CLOSE, ANIMATION_STANDARD, new OnSwipeListener() {
+
+                /*
+                 * if swiped left incorrectly (not satisfying the above conditions),
+                 * animate the foreground back to it's original position (spring effect)
+                 */
+                else if (_swipeable && swipedLeft && !_backgroundVisible) {
+
+                    // cancel swipe animation
+                    final View tempBgView = _backgroundView;
+                    animateFG(Animation.CLOSE, ANIMATION_STANDARD, new OnSwipeListener() {
                         @Override
                         public void onSwipeOptionsClosed() {
                             if (tempBgView != null)
@@ -548,69 +615,80 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                         }
                     });
 
-                    bgVisible = false;
-                    bgVisibleView = null;
-                    bgVisiblePosition = -1;
-                }
-                // else if swiped right incorrectly (not satisfying the above conditions), animate the foreground to
-                // it's open position (spring effect)
-                else if (swipeable && swipedRight && bgVisible) {
-                    // cancel
-                    animateFG(touchedView, Animation.OPEN, ANIMATION_STANDARD);
-                    bgVisible = true;
-                    bgVisibleView = fgView;
-                    bgVisiblePosition = touchedPosition;
-                }
-                // This case deals with an error where the user can swipe left, then right
-                // really fast and the fg is stuck open - so in that case we close the fg
-                else if (swipeable && swipedRight && !bgVisible) {
-                    // cancel
-                    animateFG(touchedView, Animation.CLOSE, ANIMATION_STANDARD);
-                    bgVisible = false;
-                    bgVisibleView = null;
-                    bgVisiblePosition = -1;
-                }
-                // This case deals with an error where the user can swipe right, then left
-                // really fast and the fg is stuck open - so in that case we open the fg
-                else if (swipeable && swipedLeft && bgVisible) {
-                    // cancel
-                    animateFG(touchedView, Animation.OPEN, ANIMATION_STANDARD);
-                    bgVisible = true;
-                    bgVisibleView = fgView;
-                    bgVisiblePosition = touchedPosition;
+                    _backgroundVisible = false;
+                    _backgroundVisibleView = null;
+                    _backgroundVisiblePosition = -1;
                 }
 
-                // if clicked
+                /*
+                 * if swiped right incorrectly (not satisfying the above conditions),
+                 * animate the foreground to it's open position (spring effect)
+                 */
+                else if (_swipeable && swipedRight && _backgroundVisible) {
+                    // cancel animation
+                    animateFG(Animation.OPEN, ANIMATION_STANDARD);
+                    _backgroundVisible = true;
+                    _backgroundVisibleView = _foregroundView;
+                    _backgroundVisiblePosition = _touchedPosition;
+                }
+
+                /*
+                 * This case deals with an error where the user can swipe left, then right
+                 * really fast and the swipe menu is stuck open - so in that case
+                 * we close the swipe menu
+                 */
+                else if (_swipeable && swipedRight && !_backgroundVisible) {
+                    // close menu
+                    animateFG(Animation.CLOSE, ANIMATION_STANDARD);
+                    _backgroundVisible = false;
+                    _backgroundVisibleView = null;
+                    _backgroundVisiblePosition = -1;
+                }
+
+                /*
+                 * This case deals with an error where the user can swipe right, then left
+                 * really fast and the swipe menu is stuck open - so in that case
+                 * we open the swipe menu
+                 */
+                else if (_swipeable && swipedLeft && _backgroundVisible) {
+                    // open menu
+                    animateFG(Animation.OPEN, ANIMATION_STANDARD);
+                    _backgroundVisible = true;
+                    _backgroundVisibleView = _foregroundView;
+                    _backgroundVisiblePosition = _touchedPosition;
+                }
+
+                // if the row is clicked
                 else if (!swipedRight && !swipedLeft) {
-                    // if partial foreground view is clicked (see ACTION_DOWN) bring foreground back to original position
-                    // bgVisible is true automatically since it's already checked in ACTION_DOWN block
-                    if (swipeable && fgPartialViewClicked) {
-                        animateFG(touchedView, Animation.CLOSE, ANIMATION_STANDARD);
-                        bgVisible = false;
-                        bgVisibleView = null;
-                        bgVisiblePosition = -1;
+                    /*
+                     * if partial foreground view is clicked, bring foreground back to
+                     * original position
+                     */
+                    if (_swipeable && _foregroundPartialViewClicked) {
+                        animateFG(Animation.CLOSE, ANIMATION_STANDARD);
+                        _backgroundVisible = false;
+                        _backgroundVisibleView = null;
+                        _backgroundVisiblePosition = -1;
                     }
-                    // On Click listener for rows
-                    else if (clickable && !bgVisible && touchedPosition >= 0
-                            && isIndependentViewClicked(motionEvent) && !isRViewScrolling) {
-                        mRowClickListener.onRowClicked(touchedPosition);
+
+                    // handling clicking of row
+                    else if (_clickable && !_backgroundVisible && _touchedPosition >= 0
+                            && !_recyclerViewScrolling) {
+                        _RowClickListener.onRowClicked(_touchedPosition);
                     }
-                    // On Click listener for independent views inside the rows
-                    else if (clickable && !bgVisible && touchedPosition >= 0
-                            && !isIndependentViewClicked(motionEvent) && !isRViewScrolling) {
-                        final int independentViewID = getIndependentViewID(motionEvent);
-                        if (independentViewID >= 0)
-                            mRowClickListener.onIndependentViewClicked(independentViewID, touchedPosition);
-                    }
-                    // On Click listener for background options
-                    else if (swipeable && bgVisible && !fgPartialViewClicked) {
+
+                    // handling clicking of options in swipe menu
+                    else if (_swipeable && _backgroundVisible && !_foregroundPartialViewClicked) {
                         final int optionID = getOptionViewID(motionEvent);
-                        if (optionID >= 0 && touchedPosition >= 0) {
-                            final int downPosition = touchedPosition;
+                        if (optionID >= 0 && _touchedPosition >= 0) {
+                            final int downPosition = _touchedPosition;
+
+                            // close swipe menu once option is chosen
                             closeVisibleBG(new OnSwipeListener() {
                                 @Override
                                 public void onSwipeOptionsClosed() {
-                                    mBgClickListener.onSwipeOptionClicked(optionID, downPosition);
+                                    _swipeMenuOptionsClickListener.onSwipeOptionClicked(optionID,
+                                                                                        downPosition);
                                 }
 
                                 @Override
@@ -622,86 +700,103 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                     }
                 }
             }
+
             // if clicked and not swiped
-            if (swipeable) {
-                mVelocityTracker.recycle();
-                mVelocityTracker = null;
+            if (_swipeable) {
+                _swipeVelocityTracker.recycle();
+                _swipeVelocityTracker = null;
             }
-            touchedX = 0;
-            touchedY = 0;
-            touchedView = null;
-            touchedPosition = ListView.INVALID_POSITION;
-            isFgSwiping = false;
-            bgView = null;
+            _touchedX = 0;
+            _touchedY = 0;
+            _touchedView = null;
+            _touchedPosition = ListView.INVALID_POSITION;
+            _foregroundSwiping = false;
+            _backgroundView = null;
             break;
 
             // when finger is moving across the screen (and not yet lifted)
             case MotionEvent.ACTION_MOVE: {
-                if (mVelocityTracker == null || mPaused || !swipeable) {
+
+                // cancels gesture if paused, swiping is disallowed or fields are not set
+                if (_swipeVelocityTracker == null || _interactionPaused || !_swipeable) {
                     break;
                 }
 
-                mVelocityTracker.addMovement(motionEvent);
-                float deltaX = motionEvent.getRawX() - touchedX;
-                float deltaY = motionEvent.getRawY() - touchedY;
+                _swipeVelocityTracker.addMovement(motionEvent);
+                float deltaX = motionEvent.getRawX() - _touchedX;
+                float deltaY = motionEvent.getRawY() - _touchedY;
 
                 /*
-                 * isFgSwiping variable which is set to true here is used to alter the swipedLeft, swipedRightProper
-                 * variables in "ACTION_UP" block by checking if user is actually swiping at present or not
+                 * foregroundSwiping variable which is set to true here is used to alter the swipedLeft,
+                 * swipedRightProper variables in "ACTION_UP" block by checking if user is actually swiping at present or not
                  */
-                if (!isFgSwiping && Math.abs(deltaX) > touchSlop && Math.abs(deltaY) < Math.abs(deltaX) / 2) {
-                    isFgSwiping = true;
-                    mSwipingSlop = (deltaX > 0 ? touchSlop : -touchSlop);
+                if (!_foregroundSwiping && Math.abs(deltaX) > _touchSlop && Math.abs(deltaY) < Math.abs(deltaX) / 2) {
+                    _foregroundSwiping = true;
+                    _swipingSlop = (deltaX > 0 ? _touchSlop : -_touchSlop);
                 }
 
                 // This block moves the foreground along with the finger when swiping
-                if (swipeable && isFgSwiping) {
-                    if (bgView == null) {
-                        bgView = touchedView.findViewById(bgViewID);
-                        bgView.setVisibility(View.VISIBLE);
+                if (_swipeable && _foregroundSwiping) {
+                    if (_backgroundView == null) {
+                        _backgroundView = _touchedView.findViewById(_backgroundID);
+                        _backgroundView.setVisibility(View.VISIBLE);
                     }
-                    // if fg is being swiped left
-                    if (deltaX < touchSlop && !bgVisible) {
-                        float translateAmount = deltaX - mSwipingSlop;
+                    // if swiping left
+                    if (deltaX < _touchSlop && !_backgroundVisible) {
+                        float translateAmount = deltaX - _swipingSlop;
                         {
-                        // swipe fg till width of bg. If swiped further, nothing happens (stalls at width of bg)
-                        fgView.setTranslationX(Math.abs(translateAmount) > bgWidth ? -bgWidth : translateAmount);
-                        if (fgView.getTranslationX() > 0) fgView.setTranslationX(0);
+
+                        /*
+                         * Swipe foreground till width of background. If swiped further,
+                         * nothing happens (stalls at width of background)
+                         */
+                        _foregroundView.setTranslationX(Math.abs(translateAmount) > _backgroundWidth ? -_backgroundWidth : translateAmount);
+                        if (_foregroundView.getTranslationX() > 0) _foregroundView.setTranslationX(0);
                         }
 
                     }
-                    // if fg is being swiped right
-                    else if (deltaX > 0 && bgVisible) {
-                        // for closing rightOptions
-                        if (bgVisible) {
-                            float translateAmount = (deltaX - mSwipingSlop) - bgWidth;
+                    // if swiping right
+                    else if (deltaX > 0 && _backgroundVisible) {
 
-                            // swipe fg till it reaches original position. If swiped further, nothing happens (stalls at 0)
-                            fgView.setTranslationX(translateAmount > 0 ? 0 : translateAmount);
+                        // for closing rightOptions
+                        if (_backgroundVisible) {
+                            float translateAmount = (deltaX - _swipingSlop) - _backgroundWidth;
+
+                            /*
+                             * swipe foreground till it reaches original position. If swiped further,
+                             * nothing happens (stalls at 0)
+                             */
+                            _foregroundView.setTranslationX(translateAmount > 0 ? 0 : translateAmount);
                         }
                         // for opening leftOptions
                         else {
-                            float translateAmount = (deltaX - mSwipingSlop) - bgWidth;
+                            float translateAmount = (deltaX - _swipingSlop) - _backgroundWidth;
 
-                            // swipe fg till it reaches original position. If swiped further, nothing happens (stalls at 0)
-                            fgView.setTranslationX(translateAmount > 0 ? 0 : translateAmount);
+                            /*
+                             * swipe foreground till it reaches original position. If swiped further,
+                             * nothing happens (stalls at 0)
+                             */
+                            _foregroundView.setTranslationX(translateAmount > 0 ? 0 : translateAmount);
                         }
                     }
                     return true;
                 }
-                // moves the fg slightly to give the illusion of an "unswipeable" row
-                else if (swipeable && isFgSwiping) {
-                    if (deltaX < touchSlop && !bgVisible) {
-                        float translateAmount = deltaX - mSwipingSlop;
-                        if (bgView == null)
-                            bgView = touchedView.findViewById(bgViewID);
+                // when swiped, but not beyond threshold needed for detectable swipe action
+                else if (_swipeable && _foregroundSwiping) {
+                    if (deltaX < _touchSlop && !_backgroundVisible) {
+                        float translateAmount = deltaX - _swipingSlop;
+                        if (_backgroundView == null)
+                            _backgroundView = _touchedView.findViewById(_backgroundID);
 
-                        if (bgView != null)
-                            bgView.setVisibility(View.GONE);
+                        if (_backgroundView != null)
+                            _backgroundView.setVisibility(View.GONE);
 
-                        // swipe fg till width of bg. If swiped further, nothing happens (stalls at width of bg)
-                        fgView.setTranslationX(translateAmount / 5);
-                        if (fgView.getTranslationX() > 0) fgView.setTranslationX(0);
+                        /*
+                         * swipe foreground till it reaches original position. If swiped further,
+                         * nothing happens (stalls at 0)
+                         */
+                        _foregroundView.setTranslationX(translateAmount / 5);
+                        if (_foregroundView.getTranslationX() > 0) _foregroundView.setTranslationX(0);
                     }
                     return true;
                 }
@@ -717,38 +812,23 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
      */
     public void getTouchCoordinates(MotionEvent ev) {
         int y = (int) ev.getRawY();
-        if (swipeable && bgVisible && ev.getActionMasked() == MotionEvent.ACTION_DOWN
-                && y < heightOutsideRView) closeVisibleBG(null);
+        if (_swipeable && _backgroundVisible && ev.getActionMasked() == MotionEvent.ACTION_DOWN
+                && y < _heightOutsideView) closeVisibleBG(null);
     }
 
-    private boolean shouldIgnoreAction() {
-        return rView == null;
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent motionEvent) {
+        return handleTouchEvent(motionEvent);
     }
 
-    private enum Animation {
-        OPEN, CLOSE
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent motionEvent) {
+        handleTouchEvent(motionEvent);
     }
 
-    /**
-     * Interfaces for different listeners
-     */
-    public interface OnRowClickListener {
-        void onRowClicked(int position);
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-        void onIndependentViewClicked(int independentViewID, int position);
     }
 
-    public interface OnSwipeOptionsClickListener {
-        void onSwipeOptionClicked(int viewID, int position);
-    }
-
-    public interface RecyclerTouchListenerHelper {
-        void setOnActivityTouchListener(OnActivityTouchListener listener);
-    }
-
-    public interface OnSwipeListener {
-        void onSwipeOptionsClosed();
-
-        void onSwipeOptionsOpened();
-    }
 }
