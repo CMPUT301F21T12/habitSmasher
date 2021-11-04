@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.habitsmasher.DaysTracker;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
@@ -25,6 +27,18 @@ public class HabitViewFragment extends Fragment {
     private Habit _habit;
     private String _username;
 
+    private Button _mondayButton;
+    private Button _tuesdayButton;
+    private Button _wednesdayButton;
+    private Button _thursdayButton;
+    private Button _fridayButton;
+    private Button _saturdayButton;
+    private Button _sundayButton;
+
+    private DaysTracker _tracker;
+
+    private static final String PATTERN = "dd-MM-yyyy";
+
     public HabitViewFragment() {
         // Required empty public constructor
     }
@@ -38,9 +52,11 @@ public class HabitViewFragment extends Fragment {
             _username = (String) getArguments().getSerializable("user");
         }
 
+        //set the DaysTracker
+        _tracker = new DaysTracker(_habit.getDays());
+
         // Date formatter
-        String pattern = "dd-MM-yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_habit_view, container, false);
@@ -65,6 +81,9 @@ public class HabitViewFragment extends Fragment {
             }
         });
 
+        //set up the buttons for the days of the week
+        setupDaysOfTheWeekButtons(view);
+
         return view;
     }
 
@@ -76,5 +95,42 @@ public class HabitViewFragment extends Fragment {
 
         NavController controller = NavHostFragment.findNavController(this);
         controller.navigate(R.id.action_navigation_habitView_to_habitEventListFragment, bundle);
+    }
+
+
+    /*
+     * Helper function that sets up all of the buttons and sets their state, whether selected or not
+     * The buttons are all non-clickable
+     */
+    private void setupDaysOfTheWeekButtons(View view){
+
+        Button mondayButton = view.findViewById(R.id.monday_button);
+        if (_tracker.getMonday()){
+            mondayButton.performClick();
+        }
+        Button tuesdayButton = view.findViewById(R.id.tuesday_button);
+        if (_tracker.getTuesday()){
+            tuesdayButton.performClick();
+        }
+        Button wednesdayButton = view.findViewById(R.id.wednesday_button);
+        if (_tracker.getWednesday()){
+            wednesdayButton.performClick();
+        }
+        Button thursdayButton = view.findViewById(R.id.thursday_button);
+        if (_tracker.getThursday()){
+            thursdayButton.performClick();
+        }
+        Button fridayButton = view.findViewById(R.id.friday_button);
+        if (_tracker.getFriday()){
+            fridayButton.performClick();
+        }
+        Button saturdayButton = view.findViewById(R.id.saturday_button);
+        if (_tracker.getSaturday()){
+            saturdayButton.performClick();
+        }
+        Button sundayButton = view.findViewById(R.id.sunday_button);
+        if (_tracker.getSunday()){
+            sundayButton.performClick();
+        }
     }
 }
