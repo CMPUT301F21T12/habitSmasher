@@ -36,6 +36,7 @@ public class HabitListTest {
     @Test
     public void editHabit_validEdit_expectHabitToBeEdited() {
         long habitId = 0;
+
         Habit habit = new Habit("Title 1", "Reason 1", new Date(), "MO", habitId, EMPTY_HABIT_EVENTS_LIST);
         _habitList.addHabitLocal(habit);
         Date newDate = new Date();
