@@ -139,9 +139,8 @@ public class AddHabitEventDialog extends DialogFragment {
     }
 
     /**
-     * Opens date picker
+     * Opens date picker dialog when selecting date when adding a habit event
      */
-
     private void openDatePickerDialog(){
         DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
             /**

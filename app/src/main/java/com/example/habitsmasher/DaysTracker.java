@@ -8,32 +8,32 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * This class is used to represent the days of the week a habit takes place, and contains all
+ * functionality in storing, querying, modifying, and returning what days of the week a habit
+ * takes place. This class does not currently handle storing the days in a database,
+ * but is capable of taking in information stored in a database and converting to
+ * a DaysTracker object.
+ *
+ * @author: Cameron Matthew
+ * @Version: 1.0
+ * @see Habit
+ */
 public class DaysTracker {
-    /**
-     * This class is used to represent the days of the week a habit takes place, and contains all functionality in
-     * storing, querying, modifying, and returning what days of the week a habit takes place. This class does not currently handle
-     * storing the days in a database, but is capable of taking in information stored in a database and converting to a DaysTracker object.
-     *
-     * @author: Cameron Matthew
-     * @Version: 1.0
-     * @see Habit
-     */
-
     //instance variables to represent days of the week
     private ArrayList<Boolean> _days;
 
-
     /**
-     * Creates a DaysTracker object with all values set to false. This constructor is the default constructor.
+     * Creates a DaysTracker object with all values set to false. This constructor is the default
+     * constructor.
      */
     public DaysTracker(){
-        //arraylist of booleans that represent the days of the week. autofilled to 7 bools.
+        //arraylist of booleans that represent the days of the week. autofilled to 7 booleans.
         _days = new ArrayList<Boolean>(Arrays.asList(new Boolean[7]));
 
         //fill with all false
         setFalse();
     }
-
 
     /**
      * Creates a DaysTracker with {@link String} input. The string contains all of the days that are to
@@ -60,24 +60,6 @@ public class DaysTracker {
 
 
     }
-
-    /* Was experimenting with hashmaps and iterators, if anyone thinks this may be useful I will complete it,
-     * If not I'll get rid of it.
-
-    public DaysTracker(HashMap<String, Boolean> map){
-        _days = new ArrayList<Boolean>(Arrays.asList(new Boolean[7]));
-        Collections.fill(_days, Boolean.FALSE);
-        Set<String> allKeys = map.keySet();
-
-        //iterator over key set
-        Iterator<String> keyIterator = allKeys.iterator();
-        while(keyIterator.hasNext()){
-            switch(keyIterator.next()){
-
-            }
-        }
-    }
-     */
 
     /**
      * Sets all of the days to false. Easier way to make a new DaysTracker without making a new DaysTracker.

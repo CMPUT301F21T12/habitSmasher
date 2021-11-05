@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * The habit list class is a container for the list of habits.
+ * Class that acts as a container for habits, allowing for edit, delete and add operations
  */
 public class HabitList extends ArrayList<Habit>{
 
@@ -67,7 +67,7 @@ public class HabitList extends ArrayList<Habit>{
      */
     public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker, String username) {
 
-        // get collection of specified user
+        // get collection of specified user (do we need this?)
         FirebaseFirestore _db = FirebaseFirestore.getInstance();
         final CollectionReference _collectionReference = _db.collection("Users")
                                                             .document(username)
@@ -137,7 +137,11 @@ public class HabitList extends ArrayList<Habit>{
         setHabitDataInDatabase(username, habitId.toString(), habitData);
     }
 
-    // this is a temporary implementation of generating unique habitIDs
+    // TODO: this is a temporary implementation of generating unique habitIDs, improve this
+    /**
+     * Generate a habit ID for a new habit
+     * @return the generated habit ID
+     */
     private long generateHabitId() {
         long habitIdCounter = 1;
         while(habitIdSet.contains(habitIdCounter)) {

@@ -20,13 +20,18 @@ import com.example.habitsmasher.R;
 import java.text.SimpleDateFormat;
 
 /**
- * This class handles the Habit View Fragment
+ * UI class that represents and specifies the behaviour of the interface
+ * displayed when a user is viewing the details of a certain habit
  */
 public class HabitViewFragment extends Fragment {
 
+    // habit being displayed
     private Habit _habit;
+
+    // user which owns this habit
     private String _username;
 
+    // buttons representing days of the week
     private Button _mondayButton;
     private Button _tuesdayButton;
     private Button _wednesdayButton;
@@ -87,6 +92,9 @@ public class HabitViewFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Used to open up the list of habit events associated with this habit
+     */
     private void openHabitEventsView() {
         // Create a bundle to be passed into the HabitEventListFragment
         Bundle bundle = new Bundle();
@@ -98,7 +106,7 @@ public class HabitViewFragment extends Fragment {
     }
 
 
-    /*
+    /**
      * Helper function that sets up all of the buttons and sets their state, whether selected or not
      * The buttons are all non-clickable
      */

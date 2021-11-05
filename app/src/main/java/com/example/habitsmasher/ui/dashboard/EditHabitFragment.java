@@ -21,7 +21,12 @@ import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 
-
+/**
+ *  UI Class that represents and specifies the behaviour of the dialog
+ *  that is spawned when a user wants to edit a habit in their habit list
+ * @author Jason Kim
+ * @version 1.0
+ */
 public class EditHabitFragment extends DialogFragment{
     private EditText _titleText;
     private EditText _reasonText;
@@ -40,6 +45,12 @@ public class EditHabitFragment extends DialogFragment{
     private final int _index;
     private final HabitListFragment _listener;
 
+    /**
+     * Constructs a Edit Habit dialog
+     * @param index index of habit being edited by this dialog
+     * @param editHabit habit being edited
+     * @param listener habit list fragment that spawned this dialog
+     */
     public EditHabitFragment(int index, Habit editHabit, HabitListFragment listener) {
         _index = index;
         _editHabit = editHabit;
@@ -90,7 +101,6 @@ public class EditHabitFragment extends DialogFragment{
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //HashMap<String, Habit> habitData = new HashMap<>();
                 String habitTitle = _titleText.getText().toString();
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
@@ -122,11 +132,10 @@ public class EditHabitFragment extends DialogFragment{
         return view;
     }
 
-    /*
-     * Sets up the buttons for the days of the week, including setting the initial states.
+    /**
+     * Sets up the buttons representing the days of the week
      */
     private void initializeDaysOfTheWeekButtons(){
-
         //setting day initial states (clicked or not)
         if (_tracker.getMonday()){_mondayButton.performClick();}
         if (_tracker.getTuesday()){_tuesdayButton.performClick();}
@@ -137,7 +146,6 @@ public class EditHabitFragment extends DialogFragment{
         if (_tracker.getSunday()){_sundayButton.performClick();}
 
         //button onClick methods follow below
-
         _mondayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

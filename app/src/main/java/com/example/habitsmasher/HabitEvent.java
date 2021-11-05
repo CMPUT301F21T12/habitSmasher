@@ -6,6 +6,7 @@ import java.util.Date;
 /**
  * This is the Habit Event class
  * Its purpose is to store and retrieve the start date, comments, picture, and location of a habit event
+ * Pictures for habit events are not yet implemented
  */
 public class HabitEvent {
     private Date _date;
@@ -88,14 +89,15 @@ public class HabitEvent {
 
     /**
      * Gets the ID of the current habit event
-     * @return
+     * @return habit event's id
      */
     @PropertyName("id")
     public String getId() { return _id; }
 
     /**
+     * Sets the ID of the habit event
      * This function SHOULD not be used
-     * @param id
+     * @param id new id for habit event
      */
     public void setId(String id) {_id = id; }
 }

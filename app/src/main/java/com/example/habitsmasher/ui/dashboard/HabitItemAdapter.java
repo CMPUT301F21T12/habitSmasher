@@ -35,12 +35,12 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.List;
 import java.util.Locale;
 
+
 /**
- * The habit item adapter is the custom adapter for the RecyclerView that holds the habit list
+ * Custom adapter class that is used to connect the Firestore database and the
+ * RecyclerView displaying the habits
  */
 public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
-    private static final String DATE_PATTERN = "dd-MM-yyyy";
-    private static final Locale LOCALE = Locale.CANADA;
     private static HabitList _habits;
     private static HabitListFragment _habitListFragment;
     private final String _username;
@@ -94,10 +94,17 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     }
 
 
+    /**
+     * Class that holds the necessary elements of an individual row in the HabitList
+     */
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
         private final TextView _habitTitle;
         private final ConstraintLayout _habitRows;
 
+        /**
+         * Constructs a view holder
+         * @param itemView view of row of RecyclerView which is held in ViewHolder
+         */
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
             _habitRows = itemView.findViewById(R.id.habit_rows);

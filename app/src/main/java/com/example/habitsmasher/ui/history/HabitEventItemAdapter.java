@@ -23,7 +23,8 @@ import java.text.SimpleDateFormat;
 
 /**
  * The HabitEventItemAdapter class
- * Based on HabitItemAdapter, extension of FirestoreRecycler that shows habit events list with live updates
+ * Based on HabitItemAdapter, extension of FirestoreRecycler that shows habit events list with
+ * live updates
  */
 public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
     // Initialize variables
@@ -75,7 +76,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
     }
 
     /**
-     * Necessary function for firestore recycler view
+     * Necessary function for Firestore recycler view
      * @return number of elements in snapshots
      */
     @Override
@@ -152,7 +153,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         }
 
         /**
-         * Sets view with buttons as visible
+         * Sets view with buttons as visible, sets view without buttons as invisible
          */
         public void setButtonView() {
             _layoutWithoutButtons.setVisibility(View.INVISIBLE);
@@ -160,7 +161,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         }
 
         /**
-         * Sets view without buttons as visible
+         * Sets view without buttons as visible, sets view with buttons as invisible
          */
         public void setNoButtonView() {
             _layoutWithButtons.setVisibility(View.INVISIBLE);
