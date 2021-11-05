@@ -44,7 +44,7 @@ public class AddHabitDialog extends DialogFragment {
     private EditText _habitTitleEditText;
     private EditText _habitReasonEditText;
     private TextView _habitDateTextView;
-
+    
     private Button _mondayButton;
     private Button _tuesdayButton;
     private Button _wednesdayButton;
