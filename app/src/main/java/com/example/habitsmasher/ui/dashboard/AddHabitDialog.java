@@ -24,6 +24,9 @@ import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.R;
 
 /**
+ * UI Class that represents and specifies the behaviour of the dialog
+ * that is spawned when a user wants to add a habit to their habit list
+ *
  * Making a dialogfragment from fragment came from the following video:
  * https://www.youtube.com/watch?v=LUV_djRHSEY
  *
@@ -35,6 +38,9 @@ import com.example.habitsmasher.R;
  *
  * Name: Mitch Tabian
  * Video Date: March 11, 2019
+ *
+ * @author Jacob Nyugen
+ * @version 1.0
  */
 public class AddHabitDialog extends DialogFragment {
 
@@ -117,24 +123,25 @@ public class AddHabitDialog extends DialogFragment {
                 // if the habit is valid, add it to the local list and external db
                 if (habitValidator.isHabitValid(habitTitle,
                                                 habitReason,
-                                                habitDate,
-                                                _tracker)){
+                                                habitDate, _tracker)){
                     _habitListFragment.addHabitToDatabase(habitTitle,
                                                           habitReason,
-                                                          habitValidator.checkHabitDateValid(habitDate),
-                                                          _tracker);
+                                                          habitValidator.checkHabitDateValid(habitDate), _tracker);
                     getDialog().dismiss();
                 }
             }
         });
 
-
         return view;
     }
 
+    /**
+     * Sets the onClickListeners for the different buttons representing the
+     * different days of the week
+     */
     private void setListenersForDaysOfTheWeek(){
-        //button onClick methods follow below
 
+        //button onClick methods follow below
         _mondayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -229,6 +236,9 @@ public class AddHabitDialog extends DialogFragment {
         });
     }
 
+    /**
+     * Opens a DatePickerDialog that is used to select the date of the added habit
+     */
     private void openDatePickerDialog(){
         DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
             /**

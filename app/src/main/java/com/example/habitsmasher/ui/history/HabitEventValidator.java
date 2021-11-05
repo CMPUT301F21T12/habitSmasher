@@ -7,7 +7,7 @@ import com.example.habitsmasher.ui.dashboard.HabitValidator;
 import java.util.Date;
 
 /**
- * Habit Event Validator, extends off habit validator to also add validation
+ * Habit Event Validator, extends off habit validator to also add input validation
  * for habit events
  */
 public class HabitEventValidator extends HabitValidator {

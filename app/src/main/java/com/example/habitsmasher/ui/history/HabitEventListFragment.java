@@ -43,6 +43,7 @@ import java.util.UUID;
 /**
  * HabitEventListFragment class
  * Responsible for data and UI handling of the habit event list
+ * Images for habit events are not implemented yet
  */
 public class HabitEventListFragment extends Fragment {
     // Initialize variables
@@ -171,14 +172,16 @@ public class HabitEventListFragment extends Fragment {
         new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
-    @Override public void onStart() {
+    @Override
+    public void onStart() {
         super.onStart();
 
         // Enable live updates
         _habitEventItemAdapter.startListening();
     }
 
-    @Override public void onStop() {
+    @Override
+    public void onStop() {
         super.onStop();
 
         // Stop live updates
@@ -186,7 +189,7 @@ public class HabitEventListFragment extends Fragment {
     }
 
     /**
-     * Open the habit event dialog
+     * Open the add habit event dialog
      */
     private void openAddHabitEventDialogBox() {
         // Create new AddHabitEventDialog and show it

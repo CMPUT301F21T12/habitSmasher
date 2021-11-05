@@ -36,15 +36,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * UI class that represents and specifies the behaviour of the user interface
+ * displayed when a user is accessing their own habit list
+ */
 public class HabitListFragment extends Fragment {
 
     private static final String TAG = "HabitListFragment";
 
+    // user who owns this list of habits displayed
     private final User _user = new User("TestUser", "123");
+
+    // list of habits being displayed
     private final HabitList _habitList = _user.getHabits();
+
+    // adapter that connects the RecyclerView to the database
     private HabitItemAdapter _habitItemAdapter;
+
+    // needed for dialogs spawned from this fragment
     private final HabitListFragment _fragment = this;
+
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
     @Override
@@ -100,6 +111,7 @@ public class HabitListFragment extends Fragment {
                 _habitList.addHabitLocal(addHabit);
                 HabitList.habitIdSet.add(id);
             }
+
         }
         //wraps the snapshots representing the HabitList of the user in the HabitList
         _habitList.setSnapshots(options.getSnapshots());
@@ -109,11 +121,8 @@ public class HabitListFragment extends Fragment {
                                                                     false);
 
         View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
-
         FloatingActionButton addHabitFab = view.findViewById(R.id.add_habit_fab);
-        /**
-         * When fab is pressed, method call to open dialog fragment.
-         */
+
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,12 +146,14 @@ public class HabitListFragment extends Fragment {
                   .collection("Habits");
     }
 
-    @Override public void onStart() {
+    @Override
+    public void onStart() {
         super.onStart();
         _habitItemAdapter.startListening();
     }
 
-    @Override public void onStop()
+    @Override
+    public void onStop()
     {
         super.onStop();
         _habitItemAdapter.stopListening();
@@ -175,7 +186,7 @@ public class HabitListFragment extends Fragment {
         Date: March 4, 2021
         URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
          */
-        // create a touch listener which handles the swipe function of the RecyclerView
+        // create a touch listener which handles the click and swipe function of the RecyclerView
         RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
         touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
             @Override
@@ -200,14 +211,14 @@ public class HabitListFragment extends Fragment {
                         public void onSwipeOptionClicked(int viewID, int position) {
                             // edit and delete functionality below
                             switch (viewID){
-                                // if edit clicked
+                                // if edit button clicked
                                 case R.id.edit_button:
                                     EditHabitFragment editHabitFragment = new EditHabitFragment(position,
                                             _habitItemAdapter._snapshots.get(position),
                                             _fragment);
                                     editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
                                     break;
-                                // if delete clicked
+                                // if delete button clicked
                                 case R.id.delete_button:
                                     Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
                                     _habitList.deleteHabit(_fragment.getActivity(), _user.getUsername(), habitToDelete, position);
