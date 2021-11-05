@@ -51,6 +51,7 @@ public class AddHabitDialog extends DialogFragment {
     private EditText _habitReasonEditText;
     private TextView _habitDateTextView;
 
+    // buttons for the days of the week
     private Button _mondayButton;
     private Button _tuesdayButton;
     private Button _wednesdayButton;
@@ -65,6 +66,8 @@ public class AddHabitDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_habit_dialog_box, container, false);
+
+        // grab all the editTexts and buttons
         _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
         _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
         _habitDateTextView = view.findViewById(R.id.habit_date_selection);
@@ -86,6 +89,7 @@ public class AddHabitDialog extends DialogFragment {
         // set the listeners for the days of the week buttons
         setListenersForDaysOfTheWeek();
 
+        // set the listener for the date picker
         _habitDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +97,7 @@ public class AddHabitDialog extends DialogFragment {
             }
         });
 
+        // cancel button logic
         cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,18 +106,21 @@ public class AddHabitDialog extends DialogFragment {
             }
         });
 
+        // confirm button logic
         confirmNewHabit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
 
+                // validator for the habit, ensures everything is valid
                 HabitValidator habitValidator = new HabitValidator(getActivity());
 
                 String habitTitle = _habitTitleEditText.getText().toString();
                 String habitReason = _habitReasonEditText.getText().toString();
                 String habitDate = _habitDateTextView.getText().toString();
 
+                // if the habit is valid, add it to the local list and external db
                 if (habitValidator.isHabitValid(habitTitle,
                                                 habitReason,
                                                 habitDate, _tracker)){

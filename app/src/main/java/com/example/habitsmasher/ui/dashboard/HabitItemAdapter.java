@@ -119,14 +119,21 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
         public void deleteHabitEvents(String username, Habit parentHabit) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+            // get all of the habit events
             Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
                     .document(username)
                     .collection("Habits")
                     .document(Long.toString(parentHabit.getId()))
                     .collection("Events")
                     .get();
+
+            // waiting for all the documents
             while (!querySnapshotTask.isComplete());
+
+            // make a list of all the documents
             List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+
+            // delete all the events
             WriteBatch batch = db.batch();
             for (int i = 0; i < snapshotList.size(); i++) {
                 batch.delete(snapshotList.get(i).getReference());

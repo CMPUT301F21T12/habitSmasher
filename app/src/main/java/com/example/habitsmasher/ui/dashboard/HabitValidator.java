@@ -54,18 +54,19 @@ public class HabitValidator {
             return false;
         }
 
-        // checking data
+        // check that a date was picked
         if (parsedDate == null) {
             showToastMessage("Please enter a start date");
             return false;
         }
 
-        // checking days of week
+        // check that at least one day of the week was selected
         if (tracker.getDays().isEmpty()){
             showToastMessage("Please select a weekly schedule.");
             return false;
         }
 
+        // return true if all checks pass
         return true;
     }
 

@@ -22,12 +22,15 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        // create the sample user
         User user = new User("TestUser", "123");
 
+        // get the UI elements
         TextView username = view.findViewById(R.id.username);
         TextView followers = view.findViewById(R.id.number_followers);
         TextView following = view.findViewById(R.id.number_following);
 
+        // set the UI elements
         username.setText("@" + user.getUsername());
         followers.setText(String.valueOf(user.getFollowerCount()));
         following.setText(String.valueOf(user.getFollowingCount()));

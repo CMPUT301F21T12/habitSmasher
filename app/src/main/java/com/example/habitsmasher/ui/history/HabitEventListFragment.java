@@ -91,13 +91,19 @@ public class HabitEventListFragment extends Fragment {
             when app is initially launched
             */
             if (_habitEventList.getHabitEvents().isEmpty()) {
+                // wait for snapshots to come in
                 while (!querySnapshotTask.isComplete());
+
+                //make a list of all the habit event snapshots
                 List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
                 for (int i = 0; i < snapshotList.size(); i++) {
+                    // extract the data from the snapshot
                     Map<String, Object> extractMap = snapshotList.get(i).getData();
                     String comment = (String) extractMap.get("comment");
                     Timestamp date = (Timestamp) extractMap.get("date");
                     String id = extractMap.get("id").toString();
+
+                    // create the new habit event from the snapshot data and add to local list
                     HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id);
                     Log.d(TAG, addHabitEvent.getId());
                     _habitEventList.addHabitEventLocally(addHabitEvent);
