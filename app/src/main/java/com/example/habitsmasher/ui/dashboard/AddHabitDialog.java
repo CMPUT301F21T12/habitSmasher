@@ -2,6 +2,8 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,23 +14,19 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-
-import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.DatePickerDialogFragment;
+import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.R;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 /**
+ * UI Class that represents and specifies the behaviour of the dialog
+ * that is spawned when a user wants to add a habit to their habit list
+ *
  * Making a dialogfragment from fragment came from the following video:
  * https://www.youtube.com/watch?v=LUV_djRHSEY
  *
@@ -40,33 +38,58 @@ import java.util.Date;
  *
  * Name: Mitch Tabian
  * Video Date: March 11, 2019
+ *
+ * @author Jacob Nyugen
+ * @version 1.0
  */
-public class AddHabitDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class AddHabitDialog extends DialogFragment {
 
     private static final String TAG = "AddHabitDialog";
-    private final String DATE_FORMAT = "dd/MM/yyyy";
-    private final String INCORRECT_TITLE_FORMAT = "Incorrect habit title entered";
-    private final String INCORRECT_REASON_FORMAT = "Incorrect habit reason entered";
-    private final String INCORRECT_BLANK_DATE = "Please enter a start date";
 
     private HabitListFragment _habitListFragment;
     private EditText _habitTitleEditText;
     private EditText _habitReasonEditText;
     private TextView _habitDateTextView;
-    private String _habitTitleInput;
-    private String _habitReasonInput;
-    private Date _habitDate;
+
+    // buttons for the days of the week
+    private Button _mondayButton;
+    private Button _tuesdayButton;
+    private Button _wednesdayButton;
+    private Button _thursdayButton;
+    private Button _fridayButton;
+    private Button _saturdayButton;
+    private Button _sundayButton;
+
+    private DaysTracker _tracker;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_habit_dialog_box, container, false);
+
+        // grab all the editTexts and buttons
         _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
         _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
         _habitDateTextView = view.findViewById(R.id.habit_date_selection);
         Button confirmNewHabit = view.findViewById(R.id.confirm_habit);
         Button cancelNewHabit = view.findViewById(R.id.cancel_habit);
 
+        //buttons for the days of the week, apologies for so many of them
+        _mondayButton = view.findViewById(R.id.monday_button);
+        _tuesdayButton = view.findViewById(R.id.tuesday_button);
+        _wednesdayButton = view.findViewById(R.id.wednesday_button);
+        _thursdayButton = view.findViewById(R.id.thursday_button);
+        _fridayButton = view.findViewById(R.id.friday_button);
+        _saturdayButton = view.findViewById(R.id.saturday_button);
+        _sundayButton =view.findViewById(R.id.sunday_button);
+
+        //logic handler for tracking all those days
+        _tracker = new DaysTracker();
+
+        // set the listeners for the days of the week buttons
+        setListenersForDaysOfTheWeek();
+
+        // set the listener for the date picker
         _habitDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +97,7 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             }
         });
 
+        // cancel button logic
         cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,13 +106,27 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
             }
         });
 
+        // confirm button logic
         confirmNewHabit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
-                if (checkNewHabitIsValid()){
-                    _habitListFragment.addHabitToDatabase(_habitTitleInput, _habitReasonInput, _habitDate);
+
+                // validator for the habit, ensures everything is valid
+                HabitValidator habitValidator = new HabitValidator(getActivity());
+
+                String habitTitle = _habitTitleEditText.getText().toString();
+                String habitReason = _habitReasonEditText.getText().toString();
+                String habitDate = _habitDateTextView.getText().toString();
+
+                // if the habit is valid, add it to the local list and external db
+                if (habitValidator.isHabitValid(habitTitle,
+                                                habitReason,
+                                                habitDate, _tracker)){
+                    _habitListFragment.addHabitToDatabase(habitTitle,
+                                                          habitReason,
+                                                          habitValidator.checkHabitDateValid(habitDate), _tracker);
                     getDialog().dismiss();
                 }
             }
@@ -97,76 +135,127 @@ public class AddHabitDialog extends DialogFragment implements DatePickerDialog.O
         return view;
     }
 
-    private void openDatePickerDialog(){
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(),
-                this,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
-    }
+    /**
+     * Sets the onClickListeners for the different buttons representing the
+     * different days of the week
+     */
+    private void setListenersForDaysOfTheWeek(){
 
+        //button onClick methods follow below
+        _mondayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //if monday is already selected, set it to false
+                if (_tracker.getMonday()){
+                    _tracker.setMonday(false);
+                }
+                //if monday wasn't already selected, select it
+                else{
+                    _tracker.setMonday(true);
+                }
+                Log.d("Tracker Status", _tracker.getDays());
+            }
+        });
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        //1 is added to the month we get from the DatePickerDialog
-        // because DatePickerDialog returns values between 0 and 11,
-        // which is not really helpful for users.
-        int correctedMonth = month + 1;
-        String date = day + "/" + correctedMonth + "/" + year;
-        _habitDateTextView.setText(date);
+        _tuesdayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(_tracker.getTuesday()){
+                    _tracker.setTuesday(false);
+                }
+                else{
+                    _tracker.setTuesday(true);
+                }
+                Log.d("Tracker Status", _tracker.getDays());
+            }
+        });
+
+        _wednesdayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(_tracker.getWednesday()){
+                    _tracker.setWednesday(false);
+                }
+                else{
+                    _tracker.setWednesday(true);
+                }
+                Log.d("Tracker Status", _tracker.getDays());
+            }
+        });
+
+        _thursdayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(_tracker.getThursday()){
+                    _tracker.setThursday(false);
+                }
+                else{
+                    _tracker.setThursday(true);
+                }
+                Log.d("Tracker Status", _tracker.getDays());
+            }
+        });
+
+        _fridayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(_tracker.getFriday()){
+                    _tracker.setFriday(false);
+                }
+                else{
+                    _tracker.setFriday(true);
+                }
+                Log.d("Tracker Status", _tracker.getDays());
+            }
+        });
+
+        _saturdayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(_tracker.getSaturday()){
+                    _tracker.setSaturday(false);
+                }
+                else{
+                    _tracker.setSaturday(true);
+                }
+                Log.d("Tracker Status", _tracker.getDays());
+            }
+        });
+
+        _sundayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(_tracker.getSunday()){
+                    _tracker.setSunday(false);
+                }
+                else{
+                    _tracker.setSunday(true);
+                }
+                Log.d("Tracker Status", _tracker.getDays());
+            }
+        });
     }
 
     /**
-     * Returns boolean so habit can be added to habit list or not.
-     * @return true if all fields are entered correctly, false otherwise.
+     * Opens a DatePickerDialog that is used to select the date of the added habit
      */
-    private boolean checkNewHabitIsValid(){
-        boolean invalidDate = false;
-        _habitTitleInput = _habitTitleEditText.getText().toString();
-        _habitReasonInput = _habitReasonEditText.getText().toString();
-
-        DateFormat inputDateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        _habitDate = null;
-
-        try {
-            inputDateFormatter.setLenient(false);
-            _habitDate = inputDateFormatter.parse(_habitDateTextView.getText().toString());
-        } catch (ParseException e) {
-            invalidDate = true;
-            e.printStackTrace();
-        }
-
-        /**
-         * When user input meets the requirements for a proper habit title, habit reason, and habit date,
-         * have the habit be added to the habit list back in dashboard fragment.
-         */
-        if (
-                ((_habitTitleInput.length()>0)&&(_habitTitleInput.length()<=20))&&
-                ((_habitReasonInput.length()>0)&&(_habitReasonInput.length()<=30))&&
-                (!invalidDate)
-        ) {
-            return true;
-        } else {
-
-            //Handle error checking for new habit name/title
-            if ((!(_habitTitleInput.length()>0)) || (!(_habitTitleInput.length()<=20))){
-                Toast.makeText(getActivity(), INCORRECT_TITLE_FORMAT, Toast.LENGTH_SHORT).show();
+    private void openDatePickerDialog(){
+        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
+            /**
+             * Sets the text of the date select view to reflect selected date
+             * @param view
+             * @param year year of selected date
+             * @param month month of selected date (integer from 0 to 11)
+             * @param day day of month of selected date
+             */
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                int correctedMonth = month + 1;
+                String date =  day + "/" + correctedMonth + "/" + year;
+                _habitDateTextView.setText(date);
             }
-
-            //Handle error checking for new habit reason
-            if ((!(_habitReasonInput.length()>0)) || (!(_habitReasonInput.length()<=30))){
-                Toast.makeText(getActivity(), INCORRECT_REASON_FORMAT, Toast.LENGTH_SHORT).show();
-            }
-
-            //Handle error checking for new habit date.
-            if (invalidDate){
-                Toast.makeText(getActivity(), INCORRECT_BLANK_DATE, Toast.LENGTH_SHORT).show();
-            }
-            return false;
-        }
+        });
+        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 
     @Override

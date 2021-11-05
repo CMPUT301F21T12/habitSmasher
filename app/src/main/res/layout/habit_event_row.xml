@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/habit_event_row"
+    android:layout_width="match_parent"
+    android:layout_height="128dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/habit_event_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/habit_event_row_button_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:visibility="invisible">
+
+                <TextView
+                    android:id="@+id/habit_event_date_with_buttons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/habit_event_date"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme_dark_grey"
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.302" />
+
+                <TextView
+                    android:id="@+id/habit_event_comment_with_buttons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="19dp"
+                    android:text="@string/habit_event_comment"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme_dark_grey"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.702" />
+
+                <Button
+                    android:id="@+id/delete_habit_event_button"
+                    android:layout_width="110dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="2dp"
+                    android:background="@color/habit_add_button"
+                    android:backgroundTint="@color/habit_add_button"
+                    android:text="@string/delete_button_label"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_habit_event_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <Button
+                    android:id="@+id/edit_habit_event_button"
+                    android:layout_width="110dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/habit_add_button"
+                    android:backgroundTint="@color/habit_add_button"
+                    android:text="@string/edit_button_label"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/habit_event_row_normal_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/habit_event_image"
+                    android:layout_width="130dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="28dp"
+                    android:src="@drawable/habit_temp_img"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/habit_event_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/habit_event_date"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme_dark_grey"
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.222"
+                    app:layout_constraintStart_toEndOf="@+id/habit_event_image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.302" />
+
+                <TextView
+                    android:id="@+id/habit_event_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/habit_event_comment"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme_dark_grey"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.283"
+                    app:layout_constraintStart_toEndOf="@+id/habit_event_image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.712" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

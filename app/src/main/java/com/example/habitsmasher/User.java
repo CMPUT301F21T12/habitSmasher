@@ -5,7 +5,10 @@ import android.media.Image;
 import java.util.ArrayList;
 
 /**
- * The User class models a user and holds their credentials and corresponding information
+ * Class that models a user of the app and holds their credentials and corresponding
+ * information, such as their habits, followers and users who they are following
+ *
+ * Currently, profile picture is not used
  */
 public class User {
     private String _username;
@@ -49,22 +52,43 @@ public class User {
         _profilePicture = profilePicture;
     }
 
+    /**
+     * Gets the username of the user
+     * @return username of the user
+     */
     public String getUsername() {
         return _username;
     }
 
+    /**
+     * Sets the username of the user
+     * @param username new username of the user
+     */
     public void setUsername(String username) {
         _username = username;
     }
 
+    /**
+     * Gets the password of the user
+     * @return password of the user
+     */
     public String getPassword() {
         return _password;
     }
 
+    /**
+     * Sets the password of the user
+     * @param password new password of user
+     */
     public void setPassword(String password) {
         _password = password;
     }
 
+    /**
+     * Gets the list of users in the form of usernames
+     * that this user is followed by
+     * @return list of usernames following this user
+     */
     public ArrayList<String> getFollowers() {
         return _followerList;
     }
@@ -77,6 +101,11 @@ public class User {
         _followerList.add(followerUsername);
     }
 
+    /**
+     * Gets the list of users in the form of usernames that
+     * this user is following
+     * @return list of usernames this user is following
+     */
     public ArrayList<String> getFollowingList() {
         return _followingList;
     }
@@ -89,10 +118,18 @@ public class User {
         _followingList.add(username);
     }
 
+    /**
+     * Gets the profile picture of the user
+     * @return profile picture of user
+     */
     public Image getProfilePicture() {
         return _profilePicture;
     }
 
+    /**
+     * Sets the profile picture of the user
+     * @param picture new profile picture of user
+     */
     public void setProfilePicture(Image picture) {
         _profilePicture = picture;
     }
@@ -115,7 +152,7 @@ public class User {
 
     /**
      * This method gets the list of habits associated with this user
-     * @return
+     * @return HabitList of the user
      */
     public HabitList getHabits() {
         return _habits;

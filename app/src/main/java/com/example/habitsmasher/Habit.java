@@ -4,32 +4,44 @@ import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.UUID;
 
 /**
  * This is the Habit class
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
  */
-public class Habit implements Serializable {
+public class Habit extends DatabaseEntity implements Serializable {
     private String _title;
     private String _reason;
     private Date _date;
-    private long _habitId;
+    private HabitEventList _habitEvents;
+    private String _days;
 
+    /**
+     * Empty constructor needed for FireStore storage
+     */
     public Habit () {
         // needed for firestore
     }
 
-    public Habit (String title, String reason, Date date, long habitId) {
-        _habitId = habitId;
+    /**
+     * Constructs a habit
+     * @param title title of habit
+     * @param reason reason for habit
+     * @param date starting date of habit
+     * @param habitId id of habit
+     * @param habitEvents list holding habit events
+     */
+    public Habit (String title, String reason, Date date, String days, long habitId, HabitEventList habitEvents) {
+        super(habitId);
         _title = title;
         _reason = reason;
         _date = date;
+        _days = days;
+        _habitEvents = habitEvents;
     }
 
     /**
-     *
+     * Gets the title of the habit
      * @return _title : The title of the habit
      */
     @PropertyName("title")
@@ -38,7 +50,7 @@ public class Habit implements Serializable {
     }
 
     /**
-     *
+     * Sets the title of the habit
      * @param title : The new title to be set
      */
     public void setTitle(String title) {
@@ -46,7 +58,7 @@ public class Habit implements Serializable {
     }
 
     /**
-     *
+     * Gets the reason of the habit
      * @return _reason: The reason of the habit
      */
     @PropertyName("reason")
@@ -55,7 +67,7 @@ public class Habit implements Serializable {
     }
 
     /**
-     *
+     * Sets the reason of the habit
      * @param reason : The new reason to be set
      */
     public void setReason(String reason) {
@@ -63,8 +75,8 @@ public class Habit implements Serializable {
     }
 
     /**
-     *
-     * @return _date : The date of the habit
+     * Gets the starting date of the habit
+     * @return _date : The starting date of the habit
      */
     @PropertyName("date")
     public Date getDate() {
@@ -72,25 +84,39 @@ public class Habit implements Serializable {
     }
 
     /**
-     *
-     * @param date : The new date to be set
+     * Sets the starting date of the habit
+     * @param date : The new starting date to be set
      */
     public void setDate(Date date) {
         _date = date;
     }
 
+
     /**
-     *
-     * @return _habitId: the ID of the habit
+     * Gets the days of the week the habit takes place
+     * @return _days : The days the habit takes place
      */
-    @PropertyName("habitId")
-    public long getHabitId() {
-        return _habitId;
+    @PropertyName("days")
+    public String getDays() {return _days;}
+
+    /**
+     * Sets the days of the week the habit takes place
+     * @param days : The new days of the week
+     */
+    public void setDays(String days){
+        _days = days;
     }
 
-    // should NEVER be used in practice, adding since it might be needed for _snapshots
-    public void setHabitId(long habitId) {
-        _habitId = habitId;
-    }
+    /**
+     * Gets habit event list of a habit
+     * @return habitEvents (HabitEventList): The habit events associated with a habit
+     */
+    @PropertyName("Events")
+    public HabitEventList getHabitEvents()  { return _habitEvents; }
 
+    /**
+     * Sets the habit events of a habit
+     * @param habitEvents (HabitEventList): The list of habit events to set
+     */
+    public void setHabitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
 }

@@ -8,6 +8,8 @@
     <string name="date_label">Date:</string>
     <string name="habit_title">Habit title</string>
     <string name="habit_reason">Habit reason</string>
+    <string name="habit_event_comment">Comment</string>
+    <string name="habit_event_date">Date</string>
     <string name="habit_date">Habit date</string>
     <string name="habit_list">Habit List</string>
     <string name="dd_mm_yyyy">dd-mm-yyyy</string>
@@ -17,6 +19,11 @@
     <string name="reason">Reason:</string>
     <string name="date_start">Date start:</string>
     <string name="add_habit">Add Habit</string>
+    <string name="add_habit_event">Add Habit Event</string>
+    <string name="habit_event_comment_label">Comment:</string>
+    <string name="add_habit_event_comment">Enter Comment...</string>
+    <string name="add_habit_event_location_label">ADD LOCATION</string>
+    <string name="add_habit_photo_label">ADD PHOTO</string>
     <string name="historyButtonLabel">HISTORY</string>
     <string name="dateTextBoxLabel">Date Started: %s</string>
     <string name="ratingTextBoxLabel">Follow Rating: %s</string>
@@ -29,4 +36,5 @@
     <string name="you_have_no_recent_activity">You have no recent activity!</string>
     <string name="edit_button_label">EDIT</string>
     <string name="delete_button_label">DELETE</string>
+    <string name="edit_habit">Edit Habit</string>
 </resources>

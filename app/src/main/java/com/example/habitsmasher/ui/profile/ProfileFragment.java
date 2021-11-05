@@ -12,18 +12,25 @@ import androidx.fragment.app.Fragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 
+/**
+ * UI class that represents and specifies the behaviour of the user's profile screen
+ * Currently, only displays information of a test user
+ */
 public class ProfileFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        // create the sample user
         User user = new User("TestUser", "123");
 
+        // get the UI elements
         TextView username = view.findViewById(R.id.username);
         TextView followers = view.findViewById(R.id.number_followers);
         TextView following = view.findViewById(R.id.number_following);
 
+        // set the UI elements
         username.setText("@" + user.getUsername());
         followers.setText(String.valueOf(user.getFollowerCount()));
         following.setText(String.valueOf(user.getFollowingCount()));

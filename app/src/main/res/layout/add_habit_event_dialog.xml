@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/habit_add_button">
+
+    <View
+        android:id="@+id/add_habit_header"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/add_habit_event_header"
+        android:background="@color/menu_bar"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/add_habit_event_header"
+        android:layout_width="330dp"
+        android:layout_height="55dp"
+        android:layout_alignParentTop="false"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center|start"
+        android:text="@string/add_habit_event"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/confirm_habit_event"
+        android:layout_width="135dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="540dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/menu_bar_variant"
+        android:text="@string/confirm"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancel_habit_event"
+        app:layout_constraintTop_toTopOf="@+id/add_habit_header" />
+
+    <Button
+        android:id="@+id/cancel_habit_event"
+        android:layout_width="135dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="540dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/menu_bar_variant"
+        android:text="@string/cancel"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/confirm_habit_event"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/add_habit_header" />
+
+    <TextView
+        android:id="@+id/comment_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="250dp"
+        android:text="@string/habit_event_comment_label"
+        android:textColor="@color/design_default_color_background"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/add_habit_event_comment"
+        app:layout_constraintTop_toTopOf="@+id/add_habit_header" />
+
+    <TextView
+        android:id="@+id/new_habit_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/date_start"
+        android:textColor="@color/design_default_color_background"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_habit_event_comment" />
+
+    <TextView
+        android:id="@+id/add_location_label"
+        android:layout_width="130dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="50dp"
+        android:gravity="center"
+        android:text="@string/add_habit_event_location_label"
+        android:textColor="@color/design_default_color_background"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/add_habit_event_comment"
+        android:layout_width="270dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="285dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/text_view_background"
+        android:ems="10"
+        android:gravity="start"
+        android:inputType="textMultiLine"
+        android:singleLine="false"
+        android:textColor="@color/theme_dark_grey"
+        android:hint="Enter Comment..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/add_habit_header" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="168dp"
+        android:layout_marginEnd="75dp"
+        android:baselineAlignBottom="false"
+        android:clickable="true"
+        android:tint="@color/white"
+        app:backgroundTint="@color/menu_bar_variant"
+        app:fabCustomSize="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <TextView
+        android:id="@+id/habit_event_date_selection"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:background="@color/white"
+        android:clickable="true"
+        android:ems="10"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:hint="@string/dd_mm_yyyy"
+        android:textColor="@color/theme_dark_grey"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/new_habit_date_label"
+        app:layout_constraintTop_toBottomOf="@+id/add_habit_event_comment" />
+
+    <ImageView
+        android:id="@+id/habit_event_add_photo"
+        android:layout_width="141dp"
+        android:layout_height="134dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/add_photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_habit_header" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
