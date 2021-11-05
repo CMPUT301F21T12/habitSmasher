@@ -103,7 +103,8 @@ public class HabitViewFragment extends Fragment {
      * The buttons are all non-clickable
      */
     private void setupDaysOfTheWeekButtons(View view){
-
+        // For every button, if the user selected that day when adding/editing the habit,
+        // Set the button status to selected
         Button mondayButton = view.findViewById(R.id.monday_button);
         if (_tracker.getMonday()){
             mondayButton.performClick();

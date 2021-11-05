@@ -28,16 +28,19 @@ public class HabitEventValidator extends HabitValidator {
     public boolean isHabitEventValid(String habitEventComment, String habitEventDate) {
         Date parsedDate = checkHabitDateValid(habitEventDate);
 
+        // check that the comment conforms to requirements
         if ((habitEventComment.length() <=0) || (habitEventComment.length() > 20)) {
             showToastMessage("Incorrect habit event comment entered");
             return false;
         }
 
+        // check that a date was selected
         if (parsedDate == null) {
             showToastMessage("Please enter a start date");
             return false;
         }
 
+        // if all checks pass return true
         return true;
     }
 }

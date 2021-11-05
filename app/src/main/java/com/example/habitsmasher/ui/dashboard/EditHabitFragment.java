@@ -79,6 +79,7 @@ public class EditHabitFragment extends DialogFragment{
         _reasonText.setText(_editHabit.getReason());
         _dateText.setText(DatePickerDialogFragment.parseDateToString(_editHabit.getDate()));
 
+        // listener for the date picker dialog fragment
         _dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +87,7 @@ public class EditHabitFragment extends DialogFragment{
             }
         });
 
-        // when ok is clicked
+        // when confirm button is clicked
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +96,7 @@ public class EditHabitFragment extends DialogFragment{
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
 
+                // habit validator to ensure data is formatted appropriately
                 HabitValidator habitValidator = new HabitValidator(getActivity());
 
                 if (!habitValidator.isHabitValid(habitTitle, reasonText, dateText, _tracker)) {

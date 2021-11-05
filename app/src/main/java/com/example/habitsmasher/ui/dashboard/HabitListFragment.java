@@ -62,6 +62,7 @@ public class HabitListFragment extends Fragment {
                 .setQuery(query, Habit.class)
                 .build();
 
+        //get all of the habits
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Users")
                                                     .document(_user.getUsername())
                                                     .collection("Habits")
@@ -73,17 +74,29 @@ public class HabitListFragment extends Fragment {
         when app is initially launched
         */
         if (_habitList.getHabitList().isEmpty()) {
+            // wait for all the snapshots to come in
             while (!querySnapshotTask.isComplete());
+
+            // make a list of all of the habit snapshots
             List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+
+            // convert all of the snapshots into proper habits
             for (int i = 0; i < snapshotList.size(); i++) {
+                // get the data and convert to hashmap, also print to log
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
                 Log.d(TAG, extractMap.toString());
+
+                // get all of the data from the snapshot
                 String title = (String) extractMap.get("title");
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
                 Long id = (Long) extractMap.get("id");
                 String days = (String) extractMap.get("days");
+
+                // create a new habit with the snapshot data
                 Habit addHabit = new Habit(title, reason, date.toDate(), days, id, new HabitEventList());
+
+                // add the habit to the local list
                 _habitList.addHabitLocal(addHabit);
                 HabitList.habitIdSet.add(id);
             }
@@ -185,6 +198,7 @@ public class HabitListFragment extends Fragment {
                     .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                         @Override
                         public void onSwipeOptionClicked(int viewID, int position) {
+                            // edit and delete functionality below
                             switch (viewID){
                                 // if edit clicked
                                 case R.id.edit_button:

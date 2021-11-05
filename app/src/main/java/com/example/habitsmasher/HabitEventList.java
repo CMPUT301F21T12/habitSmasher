@@ -107,6 +107,7 @@ public class HabitEventList extends ArrayList{
     private void deleteHabitEventFromDatabase(Context context, String username, Habit parentHabit, HabitEvent toDelete) {
         FirebaseFirestore db =  FirebaseFirestore.getInstance();
 
+        // get the document to delete, then delete it
         db.collection("Users")
                 .document(username)
                 .collection("Habits")

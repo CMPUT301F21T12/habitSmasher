@@ -37,26 +37,31 @@ public class HabitValidator {
                                 DaysTracker tracker) {
         Date parsedDate = checkHabitDateValid(habitDate);
 
+        // check that the title conforms to requirements
         if ((habitTitle.length() <= 0) || (habitTitle.length() > 20)) {
             showToastMessage("Incorrect habit title entered");
             return false;
         }
 
+        // check that the reason conforms to requirements
         if ((habitReason.length() <= 0) || (habitReason.length() > 30)) {
             showToastMessage("Incorrect habit reason entered");
             return false;
         }
 
+        // check that a date was picked
         if (parsedDate == null) {
             showToastMessage("Please enter a start date");
             return false;
         }
 
+        // check that at least one day of the week was selected
         if (tracker.getDays().isEmpty()){
             showToastMessage("Please select a weekly schedule.");
             return false;
         }
 
+        // return true if all checks pass
         return true;
     }
 

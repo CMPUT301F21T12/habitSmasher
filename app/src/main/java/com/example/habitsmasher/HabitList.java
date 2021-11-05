@@ -161,6 +161,7 @@ public class HabitList extends ArrayList<Habit>{
                 .document(username)
                 .collection("Habits");
 
+        // create the new document and add it
         _collectionReference.document(id)
                 .set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -212,6 +213,7 @@ public class HabitList extends ArrayList<Habit>{
     private void deleteHabitFromDatabase(Context context, String username, Habit habitToDelete) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // get the habit to delete, then delete it
         db.collection("Users")
           .document(username)
           .collection("Habits")
