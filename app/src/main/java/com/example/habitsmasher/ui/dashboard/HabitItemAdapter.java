@@ -42,7 +42,6 @@ import java.util.Locale;
  */
 public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
     private static HabitList _habits;
-    private static HabitListFragment _habitListFragment;
     private final String _username;
     public final ObservableSnapshotArray<Habit> _snapshots;
     private final FragmentActivity _activity;
@@ -60,13 +59,11 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
                             FragmentActivity activity,
                             HabitList habits,
-                            HabitListFragment fragment,
                             String username) {
         super(options);
         _snapshots = options.getSnapshots();
         _activity = activity;
         _habits = habits;
-        _habitListFragment = fragment;
         _username = username;
     }
 
@@ -123,7 +120,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
             Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
                     .document(username)
                     .collection("Habits")
-                    .document(Long.toString(parentHabit.getId()))
+                    .document(parentHabit.getId())
                     .collection("Events")
                     .get();
 

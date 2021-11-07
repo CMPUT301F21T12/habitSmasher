@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
+import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,17 +47,15 @@ import java.util.UUID;
  * Responsible for data and UI handling of the habit event list
  * Images for habit events are not implemented yet
  */
-public class HabitEventListFragment extends Fragment {
+public class HabitEventListFragment extends ListFragment<HabitEvent> {
     // Initialize variables
     private static final String TAG = "HabitEventListFragment";
 
     private HabitEventItemAdapter _habitEventItemAdapter;
     private Habit _parentHabit;
-    private String _username;
+    private User _user;
     private HabitEventList _habitEventList;
-    private HabitEventListFragment _fragment = this;
 
-    FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
     public HabitEventListFragment () {
         // Required empty constructor
@@ -63,9 +63,10 @@ public class HabitEventListFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setFragmentForDialogs(this);
         if (getArguments() != null) {
             _parentHabit = (Habit) getArguments().getSerializable("parentHabit");
-            _username = (String) getArguments().getSerializable("parentUser");
+            _user = (User) getArguments().getSerializable("parentUser");
         }
 
         _parentHabit.setHabitEvents(new HabitEventList());
@@ -76,42 +77,20 @@ public class HabitEventListFragment extends Fragment {
 
         try {
             // Get query
-            Query query = getListOfHabitEventsFromFirebase(_username);
+            Query query = getListFromFirebase();
 
             // Populate the list with existing items in the database
             FirestoreRecyclerOptions<HabitEvent> options = new FirestoreRecyclerOptions.Builder<HabitEvent>()
                     .setQuery(query, HabitEvent.class)
                     .build();
-
-
-            Task<QuerySnapshot> querySnapshotTask = query.get();
-            /*
-            populate HabitList with current Habits and habit IDs to initialize state to match
-            database, fills when habitList is empty and snapshot is not, which is only
-            when app is initially launched
-            */
-            if (_habitEventList.getHabitEvents().isEmpty()) {
-                // wait for snapshots to come in
-                while (!querySnapshotTask.isComplete());
-
-                //make a list of all the habit event snapshots
-                List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
-                for (int i = 0; i < snapshotList.size(); i++) {
-                    // extract the data from the snapshot
-                    Map<String, Object> extractMap = snapshotList.get(i).getData();
-                    String comment = (String) extractMap.get("comment");
-                    Timestamp date = (Timestamp) extractMap.get("date");
-                    String id = extractMap.get("id").toString();
-
-                    // create the new habit event from the snapshot data and add to local list
-                    HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id);
-                    Log.d(TAG, addHabitEvent.getId());
-                    _habitEventList.addHabitEventLocally(addHabitEvent);
-                }
-            }
-
+            populateList(query);
             // Set item adapter and habit event list
-            _habitEventItemAdapter = new HabitEventItemAdapter(options, _parentHabit, _username, _habitEventList, _fragment);
+            _habitEventItemAdapter = new HabitEventItemAdapter(options,
+                                                               _parentHabit,
+                                                               _user.getUsername(),
+                                                               _habitEventList,
+                                                               (HabitEventListFragment)
+                                                                       getFragmentForDialogs());
         }
         catch (NullPointerException e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
@@ -130,7 +109,7 @@ public class HabitEventListFragment extends Fragment {
         addHabitEventFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openAddHabitEventDialogBox();
+                openAddDialogBox();
             }
         });
 
@@ -140,27 +119,11 @@ public class HabitEventListFragment extends Fragment {
     }
 
     /**
-     * Gets the proper query string
-     * @param username name of the user performing the query
-     * @return
-     */
-    @NonNull
-    private Query getListOfHabitEventsFromFirebase(String username) {
-        // Query is made of username, habit name, and events
-        Query query = _db.collection("Users")
-                        .document(username)
-                        .collection("Habits")
-                        .document(Long.toString(_parentHabit.getId()))
-                        .collection("Events");
-        return query;
-    }
-
-    /**
      * Initialize the recycler view
      * @param layoutManager Manager of the layout of the recycler view to initialize
      * @param view The layout of the recycler view to initialize
      */
-    private void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
+    protected void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
         // Find recycler view
         RecyclerView recyclerView = view.findViewById(R.id.habit_events_recycler_view);
 
@@ -170,6 +133,51 @@ public class HabitEventListFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(_habitEventItemAdapter);
         new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+    }
+
+    /**
+     * Gets the proper query string
+     * @param username name of the user performing the query
+     * @return
+     */
+    @NonNull
+    protected Query getListFromFirebase() {
+        // Query is made of username, habit name, and events
+        Query query = _db.collection("Users")
+                        .document(_user.getUsername())
+                        .collection("Habits")
+                        .document(_parentHabit.getId())
+                        .collection("Events");
+        return query;
+    }
+
+    @Override
+    protected void populateList(Query query) {
+        Task<QuerySnapshot> querySnapshotTask = query.get();
+            /*
+            populate HabitList with current Habits and habit IDs to initialize state to match
+            database, fills when habitList is empty and snapshot is not, which is only
+            when app is initially launched
+            */
+        if (_habitEventList.getHabitEvents().isEmpty()) {
+            // wait for snapshots to come in
+            while (!querySnapshotTask.isComplete());
+
+            //make a list of all the habit event snapshots
+            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+            for (int i = 0; i < snapshotList.size(); i++) {
+                // extract the data from the snapshot
+                Map<String, Object> extractMap = snapshotList.get(i).getData();
+                String comment = (String) extractMap.get("comment");
+                Timestamp date = (Timestamp) extractMap.get("date");
+                String id = extractMap.get("id").toString();
+
+                // create the new habit event from the snapshot data and add to local list
+                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id);
+                Log.d(TAG, addHabitEvent.getId());
+                _habitEventList.addHabitEventLocally(addHabitEvent);
+            }
+        }
     }
 
     @Override
@@ -188,10 +196,8 @@ public class HabitEventListFragment extends Fragment {
         _habitEventItemAdapter.stopListening();
     }
 
-    /**
-     * Open the add habit event dialog
-     */
-    private void openAddHabitEventDialogBox() {
+    @Override
+    protected void openAddDialogBox() {
         // Create new AddHabitEventDialog and show it
         AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog();
         addHabitEventDialog.setTargetFragment(HabitEventListFragment.this, 1);
@@ -200,11 +206,22 @@ public class HabitEventListFragment extends Fragment {
 
     /**
      * Add a new habit event to the database
-     * @param date (Date) The date of the new event
-     * @param comment (String) The comment of the new event
+     * @param addedHabitEvent
      */
-    public void addHabitEventToDatabase(Date date, String comment) {
-        _habitEventList.addHabitEventToDatabase(date, comment, Uri.EMPTY, _username, _parentHabit);
+    public void updateListAfterAdd(HabitEvent addedHabitEvent) {
+        _habitEventList.addHabitEventToDatabase(addedHabitEvent,
+                                                _user.getUsername(),
+                                                _parentHabit);
+    }
+
+    /**
+     * Update a habit event after it has been edited
+     * @param editedHabitEvent
+     * @param pos (int) The position of the habit event in the list
+     */
+    public void updateListAfterEdit(HabitEvent editedHabitEvent, int pos) {
+        _habitEventList.editHabitInDatabase(editedHabitEvent, _user.getUsername(), _parentHabit);
+        _habitEventItemAdapter.notifyItemChanged(pos);
     }
 
     /**
@@ -218,7 +235,7 @@ public class HabitEventListFragment extends Fragment {
         StorageReference storageReference = storage.getReference();
 
         // Create path for image
-        String storageUrl = "img/" + _username + "/" + _parentHabit.getId() + "/" + id;
+        String storageUrl = "img/" + _user.getUsername()+ "/" + _parentHabit.getId() + "/" + id;
 
         // Create reference with new path and attempt upload
         StorageReference imageStorageRef = storageReference.child(storageUrl);
@@ -273,19 +290,6 @@ public class HabitEventListFragment extends Fragment {
         }
     };
 
-    /**
-     * Update a habit event after it has been edited
-     * @param newComment (String) The edited comment
-     * @param newDate (Date) The edited date
-     * @param pos (int) The position of the habit event in the list
-     * @param id (String) The ID of the habit event to edit
-     * @param viewHolder (HabitEventItemAdapter.HabitEventViewHolder) The view associated with current habit
-     */
-    public void updateAfterEdit(String newComment, Date newDate, int pos,String id, HabitEventItemAdapter.HabitEventViewHolder viewHolder) {
-        _habitEventList.editHabitInDatabase(newComment, newDate, id, _username, _parentHabit);
-        viewHolder.setNoButtonView();
-        _habitEventItemAdapter.notifyItemChanged(pos);
-    }
 
     @Override
     public void onDestroyView() { super.onDestroyView();}

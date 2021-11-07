@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * Class that acts as a container for habits, allowing for edit, delete and add operations
@@ -60,32 +61,30 @@ public class HabitList extends ArrayList<Habit>{
     /**
      * Method that adds a habit with specified fields to the habit list of a specified
      * user in the database
-     * @param title title of added habit
-     * @param reason reason of added habit
-     * @param date date of added habit
+     * @param newHabit habit to be added to the database
      * @param username user of the habit list habit is being added to
      */
-    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker, String username) {
+    public void addHabitToDatabase(Habit newHabit, String username) {
 
         // get collection of specified user (do we need this?)
         FirebaseFirestore _db = FirebaseFirestore.getInstance();
         final CollectionReference _collectionReference = _db.collection("Users")
                                                             .document(username)
                                                             .collection("Habits");
-        // generate a random ID for HabitID
-        Long habitId = generateHabitId();
+        // generate ID
+        String habitId = newHabit.getId();
 
         // initialize fields
         HashMap<String, Object> habitData = new HashMap<>();
-        habitData.put("title", title);
-        habitData.put("reason", reason);
-        habitData.put("date", date);
+        habitData.put("title", newHabit.getTitle());
+        habitData.put("reason", newHabit.getReason());
+        habitData.put("date", newHabit.getDate());
         habitData.put("id", habitId);
-        habitData.put("days", tracker.getDays());
+        habitData.put("days", newHabit.getDays());
 
         // add habit to database, using it's habit ID as the document name
-        setHabitDataInDatabase(username, habitId.toString(), habitData);
-        addHabitLocal(new Habit(title, reason, date, tracker.getDays(), habitId, new HabitEventList()));
+        setHabitDataInDatabase(username, habitId, habitData);
+        addHabitLocal(newHabit);
     }
 
     /**
@@ -98,57 +97,39 @@ public class HabitList extends ArrayList<Habit>{
 
     /**
      * Method that edits a Habit in the specified pos in the local HabitList
-     * @param newTitle new title of habit
-     * @param newReason new reason of habit
-     * @param newDate new date of habit
+     * @param editedHabit Habit containing the new fields of the editted habit
      * @param pos position of habit
-     * @param tracker days of the week the habit takes place
      */
-    public void editHabitLocal(String newTitle, String newReason, Date newDate, DaysTracker tracker, int pos) {
+    public void editHabitLocal(Habit editedHabit, int pos) {
         Habit habit = _habits.get(pos);
-        habit.setTitle(newTitle);
-        habit.setReason(newReason);
-        habit.setDate(newDate);
-        habit.setDays(tracker.getDays());
+        habit.setTitle(editedHabit.getTitle());
+        habit.setReason(editedHabit.getReason());
+        habit.setDate(editedHabit.getDate());
+        habit.setDays(editedHabit.getDays());
     }
 
     /**
      * Method that edits the habit at position pos in the database
-     * @param newTitle New title of habit
-     * @param newReason New reason of habit
-     * @param newDate New date of habit
+     * @param editedHabit Habit containing the new fields of the editted habit
      * @param pos Position of habit in the HabitList
      * @param username Username of user whose habits we are editing
      */
-    public void editHabitInDatabase(String newTitle, String newReason, Date newDate, DaysTracker tracker, int pos, String username) {
+    public void editHabitInDatabase(Habit editedHabit, int pos, String username) {
 
         // this acquires the unique habit ID of the habit to be edited
-        Long habitId = _habits.get(pos).getId();
+        String habitId = editedHabit.getId();
 
         // stores the new fields of the Habit into a hashmap
         HashMap<String, Object> habitData = new HashMap<>();
-        habitData.put("title", newTitle);
-        habitData.put("reason", newReason);
-        habitData.put("date", newDate);
+        habitData.put("title", editedHabit.getTitle());
+        habitData.put("reason", editedHabit.getReason());
+        habitData.put("date", editedHabit.getDate());
         habitData.put("id", habitId);
-        habitData.put("days", tracker.getDays());
+        habitData.put("days", editedHabit.getDays());
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
-        setHabitDataInDatabase(username, habitId.toString(), habitData);
-    }
-
-    // TODO: this is a temporary implementation of generating unique habitIDs, improve this
-    /**
-     * Generate a habit ID for a new habit
-     * @return the generated habit ID
-     */
-    private long generateHabitId() {
-        long habitIdCounter = 1;
-        while(habitIdSet.contains(habitIdCounter)) {
-            habitIdCounter++;
-        }
-        habitIdSet.add(habitIdCounter);
-        return habitIdCounter;
+        setHabitDataInDatabase(username, habitId, habitData);
+        editHabitLocal(editedHabit, pos);
     }
 
     /**

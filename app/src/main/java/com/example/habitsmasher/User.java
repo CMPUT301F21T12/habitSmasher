@@ -2,6 +2,7 @@ package com.example.habitsmasher;
 
 import android.media.Image;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  *
  * Currently, profile picture is not used
  */
-public class User {
+public class User implements Serializable {
     private String _username;
     private String _password;
     private final ArrayList<String> _followerList;
