@@ -54,9 +54,7 @@ public class HabitEventList extends ArrayList{
 
     /**
      * Add a new habit event to the database
-     * @param date Date of the habit event
-     * @param comment Comment of the new habit event
-     * @param pictureUri Picture of the new habit event
+     * @param addedHabitEvent
      * @param username Username of the user adding the habit event
      */
     public void addHabitEventToDatabase(HabitEvent addedHabitEvent, String username, Habit parentHabit) {
@@ -145,9 +143,7 @@ public class HabitEventList extends ArrayList{
 
     /**
      * This method is responsible for editing a habit in the database
-     * @param newComment (String) The edited comment
-     * @param newDate (Date) The edited date
-     * @param toEditId (String) The ID of the habit event to edit
+     * @param editedHabitEvent
      * @param username (String) The username of the current user
      * @param parentHabit (Habit) The current habit
      */

@@ -68,7 +68,7 @@ public class HabitListTest {
         assertTrue(localHabitList.contains(habitToDelete));
 
         // delete Habit
-        _habitList.deleteHabitLocally(Integer.parseInt(String.valueOf(habitToDelete.getId())));
+        _habitList.deleteHabitLocal(Integer.parseInt(String.valueOf(habitToDelete.getId())));
 
         assertFalse(localHabitList.contains(habitToDelete));
         assertEquals(2, localHabitList.size());
@@ -82,6 +82,6 @@ public class HabitListTest {
         _habitList.addHabitLocal(new Habit("Habit 2", "Reason 2", today, SAMPLE_DAYS_OF_THE_WEEK, 1, EMPTY_HABIT_EVENTS_LIST));
 
         // attempt to delete habit with invalid position
-        _habitList.deleteHabitLocally(20);
+        _habitList.deleteHabitLocal(20);
     }
 }

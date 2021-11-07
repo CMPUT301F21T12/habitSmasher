@@ -59,6 +59,14 @@ public class HabitList extends ArrayList<Habit>{
     }
 
     /**
+     * Method that adds a Habit to the local habitList
+     * @param habit Habit to be added
+     */
+    public void addHabitLocal(Habit habit) {
+        _habits.add(habit);
+    }
+
+    /**
      * Method that adds a habit with specified fields to the habit list of a specified
      * user in the database
      * @param newHabit habit to be added to the database
@@ -87,13 +95,6 @@ public class HabitList extends ArrayList<Habit>{
         addHabitLocal(newHabit);
     }
 
-    /**
-     * Method that adds a Habit to the local habitList
-     * @param habit Habit to be added
-     */
-    public void addHabitLocal(Habit habit) {
-        _habits.add(habit);
-    }
 
     /**
      * Method that edits a Habit in the specified pos in the local HabitList
@@ -106,6 +107,23 @@ public class HabitList extends ArrayList<Habit>{
         habit.setReason(editedHabit.getReason());
         habit.setDate(editedHabit.getDate());
         habit.setDays(editedHabit.getDays());
+    }
+
+    /**
+     * Method that a edits a Habit in the specified pos in the local HabitList
+     * @param newTitle
+     * @param newReason
+     * @param newDate
+     * @param tracker
+     * @param pos
+     */
+    public void editHabitLocal(String newTitle, String newReason, Date newDate ,
+                               DaysTracker tracker, int pos) {
+        Habit habit = _habits.get(pos);
+        habit.setTitle(newTitle);
+        habit.setReason(newReason);
+        habit.setDate(newDate);
+        habit.setDays(tracker.getDays());
     }
 
     /**
@@ -175,7 +193,7 @@ public class HabitList extends ArrayList<Habit>{
                             Habit habitToDelete,
                             int habitPosition) {
         // delete locally
-        deleteHabitLocally(habitPosition);
+        deleteHabitLocal(habitPosition);
 
         // delete from firebase
         deleteHabitFromDatabase(context, username, habitToDelete);
@@ -185,7 +203,7 @@ public class HabitList extends ArrayList<Habit>{
      * This method deletes a habit from the local habit list
      * @param habitPosition the index of the habit to delete
      */
-    public void deleteHabitLocally(int habitPosition) {
+    public void deleteHabitLocal(int habitPosition) {
         _habits.remove(habitPosition);
     }
 

@@ -100,7 +100,7 @@ public class AddHabitEventDialog extends DialogFragment {
                     HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
                                                         habitEventComment,
                                                         DatabaseEntity.generateId());
-                    _habitEventListFragment.updateAfterListAdd(newEvent);
+                    _habitEventListFragment.updateListAfterAdd(newEvent);
                     getDialog().dismiss();
                 }
 
