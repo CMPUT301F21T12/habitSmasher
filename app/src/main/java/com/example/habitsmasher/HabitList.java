@@ -65,7 +65,7 @@ public class HabitList extends ArrayList<Habit>{
      * @param date date of added habit
      * @param username user of the habit list habit is being added to
      */
-    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker, String username) {
+    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker, boolean isPublic, String username) {
 
         // get collection of specified user (do we need this?)
         FirebaseFirestore _db = FirebaseFirestore.getInstance();
@@ -82,10 +82,11 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("date", date);
         habitData.put("id", habitId);
         habitData.put("days", tracker.getDays());
+        habitData.put("public", isPublic);
 
         // add habit to database, using it's habit ID as the document name
         setHabitDataInDatabase(username, habitId.toString(), habitData);
-        addHabitLocal(new Habit(title, reason, date, tracker.getDays(), habitId, new HabitEventList()));
+        addHabitLocal(new Habit(title, reason, date, tracker.getDays(), isPublic, habitId, new HabitEventList()));
     }
 
     /**
@@ -120,7 +121,7 @@ public class HabitList extends ArrayList<Habit>{
      * @param pos Position of habit in the HabitList
      * @param username Username of user whose habits we are editing
      */
-    public void editHabitInDatabase(String newTitle, String newReason, Date newDate, DaysTracker tracker, int pos, String username) {
+    public void editHabitInDatabase(String newTitle, String newReason, Date newDate, DaysTracker tracker, boolean isPublic, int pos, String username) {
 
         // this acquires the unique habit ID of the habit to be edited
         Long habitId = _habits.get(pos).getId();
@@ -132,6 +133,7 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("date", newDate);
         habitData.put("id", habitId);
         habitData.put("days", tracker.getDays());
+        habitData.put("public", isPublic);
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
         setHabitDataInDatabase(username, habitId.toString(), habitData);

@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
+import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.R;
 
 /**
@@ -60,6 +61,10 @@ public class AddHabitDialog extends DialogFragment {
     private Button _saturdayButton;
     private Button _sundayButton;
 
+    // public and private buttons
+    private Button _publicButton;
+    private Button _privateButton;
+
     private DaysTracker _tracker;
 
     @Nullable
@@ -82,6 +87,9 @@ public class AddHabitDialog extends DialogFragment {
         _fridayButton = view.findViewById(R.id.friday_button);
         _saturdayButton = view.findViewById(R.id.saturday_button);
         _sundayButton =view.findViewById(R.id.sunday_button);
+
+        // public and private buttons
+        PublicPrivateButtons publicPrivateButtons = new PublicPrivateButtons(view);
 
         //logic handler for tracking all those days
         _tracker = new DaysTracker();
@@ -119,6 +127,7 @@ public class AddHabitDialog extends DialogFragment {
                 String habitTitle = _habitTitleEditText.getText().toString();
                 String habitReason = _habitReasonEditText.getText().toString();
                 String habitDate = _habitDateTextView.getText().toString();
+                boolean habitPublic = publicPrivateButtons.isPublic();
 
                 // if the habit is valid, add it to the local list and external db
                 if (habitValidator.isHabitValid(habitTitle,
@@ -126,7 +135,7 @@ public class AddHabitDialog extends DialogFragment {
                                                 habitDate, _tracker)){
                     _habitListFragment.addHabitToDatabase(habitTitle,
                                                           habitReason,
-                                                          habitValidator.checkHabitDateValid(habitDate), _tracker);
+                                                          habitValidator.checkHabitDateValid(habitDate), _tracker, habitPublic);
                     getDialog().dismiss();
                 }
             }
@@ -235,6 +244,7 @@ public class AddHabitDialog extends DialogFragment {
             }
         });
     }
+
 
     /**
      * Opens a DatePickerDialog that is used to select the date of the added habit

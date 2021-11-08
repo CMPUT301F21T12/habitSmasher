@@ -295,4 +295,31 @@
         app:layout_constraintStart_toEndOf="@+id/saturday_button"
         app:layout_constraintTop_toBottomOf="@+id/weekly_schedule_header" />
 
+    <CheckBox
+        android:id="@+id/public_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="Public"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_habit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tuesday_button"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <CheckBox
+        android:id="@+id/private_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Private"
+        app:layout_constraintBottom_toTopOf="@+id/cancel_habit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/public_button"
+        app:layout_constraintTop_toBottomOf="@+id/saturday_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

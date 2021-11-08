@@ -13,14 +13,13 @@
         android:id="@+id/descriptionHabitTextBox"
         android:layout_width="359dp"
         android:layout_height="171dp"
-        android:layout_marginTop="72dp"
         android:background="@drawable/text_view_background"
         android:ems="10"
         android:text="@string/descriptionTextBoxLabel"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thursday_button" />
+        tools:layout_editor_absoluteY="149dp" />
 
     <TextView
         android:id="@+id/dateHabitTextBox"
@@ -163,5 +162,33 @@
         android:text="Su"
         app:layout_constraintStart_toEndOf="@+id/saturday_button"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="false"
+        android:text="Public"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionHabitTextBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tuesday_button" />
+
+    <CheckBox
+        android:id="@+id/private_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="false"
+        android:text="Private"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionHabitTextBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkBox"
+        app:layout_constraintTop_toBottomOf="@+id/saturday_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

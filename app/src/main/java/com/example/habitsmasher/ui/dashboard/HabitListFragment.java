@@ -103,9 +103,10 @@ public class HabitListFragment extends Fragment {
                 Timestamp date = (Timestamp) extractMap.get("date");
                 Long id = (Long) extractMap.get("id");
                 String days = (String) extractMap.get("days");
+                boolean isPublic = (boolean) extractMap.get("public");
 
                 // create a new habit with the snapshot data
-                Habit addHabit = new Habit(title, reason, date.toDate(), days, id, new HabitEventList());
+                Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
 
                 // add the habit to the local list
                 _habitList.addHabitLocal(addHabit);
@@ -238,8 +239,8 @@ public class HabitListFragment extends Fragment {
      * @param reason the habit reason
      * @param date the habit date
      * */
-    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker){
-       _habitList.addHabitToDatabase(title, reason, date, tracker, _user.getUsername());
+    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker, boolean isPublic){
+       _habitList.addHabitToDatabase(title, reason, date, tracker, isPublic, _user.getUsername());
     }
 
     @Override
@@ -255,8 +256,8 @@ public class HabitListFragment extends Fragment {
      * @param pos position of edited habit
      */
     public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
-                                DaysTracker tracker) {
-        _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, pos, _user.getUsername());
+                                DaysTracker tracker, boolean isPublic) {
+        _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, isPublic, pos, _user.getUsername());
         _habitList.editHabitLocal(newTitle, newReason, newDate, tracker, pos);
         _habitItemAdapter.notifyItemChanged(pos);
     }

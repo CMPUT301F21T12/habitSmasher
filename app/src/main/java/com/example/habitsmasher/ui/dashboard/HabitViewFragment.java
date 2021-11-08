@@ -15,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.R;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +41,8 @@ public class HabitViewFragment extends Fragment {
     private Button _saturdayButton;
     private Button _sundayButton;
 
+    private PublicPrivateButtons _publicPrivateButtons;
+
     private DaysTracker _tracker;
 
     private static final String PATTERN = "dd-MM-yyyy";
@@ -59,6 +62,9 @@ public class HabitViewFragment extends Fragment {
 
         //set the DaysTracker
         _tracker = new DaysTracker(_habit.getDays());
+
+        // setup the public and private buttons
+        _publicPrivateButtons = new PublicPrivateButtons(getView(), _habit.isPublic());
 
         // Date formatter
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
