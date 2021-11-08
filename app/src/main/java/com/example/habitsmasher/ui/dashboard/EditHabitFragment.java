@@ -17,9 +17,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DatePickerDialogFragment;
-import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
-import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
 
 import java.util.Date;

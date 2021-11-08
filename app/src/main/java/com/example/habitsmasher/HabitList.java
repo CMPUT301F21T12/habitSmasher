@@ -17,8 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.UUID;
 
 /**
  * Class that acts as a container for habits, allowing for edit, delete and add operations
@@ -26,9 +24,6 @@ import java.util.UUID;
 public class HabitList extends ArrayList<Habit>{
     // arraylist of habits, auto-updates whenever Habit added or edited
     private ArrayList<Habit> _habits = new ArrayList<>();
-
-    // set of IDs of existing Habits
-    public static HashSet<Long> habitIdSet = new HashSet<>();
 
     /**
      * Getter method to access Habit at pos

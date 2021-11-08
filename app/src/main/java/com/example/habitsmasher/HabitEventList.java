@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * Class that acts as a container for habit events, allowing for add, edit and delete
