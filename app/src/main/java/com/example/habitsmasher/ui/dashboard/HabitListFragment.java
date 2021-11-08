@@ -49,6 +49,7 @@ public class HabitListFragment extends ListFragment<Habit> {
     private final HabitList _habitList = _user.getHabits();
 
     // adapter that connects the RecyclerView to the database
+    // note: can extract this to list fragment once adapter interface is done
     private HabitItemAdapter _habitItemAdapter;
 
     @Override
@@ -58,8 +59,6 @@ public class HabitListFragment extends ListFragment<Habit> {
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit List");
 
-        // needed for dialogs spawned from this fragment
-        setFragmentForDialogs(this);
 
         // query firebase for all habits that correspond to the current user
         Query query = getListFromFirebase();
@@ -70,9 +69,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                 .build();
 
         populateList(query);
-        //wraps the snapshots representing the HabitList of the user in the HabitList
-        _habitList.setSnapshots(options.getSnapshots());
-        _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _user.getUsername());
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
@@ -208,7 +205,7 @@ public class HabitListFragment extends ListFragment<Habit> {
     protected void openAddDialogBox() {
         AddHabitDialog addHabitDialog = new AddHabitDialog();
         addHabitDialog.setCancelable(true);
-        addHabitDialog.setTargetFragment(HabitListFragment.this, 1);
+        addHabitDialog.setTargetFragment(this, 1);
         addHabitDialog.show(getFragmentManager(), "AddHabitDialog");
     }
 
@@ -217,8 +214,8 @@ public class HabitListFragment extends ListFragment<Habit> {
     protected void openEditDialogBox(int position) {
         EditHabitFragment editHabitFragment = new EditHabitFragment(position,
                 _habitItemAdapter._snapshots.get(position),
-                (HabitListFragment) getFragmentForDialogs());
-        editHabitFragment.show(getFragmentForDialogs().getFragmentManager(),
+                this);
+        editHabitFragment.show(getFragmentManager(),
                 "Edit Habit");
     }
 
@@ -231,7 +228,7 @@ public class HabitListFragment extends ListFragment<Habit> {
         Bundle bundle = new Bundle();
         bundle.putSerializable("habit", currentHabit);
         bundle.putSerializable("user", _user);
-        NavController controller = NavHostFragment.findNavController(getFragmentForDialogs());
+        NavController controller = NavHostFragment.findNavController(this);
 
         // Navigate to the habitViewFragment
         controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
@@ -258,7 +255,7 @@ public class HabitListFragment extends ListFragment<Habit> {
     // add to list fragment class once swipe is fixed in habit events
     public void updateListAfterDelete(int position) {
         Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
-        _habitList.deleteHabit(getFragmentForDialogs().getActivity(),
+        _habitList.deleteHabit(getActivity(),
                 _user.getUsername(),
                 habitToDelete,
                 position);

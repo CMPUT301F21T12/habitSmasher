@@ -24,10 +24,6 @@ import java.util.UUID;
  * Class that acts as a container for habits, allowing for edit, delete and add operations
  */
 public class HabitList extends ArrayList<Habit>{
-
-    // array of Habits which reflect the database wrapped within HabitList
-    private ObservableSnapshotArray<Habit> _snapshots;
-
     // arraylist of habits, auto-updates whenever Habit added or edited
     private ArrayList<Habit> _habits = new ArrayList<>();
 
@@ -50,13 +46,6 @@ public class HabitList extends ArrayList<Habit>{
         return _habits;
     }
 
-    /**
-     * Wraps a snapshots array within the HabitList
-     * @param snapshots
-     */
-    public void setSnapshots(ObservableSnapshotArray<Habit> snapshots) {
-        _snapshots = snapshots;
-    }
 
     /**
      * Method that adds a Habit to the local habitList

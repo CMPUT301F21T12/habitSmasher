@@ -17,32 +17,29 @@ import com.google.firebase.firestore.Query;
  */
 public abstract class ListFragment<T> extends Fragment {
 
-    // once the ItemAdapter interface is complete, we can add this for even greater abstraction
+
+    /* once the ItemAdapter interface is complete, we can add this for
+     * even greater abstraction
+     */
     /*
-    private void ItemAdapter _itemAdapter;
-    protected void setAdapter(ItemAdapter itemAdapter) {
+    protected void ItemAdapter _itemAdapter;
+    protected void setItemAdapter(ItemAdapter itemAdapter) {
         _itemAdapter = itemAdapter
     }
-     */
 
-    private ListFragment _listFragment;
+    @Override
+    public void onStart() {
+        super();
+        _itemAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super();
+        _itemAdapter.stopListening();
+    }
+     */
     protected FirebaseFirestore _db = FirebaseFirestore.getInstance();
-
-    /**
-     * Sets the fragment of the list fragment on which dialogs are spawned
-     * @param listFragment
-     */
-    protected void setFragmentForDialogs(ListFragment listFragment) {
-        _listFragment = listFragment;
-    }
-
-    /**
-     * Gets the fragment of the list fragment on which dialogs are spawned
-     * @return
-     */
-    protected ListFragment getFragmentForDialogs() {
-        return _listFragment;
-    }
 
     /**
      * Queries the Firebase database and returns a query that

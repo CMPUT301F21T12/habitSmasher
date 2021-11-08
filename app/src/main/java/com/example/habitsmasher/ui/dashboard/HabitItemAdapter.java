@@ -44,7 +44,6 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
     private static HabitList _habits;
     private final String _username;
     public final ObservableSnapshotArray<Habit> _snapshots;
-    private final FragmentActivity _activity;
     private Context _context;
 
     /**
@@ -57,12 +56,10 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      * @param username the username of the current user
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
-                            FragmentActivity activity,
                             HabitList habits,
                             String username) {
         super(options);
         _snapshots = options.getSnapshots();
-        _activity = activity;
         _habits = habits;
         _username = username;
     }

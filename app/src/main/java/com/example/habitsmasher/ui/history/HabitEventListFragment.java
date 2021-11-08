@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -30,14 +29,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -51,7 +48,9 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
     // Initialize variables
     private static final String TAG = "HabitEventListFragment";
 
+    // can extract this to list fragment once adapter interface is done
     private HabitEventItemAdapter _habitEventItemAdapter;
+
     private Habit _parentHabit;
     private User _user;
     private HabitEventList _habitEventList;
@@ -63,7 +62,6 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setFragmentForDialogs(this);
         if (getArguments() != null) {
             _parentHabit = (Habit) getArguments().getSerializable("parentHabit");
             _user = (User) getArguments().getSerializable("parentUser");
@@ -89,8 +87,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                                                                _parentHabit,
                                                                _user.getUsername(),
                                                                _habitEventList,
-                                                               (HabitEventListFragment)
-                                                                       getFragmentForDialogs());
+                                                                       this);
         }
         catch (NullPointerException e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
@@ -137,7 +134,6 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
 
     /**
      * Gets the proper query string
-     * @param username name of the user performing the query
      * @return
      */
     @NonNull
