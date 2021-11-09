@@ -5,7 +5,6 @@ import static android.view.View.GONE;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,34 +64,19 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = emailInput.getText().toString().trim();
-                String password = passwordInput.getText().toString().trim();
+                UserValidator validator = new UserValidator(emailInput, passwordInput);
 
-                if (email.isEmpty()) {
-                    emailInput.setError("Email is required!");
-                    emailInput.requestFocus();
-                    return;
-                }
-                if (password.isEmpty()) {
-                    passwordInput.setError("Password is required!");
-                    passwordInput.requestFocus();
-                    return;
-                }
-
-                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    emailInput.setError("Invalid email format!");
-                    emailInput.requestFocus();
-                    return;
-                }
-
-                if (password.length() < 3) {
-                    passwordInput.setError("Password length must be greater than 3!");
-                    passwordInput.requestFocus();
+                // if user data is not valid
+                if (!validator.isLoginValid(emailInput.getText().toString().trim(),
+                                            passwordInput.getText().toString().trim())) {
+                    validator.showLoginErrors();  // show errors on the front-end
                     return;
                 }
 
                 progressBar.setVisibility(View.VISIBLE);
-                _auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                _auth.signInWithEmailAndPassword(validator.getValidEmailForLogin(),
+                                                 validator.getValidPasswordForLogin())
+                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {

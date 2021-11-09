@@ -1,7 +1,6 @@
 package com.example.habitsmasher;
 
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,57 +55,29 @@ public class UserRegistrationFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = emailInput.getText().toString().trim();
-                String password = passwordInput.getText().toString().trim();
-                String username = usernameInput.getText().toString().trim();
+                UserValidator validator = new UserValidator(usernameInput,
+                                                                emailInput,
+                                                                passwordInput);
 
-                if (username.isEmpty()) {
-                    usernameInput.setError("Username is required!");
-                    usernameInput.requestFocus();
-                    return;
-                }
-                if (email.isEmpty()) {
-                    emailInput.setError("Email is required!");
-                    emailInput.requestFocus();
-                    return;
-                }
-                if (password.isEmpty()) {
-                    passwordInput.setError("Password is required!");
-                    passwordInput.requestFocus();
-                    return;
-                }
-
-                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    emailInput.setError("Invalid email format!");
-                    emailInput.requestFocus();
-                    return;
-                }
-
-                if (password.length() < 3) {
-                    passwordInput.setError("Password length must be greater than 3!");
-                    passwordInput.requestFocus();
-                    return;
-                }
-
-                if (password.length() > 15) {
-                    passwordInput.setError("Password length must be less than 16!");
-                    passwordInput.requestFocus();
-                    return;
-                }
-
-                if (username.length() > 15) {
-                    usernameInput.setError("Username length must be less than 16!");
-                    usernameInput.requestFocus();
+                // if user data is not valid
+                if (!validator.isNewUserValid(usernameInput.getText().toString().trim(),
+                                              emailInput.getText().toString().trim(),
+                                              passwordInput.getText().toString().trim())) {
+                    validator.showSignUpErrors();  // show errors on the front-end
                     return;
                 }
 
                 progressBar.setVisibility(View.VISIBLE);
-                _auth.createUserWithEmailAndPassword(email, password)
+                _auth.createUserWithEmailAndPassword(validator.getValidEmailForSignUp(),
+                                                     validator.getValidPasswordForSignUp())
                      .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                          @Override
                          public void onComplete(@NonNull Task<AuthResult> task) {
                              if (task.isSuccessful()) {
-                                 User user = new User(_auth.getUid(), username, email, password);
+                                 User user = new User(_auth.getUid(),
+                                                      validator.getValidUsernameForSignUp(),
+                                                      validator.getValidEmailForSignUp(),
+                                                      validator.getValidPasswordForSignUp());
 
                                  HashMap<String, Object> userData = new HashMap<>();
                                  userData.put("username", user.getUsername());
