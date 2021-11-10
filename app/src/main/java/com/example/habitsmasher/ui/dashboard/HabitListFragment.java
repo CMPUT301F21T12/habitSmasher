@@ -42,8 +42,8 @@ import java.util.Map;
  * displayed when a user is accessing their own habit list
  */
 public class HabitListFragment extends Fragment {
-
     private static final String TAG = "HabitListFragment";
+    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
 
     // user who owns this list of habits displayed
     private User _user;
@@ -269,7 +269,7 @@ public class HabitListFragment extends Fragment {
 
     @NonNull
     private User getCurrentUser() {
-        SharedPreferences sharedPref = _context.getSharedPreferences("user data", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = _context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
 
         String username = sharedPref.getString("username", "user");
         String userId = sharedPref.getString("userId", "id");

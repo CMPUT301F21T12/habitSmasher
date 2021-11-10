@@ -23,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
  * Currently, only displays information of a test user
  */
 public class ProfileFragment extends Fragment {
+    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
+    private ProfileFragment _fragment = this;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,8 +32,8 @@ public class ProfileFragment extends Fragment {
         // create the sample user
         User user = new User("1", "TestUser", "123@gmail.com", "123");
 
-        SharedPreferences sharedPref = getContext().getSharedPreferences("user data", Context.MODE_PRIVATE);
-        String username = sharedPref.getString("username", "user");
+        SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
+        user.setUsername(sharedPref.getString("username", "user"));
 
         // get the UI elements
         TextView usernameTextView = view.findViewById(R.id.username);
@@ -40,23 +42,29 @@ public class ProfileFragment extends Fragment {
         FloatingActionButton logoutButton = view.findViewById(R.id.logout_button);
 
         // set the UI elements
-        usernameTextView.setText("@" + username);
+        usernameTextView.setText("@" + user.getUsername());
         followers.setText(String.valueOf(user.getFollowerCount()));
         following.setText(String.valueOf(user.getFollowingCount()));
 
+        setClickListenerForLogoutButton(logoutButton);
+
+        return view;
+    }
+
+    private void setClickListenerForLogoutButton(FloatingActionButton logoutButton) {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
 
-                NavController controller = NavHostFragment.findNavController(
-                        ProfileFragment.this);
-
-                controller.navigate(R.id.action_logout);
+                navigateToFragmentWithAction(R.id.action_logout);
             }
         });
+    }
 
-        return view;
+    private void navigateToFragmentWithAction(int actionId) {
+        NavController controller = NavHostFragment.findNavController(_fragment);
+        controller.navigate(actionId);
     }
 
     @Override

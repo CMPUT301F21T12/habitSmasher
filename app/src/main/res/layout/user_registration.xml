@@ -43,19 +43,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registration_email" />
 
-
-<!--    <Button-->
-<!--        android:id="@+id/registration_register_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Register"-->
-<!--        android:textSize="16sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.498"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/registration_password" />-->
-
     <Button
         android:id="@+id/registration_go_back_to_login_button"
         android:layout_width="118dp"

@@ -59,9 +59,14 @@ public class MainActivityTest {
     private static final String INVALID_EMAIL_FORMAT = "Invalid email format!";
     private static final String INCORRECT_EMAIL_PASSWORD = "Incorrect email/password";
     private static final String LOGIN_TEXT = "Login";
+    private static final String TEST_USER_ID = "TEST";
+    private static final String TEST_USER_USERNAME = "TestUser";
+    private static final String TEST_USER_EMAIL = "test@gmail.com";
+    private static final String TEST_USER_PASSWORD = "123456";
 
     private Solo _solo;
-    private User _testUser = new User("TEST", "TestUser", "test@gmail.com", "123456");
+    private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
+                                      TEST_USER_PASSWORD);
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
