@@ -14,7 +14,7 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
     protected EditText _habitTitleEditText;
     protected EditText _habitReasonEditText;
     protected TextView _habitDateTextView;
-    protected TextView _daysOfWeekText;
+    protected TextView _errorText;
 
     public void displayErrorMessage(int messageType) {
         switch(messageType) {
@@ -24,13 +24,13 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
                 break;
             case INCORRECT_REASON:
                 _habitReasonEditText.setError("Incorrect habit reason entered");
+                _habitReasonEditText.requestFocus();
                 break;
             case INCORRECT_DATE:
-                _habitDateTextView.setError("Please enter a start date");
-                _habitDateTextView.requestFocus();
+                _errorText.setText("Please select a date");
                 break;
             case INCORRECT_DAYS:
-                _daysOfWeekText.setError("Please select a weekly schedule");
+                _errorText.setText("Please select a weekly schedule");
                 break;
         }
     }

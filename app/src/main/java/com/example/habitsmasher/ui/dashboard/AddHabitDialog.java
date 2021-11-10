@@ -64,7 +64,7 @@ public class AddHabitDialog extends HabitDialog {
         _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
         _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
         _habitDateTextView = view.findViewById(R.id.habit_date_selection);
-        _daysOfWeekText = view.findViewById(R.id.weekly_schedule_header);
+        _errorText = view.findViewById(R.id.error_text);
         Button confirmNewHabit = view.findViewById(R.id.confirm_habit);
         Button cancelNewHabit = view.findViewById(R.id.cancel_habit);
 

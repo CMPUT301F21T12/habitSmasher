@@ -58,6 +58,8 @@ public class AddHabitEventDialog extends HabitEventDialog {
         // Attach UI elements
         _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
         _eventDateText = view.findViewById(R.id.habit_event_date_selection);
+
+        _errorText = view.findViewById(R.id.error_text_event);
         _cancelNewEvent = view.findViewById(R.id.cancel_habit_event);
         _confirmNewEvent = view.findViewById(R.id.confirm_habit_event);
         _eventPictureView = view.findViewById(R.id.habit_event_add_photo);

@@ -59,6 +59,7 @@ public class EditHabitEventFragment extends HabitEventDialog {
         header.setText("Edit Habit Event");
         _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
         _eventDateText = view.findViewById(R.id.habit_event_date_selection);
+        _errorText = view.findViewById(R.id.error_text);
 
         // Prefill values
         _eventCommentText.setText(_editHabitEvent.getComment());

@@ -71,7 +71,7 @@ public class EditHabitFragment extends HabitDialog {
         _titleText = view.findViewById(R.id.habit_title_edit_text);
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_selection);
-        _daysOfWeekText = view.findViewById(R.id.weekly_schedule_header);
+        _errorText = view.findViewById(R.id.error_text);
         _tracker = new DaysTracker(_editHabit.getDays());
 
         //buttons for the days of the week, apologies for so many of them

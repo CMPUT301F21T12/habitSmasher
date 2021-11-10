@@ -11,6 +11,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
 
     protected EditText _eventCommentText;
     protected TextView _eventDateText;
+    protected TextView _errorText;
 
     public void displayErrorMessage(int messageType) {
         switch(messageType) {
@@ -18,7 +19,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
                 _eventCommentText.setError("Incorrect comment");
                 break;
             case INCORRECT_DATE:
-                _eventDateText.setError("Incorrect date");
+                _errorText.setText("Please select a date");
                 break;
         }
     }
