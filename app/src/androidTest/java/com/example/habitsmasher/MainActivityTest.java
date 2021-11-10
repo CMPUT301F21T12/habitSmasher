@@ -40,13 +40,13 @@ public class MainActivityTest {
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
-    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule.";
+    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule";
     private static final String HABIT_EVENT_COMMENT_ERROR_MESSAGE = "Incorrect habit event comment entered";
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
     private static final String DELETE_BUTTON = "DELETE";
     private static final String EDIT_HABIT_DIALOG = "Edit Habit";
-    private static final long HABIT_ID = 1;
+    private static final String HABIT_ID = "1";
     private static final String VALID_EMAIL = "validEmail@gmail.com";
     private static final String VALID_USERNAME = "validUsername";
     private static final String VALID_PASSWORD = "validPwd";
@@ -248,7 +248,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_TITLE_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add habit title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -297,7 +297,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_TITLE_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add shorter habit title
         _solo.clearEditText(_solo.getEditText(testHabit.getTitle()));
@@ -348,7 +348,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_REASON_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
 
         // Add shorter habit title
         _solo.clearEditText(_solo.getEditText(testHabit.getReason()));
@@ -399,7 +399,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_REASON_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
 
         // Add habit reason
         testHabit.setReason("acceptable reason");
@@ -446,7 +446,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(EMPTY_DATE_ERROR_MESSAGE);
+        assertTextOnScreen(EMPTY_DATE_ERROR_MESSAGE);
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
@@ -492,7 +492,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check for toast message
-        checkForToastMessage(NO_DAYS_SELECTED_ERROR_MESSAGE);
+        assertTextOnScreen(NO_DAYS_SELECTED_ERROR_MESSAGE);
 
         // Select days
         setDaysInAddHabitDialogBox();
@@ -707,7 +707,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
 
         // Add habit comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -758,7 +758,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
 
         // Change habit comment
         _solo.clearEditText(_solo.getEditText(testEvent.getComment()));
@@ -808,7 +808,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(EMPTY_DATE_ERROR_MESSAGE);
+        assertTextOnScreen(EMPTY_DATE_ERROR_MESSAGE);
 
         // Enter date
         enterCurrentDateInAddHabitEventDialogBox();
@@ -1183,10 +1183,6 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.monday_button));
         _solo.clickOnView(_solo.getView(R.id.wednesday_button));
         _solo.clickOnView(_solo.getView(R.id.friday_button));
-    }
-
-    private void checkForToastMessage(String errorMessage) {
-        assertTrue(_solo.searchText(errorMessage));
     }
 
     private void assertTextOnScreen(String text) {

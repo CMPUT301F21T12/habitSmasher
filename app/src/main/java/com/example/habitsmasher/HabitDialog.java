@@ -32,7 +32,7 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
                 _habitReasonEditText.requestFocus();
                 break;
             case INCORRECT_DATE:
-                _errorText.setText("Please select a date");
+                _errorText.setText("Please enter a start date");
                 break;
             case INCORRECT_DAYS:
                 _errorText.setText("Please select a weekly schedule");
