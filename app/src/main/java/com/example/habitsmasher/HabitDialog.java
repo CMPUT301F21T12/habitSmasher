@@ -5,6 +5,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * HabitDialog is an abstract class that describes any dialog
+ * adding and editing Habits
+ */
 public abstract class HabitDialog extends DialogFragment implements DisplaysErrorMessages {
     public static final int INCORRECT_TITLE = 1;
     public static final int INCORRECT_REASON = 2;
@@ -16,6 +20,7 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
     protected TextView _habitDateTextView;
     protected TextView _errorText;
 
+    @Override
     public void displayErrorMessage(int messageType) {
         switch(messageType) {
             case INCORRECT_TITLE:

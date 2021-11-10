@@ -5,6 +5,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * HabitEventDialog is an abstract class that describes any dialog
+ * involving adding and editing Habit Events
+ */
 public abstract class HabitEventDialog extends DialogFragment implements DisplaysErrorMessages {
     public static final int INCORRECT_COMMENT = 1;
     public static final int INCORRECT_DATE = 2;
@@ -13,10 +17,12 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     protected TextView _eventDateText;
     protected TextView _errorText;
 
+    @Override
     public void displayErrorMessage(int messageType) {
         switch(messageType) {
             case INCORRECT_COMMENT:
                 _eventCommentText.setError("Incorrect comment");
+                _eventCommentText.requestFocus();
                 break;
             case INCORRECT_DATE:
                 _errorText.setText("Please select a date");
