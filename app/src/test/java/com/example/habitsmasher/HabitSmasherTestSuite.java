@@ -16,6 +16,7 @@ import org.junit.runners.Suite;
                      HabitValidatorTest.class,
                      HabitEventListTest.class,
                      HabitEventValidatorTest.class,
-                     DatePickerDialogFragmentTest.class})
+                     DatePickerDialogFragmentTest.class,
+                     UserValidatorTest.class})
 public class HabitSmasherTestSuite {
 }

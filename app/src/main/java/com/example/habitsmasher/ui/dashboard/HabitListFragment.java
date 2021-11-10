@@ -1,6 +1,7 @@
 package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,14 +42,14 @@ import java.util.Map;
  * displayed when a user is accessing their own habit list
  */
 public class HabitListFragment extends Fragment {
-
     private static final String TAG = "HabitListFragment";
+    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
 
     // user who owns this list of habits displayed
-    private final User _user = new User("TestUser", "123");
+    private User _user;
 
     // list of habits being displayed
-    private final HabitList _habitList = _user.getHabits();
+    private HabitList _habitList;
 
     // adapter that connects the RecyclerView to the database
     private HabitItemAdapter _habitItemAdapter;
@@ -58,15 +59,20 @@ public class HabitListFragment extends Fragment {
 
     FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
+    private Context _context;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Context context = getContext();
+        _context = getContext();
+
+        _user = getCurrentUser();
+        _habitList = _user.getHabits();
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit List");
 
         // query firebase for all habits that correspond to the current user
-        Query query = getListOfHabitsFromFirebase(_user.getUsername());
+        Query query = getListOfHabitsFromFirebase(_user.getId());
 
         // populate the list with existing items in the database
         FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
@@ -75,7 +81,7 @@ public class HabitListFragment extends Fragment {
 
         //get all of the habits
         Task<QuerySnapshot> querySnapshotTask = _db.collection("Users")
-                                                    .document(_user.getUsername())
+                                                    .document(_user.getId())
                                                     .collection("Habits")
                                                     .get();
 
@@ -115,8 +121,8 @@ public class HabitListFragment extends Fragment {
         }
         //wraps the snapshots representing the HabitList of the user in the HabitList
         _habitList.setSnapshots(options.getSnapshots());
-        _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment, _user.getUsername());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context,
+        _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment, _user.getId());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
 
@@ -136,13 +142,13 @@ public class HabitListFragment extends Fragment {
 
     /**
      * This method queries the database for all habits that correspond to the specified user
-     * @param username the user to get the habits for
+     * @param userId the user to get the habits for
      * @return resulting firebase query
      */
     @NonNull
-    private Query getListOfHabitsFromFirebase(String username) {
+    private Query getListOfHabitsFromFirebase(String userId) {
         return _db.collection("Users")
-                  .document(username)
+                  .document(userId)
                   .collection("Habits");
     }
 
@@ -198,7 +204,7 @@ public class HabitListFragment extends Fragment {
                 // Create a bundle to be passed into the habitViewFragment
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("habit", currentHabit);
-                bundle.putSerializable("user", _user.getUsername());
+                bundle.putSerializable("userId", _user.getId());
                 NavController controller = NavHostFragment.findNavController(_fragment);
 
                 // Navigate to the habitViewFragment
@@ -221,7 +227,7 @@ public class HabitListFragment extends Fragment {
                                 // if delete button clicked
                                 case R.id.delete_button:
                                     Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
-                                    _habitList.deleteHabit(_fragment.getActivity(), _user.getUsername(), habitToDelete, position);
+                                    _habitList.deleteHabit(_fragment.getActivity(), _user.getId(), habitToDelete, position);
                                     break;
                             }
 
@@ -239,7 +245,7 @@ public class HabitListFragment extends Fragment {
      * @param date the habit date
      * */
     public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker){
-       _habitList.addHabitToDatabase(title, reason, date, tracker, _user.getUsername());
+       _habitList.addHabitToDatabase(title, reason, date, tracker, _user.getId());
     }
 
     @Override
@@ -256,8 +262,20 @@ public class HabitListFragment extends Fragment {
      */
     public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
                                 DaysTracker tracker) {
-        _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, pos, _user.getUsername());
+        _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, pos, _user.getId());
         _habitList.editHabitLocal(newTitle, newReason, newDate, tracker, pos);
         _habitItemAdapter.notifyItemChanged(pos);
+    }
+
+    @NonNull
+    private User getCurrentUser() {
+        SharedPreferences sharedPref = _context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
+
+        String username = sharedPref.getString("username", "user");
+        String userId = sharedPref.getString("userId", "id");
+        String email = sharedPref.getString("email", "email");
+        String password = sharedPref.getString("password", "password");
+
+        return new User(userId, username, email, password);
     }
 }

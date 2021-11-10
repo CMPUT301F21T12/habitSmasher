@@ -29,7 +29,7 @@ public class HabitViewFragment extends Fragment {
     private Habit _habit;
 
     // user which owns this habit
-    private String _username;
+    private String _userId;
 
     // buttons representing days of the week
     private Button _mondayButton;
@@ -54,7 +54,7 @@ public class HabitViewFragment extends Fragment {
         // Get passed in habit
         if(getArguments() != null) {
             _habit = (Habit) getArguments().getSerializable("habit");
-            _username = (String) getArguments().getSerializable("user");
+            _userId = (String) getArguments().getSerializable("userId");
         }
 
         //set the DaysTracker
@@ -99,7 +99,7 @@ public class HabitViewFragment extends Fragment {
         // Create a bundle to be passed into the HabitEventListFragment
         Bundle bundle = new Bundle();
         bundle.putSerializable("parentHabit", _habit);
-        bundle.putSerializable("parentUser", _username);
+        bundle.putSerializable("parentUser", _userId);
 
         NavController controller = NavHostFragment.findNavController(this);
         controller.navigate(R.id.action_navigation_habitView_to_habitEventListFragment, bundle);
