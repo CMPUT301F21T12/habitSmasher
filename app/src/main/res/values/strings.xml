@@ -37,4 +37,12 @@
     <string name="edit_button_label">EDIT</string>
     <string name="delete_button_label">DELETE</string>
     <string name="edit_habit">Edit Habit</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="habit_smasher_header">HabitSmasher</string>
+    <string name="login">Login</string>
+    <string name="go_back">Go back</string>
+    <string name="username_capitalU">Username</string>
 </resources>
