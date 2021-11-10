@@ -13,6 +13,8 @@ public class UserValidator {
     private static final String INVALID_EMAIL_FORMAT_MESSAGE = "Invalid email format!";
     private static final String PASSWORD_LENGTH_MUST_BE_GREATER_THAN_6_MESSAGE = "Password length must be greater than 6!";
     private static final String PASSWORD_LENGTH_MUST_BE_LESS_THAN_16_MESSAGE = "Password length must be less than 16!";
+    private static final int UPPER_CHARACTER_LIMIT = 15;
+    private static final int LOWER_CHARACTER_LIMIT = 6;
 
     private EditText _usernameInput;
     private EditText _emailInput;
@@ -93,14 +95,14 @@ public class UserValidator {
     }
 
     public boolean isNewUserValid(String username, String email, String password) {
-        return !(username.isEmpty() | username.length() > 15 | !isLoginValid(email, password));
+        return !(username.isEmpty() | username.length() > UPPER_CHARACTER_LIMIT | !isLoginValid(email, password));
     }
 
     public boolean isLoginValid(String email, String password) {
         return !(email.isEmpty() | password.isEmpty() |
                 !PatternsCompat.EMAIL_ADDRESS.matcher(email).matches() |
-                password.length() < 6 |
-                password.length() > 15);
+                password.length() < LOWER_CHARACTER_LIMIT |
+                password.length() > UPPER_CHARACTER_LIMIT);
     }
 
 
@@ -111,7 +113,7 @@ public class UserValidator {
             return;
         }
 
-        if (_username.length() > 15) {
+        if (_username.length() > UPPER_CHARACTER_LIMIT) {
             _usernameInput.setError(USERNAME_LENGTH_MUST_BE_LESS_THAN_16_MESSAGE);
             _usernameInput.requestFocus();
             return;
@@ -138,13 +140,13 @@ public class UserValidator {
             return;
         }
 
-        if (_password.length() < 6) {
+        if (_password.length() < LOWER_CHARACTER_LIMIT) {
             _passwordInput.setError(PASSWORD_LENGTH_MUST_BE_GREATER_THAN_6_MESSAGE);
             _passwordInput.requestFocus();
             return;
         }
 
-        if (_password.length() > 15) {
+        if (_password.length() > UPPER_CHARACTER_LIMIT) {
             _passwordInput.setError(PASSWORD_LENGTH_MUST_BE_LESS_THAN_16_MESSAGE);
             _passwordInput.requestFocus();
             return;
