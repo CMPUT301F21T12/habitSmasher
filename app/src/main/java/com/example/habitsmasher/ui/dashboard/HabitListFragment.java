@@ -1,6 +1,7 @@
 package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,12 +41,15 @@ import java.util.Map;
 public class HabitListFragment extends ListFragment<Habit> {
 
     private static final String TAG = "HabitListFragment";
+    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
 
     // user who owns this list of habits displayed
-    private final User _user = new User("TestUser", "123");
+    private User _user;
+
+    private Context _context;
 
     // list of habits being displayed
-    private final HabitList _habitList = _user.getHabits();
+    private HabitList _habitList;
 
     // adapter that connects the RecyclerView to the database
     // note: can extract this to list fragment once adapter interface is done
@@ -54,7 +58,10 @@ public class HabitListFragment extends ListFragment<Habit> {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Context context = getContext();
+        _context = getContext();
+
+        _user = getCurrentUser();
+        _habitList = _user.getHabits();
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit List");
 
@@ -142,7 +149,7 @@ public class HabitListFragment extends ListFragment<Habit> {
     @NonNull
     public Query getListFromFirebase() {
         return _db.collection("Users")
-                  .document(_user.getUsername())
+                  .document(_user.getId())
                   .collection("Habits");
     }
 
@@ -238,7 +245,7 @@ public class HabitListFragment extends ListFragment<Habit> {
      * @param addedHabit
      */
     public void updateListAfterAdd(Habit addedHabit){
-        _habitList.addHabitToDatabase(addedHabit, _user.getUsername());
+        _habitList.addHabitToDatabase(addedHabit, _user.getId());
     }
 
     /**
@@ -247,7 +254,7 @@ public class HabitListFragment extends ListFragment<Habit> {
      * @param pos
      */
     public void updateListAfterEdit(Habit editedHabit, int pos) {
-        _habitList.editHabitInDatabase(editedHabit, pos, _user.getUsername());
+        _habitList.editHabitInDatabase(editedHabit, pos, _user.getId());
         _habitItemAdapter.notifyItemChanged(pos);
     }
 
@@ -255,8 +262,22 @@ public class HabitListFragment extends ListFragment<Habit> {
     public void updateListAfterDelete(int position) {
         Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
         _habitList.deleteHabit(getActivity(),
-                _user.getUsername(),
+                _user.getId(),
                 habitToDelete,
                 position);
     }
+
+    @NonNull
+    private User getCurrentUser() {
+        SharedPreferences sharedPref = _context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
+
+        String username = sharedPref.getString("username", "user");
+        String userId = sharedPref.getString("userId", "id");
+        String email = sharedPref.getString("email", "email");
+        String password = sharedPref.getString("password", "password");
+
+        return new User(userId, username, email, password);
+    }
+
+
 }

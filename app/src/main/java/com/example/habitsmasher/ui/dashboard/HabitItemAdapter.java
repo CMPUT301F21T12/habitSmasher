@@ -35,7 +35,8 @@ import java.util.List;
  */
 public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
     private static HabitList _habits;
-    private final String _username;
+    private static HabitListFragment _habitListFragment;
+    private final String _userId;
     public final ObservableSnapshotArray<Habit> _snapshots;
     private Context _context;
 
@@ -46,15 +47,17 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      * @param activity
      * @param habits the habit list
      * @param fragment the habitListFragment
-     * @param username the username of the current user
+     * @param userId the username of the current user
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
                             HabitList habits,
-                            String username) {
+                            HabitListFragment fragment,
+                            String userId) {
         super(options);
         _snapshots = options.getSnapshots();
         _habits = habits;
-        _username = username;
+        _habitListFragment = fragment;
+        _userId = userId;
     }
 
 
@@ -100,15 +103,15 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
 
         /**
          * Deletes all child habit events of a habit
-         * @param username (String) The current user's username
+         * @param userId (String) The current user's username
          * @param parentHabit (Habit) The habit to delete
          */
-        public void deleteHabitEvents(String username, Habit parentHabit) {
+        public void deleteHabitEvents(String userId, Habit parentHabit) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             // get all of the habit events
             Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
-                    .document(username)
+                    .document(userId)
                     .collection("Habits")
                     .document(parentHabit.getId())
                     .collection("Events")

@@ -1,6 +1,7 @@
 package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,6 @@ import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +35,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,12 +48,13 @@ import java.util.UUID;
 public class HabitEventListFragment extends ListFragment<HabitEvent> {
     // Initialize variables
     private static final String TAG = "HabitEventListFragment";
+    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
+    private static final String USER_ID_SHARED_PREF_TAG = "userId";
 
     // can extract this to list fragment once adapter interface is done
     private HabitEventItemAdapter _habitEventItemAdapter;
-
     private Habit _parentHabit;
-    private User _user;
+    private String _userId;
     private HabitEventList _habitEventList;
 
 
@@ -64,8 +66,10 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getArguments() != null) {
             _parentHabit = (Habit) getArguments().getSerializable("parentHabit");
-            _user = (User) getArguments().getSerializable("parentUser");
         }
+
+        SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
+        _userId = sharedPref.getString(USER_ID_SHARED_PREF_TAG, "user");
 
         _parentHabit.setHabitEvents(new HabitEventList());
         _habitEventList = _parentHabit.getHabitEvents();
@@ -85,7 +89,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
             // Set item adapter and habit event list
             _habitEventItemAdapter = new HabitEventItemAdapter(options,
                                                                _parentHabit,
-                                                               _user.getUsername(),
+                                                               _userId
                                                                _habitEventList,
                                                                        this);
         }
@@ -140,7 +144,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
     protected Query getListFromFirebase() {
         // Query is made of username, habit name, and events
         Query query = _db.collection("Users")
-                        .document(_user.getUsername())
+                        .document(_userId)
                         .collection("Habits")
                         .document(_parentHabit.getId())
                         .collection("Events");
@@ -206,7 +210,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
      */
     public void updateListAfterAdd(HabitEvent addedHabitEvent) {
         _habitEventList.addHabitEventToDatabase(addedHabitEvent,
-                                                _user.getUsername(),
+                                                _userId,
                                                 _parentHabit);
     }
 
@@ -216,7 +220,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
      * @param pos (int) The position of the habit event in the list
      */
     public void updateListAfterEdit(HabitEvent editedHabitEvent, int pos) {
-        _habitEventList.editHabitInDatabase(editedHabitEvent, _user.getUsername(), _parentHabit);
+        _habitEventList.editHabitInDatabase(editedHabitEvent, _userId, _parentHabit);
         _habitEventItemAdapter.notifyItemChanged(pos);
     }
 
@@ -231,7 +235,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         StorageReference storageReference = storage.getReference();
 
         // Create path for image
-        String storageUrl = "img/" + _user.getUsername()+ "/" + _parentHabit.getId() + "/" + id;
+        String storageUrl = "img/" + _userId + "/" + _parentHabit.getId() + "/" + id;
 
         // Create reference with new path and attempt upload
         StorageReference imageStorageRef = storageReference.child(storageUrl);

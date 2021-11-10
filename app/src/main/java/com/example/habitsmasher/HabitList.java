@@ -54,14 +54,13 @@ public class HabitList extends ArrayList<Habit>{
      * Method that adds a habit with specified fields to the habit list of a specified
      * user in the database
      * @param newHabit habit to be added to the database
-     * @param username user of the habit list habit is being added to
+     * @param userId id of the user of the habit list the habit is being added to
      */
-    public void addHabitToDatabase(Habit newHabit, String username) {
-
+    public void addHabitToDatabase(Habit newHabit, String userId) {
         // get collection of specified user (do we need this?)
         FirebaseFirestore _db = FirebaseFirestore.getInstance();
         final CollectionReference _collectionReference = _db.collection("Users")
-                                                            .document(username)
+                                                            .document(userId)
                                                             .collection("Habits");
         // generate ID
         String habitId = newHabit.getId();
@@ -75,7 +74,7 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("days", newHabit.getDays());
 
         // add habit to database, using it's habit ID as the document name
-        setHabitDataInDatabase(username, habitId, habitData);
+        setHabitDataInDatabase(userId, habitId, habitData);
         addHabitLocal(newHabit);
     }
 
@@ -114,10 +113,9 @@ public class HabitList extends ArrayList<Habit>{
      * Method that edits the habit at position pos in the database
      * @param editedHabit Habit containing the new fields of the editted habit
      * @param pos Position of habit in the HabitList
-     * @param username Username of user whose habits we are editing
+     * @param userId id of user whose habits we are editing
      */
-    public void editHabitInDatabase(Habit editedHabit, int pos, String username) {
-
+    public void editHabitInDatabase(Habit editedHabit, int pos, String userId) {
         // this acquires the unique habit ID of the habit to be edited
         String habitId = editedHabit.getId();
 
@@ -130,22 +128,21 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("days", editedHabit.getDays());
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
-        setHabitDataInDatabase(username, habitId, habitData);
-        editHabitLocal(editedHabit, pos);
+        setHabitDataInDatabase(userId, habitId, habitData);
     }
 
     /**
      * Sets the fields of habit belonging the user username with the habit ID id
      * to the ones specified by data
-     * @param username name of user
+     * @param userId id of user
      * @param id id of habit
      * @param data fields of habit
      */
-    private void setHabitDataInDatabase(String username, String id, HashMap<String, Object> data) {
+    private void setHabitDataInDatabase(String userId, String id, HashMap<String, Object> data) {
         // get collection of Habits for a specified user
         FirebaseFirestore _db = FirebaseFirestore.getInstance();
         final CollectionReference _collectionReference = _db.collection("Users")
-                .document(username)
+                .document(userId)
                 .collection("Habits");
 
         // create the new document and add it
@@ -168,19 +165,19 @@ public class HabitList extends ArrayList<Habit>{
     /**
      * This method is responsible for deleting a habit from both locally and the db
      * @param context the current application context
-     * @param username the current user's username
+     * @param userId the current user's username
      * @param habitToDelete the habit to delete
      * @param habitPosition the position of the habit to delete
      */
     public void deleteHabit(Context context,
-                            String username,
+                            String userId,
                             Habit habitToDelete,
                             int habitPosition) {
         // delete locally
         deleteHabitLocal(habitPosition);
 
         // delete from firebase
-        deleteHabitFromDatabase(context, username, habitToDelete);
+        deleteHabitFromDatabase(context, userId, habitToDelete);
     }
 
     /**
@@ -194,15 +191,15 @@ public class HabitList extends ArrayList<Habit>{
     /**
      * This method deletes a habit from the database
      * @param context the current application context
-     * @param username the current user's username
+     * @param userId the current user's id
      * @param habitToDelete the habit to delete
      */
-    private void deleteHabitFromDatabase(Context context, String username, Habit habitToDelete) {
+    private void deleteHabitFromDatabase(Context context, String userId, Habit habitToDelete) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // get the habit to delete, then delete it
         db.collection("Users")
-          .document(username)
+          .document(userId)
           .collection("Habits")
           .document(String.valueOf(habitToDelete.getId()))
           .delete()
