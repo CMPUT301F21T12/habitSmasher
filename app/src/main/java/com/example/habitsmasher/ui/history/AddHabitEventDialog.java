@@ -25,19 +25,19 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
+import com.example.habitsmasher.HabitEventDialog;
 import com.example.habitsmasher.R;
 
 /**
  * The AddHabitEventDialog
  * Deals with UI and information handling of the add habit event popup
  */
-public class AddHabitEventDialog extends DialogFragment {
+public class AddHabitEventDialog extends HabitEventDialog {
     private static final String TAG = "AddHabitEventDialog";
 
     // UI elements
     private HabitEventListFragment _habitEventListFragment;
-    private EditText _eventCommentText;
-    private TextView _eventDateText;
+    private AddHabitEventDialog _addFragment = this;
     private Button _cancelNewEvent;
     private Button _confirmNewEvent;
     private ImageView _eventPictureView;
@@ -87,7 +87,7 @@ public class AddHabitEventDialog extends DialogFragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                HabitEventValidator habitEventValidator = new HabitEventValidator(getActivity());
+                HabitEventValidator habitEventValidator = new HabitEventValidator(_addFragment);
 
                 String habitEventComment = _eventCommentText.getText().toString();
                 String habitEventDate = _eventDateText.getText().toString();

@@ -13,12 +13,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DatePickerDialogFragment;
-import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitDialog;
 import com.example.habitsmasher.R;
 
 /**
@@ -27,7 +26,7 @@ import com.example.habitsmasher.R;
  * @author Jason Kim
  * @version 1.0
  */
-public class EditHabitFragment extends DialogFragment{
+public class EditHabitFragment extends HabitDialog {
     private EditText _titleText;
     private EditText _reasonText;
     private TextView _dateText;
@@ -44,6 +43,7 @@ public class EditHabitFragment extends DialogFragment{
     private final Habit _editHabit;
     private final int _index;
     private final HabitListFragment _listener;
+    private final EditHabitFragment _editFragment = this;
 
     /**
      * Constructs a Edit Habit dialog
@@ -71,6 +71,7 @@ public class EditHabitFragment extends DialogFragment{
         _titleText = view.findViewById(R.id.habit_title_edit_text);
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_selection);
+        _daysOfWeekText = view.findViewById(R.id.weekly_schedule_header);
         _tracker = new DaysTracker(_editHabit.getDays());
 
         //buttons for the days of the week, apologies for so many of them
@@ -107,7 +108,7 @@ public class EditHabitFragment extends DialogFragment{
                 String dateText = _dateText.getText().toString();
 
                 // habit validator to ensure data is formatted appropriately
-                HabitValidator habitValidator = new HabitValidator(getActivity());
+                HabitValidator habitValidator = new HabitValidator(_editFragment);
 
                 if (!habitValidator.isHabitValid(habitTitle, reasonText, dateText, _tracker)) {
                     return;
@@ -263,4 +264,6 @@ public class EditHabitFragment extends DialogFragment{
         });
         datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
+
+
 }

@@ -16,21 +16,19 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
+import com.example.habitsmasher.HabitEventDialog;
 import com.example.habitsmasher.R;
 
 /**
  * The EditHabitEventFragment class
  * Based on EditEventFragment, dialog which pops up and allows a user to edit habit events
  */
-public class EditHabitEventFragment extends DialogFragment {
-    // Initialize UI variables
-    private EditText _commentText;
-    private TextView _dateText;
-
+public class EditHabitEventFragment extends HabitEventDialog {
     // Initialize global variables
     private final int _index;
     private final HabitEvent _editHabitEvent;
     private final HabitEventListFragment _listener;
+    private final EditHabitEventFragment _editFragment = this;
     private final HabitEventItemAdapter.HabitEventViewHolder _viewHolder;
 
     /**
@@ -59,15 +57,15 @@ public class EditHabitEventFragment extends DialogFragment {
         TextView header = view.findViewById(R.id.add_habit_event_header);
 
         header.setText("Edit Habit Event");
-        _commentText = view.findViewById(R.id.add_habit_event_comment);
-        _dateText = view.findViewById(R.id.habit_event_date_selection);
+        _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
+        _eventDateText = view.findViewById(R.id.habit_event_date_selection);
 
         // Prefill values
-        _commentText.setText(_editHabitEvent.getComment());
-        _dateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
+        _eventCommentText.setText(_editHabitEvent.getComment());
+        _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
 
         // Add listener to date text to open date picker
-        _dateText.setOnClickListener(new View.OnClickListener() {
+        _eventDateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openDatePickerDialog();
@@ -79,11 +77,11 @@ public class EditHabitEventFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 // Get updated comment and date
-                String eventComment = _commentText.getText().toString();
-                String dateText = _dateText.getText().toString();
+                String eventComment = _eventCommentText.getText().toString();
+                String dateText = _eventDateText.getText().toString();
 
                 // Validate that the comment and date are valid
-                HabitEventValidator eventValidator = new HabitEventValidator(getActivity());
+                HabitEventValidator eventValidator = new HabitEventValidator(_editFragment);
                 if (!eventValidator.isHabitEventValid(eventComment, dateText)) {
                     return;
                 }
@@ -123,7 +121,7 @@ public class EditHabitEventFragment extends DialogFragment {
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 int correctedMonth = month + 1;
                 String date = day + "/" + correctedMonth + "/" + year;
-                _dateText.setText(date);
+                _eventDateText.setText(date);
             }
         });
         datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
