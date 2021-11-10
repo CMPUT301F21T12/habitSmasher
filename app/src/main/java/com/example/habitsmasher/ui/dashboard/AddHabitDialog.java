@@ -84,6 +84,7 @@ public class AddHabitDialog extends HabitDialog {
         //logic handler for tracking all those days
         _tracker = new DaysTracker();
 
+        _errorText.setText("");
         // set the listeners for the days of the week buttons
         setListenersForDaysOfTheWeek();
 
@@ -99,6 +100,7 @@ public class AddHabitDialog extends HabitDialog {
         cancelNewHabit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                _errorText.setText("");
                 Log.d(TAG, "Cancel");
                 getDialog().dismiss();
             }
@@ -128,6 +130,7 @@ public class AddHabitDialog extends HabitDialog {
                                                _tracker.getDays(),
                                                DatabaseEntity.generateId(),
                                                 new HabitEventList());
+                    _errorText.setText("");
                     _habitListFragment.updateListAfterAdd(newHabit);
                     getDialog().dismiss();
                 }

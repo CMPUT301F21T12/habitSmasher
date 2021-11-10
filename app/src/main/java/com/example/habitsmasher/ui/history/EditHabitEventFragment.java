@@ -61,11 +61,12 @@ public class EditHabitEventFragment extends HabitEventDialog {
         header.setText("Edit Habit Event");
         _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
         _eventDateText = view.findViewById(R.id.habit_event_date_selection);
-        _errorText = view.findViewById(R.id.error_text);
+        _errorText = view.findViewById(R.id.error_text_event);
 
         // Prefill values
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
+        _errorText.setText("");
 
         // Add listener to date text to open date picker
         _eventDateText.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +95,7 @@ public class EditHabitEventFragment extends HabitEventDialog {
                 HabitEvent editedHabitEvent = new HabitEvent(newDate,
                                                             eventComment,
                                                             _editHabitEvent.getId());
+                _errorText.setText("");
                 _listener.updateListAfterEdit(editedHabitEvent,_index);
 
                 // Close dialog

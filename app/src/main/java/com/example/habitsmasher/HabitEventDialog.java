@@ -21,8 +21,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     public void displayErrorMessage(int messageType) {
         switch(messageType) {
             case INCORRECT_COMMENT:
-                _eventCommentText.setError("Incorrect comment");
-                _eventCommentText.requestFocus();
+                _eventCommentText.setText("Incorrect comment");
                 break;
             case INCORRECT_DATE:
                 _errorText.setText("Please select a date");

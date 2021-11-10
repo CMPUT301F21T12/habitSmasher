@@ -68,6 +68,7 @@ public class AddHabitEventDialog extends HabitEventDialog {
         TextView header = view.findViewById(R.id.add_habit_event_header);
 
         header.setText("Add Habit Event");
+        _errorText.setText("");
 
         // Add listener to date text to open date picker
         _eventDateText.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +82,7 @@ public class AddHabitEventDialog extends HabitEventDialog {
         _cancelNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                _errorText.setText("");
                 Log.d(TAG, "Cancel");
                 getDialog().dismiss();
             }
@@ -102,6 +104,7 @@ public class AddHabitEventDialog extends HabitEventDialog {
                     HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
                                                         habitEventComment,
                                                         DatabaseEntity.generateId());
+                    _errorText.setText("");
                     _habitEventListFragment.updateListAfterAdd(newEvent);
                     getDialog().dismiss();
                 }

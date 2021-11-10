@@ -86,6 +86,7 @@ public class EditHabitFragment extends HabitDialog {
         header.setText(getResources().getString(R.string.edit_habit));
 
         // presetting text to values of habit
+        _errorText.setText("");
         _habitTitleEditText.setText(_editHabit.getTitle());
         _habitReasonEditText.setText(_editHabit.getReason());
         _habitDateTextView.setText(DatePickerDialogFragment.parseDateToString(_editHabit.getDate()));
@@ -102,9 +103,9 @@ public class EditHabitFragment extends HabitDialog {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String habitTitle = _titleText.getText().toString();
-                String reasonText = _reasonText.getText().toString();
-                String dateText = _dateText.getText().toString();
+                String habitTitle = _habitTitleEditText.getText().toString();
+                String reasonText = _habitReasonEditText.getText().toString();
+                String dateText = _habitDateTextView.getText().toString();
 
                 // habit validator to ensure data is formatted appropriately
                 HabitValidator habitValidator = new HabitValidator(_editFragment);
@@ -121,6 +122,7 @@ public class EditHabitFragment extends HabitDialog {
                                         _editHabit.getHabitEvents());
 
                 // update local list and display
+                _errorText.setText("");
                 _listener.updateListAfterEdit(editedHabit, _index);
                 getDialog().dismiss();
             }
@@ -130,6 +132,7 @@ public class EditHabitFragment extends HabitDialog {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                _errorText.setText("");
                 getDialog().dismiss();
             }
         });
@@ -264,7 +267,7 @@ public class EditHabitFragment extends HabitDialog {
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 int correctedMonth = month + 1;
                 String date = day + "/" + correctedMonth + "/" + year;
-                _dateText.setText(date);
+                _habitDateTextView.setText(date);
             }
         });
         datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
