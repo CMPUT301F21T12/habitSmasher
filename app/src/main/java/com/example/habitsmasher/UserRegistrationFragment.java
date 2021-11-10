@@ -25,10 +25,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+/**
+ * This class holds the front-end elements related to the user sign up page
+ * Author: Rudy Patel
+ */
 public class UserRegistrationFragment extends Fragment {
     private static final String USER_REGISTERED_MESSAGE = "User registered!";
     private static final String FAILED_TO_ADD_USER_MESSAGE = "Failed to add user, try again!";
     private static final String FAILED_TO_REGISTER_MESSAGE = "Failed to register";
+
     private FirebaseAuth _auth;
     private ProgressBar _progressBar;
 
@@ -42,6 +47,7 @@ public class UserRegistrationFragment extends Fragment {
 
         _auth = FirebaseAuth.getInstance();
 
+        // get front-end elements
         EditText emailInput = view.findViewById(R.id.registration_email);
         EditText passwordInput = view.findViewById(R.id.registration_password);
         EditText usernameInput = view.findViewById(R.id.registration_username);
@@ -53,10 +59,17 @@ public class UserRegistrationFragment extends Fragment {
 
         setClickListenerForRegisterButton(emailInput, passwordInput, usernameInput, registerButton);
 
-
         return view;
     }
 
+    /**
+     * This method sets the click listener for the register button, along with routing to the
+     * associated validators to process the input data
+     * @param emailInput the email input box
+     * @param passwordInput the password input box
+     * @param usernameInput the username input box
+     * @param registerButton the register button
+     */
     private void setClickListenerForRegisterButton(EditText emailInput,
                                                    EditText passwordInput,
                                                    EditText usernameInput,
@@ -85,6 +98,13 @@ public class UserRegistrationFragment extends Fragment {
         });
     }
 
+    /**
+     * This method is responsible for using Firebase Auth to create a new user entry in the database
+     * with the provided username, email, and password
+     * @param email the user's email
+     * @param password the user's password
+     * @param username the user's username
+     */
     private void createNewUserWithEmailAndPassword(String email, String password, String username) {
         _auth.createUserWithEmailAndPassword(email, password)
              .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -106,6 +126,10 @@ public class UserRegistrationFragment extends Fragment {
              });
     }
 
+    /**
+     * This method adds a new user to the Firestore database
+     * @param user the new user to add
+     */
     private void addNewUserToDatabase(User user) {
         FirebaseFirestore.getInstance()
                          .collection("Users")
@@ -124,11 +148,20 @@ public class UserRegistrationFragment extends Fragment {
                          });
     }
 
-    private void showMessage(String userRegisteredMessage) {
+    /**
+     * This helper method shows a toast message to the screen
+     * @param message message to display
+     */
+    private void showMessage(String message) {
         Toast.makeText(getContext(),
-                       userRegisteredMessage, Toast.LENGTH_LONG).show();
+                       message, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * This helper method builds up the user data to insert into the database
+     * @param user the user data to build up
+     * @return a hashmap of key/value pairs of the user data
+     */
     @NonNull
     private HashMap<String, Object> buildUserDataMap(User user) {
         HashMap<String, Object> userData = new HashMap<>();
@@ -141,6 +174,10 @@ public class UserRegistrationFragment extends Fragment {
         return userData;
     }
 
+    /**
+     * This method sets the click listener for the "go back" button and routes to the new fragment
+     * @param backToLoginButton
+     */
     private void setClickListenerForBackToLoginButton(Button backToLoginButton) {
         backToLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +187,9 @@ public class UserRegistrationFragment extends Fragment {
         });
     }
 
+    /**
+     * This helper method is responsible for routing back to the LoginFragment
+     */
     private void goBackToLoginScreen() {
         NavController controller = NavHostFragment.findNavController(UserRegistrationFragment.this);
         controller.navigate(R.id.action_navigation_registration_to_UserLoginFragment);

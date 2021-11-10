@@ -31,6 +31,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This class holds the front-end elements relating to the Login screen
+ * Author: Rudy Patel
+ */
 public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
@@ -76,6 +80,13 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This method sets the click listener for the login button, along with calling the associated
+     * validators and setting/hiding UI related elements
+     * @param loginButton the login button
+     * @param emailInput the email input box
+     * @param passwordInput the password input box
+     */
     private void setClickListenerForLoginButton(Button loginButton, EditText emailInput, EditText passwordInput) {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +108,11 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    /**
+     * This method sets the click listener for the register button and routes the screen to the
+     * user sign up page
+     * @param view the current view
+     */
     private void setClickListenerForRegisterButton(View view) {
         View registerButton = view.findViewById(R.id.login_signup_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +123,11 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    /**
+     * This method is responsible for using Firebase Auth to sign in a user given an email/pwd
+     * @param email the user email
+     * @param password the user password
+     */
     private void signInUserWithEmailAndPassword(String email, String password) {
         _auth.signInWithEmailAndPassword(email, password)
              .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -136,11 +157,19 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    /**
+     * This method is responsible for switching the application context to a new fragment
+     * @param actionId the action corresponding to the routing of the new fragment
+     */
     private void navigateToFragmentWithAction(int actionId) {
         NavController controller = NavHostFragment.findNavController(_fragment);
         controller.navigate(actionId);
     }
 
+    /**
+     * This method saves the logged in user's information to be shared/accessed throughout fragments
+     * @param user the user logged in
+     */
     private void saveUserInformation(User user) {
         SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -153,6 +182,10 @@ public class LoginFragment extends Fragment {
         editor.apply();
     }
 
+    /**
+     * This method gets the document reference from firebase of the current user
+     * @return document reference from firebase of the current user
+     */
     @NonNull
     private DocumentReference getCurrentUserDocumentReference() {
         DocumentReference userRef = FirebaseFirestore.getInstance()
@@ -163,6 +196,10 @@ public class LoginFragment extends Fragment {
         return userRef;
     }
 
+    /**
+     * This helper method shows a toast message to the screen
+     * @param message message to display
+     */
     private void showMessage(String message) {
         Toast.makeText(getContext(),
                        message,
