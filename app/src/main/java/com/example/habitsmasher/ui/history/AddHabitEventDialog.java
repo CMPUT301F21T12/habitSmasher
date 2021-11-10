@@ -25,6 +25,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
+import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventDialog;
 import com.example.habitsmasher.R;
 
@@ -97,8 +98,10 @@ public class AddHabitEventDialog extends HabitEventDialog {
                 // Check if event data is valid
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
-                    // HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment, _selectedImage, UUID.randomUUID().toString());
-                    _habitEventListFragment.addHabitEventToDatabase(habitEventValidator.checkHabitDateValid(habitEventDate), habitEventComment);
+                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
+                                                        habitEventComment,
+                                                        DatabaseEntity.generateId());
+                    _habitEventListFragment.updateListAfterAdd(newEvent);
                     getDialog().dismiss();
                 }
 

@@ -20,6 +20,8 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitDialog;
 import com.example.habitsmasher.R;
 
+import java.util.Date;
+
 /**
  *  UI Class that represents and specifies the behaviour of the dialog
  *  that is spawned when a user wants to edit a habit in their habit list
@@ -113,10 +115,16 @@ public class EditHabitFragment extends HabitDialog {
                 if (!habitValidator.isHabitValid(habitTitle, reasonText, dateText, _tracker)) {
                     return;
                 }
+                Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
+                Habit editedHabit = new Habit(habitTitle,
+                                        reasonText,
+                                        newDate,
+                                        _tracker.getDays(),
+                                        _editHabit.getId(),
+                                        _editHabit.getHabitEvents());
 
                 // update local list and display
-                _listener.updateAfterEdit(habitTitle, reasonText, DatePickerDialogFragment.parseStringToDate(dateText), _index, _tracker);
-
+                _listener.updateListAfterEdit(editedHabit, _index);
                 getDialog().dismiss();
             }
         });

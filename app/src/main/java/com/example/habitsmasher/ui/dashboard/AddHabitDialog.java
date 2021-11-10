@@ -6,8 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import androidx.annotation.NonNull;
@@ -16,6 +16,8 @@ import androidx.annotation.RequiresApi;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.HabitDialog;
+import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
 
 /**
@@ -118,9 +120,13 @@ public class AddHabitDialog extends HabitDialog {
                 if (habitValidator.isHabitValid(habitTitle,
                                                 habitReason,
                                                 habitDate, _tracker)){
-                    _habitListFragment.addHabitToDatabase(habitTitle,
-                                                          habitReason,
-                                                          habitValidator.checkHabitDateValid(habitDate), _tracker);
+                    Habit newHabit = new Habit(habitTitle,
+                                               habitReason,
+                                               habitValidator.checkHabitDateValid(habitDate),
+                                               _tracker.getDays(),
+                                               DatabaseEntity.generateId(),
+                                                new HabitEventList());
+                    _habitListFragment.updateListAfterAdd(newHabit);
                     getDialog().dismiss();
                 }
             }
