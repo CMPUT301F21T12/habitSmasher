@@ -233,7 +233,7 @@ public class HabitListFragment extends ListFragment<Habit> {
         // Create a bundle to be passed into the habitViewFragment
         Bundle bundle = new Bundle();
         bundle.putSerializable("habit", currentHabit);
-        bundle.putSerializable("user", _user);
+        bundle.putSerializable("userId", _user.getId());
         NavController controller = NavHostFragment.findNavController(this);
 
         // Navigate to the habitViewFragment

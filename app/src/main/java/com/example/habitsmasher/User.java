@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * Currently, profile picture is not used
  */
-public class User implements Serializable {
+public class User {
     private String _username;
     private String _password;
     private String _email;
