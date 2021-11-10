@@ -88,10 +88,10 @@ public class EditHabitFragment extends HabitDialog {
         // presetting text to values of habit
         _habitTitleEditText.setText(_editHabit.getTitle());
         _habitReasonEditText.setText(_editHabit.getReason());
-        _habitReasonEditText.setText(DatePickerDialogFragment.parseDateToString(_editHabit.getDate()));
+        _habitDateTextView.setText(DatePickerDialogFragment.parseDateToString(_editHabit.getDate()));
 
         // listener for the date picker dialog fragment
-        _dateText.setOnClickListener(new View.OnClickListener() {
+        _habitDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDatePickerDialog();
