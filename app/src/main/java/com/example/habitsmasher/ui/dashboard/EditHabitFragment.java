@@ -70,9 +70,9 @@ public class EditHabitFragment extends HabitDialog {
         TextView header = view.findViewById(R.id.add_habit_header);
         Button confirmButton = view.findViewById(R.id.confirm_habit);
         Button cancelButton = view.findViewById(R.id.cancel_habit);
-        _titleText = view.findViewById(R.id.habit_title_edit_text);
-        _reasonText = view.findViewById(R.id.habit_reason_edit_text);
-        _dateText = view.findViewById(R.id.habit_date_selection);
+        _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
+        _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
+        _habitDateTextView = view.findViewById(R.id.habit_date_selection);
         _errorText = view.findViewById(R.id.error_text);
         _tracker = new DaysTracker(_editHabit.getDays());
 
