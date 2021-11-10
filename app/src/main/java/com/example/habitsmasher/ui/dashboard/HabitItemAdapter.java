@@ -35,7 +35,6 @@ import java.util.List;
  */
 public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
     private static HabitList _habits;
-    private static HabitListFragment _habitListFragment;
     private final String _userId;
     public final ObservableSnapshotArray<Habit> _snapshots;
     private Context _context;
@@ -44,19 +43,16 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      * @param options the firestore entities
-     * @param activity
      * @param habits the habit list
      * @param fragment the habitListFragment
      * @param userId the username of the current user
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
                             HabitList habits,
-                            HabitListFragment fragment,
                             String userId) {
         super(options);
         _snapshots = options.getSnapshots();
         _habits = habits;
-        _habitListFragment = fragment;
         _userId = userId;
     }
 

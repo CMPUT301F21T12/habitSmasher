@@ -76,7 +76,7 @@ public class HabitListFragment extends ListFragment<Habit> {
 
         populateList(query);
         _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context,
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
 

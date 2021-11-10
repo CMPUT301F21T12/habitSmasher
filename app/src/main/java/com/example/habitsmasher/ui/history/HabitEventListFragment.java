@@ -89,7 +89,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
             // Set item adapter and habit event list
             _habitEventItemAdapter = new HabitEventItemAdapter(options,
                                                                _parentHabit,
-                                                               _userId
+                                                               _userId,
                                                                _habitEventList,
                                                                        this);
         }
