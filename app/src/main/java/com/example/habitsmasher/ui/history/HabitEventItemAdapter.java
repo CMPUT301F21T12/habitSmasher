@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
+import com.example.habitsmasher.ItemAdapterInterface;
 import com.example.habitsmasher.R;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 
@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
  * Based on HabitItemAdapter, extension of FirestoreRecycler that shows habit events list with
  * live updates
  */
-public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
+public class HabitEventItemAdapter implements ItemAdapterInterface<HabitEventItemAdapter.HabitEventViewHolder, HabitEvent> {
     // Initialize variables
     private Context _context;
     private final String DATE_FORMAT = "dd/MM/yyyy";
@@ -48,7 +48,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
                                  String username,
                                  HabitEventList habitEvents,
                                  HabitEventListFragment fragment) {
-        super(options);
         _snapshots = options.getSnapshots();
         _parentHabit = parentHabit;
         _username = username;
