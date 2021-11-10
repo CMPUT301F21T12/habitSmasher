@@ -13,43 +13,30 @@ import java.util.ArrayList;
 public class User {
     private String _username;
     private String _password;
-    private final ArrayList<String> _followerList;
-    private final ArrayList<String> _followingList;
+    private String _email;
+    private String _id;
+    private final ArrayList<String> _followerList = new ArrayList<>();
+    private final ArrayList<String> _followingList = new ArrayList<>();
     private Image _profilePicture;
     private static final HabitList _habits = new HabitList();
 
-    /**
-     * This lightweight constructor initializes a new user with empty lists
-     * @param username the username
-     * @param password the password
-     */
-    public User(String username,
-                 String password) {
-        _username = username;
-        _password = password;
-        _followerList = new ArrayList<>();
-        _followingList = new ArrayList<>();
+    public User() {
+        // needed for firebase
     }
 
     /**
-     * This heavy-duty constructor provides the ability to create a new user with control over all
-     * parameters/fields
-     * @param username the username
+     * This lightweight constructor initializes a new user with empty lists
+     * @param email the email
      * @param password the password
-     * @param followerList the list of followers
-     * @param followingList the list of users following
-     * @param profilePicture the profile picture of the user
      */
-    public User(String username,
-                 String password,
-                 ArrayList<String> followerList,
-                 ArrayList<String> followingList,
-                 Image profilePicture) {
-        _username = username;
+    public User(String id,
+                String username,
+                String email,
+                String password) {
+        _email = email;
         _password = password;
-        _followerList = followerList;
-        _followingList = followingList;
-        _profilePicture = profilePicture;
+        _username = username;
+        _id = id;
     }
 
     /**
@@ -66,6 +53,38 @@ public class User {
      */
     public void setUsername(String username) {
         _username = username;
+    }
+
+    /**
+     * Gets the id of the user
+     * @return id of the user
+     */
+    public String getId() {
+        return _id;
+    }
+
+    /**
+     * Sets the id of the user
+     * @param id new username of the user
+     */
+    public void setId(String id) {
+        _id = id;
+    }
+
+    /**
+     * Gets the email of the user
+     * @return email of the user
+     */
+    public String getEmail() {
+        return _email;
+    }
+
+    /**
+     * Sets the email of the user
+     * @param email new username of the user
+     */
+    public void setEmail(String email) {
+        _email = email;
     }
 
     /**

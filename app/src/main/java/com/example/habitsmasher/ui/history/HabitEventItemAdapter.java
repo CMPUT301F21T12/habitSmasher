@@ -32,7 +32,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
     private final String DATE_FORMAT = "dd/MM/yyyy";
     public final ObservableSnapshotArray<HabitEvent> _snapshots;
     private static Habit _parentHabit;
-    private static String _username;
+    private static String _userId;
     private static HabitEventList _habitEvents;
     private static HabitEventListFragment _habitEventListFragment;
 
@@ -45,13 +45,13 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
      */
     public HabitEventItemAdapter(@NonNull FirestoreRecyclerOptions<HabitEvent> options,
                                  Habit parentHabit,
-                                 String username,
+                                 String userId,
                                  HabitEventList habitEvents,
                                  HabitEventListFragment fragment) {
         super(options);
         _snapshots = options.getSnapshots();
         _parentHabit = parentHabit;
-        _username = username;
+        _userId = userId;
         _habitEvents = habitEvents;
         _habitEventListFragment = fragment;
     }
@@ -62,7 +62,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         // Inflate view based on HabitEventViewHolder
         _context = parent.getContext();
         View view = LayoutInflater.from(_context).inflate(R.layout.habit_event_row, parent, false);
-        return new HabitEventViewHolder(view, _snapshots,_username, _parentHabit, _context);
+        return new HabitEventViewHolder(view, _snapshots, _userId, _parentHabit, _context);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
          */
         public HabitEventViewHolder(@NonNull View itemView,
                                     ObservableSnapshotArray<HabitEvent> _snapshots,
-                                    String username,
+                                    String userId,
                                     Habit parentHabit,
                                     Context context) {
             super(itemView);
@@ -130,7 +130,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
                     HabitEvent toDelete = _snapshots.get(eventPosition);
 
                     // Delete the habit event
-                    _habitEvents.deleteHabitEvent(context, username, parentHabit, toDelete);
+                    _habitEvents.deleteHabitEvent(context, userId, parentHabit, toDelete);
                 }
             });
 
