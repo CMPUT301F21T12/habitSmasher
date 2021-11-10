@@ -29,9 +29,6 @@ import java.util.Date;
  * @version 1.0
  */
 public class EditHabitFragment extends HabitDialog {
-    private EditText _titleText;
-    private EditText _reasonText;
-    private TextView _dateText;
     private DaysTracker _tracker;
 
     private Button _mondayButton;
@@ -89,9 +86,9 @@ public class EditHabitFragment extends HabitDialog {
         header.setText(getResources().getString(R.string.edit_habit));
 
         // presetting text to values of habit
-        _titleText.setText(_editHabit.getTitle());
-        _reasonText.setText(_editHabit.getReason());
-        _dateText.setText(DatePickerDialogFragment.parseDateToString(_editHabit.getDate()));
+        _habitTitleEditText.setText(_editHabit.getTitle());
+        _habitReasonEditText.setText(_editHabit.getReason());
+        _habitReasonEditText.setText(DatePickerDialogFragment.parseDateToString(_editHabit.getDate()));
 
         // listener for the date picker dialog fragment
         _dateText.setOnClickListener(new View.OnClickListener() {
