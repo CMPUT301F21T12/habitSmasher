@@ -71,11 +71,12 @@ public class LoginFragment extends Fragment {
         EditText emailInput = view.findViewById(R.id.login_email);
         EditText passwordInput = view.findViewById(R.id.login_password);
         TextView forgotPassword = view.findViewById(R.id.login_forgot_password);
+        Button registerButton = view.findViewById(R.id.login_signup_button);
         _progressBar = view.findViewById(R.id.login_progress_bar);
 
         setClickListenerForLoginButton(loginButton, emailInput, passwordInput);
 
-        setClickListenerForRegisterButton(view);
+        setClickListenerForRegisterButton(registerButton);
 
         return view;
     }
@@ -111,10 +112,9 @@ public class LoginFragment extends Fragment {
     /**
      * This method sets the click listener for the register button and routes the screen to the
      * user sign up page
-     * @param view the current view
+     * @param registerButton the register button
      */
-    private void setClickListenerForRegisterButton(View view) {
-        View registerButton = view.findViewById(R.id.login_signup_button);
+    private void setClickListenerForRegisterButton(Button registerButton) {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
