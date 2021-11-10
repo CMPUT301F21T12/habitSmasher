@@ -1,6 +1,10 @@
 package com.example.habitsmasher.ui.dashboard;
 
+import static android.content.ContentValues.TAG;
+
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,14 +67,14 @@ public class HabitViewFragment extends Fragment {
         //set the DaysTracker
         _tracker = new DaysTracker(_habit.getDays());
 
-        // setup the public and private buttons
-        _publicPrivateButtons = new PublicPrivateButtons(getView(), _habit.isPublic());
-
         // Date formatter
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_habit_view, container, false);
+
+        // setup the public and private buttons
+        _publicPrivateButtons = new PublicPrivateButtons(view, _habit.getPublic());
 
         // Grab text boxes
         TextView descriptionHabitTextBox = view.findViewById(R.id.descriptionHabitTextBox);

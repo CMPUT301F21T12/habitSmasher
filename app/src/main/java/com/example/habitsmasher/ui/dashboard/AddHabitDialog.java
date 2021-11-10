@@ -90,6 +90,7 @@ public class AddHabitDialog extends DialogFragment {
 
         // public and private buttons
         PublicPrivateButtons publicPrivateButtons = new PublicPrivateButtons(view);
+        publicPrivateButtons.setClickListeners();
 
         //logic handler for tracking all those days
         _tracker = new DaysTracker();

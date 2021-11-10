@@ -73,7 +73,8 @@ public class EditHabitFragment extends DialogFragment{
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_selection);
         _tracker = new DaysTracker(_editHabit.getDays());
-        _publicPrivateButtons = new PublicPrivateButtons(view, _editHabit.isPublic());
+        _publicPrivateButtons = new PublicPrivateButtons(view, _editHabit.getPublic());
+        _publicPrivateButtons.setClickListeners();
 
 
         //buttons for the days of the week, apologies for so many of them

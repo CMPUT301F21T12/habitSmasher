@@ -44,26 +44,22 @@
         android:id="@+id/confirm_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:background="@color/habit_list_text"
         android:text="@string/confirm"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/habit_date_selection"
-        app:layout_constraintTop_toBottomOf="@+id/thursday_button" />
+        app:layout_constraintStart_toStartOf="@+id/habit_date_selection" />
 
     <Button
         android:id="@+id/cancel_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:background="@color/habit_list_text"
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/confirm_habit"
-        app:layout_constraintTop_toBottomOf="@+id/saturday_button" />
+        app:layout_constraintStart_toEndOf="@+id/confirm_habit" />
 
     <TextView
         android:id="@+id/habit_name_text_view"

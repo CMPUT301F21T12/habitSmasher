@@ -1,9 +1,13 @@
 package com.example.habitsmasher;
 
+import static android.content.ContentValues.TAG;
+
+import android.nfc.Tag;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.HashMap;
+import com.google.android.material.tabs.TabLayout;
 
 public class PublicPrivateButtons {
     /**
@@ -33,8 +37,6 @@ public class PublicPrivateButtons {
         _publicSelected = true;
         _privateSelected = false;
 
-        // set the listeners
-        setClickListeners();
     }
 
     /**
@@ -47,23 +49,29 @@ public class PublicPrivateButtons {
         _publicButton = view.findViewById(R.id.public_button);
         _privateButton = view.findViewById(R.id.private_button);
 
+        Log.d(TAG, String.valueOf(isPublic));
+
         // if its public, click the public button. if not, click the private button
         if (isPublic){
+            Log.d(TAG, "Habit is public.");
             _publicButton.performClick();
             _publicSelected = true;
             _privateSelected = false;
         }
         else{
+            Log.d(TAG, "Habit is private.");
             _privateButton.performClick();
             _publicSelected = false;
             _privateSelected = true;
         }
 
-        // set the listeners
-        setClickListeners();
     }
 
-    private void setClickListeners(){
+    /**
+     * Sets the onClick listeners for both buttons. This also sets the logic behind the buttons in which
+     * only one button may be clicked at a time.
+     */
+    public void setClickListeners(){
         // on click listeners and logic behind the buttons switching
         // TODO: Check interactions when the selected button is selected again
         // preferably make it unselectable
@@ -75,7 +83,13 @@ public class PublicPrivateButtons {
                 if (_privateSelected){
                     _privateButton.performClick();
                     _privateSelected = false;
+                    _publicSelected = true;
+
                 }
+                // make only the private button clickable
+                _publicButton.setClickable(false);
+                _privateButton.setClickable(true);
+                //Log.d("Pu/Pr button status", "1! Public: " + _publicSelected + ", Private: " + _privateSelected);
             }
         });
 
@@ -86,7 +100,13 @@ public class PublicPrivateButtons {
                 if (_publicSelected){
                     _publicButton.performClick();
                     _publicSelected = false;
+                    _privateSelected = true;
+
                 }
+                // make only the public button clickable
+                _publicButton.setClickable(true);
+                _privateButton.setClickable(false);
+                //Log.d("Pu/Pr button status", "2! Public: " + _publicSelected + ", Private: " + _privateSelected);
             }
         });
     }

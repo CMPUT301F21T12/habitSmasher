@@ -15,7 +15,7 @@ public class Habit extends DatabaseEntity implements Serializable {
     private Date _date;
     private HabitEventList _habitEvents;
     private String _days;
-    private boolean _isPublic;
+    private boolean _public;
 
     /**
      * Empty constructor needed for FireStore storage
@@ -39,7 +39,7 @@ public class Habit extends DatabaseEntity implements Serializable {
         _date = date;
         _days = days;
         _habitEvents = habitEvents;
-        _isPublic = isPublic;
+        _public = isPublic;
     }
 
     /**
@@ -126,15 +126,12 @@ public class Habit extends DatabaseEntity implements Serializable {
      * Gets whether the habit is public or private. If true, public. If false, private.
      * @return true if public, false if private.
      */
-    public boolean isPublic(){return _isPublic;}
+    @PropertyName("public")
+    public boolean getPublic(){return _public;}
 
     /**
      * Sets the habit to public.
      */
-    public void setPublic(){_isPublic = true;}
+    public void setPublic(boolean isPublic){_public = isPublic;}
 
-    /**
-     * Sets the habit to private.
-     */
-    public void setPrivate(){_isPublic = false;}
 }

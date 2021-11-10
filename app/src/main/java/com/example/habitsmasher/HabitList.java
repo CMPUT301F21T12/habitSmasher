@@ -105,12 +105,14 @@ public class HabitList extends ArrayList<Habit>{
      * @param pos position of habit
      * @param tracker days of the week the habit takes place
      */
-    public void editHabitLocal(String newTitle, String newReason, Date newDate, DaysTracker tracker, int pos) {
+    public void editHabitLocal(String newTitle, String newReason, Date newDate, DaysTracker tracker, boolean isPublic, int pos) {
         Habit habit = _habits.get(pos);
         habit.setTitle(newTitle);
         habit.setReason(newReason);
         habit.setDate(newDate);
         habit.setDays(tracker.getDays());
+        habit.setPublic(isPublic);
+        Log.d(TAG, "Name: " + newTitle + ", isPublic: " + isPublic);
     }
 
     /**

@@ -108,6 +108,8 @@ public class HabitListFragment extends Fragment {
                 // create a new habit with the snapshot data
                 Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
 
+                Log.d(TAG, String.valueOf(addHabit.getPublic()));
+
                 // add the habit to the local list
                 _habitList.addHabitLocal(addHabit);
                 HabitList.habitIdSet.add(id);
@@ -132,6 +134,7 @@ public class HabitListFragment extends Fragment {
         });
 
         initializeRecyclerView(layoutManager, view);
+        Log.d(TAG, String.valueOf(_habitList.getHabit(0).getPublic()));
         return view;
     }
 
@@ -195,6 +198,7 @@ public class HabitListFragment extends Fragment {
             public void onRowClicked(int position) {
                 // Get the selected habit
                 Habit currentHabit = _habitItemAdapter._snapshots.get(position);
+                Log.d(TAG, "onRowClicked: current habit:" + currentHabit.getPublic());
 
                 // Create a bundle to be passed into the habitViewFragment
                 Bundle bundle = new Bundle();
@@ -258,7 +262,7 @@ public class HabitListFragment extends Fragment {
     public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
                                 DaysTracker tracker, boolean isPublic) {
         _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, isPublic, pos, _user.getUsername());
-        _habitList.editHabitLocal(newTitle, newReason, newDate, tracker, pos);
+        _habitList.editHabitLocal(newTitle, newReason, newDate, tracker, isPublic, pos);
         _habitItemAdapter.notifyItemChanged(pos);
     }
 }
