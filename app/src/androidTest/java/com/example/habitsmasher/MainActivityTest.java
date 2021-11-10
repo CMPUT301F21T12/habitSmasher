@@ -1186,9 +1186,7 @@ public class MainActivityTest {
     }
 
     private void checkForToastMessage(String errorMessage) {
-        TextView toast = (TextView) _solo.getView(R.id.message);
-        Log.d("ToastTest", "Toast test: " + toast.toString());
-        assertEquals(errorMessage, toast.getText().toString(),errorMessage);
+        assertTrue(_solo.searchText(errorMessage));
     }
 
     private void assertTextOnScreen(String text) {

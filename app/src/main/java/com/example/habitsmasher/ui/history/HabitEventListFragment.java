@@ -1,6 +1,7 @@
 package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +49,8 @@ import java.util.UUID;
 public class HabitEventListFragment extends Fragment {
     // Initialize variables
     private static final String TAG = "HabitEventListFragment";
+    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
+    private static final String USER_ID_SHARED_PREF_TAG = "userId";
 
     private HabitEventItemAdapter _habitEventItemAdapter;
     private Habit _parentHabit;
@@ -65,8 +68,10 @@ public class HabitEventListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getArguments() != null) {
             _parentHabit = (Habit) getArguments().getSerializable("parentHabit");
-            _userId = (String) getArguments().getSerializable("userId");
         }
+
+        SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
+        _userId = sharedPref.getString(USER_ID_SHARED_PREF_TAG, "user");
 
         _parentHabit.setHabitEvents(new HabitEventList());
         _habitEventList = _parentHabit.getHabitEvents();
@@ -148,7 +153,7 @@ public class HabitEventListFragment extends Fragment {
     private Query getListOfHabitEventsFromFirebase(String userId) {
         // Query is made of username, habit name, and events
         Query query = _db.collection("Users")
-                        .document(userId)
+                        .document(_userId)
                         .collection("Habits")
                         .document(Long.toString(_parentHabit.getId()))
                         .collection("Events");
