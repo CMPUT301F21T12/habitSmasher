@@ -13,6 +13,8 @@ import android.widget.DatePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.example.habitsmasher.DatabaseEntity;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.HabitDialog;
