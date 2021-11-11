@@ -19,7 +19,6 @@ import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ItemAdapterInterface;
 import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,11 +34,10 @@ import java.util.List;
  * Custom adapter class that is used to connect the Firestore database and the
  * RecyclerView displaying the habits
  */
-public class HabitItemAdapter implements ItemAdapterInterface<HabitItemAdapter.HabitViewHolder, Habit> {
+public class HabitItemAdapter extends ItemAdapterInterface<Habit, HabitItemAdapter.HabitViewHolder> {
     private static HabitList _habits;
     private static HabitListFragment _habitListFragment;
     private final String _username;
-    public final ObservableSnapshotArray<Habit> _snapshots;
     private final FragmentActivity _activity;
     private Context _context;
 
@@ -57,7 +55,7 @@ public class HabitItemAdapter implements ItemAdapterInterface<HabitItemAdapter.H
                             HabitList habits,
                             HabitListFragment fragment,
                             String username) {
-        _snapshots = options.getSnapshots();
+        super(options);
         _activity = activity;
         _habits = habits;
         _habitListFragment = fragment;

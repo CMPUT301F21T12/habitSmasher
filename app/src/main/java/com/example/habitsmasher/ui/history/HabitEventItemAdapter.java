@@ -26,11 +26,10 @@ import java.text.SimpleDateFormat;
  * Based on HabitItemAdapter, extension of FirestoreRecycler that shows habit events list with
  * live updates
  */
-public class HabitEventItemAdapter implements ItemAdapterInterface<HabitEventItemAdapter.HabitEventViewHolder, HabitEvent> {
+public class HabitEventItemAdapter extends ItemAdapterInterface<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
     // Initialize variables
+    private static String DATE_FORMAT = "dd/MM/yyyy";
     private Context _context;
-    private final String DATE_FORMAT = "dd/MM/yyyy";
-    public final ObservableSnapshotArray<HabitEvent> _snapshots;
     private static Habit _parentHabit;
     private static String _username;
     private static HabitEventList _habitEvents;
@@ -48,7 +47,7 @@ public class HabitEventItemAdapter implements ItemAdapterInterface<HabitEventIte
                                  String username,
                                  HabitEventList habitEvents,
                                  HabitEventListFragment fragment) {
-        _snapshots = options.getSnapshots();
+        super(options);
         _parentHabit = parentHabit;
         _username = username;
         _habitEvents = habitEvents;
