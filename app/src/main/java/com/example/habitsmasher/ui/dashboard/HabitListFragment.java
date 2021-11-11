@@ -140,7 +140,7 @@ public class HabitListFragment extends Fragment {
         });
 
         initializeRecyclerView(layoutManager, view);
-        Log.d(TAG, String.valueOf(_habitList.getHabit(0).getPublic()));
+
         return view;
     }
 

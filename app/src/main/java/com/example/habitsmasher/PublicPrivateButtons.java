@@ -6,6 +6,7 @@ import android.nfc.Tag;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -34,8 +35,11 @@ public class PublicPrivateButtons {
 
         // set the public button as the default button.
         _publicButton.performClick();
+        _publicButton.setClickable(false);
         _publicSelected = true;
         _privateSelected = false;
+        Log.d("BUTTONS", "Standard const., public="+_publicSelected+", private="+_privateSelected);
+        Log.d("BUTTONS", "Is button clickable? " + _publicButton.isClickable());
 
     }
 
@@ -55,12 +59,14 @@ public class PublicPrivateButtons {
         if (isPublic){
             Log.d(TAG, "Habit is public.");
             _publicButton.performClick();
+            _publicButton.setClickable(false);
             _publicSelected = true;
             _privateSelected = false;
         }
         else{
             Log.d(TAG, "Habit is private.");
             _privateButton.performClick();
+            _privateButton.setClickable(false);
             _publicSelected = false;
             _privateSelected = true;
         }
@@ -89,7 +95,7 @@ public class PublicPrivateButtons {
                 // make only the private button clickable
                 _publicButton.setClickable(false);
                 _privateButton.setClickable(true);
-                //Log.d("Pu/Pr button status", "1! Public: " + _publicSelected + ", Private: " + _privateSelected);
+                Log.d("Pu/Pr button status", "1! Public: " + _publicSelected + ", Private: " + _privateSelected);
             }
         });
 
@@ -106,7 +112,7 @@ public class PublicPrivateButtons {
                 // make only the public button clickable
                 _publicButton.setClickable(true);
                 _privateButton.setClickable(false);
-                //Log.d("Pu/Pr button status", "2! Public: " + _publicSelected + ", Private: " + _privateSelected);
+                Log.d("Pu/Pr button status", "2! Public: " + _publicSelected + ", Private: " + _privateSelected);
             }
         });
     }
