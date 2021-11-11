@@ -18,7 +18,9 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ItemAdapterInterface;
 import com.example.habitsmasher.R;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -39,27 +41,23 @@ public class HabitItemAdapter extends ItemAdapterInterface<Habit, HabitItemAdapt
     private static HabitListFragment _habitListFragment;
     private final String _username;
     private final FragmentActivity _activity;
+    private final String _userId;
     private Context _context;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      * @param options the firestore entities
-     * @param activity
      * @param habits the habit list
      * @param fragment the habitListFragment
-     * @param username the username of the current user
+     * @param userId the username of the current user
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
-                            FragmentActivity activity,
                             HabitList habits,
-                            HabitListFragment fragment,
-                            String username) {
+                            String userId) {
         super(options);
-        _activity = activity;
         _habits = habits;
-        _habitListFragment = fragment;
-        _username = username;
+        _userId = userId;
     }
 
 
@@ -73,9 +71,9 @@ public class HabitItemAdapter extends ItemAdapterInterface<Habit, HabitItemAdapt
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HabitViewHolder holder,
-                                 int position,
-                                 @NonNull Habit habit) {
+    protected void onBindViewHolder(@NonNull HabitViewHolder holder,
+                                    int position,
+                                    @NonNull Habit habit) {
         // set necessary elements of the habit
         holder._habitTitle.setText(habit.getTitle());
     }
@@ -105,17 +103,17 @@ public class HabitItemAdapter extends ItemAdapterInterface<Habit, HabitItemAdapt
 
         /**
          * Deletes all child habit events of a habit
-         * @param username (String) The current user's username
+         * @param userId (String) The current user's username
          * @param parentHabit (Habit) The habit to delete
          */
-        public void deleteHabitEvents(String username, Habit parentHabit) {
+        public void deleteHabitEvents(String userId, Habit parentHabit) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             // get all of the habit events
             Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
-                    .document(username)
+                    .document(userId)
                     .collection("Habits")
-                    .document(Long.toString(parentHabit.getId()))
+                    .document(parentHabit.getId())
                     .collection("Events")
                     .get();
 

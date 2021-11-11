@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.example.habitsmasher.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_LoginFragment"
+            app:destination="@id/user_login"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -23,10 +27,39 @@
     </fragment>
 
     <fragment
+        android:id="@+id/user_login"
+        android:name="com.example.habitsmasher.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/user_login" >
+        <action
+            android:id="@+id/action_navigation_login_to_UserRegistrationFragment"
+            app:destination="@id/user_registration"/>
+
+        <action
+            android:id="@+id/action_navigation_login_to_ProfileFragment"
+            app:destination="@id/navigation_notifications"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/user_registration"
+        android:name="com.example.habitsmasher.UserRegistrationFragment"
+        android:label="Registration"
+        tools:layout="@layout/user_registration" >
+        <action
+            android:id="@+id/action_navigation_registration_to_UserLoginFragment"
+            app:destination="@id/user_login"/>
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.habitsmasher.ui.profile.ProfileFragment"
         android:label="@string/profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_logout"
+            app:destination="@id/user_login"/>
+    </fragment>
+
     <fragment
         android:id="@+id/habitViewFragment"
         android:name="com.example.habitsmasher.ui.dashboard.HabitViewFragment"

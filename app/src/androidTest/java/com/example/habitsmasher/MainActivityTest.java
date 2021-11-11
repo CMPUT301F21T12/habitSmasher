@@ -46,9 +46,27 @@ public class MainActivityTest {
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
     private static final String DELETE_BUTTON = "DELETE";
     private static final String EDIT_HABIT_DIALOG = "Edit Habit";
-    private static final long HABIT_ID = 1;
+    private static final String HABIT_ID = "1";
+    private static final String VALID_EMAIL = "validEmail@gmail.com";
+    private static final String VALID_USERNAME = "validUsername";
+    private static final String VALID_PASSWORD = "validPwd";
+    private static final String NEW_USER_ID = "123456789";
+    private static final String SIGN_UP_TEXT = "Sign Up";
+    private static final String INVALID_EMAIL = "badEmail123";
+    private static final String USERNAME_IS_REQUIRED = "Username is required!";
+    private static final String EMAIL_IS_REQUIRED = "Email is required!";
+    private static final String PASSWORD_IS_REQUIRED = "Password is required!";
+    private static final String INVALID_EMAIL_FORMAT = "Invalid email format!";
+    private static final String INCORRECT_EMAIL_PASSWORD = "Incorrect email/password";
+    private static final String LOGIN_TEXT = "Login";
+    private static final String TEST_USER_ID = "TEST";
+    private static final String TEST_USER_USERNAME = "TestUser";
+    private static final String TEST_USER_EMAIL = "test@gmail.com";
+    private static final String TEST_USER_PASSWORD = "123456";
 
     private Solo _solo;
+    private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
+                                      TEST_USER_PASSWORD);
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -77,6 +95,8 @@ public class MainActivityTest {
      */
     @Test
     public void navigateToHabitList(){
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -92,6 +112,8 @@ public class MainActivityTest {
      */
     @Test
     public void navigateToUserProfile(){
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -102,20 +124,10 @@ public class MainActivityTest {
         assertTextOnScreen(PROFILE_TEXT);
     }
 
-    /**
-     * Make sure that the home screen is displayed when the app starts
-     */
-    @Test
-    public void ensureHomeScreenDisplayedOnStart(){
-        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
-        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
-
-        // ensure that the app has transitioned to the Notifications screen
-        assertTextOnScreen(HOME_TEXT);
-    }
-
     @Test
     public void navigateToHabitViewFragment() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -169,6 +181,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitAddedSuccessfully() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -207,6 +221,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitAdditionFails_emptyTitle() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -251,6 +267,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitAdditionFails_titleTooLong() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -300,6 +318,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitAdditionFails_reasonTooLong() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -349,6 +369,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitAdditionFails_reasonEmpty() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -397,6 +419,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitAdditionFails_dateEmpty() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -441,6 +465,7 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitAdditionFails_NoDays(){
+        logInTestUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
@@ -486,7 +511,6 @@ public class MainActivityTest {
 
     }
 
-
     /**
      * Tests edit function is working correctly
      * Testing swipe code found here:
@@ -496,6 +520,8 @@ public class MainActivityTest {
      */
     @Test
     public void ensureEditIsFunctioning() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -554,6 +580,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitDeletedSuccessfully() {
+        logInTestUser();
+
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
@@ -592,6 +620,8 @@ public class MainActivityTest {
 
     @Test
     public void navigateToHabitEventsList() {
+        logInTestUser();
+
         // Navigate to view habit
         Habit testHabit = goToViewHabit("ViewEventsTest");
 
@@ -610,6 +640,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitEventAddedSuccessfully() {
+        logInTestUser();
+
         // Navigate to view habit
         Habit testHabit = goToViewHabit("AddEventTest");
 
@@ -650,6 +682,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitEventFails_emptyComment() {
+        logInTestUser();
+
         // Navigate to view habit
         Habit testHabit = goToViewHabit("EmptyComEventTest");
 
@@ -696,6 +730,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitEventFails_commentTooLong() {
+        logInTestUser();
+
         // Navigate to view habit
         Habit testHabit = goToViewHabit("LongCommentEventTest");
 
@@ -747,6 +783,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitEventFails_dateEmpty() {
+        logInTestUser();
+
         // Navigate to view habit
         Habit testHabit = goToViewHabit("EmptyDateEventTest");
 
@@ -793,6 +831,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitEventDeletedSuccessfully() {
+        logInTestUser();
+
         // Navigate to view habit
         Habit testHabit = goToViewHabit("DeleteEventTest");
 
@@ -836,6 +876,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitEventEditedSuccessfully_changeDate() {
+        logInTestUser();
+
         // Navigate to view habit
         Habit testHabit = goToViewHabit("EditDateEvent");
 
@@ -888,6 +930,8 @@ public class MainActivityTest {
 
     @Test
     public void ensureHabitEventEditedSuccessfully_changeComment() {
+        logInTestUser();
+
         // Navigate to view habit
         Habit testHabit = goToViewHabit("EditCommentEvent");
 
@@ -940,6 +984,91 @@ public class MainActivityTest {
         _solo.goBack();
         _solo.goBack();
         deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void signUpNewUser_emptyUsername_signUpFails() {
+        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD);
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        _solo.enterText(_solo.getEditText("Username"), newUser.getUsername());
+        _solo.enterText(_solo.getEditText("Email"), newUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), newUser.getPassword());
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        assertTextOnScreen(USERNAME_IS_REQUIRED);
+    }
+
+    @Test
+    public void signUpNewUser_emptyEmail_signUpFails() {
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD);
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        _solo.enterText(_solo.getEditText("Username"), newUser.getUsername());
+        _solo.enterText(_solo.getEditText("Email"), newUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), newUser.getPassword());
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        assertTextOnScreen(EMAIL_IS_REQUIRED);
+    }
+
+    @Test
+    public void signUpNewUser_emptyPassword_signUpFails() {
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "");
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        _solo.enterText(_solo.getEditText("Username"), newUser.getUsername());
+        _solo.enterText(_solo.getEditText("Email"), newUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), newUser.getPassword());
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        assertTextOnScreen(PASSWORD_IS_REQUIRED);
+    }
+
+    @Test
+    public void loginTestUser_invalidEmail_loginFails() {
+        _solo.enterText(_solo.getEditText("Email"), INVALID_EMAIL);
+        _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
+
+        _solo.clickOnButton(LOGIN_TEXT);
+
+        assertTextOnScreen(INVALID_EMAIL_FORMAT);
+    }
+
+    @Test
+    public void loginTestUser_emptyEmail_loginFails() {
+        _solo.enterText(_solo.getEditText("Email"), "");
+        _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
+
+        _solo.clickOnButton(LOGIN_TEXT);
+
+        assertTextOnScreen(EMAIL_IS_REQUIRED);
+    }
+
+    @Test
+    public void loginTestUser_invalidPassword_loginFails() {
+        _solo.enterText(_solo.getEditText("Email"), _testUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), "wrongPassword");
+
+        _solo.clickOnButton(LOGIN_TEXT);
+
+        assertTextOnScreen(INCORRECT_EMAIL_PASSWORD);
+    }
+
+    @Test
+    public void loginTestUser_emptyPassword_loginFails() {
+        _solo.enterText(_solo.getEditText("Email"), _testUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), "");
+
+        _solo.clickOnButton(LOGIN_TEXT);
+
+        assertTextOnScreen(PASSWORD_IS_REQUIRED);
     }
 
     private void deleteTestHabit(Habit habitToDelete) {
@@ -1057,9 +1186,7 @@ public class MainActivityTest {
     }
 
     private void checkForToastMessage(String errorMessage) {
-        TextView toast = (TextView) _solo.getView(R.id.message);
-        Log.d("ToastTest", "Toast test: " + toast.toString());
-        assertEquals(errorMessage, toast.getText().toString(),errorMessage);
+        assertTrue(_solo.searchText(errorMessage));
     }
 
     private void assertTextOnScreen(String text) {
@@ -1082,5 +1209,12 @@ public class MainActivityTest {
         // Different states. This gives the difference between states.
         //Log.d("Monday Background", _solo.getView(R.id.monday_button).getBackground().toString());
         //Log.d("Tuesday Background", _solo.getView(R.id.tuesday_button).getBackground().toString());
+    }
+
+    private void logInTestUser() {
+        _solo.enterText(_solo.getEditText("Email"), _testUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
+
+        _solo.clickOnButton(LOGIN_TEXT);
     }
 }

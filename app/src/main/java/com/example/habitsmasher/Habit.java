@@ -31,7 +31,8 @@ public class Habit extends DatabaseEntity implements Serializable {
      * @param habitId id of habit
      * @param habitEvents list holding habit events
      */
-    public Habit (String title, String reason, Date date, String days, long habitId, HabitEventList habitEvents) {
+    public Habit (String title, String reason, Date date, String days, String habitId,
+                  HabitEventList habitEvents) {
         super(habitId);
         _title = title;
         _reason = reason;
