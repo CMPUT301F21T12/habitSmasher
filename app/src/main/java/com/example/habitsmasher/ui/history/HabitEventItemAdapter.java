@@ -4,11 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
@@ -91,12 +89,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         private final TextView _habitEventComment;
         private final TextView _habitEventDateWithButtons;
         private final TextView _get_habitEventCommentWithButtons;
-        private final Button _editHabitEventButton;
-        private final Button _deleteHabitEventButton;
-        private final ConstraintLayout _layoutWithoutButtons;
-        private final ConstraintLayout _layoutWithButtons;
-        private HabitEventViewHolder _habitEventViewHolder = this;
-
         // private final ImageView _habitEventImage;
 
         /**
@@ -115,57 +107,7 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
             _habitEventComment = itemView.findViewById(R.id.habit_event_comment);
             _habitEventDateWithButtons = itemView.findViewById(R.id.habit_event_date_with_buttons);
             _get_habitEventCommentWithButtons = itemView.findViewById(R.id.habit_event_comment_with_buttons);
-            _editHabitEventButton = itemView.findViewById(R.id.edit_habit_event_button);
-            _deleteHabitEventButton = itemView.findViewById(R.id.delete_habit_event_button);
-            _layoutWithButtons = itemView.findViewById(R.id.habit_event_row_button_view);
-            _layoutWithoutButtons = itemView.findViewById(R.id.habit_event_row_normal_view);
             // _habitEventImage = itemView.findViewById(R.id.habit_event_image);
-
-            // Add listener to delete button
-            _deleteHabitEventButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Get habit event for which button was clicked
-                    int eventPosition = getAdapterPosition();
-                    HabitEvent toDelete = _snapshots.get(eventPosition);
-
-                    // Delete the habit event
-                    _habitEvents.deleteHabitEvent(context, userId, parentHabit, toDelete);
-                }
-            });
-
-            // Add listener to edit button
-            _editHabitEventButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Get position of click, and corresponding habit event
-                    int eventPosition = getAdapterPosition();
-                    HabitEvent toEdit = _snapshots.get(eventPosition);
-
-                    // Open edit habit event dialog
-                    EditHabitEventFragment editHabitEventFragment = new EditHabitEventFragment(eventPosition,
-                                                                            toEdit,
-                                                                            _habitEventListFragment,
-                                                                            _habitEventViewHolder);
-                    editHabitEventFragment.show(_habitEventListFragment.getFragmentManager(), "Edit Habit Event");
-                }
-            });
-        }
-
-        /**
-         * Sets view with buttons as visible, sets view without buttons as invisible
-         */
-        public void setButtonView() {
-            _layoutWithoutButtons.setVisibility(View.INVISIBLE);
-            _layoutWithButtons.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * Sets view without buttons as visible, sets view with buttons as invisible
-         */
-        public void setNoButtonView() {
-            _layoutWithButtons.setVisibility(View.INVISIBLE);
-            _layoutWithoutButtons.setVisibility(View.VISIBLE);
         }
     }
 

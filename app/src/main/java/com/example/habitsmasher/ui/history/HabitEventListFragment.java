@@ -11,9 +11,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +23,7 @@ import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -133,7 +135,41 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(_habitEventItemAdapter);
-        new ItemTouchHelper(_itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
+        /* Implementation of swipe menu functionality came from this source:
+        Name: Velmurugan
+        Date: March 4, 2021
+        URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
+         */
+        // create a touch listener which handles the click and swipe function of the RecyclerView
+        RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+
+        touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+            @Override
+            // if row at the specified position is clicked
+            public void onRowClicked(int position) {
+                openViewWindowForItem(position);
+            }
+        })
+                .setSwipeOptionViews(R.id.edit_habit_event_button, R.id.delete_habit_event_button)
+                .setSwipeable(R.id.habit_event_row_normal_view, R.id.habit_event_row_button_view, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                    @Override
+                    public void onSwipeOptionClicked(int viewID, int position) {
+                        // edit and delete functionality below
+                        switch (viewID){
+                            // if edit button clicked
+                            case R.id.edit_habit_event_button:
+                                openEditDialogBox(position);
+                                break;
+                            // if delete button clicked
+                            case R.id.delete_habit_event_button:
+                                updateListAfterDelete(position);
+                                break;
+                        }
+
+                    }
+                });
+        recyclerView.addOnItemTouchListener(touchListener);
     }
 
     /**
@@ -204,6 +240,16 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
 
+    // TODO: add this to list fragment class once swipe is complete in habit event list
+    protected void openEditDialogBox(int position) {
+        EditHabitEventFragment editHabitEventFragment = new EditHabitEventFragment(position,
+                _habitEventItemAdapter._snapshots.get(position),
+                this
+                );
+        editHabitEventFragment.show(getFragmentManager(),
+                "Edit Habit Event");
+    }
+
     /**
      * Add a new habit event to the database
      * @param addedHabitEvent
@@ -222,6 +268,16 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
     public void updateListAfterEdit(HabitEvent editedHabitEvent, int pos) {
         _habitEventList.editHabitInDatabase(editedHabitEvent, _userId, _parentHabit);
         _habitEventItemAdapter.notifyItemChanged(pos);
+    }
+
+    // TODO: add to list fragment class once swipe is fixed in habit events
+    public void updateListAfterDelete(int position) {
+        HabitEvent habitEventToDelete = _habitEventItemAdapter._snapshots.get(position);
+        _habitEventList.deleteHabitEvent(getActivity(),
+                _userId,
+                _parentHabit,
+                habitEventToDelete
+        );
     }
 
     /**
@@ -258,38 +314,19 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         });
     }
 
-    /**
-     * The implementation of the swipe to delete functionality below came from the following URL:
-     * https://stackoverflow.com/questions/33985719/android-swipe-to-delete-recyclerview
-     *
-     * Name: Rahul Raina
-     * Date: November 2, 2016
-     */
-    ItemTouchHelper.SimpleCallback _itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView,
-                              @NonNull RecyclerView.ViewHolder viewHolder,
-                              @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
+    // TODO: add this to list fragment class once view is implemented for habitevents
+    protected void openViewWindowForItem(int position) {
+        // Get the selected habit
+        HabitEvent currentHabitEvent = _habitEventItemAdapter._snapshots.get(position);
 
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            // Get the habit event view holder
-            HabitEventItemAdapter.HabitEventViewHolder habitEventViewHolder = (HabitEventItemAdapter.HabitEventViewHolder) viewHolder;
+        // Create a bundle to be passed into the habitViewFragment
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("habitEvent", currentHabitEvent);
+        NavController controller = NavHostFragment.findNavController(this);
 
-            // Switch to buttons or no buttons view depending on swipe direction
-            if (direction == ItemTouchHelper.LEFT) {
-                habitEventViewHolder.setButtonView();
-            } else if (direction == ItemTouchHelper.RIGHT){
-                habitEventViewHolder.setNoButtonView();
-            }
-
-            // Alert item adapter that there was a change
-            _habitEventItemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
-        }
-    };
-
+        // Navigate to the habitViewFragment
+        controller.navigate(R.id.action_navigation_habitEventList_to_habitEventView, bundle);
+    }
 
     @Override
     public void onDestroyView() { super.onDestroyView();}

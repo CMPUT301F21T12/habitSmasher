@@ -33,20 +33,17 @@ public class EditHabitEventFragment extends DialogFragment {
     private final int _index;
     private final HabitEvent _editHabitEvent;
     private final HabitEventListFragment _listener;
-    private final HabitEventItemAdapter.HabitEventViewHolder _viewHolder;
 
     /**
      * Default constructor
      * @param index (int) The index of the habit to edit within the list
      * @param editHabitEvent (HabitEvent) The habit event to edit
      * @param listener (HabitEventListFragment) The parent fragment
-     * @param habitEventViewHolder (HabitEventViewHolder) The view holder associated with the habit event
      */
-    public EditHabitEventFragment (int index, HabitEvent editHabitEvent, HabitEventListFragment listener, HabitEventItemAdapter.HabitEventViewHolder habitEventViewHolder) {
+    public EditHabitEventFragment (int index, HabitEvent editHabitEvent, HabitEventListFragment listener) {
         _index = index;
         _editHabitEvent = editHabitEvent;
         _listener = listener;
-        _viewHolder = habitEventViewHolder;
     }
 
     @Nullable

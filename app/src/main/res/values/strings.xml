@@ -45,4 +45,7 @@
     <string name="login">Login</string>
     <string name="go_back">Go back</string>
     <string name="username_capitalU">Username</string>
+    <string name="view_event_date_label">DATE OF EVENT</string>
+    <string name="view_event_comment_label">COMMENT</string>
+    <string name="view_event_location_label">LOCATION</string>
 </resources>
