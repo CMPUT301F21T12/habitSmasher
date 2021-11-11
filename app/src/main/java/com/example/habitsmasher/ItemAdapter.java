@@ -7,7 +7,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 
-public abstract class ItemAdapterInterface <A, B extends RecyclerView.ViewHolder> extends FirestoreRecyclerAdapter<A, B> {
+public abstract class ItemAdapter<A, B extends RecyclerView.ViewHolder> extends FirestoreRecyclerAdapter<A, B> {
     public final ObservableSnapshotArray<A> _snapshots;
 
     /**
@@ -16,7 +16,7 @@ public abstract class ItemAdapterInterface <A, B extends RecyclerView.ViewHolder
      *
      * @param options
      */
-    public ItemAdapterInterface(@NonNull FirestoreRecyclerOptions<A> options) {
+    public ItemAdapter(@NonNull FirestoreRecyclerOptions<A> options) {
         super(options);
         _snapshots = options.getSnapshots();
     }
