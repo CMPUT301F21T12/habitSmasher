@@ -1068,7 +1068,7 @@ public class MainActivityTest {
 
         _solo.clickOnButton(LOGIN_TEXT);
 
-        checkForToastMessage(PASSWORD_IS_REQUIRED);
+        assertTextOnScreen(PASSWORD_IS_REQUIRED);
     }
 
     private void deleteTestHabit(Habit habitToDelete) {
