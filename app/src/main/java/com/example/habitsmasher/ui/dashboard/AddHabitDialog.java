@@ -23,6 +23,7 @@ import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
+import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
 
 /**
  * UI Class that represents and specifies the behaviour of the dialog
@@ -91,12 +92,7 @@ public class AddHabitDialog extends DialogFragment {
         setListenersForDaysOfTheWeek();
 
         // set the listener for the date picker
-        _habitDateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDatePickerDialog();
-            }
-        });
+        _habitDateTextView.setOnClickListener(new ClickListenerForDatePicker(getFragmentManager(), _habitDateTextView));
 
         // cancel button logic
         cancelNewHabit.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
@@ -229,28 +225,6 @@ public class AddHabitDialog extends DialogFragment {
                 Log.d("Tracker Status", _tracker.getDays());
             }
         });
-    }
-
-    /**
-     * Opens a DatePickerDialog that is used to select the date of the added habit
-     */
-    private void openDatePickerDialog(){
-        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
-            /**
-             * Sets the text of the date select view to reflect selected date
-             * @param view
-             * @param year year of selected date
-             * @param month month of selected date (integer from 0 to 11)
-             * @param day day of month of selected date
-             */
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                int correctedMonth = month + 1;
-                String date =  day + "/" + correctedMonth + "/" + year;
-                _habitDateTextView.setText(date);
-            }
-        });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 
     @Override

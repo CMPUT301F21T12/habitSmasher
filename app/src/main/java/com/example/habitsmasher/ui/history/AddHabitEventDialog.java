@@ -27,6 +27,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
+import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
 
 /**
  * The AddHabitEventDialog
@@ -67,12 +68,7 @@ public class AddHabitEventDialog extends DialogFragment {
         header.setText("Add Habit Event");
 
         // Add listener to date text to open date picker
-        _eventDateText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDatePickerDialog();
-            }
-        });
+        _eventDateText.setOnClickListener(new ClickListenerForDatePicker(getFragmentManager(), _eventDateText));
 
         // Add listener to cancel button which closes dialog
         _cancelNewEvent.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
@@ -131,28 +127,6 @@ public class AddHabitEventDialog extends DialogFragment {
                 }
                 break;
         }
-    }
-
-    /**
-     * Opens date picker dialog when selecting date when adding a habit event
-     */
-    private void openDatePickerDialog(){
-        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
-            /**
-             * Sets the text of the date select view to reflect selected date
-             * @param view
-             * @param year year of selected date
-             * @param month month of selected date (integer from 0 to 11)
-             * @param day day of month of selected date
-             */
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                int correctedMonth = month + 1;
-                String date =  day + "/" + correctedMonth + "/" + year;
-                _eventDateText.setText(date);
-            }
-        });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 
     @Override
