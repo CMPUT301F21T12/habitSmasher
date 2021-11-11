@@ -46,7 +46,7 @@ public class MainActivityTest {
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
     private static final String DELETE_BUTTON = "DELETE";
     private static final String EDIT_HABIT_DIALOG = "Edit Habit";
-    private static final long HABIT_ID = 1;
+    private static final String HABIT_ID = "1";
     private static final String VALID_EMAIL = "validEmail@gmail.com";
     private static final String VALID_USERNAME = "validUsername";
     private static final String VALID_PASSWORD = "validPwd";

@@ -17,21 +17,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Class that acts as a container for habits, allowing for edit, delete and add operations
  */
 public class HabitList extends ArrayList<Habit>{
-
-    // array of Habits which reflect the database wrapped within HabitList
-    private ObservableSnapshotArray<Habit> _snapshots;
-
     // arraylist of habits, auto-updates whenever Habit added or edited
     private ArrayList<Habit> _habits = new ArrayList<>();
-
-    // set of IDs of existing Habits
-    public static HashSet<Long> habitIdSet = new HashSet<>();
 
     /**
      * Getter method to access Habit at pos
@@ -49,44 +41,6 @@ public class HabitList extends ArrayList<Habit>{
         return _habits;
     }
 
-    /**
-     * Wraps a snapshots array within the HabitList
-     * @param snapshots
-     */
-    public void setSnapshots(ObservableSnapshotArray<Habit> snapshots) {
-        _snapshots = snapshots;
-    }
-
-    /**
-     * Method that adds a habit with specified fields to the habit list of a specified
-     * user in the database
-     * @param title title of added habit
-     * @param reason reason of added habit
-     * @param date date of added habit
-     * @param userId id of the user of the habit list the habit is being added to
-     */
-    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker, String userId) {
-
-        // get collection of specified user (do we need this?)
-        FirebaseFirestore _db = FirebaseFirestore.getInstance();
-        final CollectionReference _collectionReference = _db.collection("Users")
-                                                            .document(userId)
-                                                            .collection("Habits");
-        // generate a random ID for HabitID
-        Long habitId = generateHabitId();
-
-        // initialize fields
-        HashMap<String, Object> habitData = new HashMap<>();
-        habitData.put("title", title);
-        habitData.put("reason", reason);
-        habitData.put("date", date);
-        habitData.put("id", habitId);
-        habitData.put("days", tracker.getDays());
-
-        // add habit to database, using it's habit ID as the document name
-        setHabitDataInDatabase(userId, habitId.toString(), habitData);
-        addHabitLocal(new Habit(title, reason, date, tracker.getDays(), habitId, new HabitEventList()));
-    }
 
     /**
      * Method that adds a Habit to the local habitList
@@ -97,14 +51,57 @@ public class HabitList extends ArrayList<Habit>{
     }
 
     /**
-     * Method that edits a Habit in the specified pos in the local HabitList
-     * @param newTitle new title of habit
-     * @param newReason new reason of habit
-     * @param newDate new date of habit
-     * @param pos position of habit
-     * @param tracker days of the week the habit takes place
+     * Method that adds a habit with specified fields to the habit list of a specified
+     * user in the database
+     * @param newHabit habit to be added to the database
+     * @param userId id of the user of the habit list the habit is being added to
      */
-    public void editHabitLocal(String newTitle, String newReason, Date newDate, DaysTracker tracker, int pos) {
+    public void addHabitToDatabase(Habit newHabit, String userId) {
+        // get collection of specified user (do we need this?)
+        FirebaseFirestore _db = FirebaseFirestore.getInstance();
+        final CollectionReference _collectionReference = _db.collection("Users")
+                                                            .document(userId)
+                                                            .collection("Habits");
+        // generate ID
+        String habitId = newHabit.getId();
+
+        // initialize fields
+        HashMap<String, Object> habitData = new HashMap<>();
+        habitData.put("title", newHabit.getTitle());
+        habitData.put("reason", newHabit.getReason());
+        habitData.put("date", newHabit.getDate());
+        habitData.put("id", habitId);
+        habitData.put("days", newHabit.getDays());
+
+        // add habit to database, using it's habit ID as the document name
+        setHabitDataInDatabase(userId, habitId, habitData);
+        addHabitLocal(newHabit);
+    }
+
+
+    /**
+     * Method that edits a Habit in the specified pos in the local HabitList
+     * @param editedHabit Habit containing the new fields of the editted habit
+     * @param pos position of habit
+     */
+    public void editHabitLocal(Habit editedHabit, int pos) {
+        Habit habit = _habits.get(pos);
+        habit.setTitle(editedHabit.getTitle());
+        habit.setReason(editedHabit.getReason());
+        habit.setDate(editedHabit.getDate());
+        habit.setDays(editedHabit.getDays());
+    }
+
+    /**
+     * Method that a edits a Habit in the specified pos in the local HabitList
+     * @param newTitle
+     * @param newReason
+     * @param newDate
+     * @param tracker
+     * @param pos
+     */
+    public void editHabitLocal(String newTitle, String newReason, Date newDate ,
+                               DaysTracker tracker, int pos) {
         Habit habit = _habits.get(pos);
         habit.setTitle(newTitle);
         habit.setReason(newReason);
@@ -114,41 +111,24 @@ public class HabitList extends ArrayList<Habit>{
 
     /**
      * Method that edits the habit at position pos in the database
-     * @param newTitle New title of habit
-     * @param newReason New reason of habit
-     * @param newDate New date of habit
+     * @param editedHabit Habit containing the new fields of the editted habit
      * @param pos Position of habit in the HabitList
      * @param userId id of user whose habits we are editing
      */
-    public void editHabitInDatabase(String newTitle, String newReason, Date newDate, DaysTracker tracker, int pos, String userId) {
-
+    public void editHabitInDatabase(Habit editedHabit, int pos, String userId) {
         // this acquires the unique habit ID of the habit to be edited
-        Long habitId = _habits.get(pos).getId();
+        String habitId = editedHabit.getId();
 
         // stores the new fields of the Habit into a hashmap
         HashMap<String, Object> habitData = new HashMap<>();
-        habitData.put("title", newTitle);
-        habitData.put("reason", newReason);
-        habitData.put("date", newDate);
+        habitData.put("title", editedHabit.getTitle());
+        habitData.put("reason", editedHabit.getReason());
+        habitData.put("date", editedHabit.getDate());
         habitData.put("id", habitId);
-        habitData.put("days", tracker.getDays());
+        habitData.put("days", editedHabit.getDays());
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
-        setHabitDataInDatabase(userId, habitId.toString(), habitData);
-    }
-
-    // TODO: this is a temporary implementation of generating unique habitIDs, improve this
-    /**
-     * Generate a habit ID for a new habit
-     * @return the generated habit ID
-     */
-    private long generateHabitId() {
-        long habitIdCounter = 1;
-        while(habitIdSet.contains(habitIdCounter)) {
-            habitIdCounter++;
-        }
-        habitIdSet.add(habitIdCounter);
-        return habitIdCounter;
+        setHabitDataInDatabase(userId, habitId, habitData);
     }
 
     /**
@@ -194,7 +174,7 @@ public class HabitList extends ArrayList<Habit>{
                             Habit habitToDelete,
                             int habitPosition) {
         // delete locally
-        deleteHabitLocally(habitPosition);
+        deleteHabitLocal(habitPosition);
 
         // delete from firebase
         deleteHabitFromDatabase(context, userId, habitToDelete);
@@ -204,7 +184,7 @@ public class HabitList extends ArrayList<Habit>{
      * This method deletes a habit from the local habit list
      * @param habitPosition the index of the habit to delete
      */
-    public void deleteHabitLocally(int habitPosition) {
+    public void deleteHabitLocal(int habitPosition) {
         _habits.remove(habitPosition);
     }
 
