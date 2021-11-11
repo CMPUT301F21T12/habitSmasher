@@ -1068,7 +1068,7 @@ public class MainActivityTest {
 
         _solo.clickOnButton(LOGIN_TEXT);
 
-        assertTextOnScreen(PASSWORD_IS_REQUIRED);
+        checkForToastMessage(PASSWORD_IS_REQUIRED);
     }
 
     private void deleteTestHabit(Habit habitToDelete) {
@@ -1216,5 +1216,6 @@ public class MainActivityTest {
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
 
         _solo.clickOnButton(LOGIN_TEXT);
+        _solo.sleep(4000);
     }
 }
