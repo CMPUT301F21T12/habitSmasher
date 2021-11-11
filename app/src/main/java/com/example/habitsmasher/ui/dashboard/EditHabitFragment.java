@@ -21,6 +21,8 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.R;
 
+import java.util.Date;
+
 /**
  *  UI Class that represents and specifies the behaviour of the dialog
  *  that is spawned when a user wants to edit a habit in their habit list
@@ -109,7 +111,7 @@ public class EditHabitFragment extends DialogFragment{
                 String habitTitle = _titleText.getText().toString();
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
-                boolean isPublic = _publicPrivateButtons.isPublic();
+                boolean isPublic = _publicPrivateButtons.isHabitPublic();
 
                 // habit validator to ensure data is formatted appropriately
                 HabitValidator habitValidator = new HabitValidator(getActivity());
@@ -117,10 +119,17 @@ public class EditHabitFragment extends DialogFragment{
                 if (!habitValidator.isHabitValid(habitTitle, reasonText, dateText, _tracker)) {
                     return;
                 }
+                Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
+                Habit editedHabit = new Habit(habitTitle,
+                                        reasonText,
+                                        newDate,
+                                        _tracker.getDays(),
+                                        isPublic,
+                                        _editHabit.getId(),
+                                        _editHabit.getHabitEvents());
 
                 // update local list and display
-                _listener.updateAfterEdit(habitTitle, reasonText, DatePickerDialogFragment.parseStringToDate(dateText), _index, _tracker, isPublic);
-
+                _listener.updateListAfterEdit(editedHabit, _index);
                 getDialog().dismiss();
             }
         });

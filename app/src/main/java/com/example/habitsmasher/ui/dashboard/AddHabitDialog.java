@@ -2,8 +2,6 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,11 +15,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.habitsmasher.DatabaseEntity;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.PublicPrivateButtons;
+import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
 
 /**
@@ -128,15 +129,20 @@ public class AddHabitDialog extends DialogFragment {
                 String habitTitle = _habitTitleEditText.getText().toString();
                 String habitReason = _habitReasonEditText.getText().toString();
                 String habitDate = _habitDateTextView.getText().toString();
-                boolean habitPublic = publicPrivateButtons.isPublic();
+                boolean habitPublic = publicPrivateButtons.isHabitPublic();
 
                 // if the habit is valid, add it to the local list and external db
                 if (habitValidator.isHabitValid(habitTitle,
                                                 habitReason,
                                                 habitDate, _tracker)){
-                    _habitListFragment.addHabitToDatabase(habitTitle,
-                                                          habitReason,
-                                                          habitValidator.checkHabitDateValid(habitDate), _tracker, habitPublic);
+                    Habit newHabit = new Habit(habitTitle,
+                                               habitReason,
+                                               habitValidator.checkHabitDateValid(habitDate),
+                                               _tracker.getDays(),
+                                               habitPublic,
+                                               DatabaseEntity.generateId(),
+                                                new HabitEventList());
+                    _habitListFragment.updateListAfterAdd(newHabit);
                     getDialog().dismiss();
                 }
             }

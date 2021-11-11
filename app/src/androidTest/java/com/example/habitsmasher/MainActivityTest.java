@@ -49,7 +49,7 @@ public class MainActivityTest {
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
     private static final String DELETE_BUTTON = "DELETE";
     private static final String EDIT_HABIT_DIALOG = "Edit Habit";
-    private static final long HABIT_ID = 1;
+    private static final String HABIT_ID = "1";
     private static final String VALID_EMAIL = "validEmail@gmail.com";
     private static final String VALID_USERNAME = "validUsername";
     private static final String VALID_PASSWORD = "validPwd";
@@ -524,7 +524,6 @@ public class MainActivityTest {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
-        _solo.waitForActivity("ProfileActivity", 4000);
 
         // click on the Habit List tab in the bottom navigation bar
         _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
@@ -565,8 +564,8 @@ public class MainActivityTest {
         // assert that the correct buttons are selected, not just the underlying habit
         CheckBox publicBox = (CheckBox) _solo.getView(R.id.public_button);
         CheckBox privateBox = (CheckBox) _solo.getView(R.id.private_button);
-        assert publicBox.isChecked();
-        assert !(privateBox.isChecked());
+        assertTrue(publicBox.isChecked());
+        assertFalse(privateBox.isChecked());
 
         _solo.goBack();
 
@@ -580,7 +579,6 @@ public class MainActivityTest {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
 
-        _solo.waitForActivity("ProfileActivity", 4000);
 
         // click on the Habit List tab in the bottom navigation bar
         _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
@@ -623,8 +621,8 @@ public class MainActivityTest {
         CheckBox privateBox = (CheckBox) _solo.getView(R.id.private_button);
 
         // assert that the correct buttons are selected, not just the underlying habit
-        assert privateBox.isChecked();
-        assert !(publicBox.isChecked());
+        assertTrue(privateBox.isChecked());
+        assertFalse(publicBox.isChecked());
 
         _solo.goBack();
 
@@ -1306,7 +1304,7 @@ public class MainActivityTest {
     }
 
     private void setPrivacyInAddHabitDialogBox(boolean privacy){
-        if (privacy == PUBLIC_HABIT) {
+        if (privacy) {
             _solo.clickOnView(_solo.getView(R.id.public_button));
         } else {
             _solo.clickOnView(_solo.getView(R.id.private_button));

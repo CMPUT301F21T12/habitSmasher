@@ -57,14 +57,12 @@ public class PublicPrivateButtons {
 
         // if its public, click the public button. if not, click the private button
         if (isPublic){
-            Log.d(TAG, "Habit is public.");
             _publicButton.performClick();
             _publicButton.setClickable(false);
             _publicSelected = true;
             _privateSelected = false;
         }
         else{
-            Log.d(TAG, "Habit is private.");
             _privateButton.performClick();
             _privateButton.setClickable(false);
             _publicSelected = false;
@@ -95,7 +93,6 @@ public class PublicPrivateButtons {
                 // make only the private button clickable
                 _publicButton.setClickable(false);
                 _privateButton.setClickable(true);
-                Log.d("Pu/Pr button status", "1! Public: " + _publicSelected + ", Private: " + _privateSelected);
             }
         });
 
@@ -112,7 +109,6 @@ public class PublicPrivateButtons {
                 // make only the public button clickable
                 _publicButton.setClickable(true);
                 _privateButton.setClickable(false);
-                Log.d("Pu/Pr button status", "2! Public: " + _publicSelected + ", Private: " + _privateSelected);
             }
         });
     }
@@ -122,7 +118,7 @@ public class PublicPrivateButtons {
      * selected the private button is unselected, and vice versa.
      * @return
      */
-    public boolean isPublic(){
+    public boolean isHabitPublic(){
         if (_publicSelected) return true;
         else return false;
     }

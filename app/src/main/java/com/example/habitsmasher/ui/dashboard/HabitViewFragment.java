@@ -1,10 +1,6 @@
 package com.example.habitsmasher.ui.dashboard;
 
-import static android.content.ContentValues.TAG;
-
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +32,6 @@ public class HabitViewFragment extends Fragment {
     // user which owns this habit
     private String _userId;
 
-    // buttons representing days of the week
-    private Button _mondayButton;
-    private Button _tuesdayButton;
-    private Button _wednesdayButton;
-    private Button _thursdayButton;
-    private Button _fridayButton;
-    private Button _saturdayButton;
-    private Button _sundayButton;
 
     private PublicPrivateButtons _publicPrivateButtons;
 

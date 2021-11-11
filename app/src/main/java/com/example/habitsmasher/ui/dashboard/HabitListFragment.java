@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -18,10 +17,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.HabitList;
+import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -29,11 +28,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,25 +38,22 @@ import java.util.Map;
  * UI class that represents and specifies the behaviour of the user interface
  * displayed when a user is accessing their own habit list
  */
-public class HabitListFragment extends Fragment {
+public class HabitListFragment extends ListFragment<Habit> {
+
     private static final String TAG = "HabitListFragment";
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
 
     // user who owns this list of habits displayed
     private User _user;
 
+    private Context _context;
+
     // list of habits being displayed
     private HabitList _habitList;
 
     // adapter that connects the RecyclerView to the database
+    // note: can extract this to list fragment once adapter interface is done
     private HabitItemAdapter _habitItemAdapter;
-
-    // needed for dialogs spawned from this fragment
-    private final HabitListFragment _fragment = this;
-
-    FirebaseFirestore _db = FirebaseFirestore.getInstance();
-
-    private Context _context;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -71,60 +65,17 @@ public class HabitListFragment extends Fragment {
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit List");
 
+
         // query firebase for all habits that correspond to the current user
-        Query query = getListOfHabitsFromFirebase(_user.getId());
+        Query query = getListFromFirebase();
 
         // populate the list with existing items in the database
         FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
                 .setQuery(query, Habit.class)
                 .build();
 
-        //get all of the habits
-        Task<QuerySnapshot> querySnapshotTask = _db.collection("Users")
-                                                    .document(_user.getId())
-                                                    .collection("Habits")
-                                                    .get();
-
-        /*
-        populate HabitList with current Habits and habit IDs to initialize state to match
-        database, fills when habitList is empty and snapshot is not, which is only
-        when app is initially launched
-        */
-        if (_habitList.getHabitList().isEmpty()) {
-            // wait for all the snapshots to come in
-            while (!querySnapshotTask.isComplete());
-
-            // make a list of all of the habit snapshots
-            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
-
-            // convert all of the snapshots into proper habits
-            for (int i = 0; i < snapshotList.size(); i++) {
-                // get the data and convert to hashmap, also print to log
-                Map<String, Object> extractMap = snapshotList.get(i).getData();
-                Log.d(TAG, extractMap.toString());
-
-                // get all of the data from the snapshot
-                String title = (String) extractMap.get("title");
-                String reason = (String) extractMap.get("reason");
-                Timestamp date = (Timestamp) extractMap.get("date");
-                Long id = (Long) extractMap.get("id");
-                String days = (String) extractMap.get("days");
-                boolean isPublic = (boolean) extractMap.get("public");
-
-                // create a new habit with the snapshot data
-                Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
-
-                Log.d(TAG, String.valueOf(addHabit.getPublic()));
-
-                // add the habit to the local list
-                _habitList.addHabitLocal(addHabit);
-                HabitList.habitIdSet.add(id);
-            }
-
-        }
-        //wraps the snapshots representing the HabitList of the user in the HabitList
-        _habitList.setSnapshots(options.getSnapshots());
-        _habitItemAdapter = new HabitItemAdapter(options, getActivity(), _habitList, _fragment, _user.getId());
+        populateList(query);
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
@@ -135,48 +86,12 @@ public class HabitListFragment extends Fragment {
         addHabitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openAddHabitDialogBox();
+                openAddDialogBox();
             }
         });
 
         initializeRecyclerView(layoutManager, view);
-
         return view;
-    }
-
-    /**
-     * This method queries the database for all habits that correspond to the specified user
-     * @param userId the user to get the habits for
-     * @return resulting firebase query
-     */
-    @NonNull
-    private Query getListOfHabitsFromFirebase(String userId) {
-        return _db.collection("Users")
-                  .document(userId)
-                  .collection("Habits");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        _habitItemAdapter.startListening();
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        _habitItemAdapter.stopListening();
-    }
-
-    /**
-     * This helper method is responsible for opening the add habit dialog box
-     */
-    private void openAddHabitDialogBox() {
-        AddHabitDialog addHabitDialog = new AddHabitDialog();
-        addHabitDialog.setCancelable(true);
-        addHabitDialog.setTargetFragment(HabitListFragment.this, 1);
-        addHabitDialog.show(getFragmentManager(), "AddHabitDialog");
     }
 
     /**
@@ -184,7 +99,7 @@ public class HabitListFragment extends Fragment {
      * @param layoutManager the associated LinearLayoutManager
      * @param view the associated View
      */
-    private void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
+    public void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_items);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
@@ -202,74 +117,155 @@ public class HabitListFragment extends Fragment {
             @Override
             // if row at the specified position is clicked
             public void onRowClicked(int position) {
-                // Get the selected habit
-                Habit currentHabit = _habitItemAdapter._snapshots.get(position);
-                Log.d(TAG, "onRowClicked: current habit:" + currentHabit.getPublic());
-
-                // Create a bundle to be passed into the habitViewFragment
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("habit", currentHabit);
-                bundle.putSerializable("userId", _user.getId());
-                NavController controller = NavHostFragment.findNavController(_fragment);
-
-                // Navigate to the habitViewFragment
-                controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
+                openViewWindowForItem(position);
             }
         })
-                    .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
-                    .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-                        @Override
-                        public void onSwipeOptionClicked(int viewID, int position) {
-                            // edit and delete functionality below
-                            switch (viewID){
-                                // if edit button clicked
-                                case R.id.edit_button:
-                                    EditHabitFragment editHabitFragment = new EditHabitFragment(position,
-                                            _habitItemAdapter._snapshots.get(position),
-                                            _fragment);
-                                    editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
-                                    break;
-                                // if delete button clicked
-                                case R.id.delete_button:
-                                    Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
-                                    _habitList.deleteHabit(_fragment.getActivity(), _user.getId(), habitToDelete, position);
-                                    break;
-                            }
-
+                .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
+                .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                    @Override
+                    public void onSwipeOptionClicked(int viewID, int position) {
+                        // edit and delete functionality below
+                        switch (viewID){
+                            // if edit button clicked
+                            case R.id.edit_button:
+                                openEditDialogBox(position);
+                                break;
+                            // if delete button clicked
+                            case R.id.delete_button:
+                                updateListAfterDelete(position);
+                                break;
                         }
-                    });
 
+                    }
+                });
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
     }
 
     /**
-     * This method is responsible for adding a new habit to the user's HabitList
-     * @param title the habit title
-     * @param reason the habit reason
-     * @param date the habit date
-     * */
-    public void addHabitToDatabase(String title, String reason, Date date, DaysTracker tracker, boolean isPublic){
-       _habitList.addHabitToDatabase(title, reason, date, tracker, isPublic, _user.getId());
+     * This method queries the database for all habits that correspond to the specified user
+     * @return resulting firebase query
+     */
+    @NonNull
+    public Query getListFromFirebase() {
+        return _db.collection("Users")
+                  .document(_user.getId())
+                  .collection("Habits");
+    }
+
+    protected void populateList(Query query) {
+        //get all of the habits
+        Task<QuerySnapshot> querySnapshotTask = query.get();
+
+        /*
+        populate HabitList with current Habits and habit IDs to initialize state to match
+        database, fills when habitList is empty and snapshot is not, which is only
+        when app is initially launched
+        */
+        if (_habitList.getHabitList().isEmpty()) {
+            // wait for all the snapshots to come in
+            while (!querySnapshotTask.isComplete()) ;
+
+            // make a list of all of the habit snapshots
+            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+
+            // convert all of the snapshots into proper habits
+            for (int i = 0; i < snapshotList.size(); i++) {
+                // get the data and convert to hashmap, also print to log
+                Map<String, Object> extractMap = snapshotList.get(i).getData();
+                Log.d(TAG, extractMap.toString());
+
+                // get all of the data from the snapshot
+                String title = (String) extractMap.get("title");
+                String reason = (String) extractMap.get("reason");
+                Timestamp date = (Timestamp) extractMap.get("date");
+                String id = (String) extractMap.get("id");
+                String days = (String) extractMap.get("days");
+                boolean isPublic = (boolean) extractMap.get("public");
+
+                // create a new habit with the snapshot data
+                Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
+
+                // add the habit to the local list
+                _habitList.addHabitLocal(addHabit);
+            }
+        }
+    }
+
+    // we can extract these two methods to list fragment once item adapter interface is done!
+    @Override
+    public void onStart() {
+        super.onStart();
+        _habitItemAdapter.startListening();
     }
 
     @Override
-    public void onDestroyView() { super.onDestroyView();
+    public void onStop()
+    {
+        super.onStop();
+        _habitItemAdapter.stopListening();
     }
 
     /**
-     * This method is responsible for editing a certain habit at position pos
-     * in the user's habit list
-     * @param newTitle habit's new title
-     * @param newReason habit's new reason
-     * @param newDate habit's new date
-     * @param pos position of edited habit
+     * This helper method is responsible for opening the add habit dialog box
      */
-    public void updateAfterEdit(String newTitle, String newReason, Date newDate, int pos,
-                                DaysTracker tracker, boolean isPublic) {
-        _habitList.editHabitInDatabase(newTitle, newReason, newDate, tracker, isPublic, pos, _user.getId());
-        _habitList.editHabitLocal(newTitle, newReason, newDate, tracker, isPublic, pos);
+    protected void openAddDialogBox() {
+        AddHabitDialog addHabitDialog = new AddHabitDialog();
+        addHabitDialog.setCancelable(true);
+        addHabitDialog.setTargetFragment(this, 1);
+        addHabitDialog.show(getFragmentManager(), "AddHabitDialog");
+    }
+
+
+    // note: add this to list fragment class once swipe is complete in habit event list
+    protected void openEditDialogBox(int position) {
+        EditHabitFragment editHabitFragment = new EditHabitFragment(position,
+                _habitItemAdapter._snapshots.get(position),
+                this);
+        editHabitFragment.show(getFragmentManager(),
+                "Edit Habit");
+    }
+
+    // note: add this to list fragment class once view is implemented for habitevents
+    protected void openViewWindowForItem(int position) {
+        // Get the selected habit
+        Habit currentHabit = _habitItemAdapter._snapshots.get(position);
+
+        // Create a bundle to be passed into the habitViewFragment
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("habit", currentHabit);
+        bundle.putSerializable("userId", _user.getId());
+        NavController controller = NavHostFragment.findNavController(this);
+
+        // Navigate to the habitViewFragment
+        controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
+    }
+
+    /**
+     * Updates the displayed habit list after an add operation
+     * @param addedHabit
+     */
+    public void updateListAfterAdd(Habit addedHabit){
+        _habitList.addHabitToDatabase(addedHabit, _user.getId());
+    }
+
+    /**
+     * Updates the displayed habit list after an edit operation
+     * @param editedHabit
+     * @param pos
+     */
+    public void updateListAfterEdit(Habit editedHabit, int pos) {
+        _habitList.editHabitInDatabase(editedHabit, pos, _user.getId());
         _habitItemAdapter.notifyItemChanged(pos);
+    }
+
+    // add to list fragment class once swipe is fixed in habit events
+    public void updateListAfterDelete(int position) {
+        Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+        _habitList.deleteHabit(getActivity(),
+                _user.getId(),
+                habitToDelete,
+                position);
     }
 
     @NonNull
@@ -283,4 +279,6 @@ public class HabitListFragment extends Fragment {
 
         return new User(userId, username, email, password);
     }
+
+
 }

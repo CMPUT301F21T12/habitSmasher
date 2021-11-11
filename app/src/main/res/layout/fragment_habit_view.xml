@@ -170,7 +170,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:clickable="false"
-        android:text="Public"
+        android:text="@string/public_habit"
         app:layout_constraintStart_toStartOf="@+id/tuesday_button"
         app:layout_constraintTop_toBottomOf="@+id/tuesday_button" />
 
@@ -181,7 +181,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:clickable="false"
-        android:text="Private"
+        android:text="@string/private_habit"
         app:layout_constraintEnd_toEndOf="@+id/descriptionHabitTextBox"
         app:layout_constraintTop_toBottomOf="@+id/saturday_button" />
 

@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * Class that acts as a container for habit events, allowing for add, edit and delete
@@ -54,24 +53,22 @@ public class HabitEventList extends ArrayList{
 
     /**
      * Add a new habit event to the database
-     * @param date Date of the habit event
-     * @param comment Comment of the new habit event
-     * @param pictureUri Picture of the new habit event
-     * @param userId id of the user adding the habit event
+     * @param addedHabitEvent
+     * @param username Username of the user adding the habit event
      */
-    public void addHabitEventToDatabase(Date date, String comment, Uri pictureUri, String userId, Habit parentHabit) {
+    public void addHabitEventToDatabase(HabitEvent addedHabitEvent, String userId, Habit parentHabit) {
         // get collection of specified user
-        String eventId = UUID.randomUUID().toString();
+        String eventId = addedHabitEvent.getId();
 
         // Store data in a hash map
         HashMap<String, Object> eventData = new HashMap<>();
-        eventData.put("date", date);
-        eventData.put("comment", comment);
+        eventData.put("date", addedHabitEvent.getDate());
+        eventData.put("comment", addedHabitEvent.getComment());
         eventData.put("id", eventId);
 
         // Set data in database
         setHabitEventDataInDatabase(userId, parentHabit, eventId, eventData);
-        addHabitEventLocally(new HabitEvent(date, comment, eventId));
+        addHabitEventLocally(addedHabitEvent);
     }
 
     /**
@@ -111,7 +108,7 @@ public class HabitEventList extends ArrayList{
         db.collection("Users")
                 .document(userId)
                 .collection("Habits")
-                .document(Long.toString(parentHabit.getId()))
+                .document((parentHabit.getId()))
                 .collection("Events")
                 .document(toDelete.getId())
                 .delete()
@@ -145,17 +142,21 @@ public class HabitEventList extends ArrayList{
 
     /**
      * This method is responsible for editing a habit in the database
+     * @param editedHabitEvent
+     * @param username (String) The username of the current user
      * @param newComment (String) The edited comment
      * @param newDate (Date) The edited date
      * @param toEditId (String) The ID of the habit event to edit
      * @param userId (String) The id of the current user
      * @param parentHabit (Habit) The current habit
      */
-    public void editHabitInDatabase(String newComment, Date newDate, String toEditId, String userId, Habit parentHabit) {
+    public void editHabitInDatabase(HabitEvent editedHabitEvent, String userId,
+                                    Habit parentHabit) {
+        String toEditId = editedHabitEvent.getId();
         // Create hashmap to hold data
         HashMap<String, Object> habitEventData = new HashMap<>();
-        habitEventData.put("comment", newComment);
-        habitEventData.put("date", newDate);
+        habitEventData.put("comment", editedHabitEvent.getComment());
+        habitEventData.put("date", editedHabitEvent.getDate());
         habitEventData.put("id", toEditId);
 
         // Set edited data in the database
@@ -177,7 +178,7 @@ public class HabitEventList extends ArrayList{
         final CollectionReference collectionReference = db.collection("Users")
                 .document(userId)
                 .collection("Habits")
-                .document(Long.toString(parentHabit.getId()))
+                .document(parentHabit.getId())
                 .collection("Events");
 
         // Set data in database
