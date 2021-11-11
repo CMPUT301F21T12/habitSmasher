@@ -1,5 +1,7 @@
 package com.example.habitsmasher.ui.history;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -22,6 +24,8 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.FailureListener;
+import com.example.habitsmasher.listeners.SuccessListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -230,20 +234,10 @@ public class HabitEventListFragment extends Fragment {
         UploadTask uploadTask = imageStorageRef.putFile(image);
 
         // Handle upload success
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Data failed to be added." + e.toString());
-            }
-        });
+        uploadTask.addOnSuccessListener(new SuccessListener(TAG, "Data successfully added."));
 
         // Handle upload failure
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d(TAG, "Data successfully added.");
-            }
-        });
+        uploadTask.addOnFailureListener(new FailureListener(TAG, "Data failed to be added."));
     }
 
     /**

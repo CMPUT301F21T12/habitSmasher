@@ -1216,5 +1216,7 @@ public class MainActivityTest {
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
 
         _solo.clickOnButton(LOGIN_TEXT);
+        // Wait for Profile fragment to load
+        _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
     }
 }

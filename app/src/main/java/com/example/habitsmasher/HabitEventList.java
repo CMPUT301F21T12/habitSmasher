@@ -6,6 +6,11 @@ import android.util.Log;
 import android.widget.Toast;
 import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
+
+import com.example.habitsmasher.listeners.FailureListener;
+import com.example.habitsmasher.listeners.FailureListenerWithToast;
+import com.example.habitsmasher.listeners.SuccessListener;
+import com.example.habitsmasher.listeners.SuccessListenerWithToast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -115,20 +120,12 @@ public class HabitEventList extends ArrayList{
                 .collection("Events")
                 .document(toDelete.getId())
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("deleteHabitEvent", "Data successfully deleted.");
-                        Toast.makeText(context, "Habit Event deleted!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("deleteHabitEvent", "Data failed to be deleted.");
-                        Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnSuccessListener(new SuccessListenerWithToast(context,
+                        "deleteHabitEvent", "Data successfully deleted.",
+                        "Habit Event deleted!"))
+                .addOnFailureListener(new FailureListenerWithToast(context,
+                        "deleteHabitEvent", "Data failed to be deleted.",
+                        "Something went wrong!"));
     }
 
     /**
@@ -184,19 +181,7 @@ public class HabitEventList extends ArrayList{
         collectionReference
                 .document(id)
                 .set(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    // Handle success
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Data successfully added.");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    // Handle failure
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Data failed to be added." + e.toString());
-                    }
-                });
+                .addOnSuccessListener(new SuccessListener(TAG, "Data successfully added."))
+                .addOnFailureListener(new FailureListener(TAG, "Data failed to be added."));
     }
 }
