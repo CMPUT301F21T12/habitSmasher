@@ -22,6 +22,7 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
 import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
+import com.example.habitsmasher.listeners.ClickListenerForDaysOfTheWeek;
 
 /**
  *  UI Class that represents and specifies the behaviour of the dialog
@@ -143,97 +144,18 @@ public class EditHabitFragment extends DialogFragment{
         if (_tracker.getSunday()){_sundayButton.performClick();}
 
         //button onClick methods follow below
-        _mondayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //if monday is already selected, set it to false
-                if (_tracker.getMonday()){
-                    _tracker.setMonday(false);
-                }
-                //if monday wasn't already selected, select it
-                else{
-                    _tracker.setMonday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _mondayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "MO"));
 
-        _tuesdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getTuesday()){
-                    _tracker.setTuesday(false);
-                }
-                else{
-                    _tracker.setTuesday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _tuesdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "TU"));
 
-        _wednesdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getWednesday()){
-                    _tracker.setWednesday(false);
-                }
-                else{
-                    _tracker.setWednesday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _wednesdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "WE"));
 
-        _thursdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getThursday()){
-                    _tracker.setThursday(false);
-                }
-                else{
-                    _tracker.setThursday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _thursdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "TH"));
 
-        _fridayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getFriday()){
-                    _tracker.setFriday(false);
-                }
-                else{
-                    _tracker.setFriday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _fridayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "FR"));
 
-        _saturdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getSaturday()){
-                    _tracker.setSaturday(false);
-                }
-                else{
-                    _tracker.setSaturday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _saturdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "SA"));
 
-        _sundayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getSunday()){
-                    _tracker.setSunday(false);
-                }
-                else{
-                    _tracker.setSunday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _sundayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "SU"));
     }
 }

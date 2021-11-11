@@ -8,9 +8,9 @@ public class ClickListenerForCancel implements View.OnClickListener{
     private Dialog _dialog;
     private String _tag;
 
-    public ClickListenerForCancel(Dialog _dialog, String _tag) {
-        this._dialog = _dialog;
-        this._tag = _tag;
+    public ClickListenerForCancel(Dialog dialog, String tag) {
+        _dialog = dialog;
+        _tag = tag;
     }
 
     @Override
