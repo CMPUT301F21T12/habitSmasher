@@ -603,6 +603,9 @@ public class MainActivityTest {
         // Select days
         setDaysInAddHabitDialogBox();
 
+        // select private
+        setPrivacyInAddHabitDialogBox(PRIVATE_HABIT);
+
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
 
@@ -622,6 +625,8 @@ public class MainActivityTest {
         // assert that the correct buttons are selected, not just the underlying habit
         assert privateBox.isChecked();
         assert !(publicBox.isChecked());
+
+        _solo.goBack();
 
         deleteTestHabit(testHabit);
     }
