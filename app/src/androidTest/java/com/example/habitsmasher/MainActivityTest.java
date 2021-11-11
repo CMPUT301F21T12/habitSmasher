@@ -1212,5 +1212,6 @@ public class MainActivityTest {
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
 
         _solo.clickOnButton(LOGIN_TEXT);
+        _solo.sleep(4000);
     }
 }
