@@ -2,6 +2,7 @@ package com.example.habitsmasher;
 
 /**
  * Interface implemented by any UI class that displays error messages
+ * @author Jason Kim
  */
 public interface DisplaysErrorMessages {
 

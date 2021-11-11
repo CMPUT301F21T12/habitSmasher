@@ -13,11 +13,14 @@ import java.util.Date;
 public class HabitEventValidator extends HabitValidator {
     /**
      * Default constructor
-     * @param fragment (FragmentActivity) The parent fragment activity
+     * @param fragment The parent fragment
      */
     public HabitEventValidator(DisplaysErrorMessages fragment) {
         super(fragment);
     }
+
+    private final int MINIMUM_COMMENT_LENGTH = 0;
+    private final int MAXIMUM_COMMENT_LENGTH = 20;
 
     /**
      * Checks if a habit event is valid
@@ -29,7 +32,8 @@ public class HabitEventValidator extends HabitValidator {
         Date parsedDate = checkHabitDateValid(habitEventDate);
 
         // check that the comment conforms to requirements
-        if ((habitEventComment.length() <=0) || (habitEventComment.length() > 20)) {
+        if ((habitEventComment.length() <= MINIMUM_COMMENT_LENGTH)
+                || (habitEventComment.length() > MAXIMUM_COMMENT_LENGTH)) {
             _fragment.displayErrorMessage(HabitEventDialog.INCORRECT_COMMENT);
             return false;
         }

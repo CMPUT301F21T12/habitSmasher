@@ -1,11 +1,5 @@
 package com.example.habitsmasher.ui.dashboard;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
-
-import androidx.fragment.app.FragmentActivity;
-
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DisplaysErrorMessages;
 import com.example.habitsmasher.HabitDialog;
@@ -20,7 +14,15 @@ import java.util.Date;
  * when adding or editing a habit
  */
 public class HabitValidator {
+
+    /* takes in a fragment that can display error messages, this allows it
+    to pass in fragments from Habit and HabitEvent (since habitEventValidator
+    extends this class) */
     protected final DisplaysErrorMessages _fragment;
+
+    private final int MINIMUM_LENGTH = 0;
+    private final int MAXIMUM_HABIT_TITLE_LENGTH = 20;
+    private final int MAXIMUM_HABIT_REASON_LENGTH = 30;
 
     /**
      * Creates the validator
@@ -45,13 +47,15 @@ public class HabitValidator {
         Date parsedDate = checkHabitDateValid(habitDate);
 
         // checking title length
-        if ((habitTitle.length() <= 0) || (habitTitle.length() > 20)) {
+        if ((habitTitle.length() <= MINIMUM_LENGTH) ||
+                (habitTitle.length() > MAXIMUM_HABIT_TITLE_LENGTH)) {
             _fragment.displayErrorMessage(HabitDialog.INCORRECT_TITLE);
             return false;
         }
 
         // checking reason length
-        if ((habitReason.length() <= 0) || (habitReason.length() > 30)) {
+        if ((habitReason.length() <= MINIMUM_LENGTH) ||
+                (habitReason.length() > MAXIMUM_HABIT_REASON_LENGTH)) {
             _fragment.displayErrorMessage(HabitDialog.INCORRECT_REASON);
             return false;
         }
