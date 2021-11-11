@@ -17,12 +17,14 @@ import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
 
 /**
  * The EditHabitEventFragment class
  * Based on EditEventFragment, dialog which pops up and allows a user to edit habit events
  */
 public class EditHabitEventFragment extends DialogFragment {
+    private static final String TAG = "EditHabitEventFragment";
     // Initialize UI variables
     private EditText _commentText;
     private TextView _dateText;
@@ -97,12 +99,7 @@ public class EditHabitEventFragment extends DialogFragment {
         });
 
         // Add listener to cancel button that closes the dialog
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDialog().dismiss();
-            }
-        });
+        cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
 
         return view;
     }

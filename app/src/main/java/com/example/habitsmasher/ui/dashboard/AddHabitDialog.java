@@ -22,6 +22,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
 
 /**
  * UI Class that represents and specifies the behaviour of the dialog
@@ -98,13 +99,7 @@ public class AddHabitDialog extends DialogFragment {
         });
 
         // cancel button logic
-        cancelNewHabit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Cancel");
-                getDialog().dismiss();
-            }
-        });
+        cancelNewHabit.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
 
         // confirm button logic
         confirmNewHabit.setOnClickListener(new View.OnClickListener() {

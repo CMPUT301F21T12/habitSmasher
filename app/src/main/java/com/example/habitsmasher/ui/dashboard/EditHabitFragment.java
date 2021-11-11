@@ -20,6 +20,7 @@ import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
 
 /**
  *  UI Class that represents and specifies the behaviour of the dialog
@@ -28,6 +29,9 @@ import com.example.habitsmasher.R;
  * @version 1.0
  */
 public class EditHabitFragment extends DialogFragment{
+
+    private static final String TAG = "EditHabitDialog";
+
     private EditText _titleText;
     private EditText _reasonText;
     private TextView _dateText;
@@ -121,12 +125,7 @@ public class EditHabitFragment extends DialogFragment{
         });
 
         // when cancel button is clicked
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
 
         //set up days of the week buttons
         initializeDaysOfTheWeekButtons();

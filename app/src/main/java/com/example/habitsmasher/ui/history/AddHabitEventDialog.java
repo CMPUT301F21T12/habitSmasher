@@ -26,6 +26,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
 
 /**
  * The AddHabitEventDialog
@@ -74,13 +75,7 @@ public class AddHabitEventDialog extends DialogFragment {
         });
 
         // Add listener to cancel button which closes dialog
-        _cancelNewEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Cancel");
-                getDialog().dismiss();
-            }
-        });
+        _cancelNewEvent.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
 
         // Add listener to confirm button that adds events to database and closed dialog
         _confirmNewEvent.setOnClickListener(new View.OnClickListener() {
