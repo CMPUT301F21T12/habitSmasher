@@ -7,6 +7,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 
+/**
+ * Abstract class for adapters to use.
+ * @author Jacob Nguyen, Jason Kim
+ */
 public abstract class ItemAdapter<A, B extends RecyclerView.ViewHolder> extends FirestoreRecyclerAdapter<A, B> {
     public final ObservableSnapshotArray<A> _snapshots;
 
