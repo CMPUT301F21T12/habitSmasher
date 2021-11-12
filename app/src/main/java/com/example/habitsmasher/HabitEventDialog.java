@@ -9,6 +9,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -75,6 +76,8 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
             }
         });
     }
+
+    protected abstract void setConfirmButtonListener();
 
     /**
      * Opens the calendar dialog used for date selection

@@ -38,13 +38,6 @@ public class AddHabitEventDialog extends HabitEventDialog {
 
     private AddHabitEventDialog _addFragment = this;
 
-    /**
-     * Default constructor
-     */
-    public AddHabitEventDialog() {
-    }
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +49,8 @@ public class AddHabitEventDialog extends HabitEventDialog {
         _header.setText("Add Habit Event");
         _errorText.setText("");
 
+        TAG = "AddHabitEventDialog";
+
         // Add listener to date text to open date picker
         setDateTextViewListener();
 
@@ -63,6 +58,23 @@ public class AddHabitEventDialog extends HabitEventDialog {
         setCancelButtonListener();
 
         // Add listener to confirm button that adds events to database and closed dialog
+        setConfirmButtonListener();
+
+        // Add listener to image view
+        _eventPictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open gallery to let user pick photo
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, 1);
+            }
+        });
+
+        return view;
+    }
+
+    @Override
+    protected void setConfirmButtonListener() {
         _confirmButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -76,8 +88,8 @@ public class AddHabitEventDialog extends HabitEventDialog {
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
                     HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
-                                                        habitEventComment,
-                                                        DatabaseEntity.generateId());
+                            habitEventComment,
+                            DatabaseEntity.generateId());
                     _errorText.setText("");
                     _habitEventListFragment.updateListAfterAdd(newEvent);
                     getDialog().dismiss();
@@ -85,18 +97,6 @@ public class AddHabitEventDialog extends HabitEventDialog {
 
             }
         });
-
-        // Add listener to image view
-        _eventPictureView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Open gallery to let user pick photo
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto, 1);
-            }
-        });
-
-        return view;
     }
 
     /**
@@ -119,27 +119,5 @@ public class AddHabitEventDialog extends HabitEventDialog {
                 }
                 break;
         }
-    }
-
-    /**
-     * Opens date picker dialog when selecting date when adding a habit event
-     */
-    private void openDatePickerDialog(){
-        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
-            /**
-             * Sets the text of the date select view to reflect selected date
-             * @param view
-             * @param year year of selected date
-             * @param month month of selected date (integer from 0 to 11)
-             * @param day day of month of selected date
-             */
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                int correctedMonth = month + 1;
-                String date =  day + "/" + correctedMonth + "/" + year;
-                _eventDateText.setText(date);
-            }
-        });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 }

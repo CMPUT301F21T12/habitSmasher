@@ -144,10 +144,8 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
 
                     // Open edit habit event dialog
                     EditHabitEventDialog editHabitEventDialog= new EditHabitEventDialog(eventPosition,
-                                                                            toEdit,
-                                                                            _habitEventViewHolder);
+                                                                            toEdit);
                     editHabitEventDialog.setTargetFragment(_habitEventListFragment, 1);
-                    editHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
                     editHabitEventDialog.show(_habitEventListFragment.getFragmentManager(), "Edit Habit Event");
                 }
             });

@@ -27,18 +27,18 @@ public class EditHabitEventDialog extends HabitEventDialog {
     private final int _index;
     private final HabitEvent _editHabitEvent;
     private final EditHabitEventDialog _editFragment = this;
-    private final HabitEventItemAdapter.HabitEventViewHolder _viewHolder;
 
     /**
      * Default constructor
      * @param index (int) The index of the habit to edit within the list
      * @param editHabitEvent (HabitEvent) The habit event to edit
-     * @param habitEventViewHolder (HabitEventViewHolder) The view holder associated with the habit event
      */
-    public EditHabitEventDialog(int index, HabitEvent editHabitEvent, HabitEventItemAdapter.HabitEventViewHolder habitEventViewHolder) {
+    public EditHabitEventDialog(int index, HabitEvent editHabitEvent) {
         _index = index;
         _editHabitEvent = editHabitEvent;
-        _viewHolder = habitEventViewHolder;
+
+        // tag for logging
+        TAG = "EditHabitEventDialog";
     }
 
     @Nullable
@@ -55,16 +55,25 @@ public class EditHabitEventDialog extends HabitEventDialog {
         //set error text to blank
         _errorText.setText("");
 
+        // Add listener to date text to open date picker
+        setDateTextViewListener();
+
+        // Add listener to confirm button that propagates habit event editing
+        setConfirmButtonListener();
+
+        // Add listener to cancel button that closes the dialog
+        setCancelButtonListener();
+
         // Prefill values
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
 
+        return view;
+    }
 
-        // Add listener to date text to open date picker
-
-
-        // Add listener to confirm button that propagates habit event editing
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    protected void setConfirmButtonListener() {
+        _confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Get updated comment and date
@@ -80,8 +89,8 @@ public class EditHabitEventDialog extends HabitEventDialog {
                 // Update the habit event in the database and locally
                 Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
                 HabitEvent editedHabitEvent = new HabitEvent(newDate,
-                                                            eventComment,
-                                                            _editHabitEvent.getId());
+                        eventComment,
+                        _editHabitEvent.getId());
                 _errorText.setText("");
                 _habitEventListFragment.updateListAfterEdit(editedHabitEvent,_index);
 
@@ -89,12 +98,5 @@ public class EditHabitEventDialog extends HabitEventDialog {
                 getDialog().dismiss();
             }
         });
-
-        // Add listener to cancel button that closes the dialog
-
-
-        return view;
     }
-
-
 }
