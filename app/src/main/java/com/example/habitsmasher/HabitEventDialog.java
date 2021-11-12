@@ -27,8 +27,13 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     public static final int INCORRECT_COMMENT = 1;
     public static final int INCORRECT_DATE = 2;
 
+    // fragment that spawned this habit event dialog
     protected HabitEventListFragment _habitEventListFragment;
+
+    // tag for logging
     protected String TAG;
+
+    // selected image (currently not in use until images are implemented)
     protected Uri _selectedImage;
 
     // text elements in habit event dialog
@@ -37,8 +42,10 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     protected TextView _errorText;
     protected TextView _header;
 
+    // view of image
     protected ImageView _eventPictureView;
 
+    // confirm and cancel buttons
     protected Button _confirmButton;
     protected Button _cancelButton;
 
@@ -57,6 +64,9 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         _cancelButton = view.findViewById(R.id.cancel_habit_event);
     }
 
+    /**
+     * Sets up the listener for the date text view
+     */
     protected void setDateTextViewListener() {
         _eventDateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +76,9 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         });
     }
 
+    /**
+     * Defines the logic when the cancel button is clicked
+     */
     protected void setCancelButtonListener() {
         _cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +90,9 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         });
     }
 
+    /**
+     * Defines the logic when the confirm button is clicked
+     */
     protected abstract void setConfirmButtonListener();
 
     /**

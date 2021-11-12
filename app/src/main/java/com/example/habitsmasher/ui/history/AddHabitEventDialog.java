@@ -60,7 +60,7 @@ public class AddHabitEventDialog extends HabitEventDialog {
         // Add listener to confirm button that adds events to database and closed dialog
         setConfirmButtonListener();
 
-        // Add listener to image view
+        // Add listener to image view (not touching this during refactoring until images are done)
         _eventPictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,6 +100,7 @@ public class AddHabitEventDialog extends HabitEventDialog {
     }
 
     /**
+     * Not touching this when refactoring until images are fully implemented for habit events
      * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
      * Override onActivityResult to handle when user has selected image
      * @param requestCode
