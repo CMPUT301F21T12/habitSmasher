@@ -97,7 +97,7 @@ public class ListenersTest {
     public void failureListener_validInput_expectNoErrors(){
         Exception mockException = mock(Exception.class);
         _failureListener.onFailure(mockException);
-        //Here we can verify whether the methods "onClick" executed
+        //Here we can verify whether the methods "onFailure" executed
         verify(_failureListener, times(1)).onFailure(mockException);
     }
 
@@ -105,7 +105,7 @@ public class ListenersTest {
     public void failureListenerWithToast_validInput_expectNoErrors(){
         Exception mockException = mock(Exception.class);
         _failureListenerWithToast.onFailure(mockException);
-        //Here we can verify whether the methods "onClick" executed
+        //Here we can verify whether the methods "onFailure" executed
         verify(_failureListenerWithToast, times(1)).onFailure(mockException);
 
     }
@@ -114,7 +114,7 @@ public class ListenersTest {
     public void successListener_validInput_expectNoErrors(){
         Object mockObject = mock(Object.class);
         _successListener.onSuccess(mockObject);
-        //Here we can verify whether the methods "onClick" executed
+        //Here we can verify whether the methods "onSuccess" executed
         verify(_successListener, times(1)).onSuccess(mockObject);
     }
 
@@ -122,14 +122,14 @@ public class ListenersTest {
     public void successListenerWithToast_validInput_expectNoErrors(){
         Object mockObject = mock(Object.class);
         _successListenerWithToast.onSuccess(mockObject);
-        //Here we can verify whether the methods "onClick" executed
+        //Here we can verify whether the methods "onSuccess" executed
         verify(_successListenerWithToast, times(1)).onSuccess(mockObject);
     }
 
     @Test
     public void swipeListener_validInput_expectNoErrors(){
         _swipeListener.onSwipeOptionClicked(ID, POSITION);
-        //Here we can verify whether the methods "onClick" executed
+        //Here we can verify whether the methods "onSwipeOptionClicked" executed
         verify(_swipeListener, times(1)).onSwipeOptionClicked(ID, POSITION);
     }
 }
