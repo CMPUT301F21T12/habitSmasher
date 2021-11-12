@@ -8,7 +8,11 @@ import com.example.habitsmasher.ui.dashboard.EditHabitFragment;
 import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
 import com.example.habitsmasher.ui.dashboard.HabitListFragment;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
-
+/**
+ * This is the SwipeListener class
+ * It implements the RecyclerTouchListener.OnSwipeOptionsClickListener
+ * Its purpose is to perform the onSwipeOptionClicked listener actions
+ */
 public class SwipeListener implements RecyclerTouchListener.OnSwipeOptionsClickListener{
     private HabitItemAdapter _habitItemAdapter;
     private HabitListFragment _fragment;

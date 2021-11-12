@@ -3,7 +3,11 @@ package com.example.habitsmasher.listeners;
 import android.app.Dialog;
 import android.util.Log;
 import android.view.View;
-
+/**
+ * This is the ClickListenerForCancel class
+ * It implements the View.OnClickListener
+ * Its purpose is to perform the onClick listener actions
+ */
 public class ClickListenerForCancel implements View.OnClickListener{
     private Dialog _dialog;
     private String _tag;

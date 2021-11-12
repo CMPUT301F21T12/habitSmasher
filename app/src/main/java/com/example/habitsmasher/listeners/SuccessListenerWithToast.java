@@ -5,7 +5,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-
+/**
+ * This is the SuccessListenerWithToast class
+ * It implements the OnSuccessListener
+ * Its purpose is to perform the onSuccess listener actions
+ */
 public class SuccessListenerWithToast implements OnSuccessListener {
     private Context _context;
     private String _logTag;

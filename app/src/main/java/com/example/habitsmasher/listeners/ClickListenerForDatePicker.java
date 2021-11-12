@@ -8,7 +8,11 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
-
+/**
+ * This is the ClickListenerForDatePicker class
+ * It implements the View.OnClickListener
+ * Its purpose is to perform the onClick listener actions
+ */
 public class ClickListenerForDatePicker implements View.OnClickListener{
     private FragmentManager _fragmentManager;
     private TextView _dateText;
