@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * Class that acts as a container for habit events, allowing for add, edit and delete
@@ -54,39 +53,37 @@ public class HabitEventList extends ArrayList{
 
     /**
      * Add a new habit event to the database
-     * @param date Date of the habit event
-     * @param comment Comment of the new habit event
-     * @param pictureUri Picture of the new habit event
+     * @param addedHabitEvent
      * @param username Username of the user adding the habit event
      */
-    public void addHabitEventToDatabase(Date date, String comment, Uri pictureUri, String username, Habit parentHabit) {
+    public void addHabitEventToDatabase(HabitEvent addedHabitEvent, String userId, Habit parentHabit) {
         // get collection of specified user
-        String eventId = UUID.randomUUID().toString();
+        String eventId = addedHabitEvent.getId();
 
         // Store data in a hash map
         HashMap<String, Object> eventData = new HashMap<>();
-        eventData.put("date", date);
-        eventData.put("comment", comment);
+        eventData.put("date", addedHabitEvent.getDate());
+        eventData.put("comment", addedHabitEvent.getComment());
         eventData.put("id", eventId);
 
         // Set data in database
-        setHabitEventDataInDatabase(username, parentHabit, eventId, eventData);
-        addHabitEventLocally(new HabitEvent(date, comment, eventId));
+        setHabitEventDataInDatabase(userId, parentHabit, eventId, eventData);
+        addHabitEventLocally(addedHabitEvent);
     }
 
     /**
      * This method deletes a habit event locally and from the database
      * @param context (Context) The current application context
-     * @param username (String) The current user's username
+     * @param userId (String) The current user's username
      * @param parentHabit (Habit) The current habit
      * @param toDelete (HabitEvent) The habit event to delete
      */
-    public void deleteHabitEvent(Context context, String username, Habit parentHabit, HabitEvent toDelete) {
+    public void deleteHabitEvent(Context context, String userId, Habit parentHabit, HabitEvent toDelete) {
         // Delete locally
         deleteHabitEventLocally(toDelete);
 
         // Delete from database
-        deleteHabitEventFromDatabase(context, username, parentHabit, toDelete);
+        deleteHabitEventFromDatabase(context, userId, parentHabit, toDelete);
     }
 
     /**
@@ -100,18 +97,18 @@ public class HabitEventList extends ArrayList{
     /**
      * This method deleted a habit event from the database
      * @param context (Context) The current application context
-     * @param username (String) The current user's username
+     * @param userId (String) The current user's username
      * @param parentHabit (Habit) The current habit
      * @param toDelete (HabitEvent) The habit event to delete
      */
-    private void deleteHabitEventFromDatabase(Context context, String username, Habit parentHabit, HabitEvent toDelete) {
+    private void deleteHabitEventFromDatabase(Context context, String userId, Habit parentHabit, HabitEvent toDelete) {
         FirebaseFirestore db =  FirebaseFirestore.getInstance();
 
         // get the document to delete, then delete it
         db.collection("Users")
-                .document(username)
+                .document(userId)
                 .collection("Habits")
-                .document(Long.toString(parentHabit.getId()))
+                .document((parentHabit.getId()))
                 .collection("Events")
                 .document(toDelete.getId())
                 .delete()
@@ -145,39 +142,43 @@ public class HabitEventList extends ArrayList{
 
     /**
      * This method is responsible for editing a habit in the database
+     * @param editedHabitEvent
+     * @param username (String) The username of the current user
      * @param newComment (String) The edited comment
      * @param newDate (Date) The edited date
      * @param toEditId (String) The ID of the habit event to edit
-     * @param username (String) The username of the current user
+     * @param userId (String) The id of the current user
      * @param parentHabit (Habit) The current habit
      */
-    public void editHabitInDatabase(String newComment, Date newDate, String toEditId, String username, Habit parentHabit) {
+    public void editHabitInDatabase(HabitEvent editedHabitEvent, String userId,
+                                    Habit parentHabit) {
+        String toEditId = editedHabitEvent.getId();
         // Create hashmap to hold data
         HashMap<String, Object> habitEventData = new HashMap<>();
-        habitEventData.put("comment", newComment);
-        habitEventData.put("date", newDate);
+        habitEventData.put("comment", editedHabitEvent.getComment());
+        habitEventData.put("date", editedHabitEvent.getDate());
         habitEventData.put("id", toEditId);
 
         // Set edited data in the database
-        setHabitEventDataInDatabase(username,parentHabit, toEditId, habitEventData);
+        setHabitEventDataInDatabase(userId,parentHabit, toEditId, habitEventData);
     }
 
     /**
      * This method is responsible for setting habit event data in the database
-     * @param username (String) The current user's username
+     * @param userId (String) The current user's id
      * @param parentHabit (Habit) The current habit
      * @param id (String) The id of the habit event for which data is being set
      * @param data The data to set
      */
-    private void setHabitEventDataInDatabase(String username, Habit parentHabit, String id, HashMap<String, Object> data) {
+    private void setHabitEventDataInDatabase(String userId, Habit parentHabit, String id, HashMap<String, Object> data) {
         // Get firestore database reference
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Get path to events collection
         final CollectionReference collectionReference = db.collection("Users")
-                .document(username)
+                .document(userId)
                 .collection("Habits")
-                .document(Long.toString(parentHabit.getId()))
+                .document(parentHabit.getId())
                 .collection("Events");
 
         // Set data in database

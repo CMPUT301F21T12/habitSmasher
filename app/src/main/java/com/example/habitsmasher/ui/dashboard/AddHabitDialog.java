@@ -2,8 +2,6 @@ package com.example.habitsmasher.ui.dashboard;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,10 +15,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.habitsmasher.DatabaseEntity;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
+import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
 
 /**
@@ -124,9 +125,13 @@ public class AddHabitDialog extends DialogFragment {
                 if (habitValidator.isHabitValid(habitTitle,
                                                 habitReason,
                                                 habitDate, _tracker)){
-                    _habitListFragment.addHabitToDatabase(habitTitle,
-                                                          habitReason,
-                                                          habitValidator.checkHabitDateValid(habitDate), _tracker);
+                    Habit newHabit = new Habit(habitTitle,
+                                               habitReason,
+                                               habitValidator.checkHabitDateValid(habitDate),
+                                               _tracker.getDays(),
+                                               DatabaseEntity.generateId(),
+                                                new HabitEventList());
+                    _habitListFragment.updateListAfterAdd(newHabit);
                     getDialog().dismiss();
                 }
             }
