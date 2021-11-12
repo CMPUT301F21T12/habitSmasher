@@ -1,6 +1,5 @@
 package com.example.habitsmasher;
 
-
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.util.Log;
@@ -13,6 +12,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.habitsmasher.DaysTracker;
+import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.ui.dashboard.HabitListFragment;
 
 
@@ -28,6 +29,7 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
     public static final int INCORRECT_REASON = 2;
     public static final int INCORRECT_DATE = 3;
     public static final int INCORRECT_DAYS = 4;
+
 
     // tag of dialog for logging
     protected String TAG;
@@ -50,12 +52,16 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
     protected Button _saturdayButton;
     protected Button _sundayButton;
 
+    protected PublicPrivateButtons _publicPrivateButtons;
+
+
     // confirm and cancel button for habit dialog
     protected Button _confirmButton;
     protected Button _cancelButton;
 
     // days tracker used to keep track of weekly schedule of habits
     protected DaysTracker _tracker;
+
 
     /**
      * Initializes the variables holding the
@@ -267,3 +273,4 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
         }
     }
 }
+

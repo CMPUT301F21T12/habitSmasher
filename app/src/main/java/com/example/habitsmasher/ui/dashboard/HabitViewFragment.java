@@ -15,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.R;
 
 import java.text.SimpleDateFormat;
@@ -31,14 +32,8 @@ public class HabitViewFragment extends Fragment {
     // user which owns this habit
     private String _userId;
 
-    // buttons representing days of the week
-    private Button _mondayButton;
-    private Button _tuesdayButton;
-    private Button _wednesdayButton;
-    private Button _thursdayButton;
-    private Button _fridayButton;
-    private Button _saturdayButton;
-    private Button _sundayButton;
+
+    private PublicPrivateButtons _publicPrivateButtons;
 
     private DaysTracker _tracker;
 
@@ -65,6 +60,9 @@ public class HabitViewFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_habit_view, container, false);
+
+        // setup the public and private buttons
+        _publicPrivateButtons = new PublicPrivateButtons(view, _habit.getPublic());
 
         // Grab text boxes
         TextView descriptionHabitTextBox = view.findViewById(R.id.descriptionHabitTextBox);

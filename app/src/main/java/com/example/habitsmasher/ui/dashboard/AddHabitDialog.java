@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi;
 import com.example.habitsmasher.DatabaseEntity;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.HabitDialog;
+import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
@@ -52,7 +53,11 @@ public class AddHabitDialog extends HabitDialog {
         // set error text to blank
         _errorText.setText("");
 
-        // logic handler for tracking all those days
+        // public and private buttons
+        _publicPrivateButtons = new PublicPrivateButtons(view);
+        _publicPrivateButtons.setClickListeners();
+
+        //logic handler for tracking all those days
         _tracker = new DaysTracker();
 
         // set the listeners for the days of the week buttons
@@ -83,6 +88,7 @@ public class AddHabitDialog extends HabitDialog {
                 String habitTitle = _habitTitleEditText.getText().toString();
                 String habitReason = _habitReasonEditText.getText().toString();
                 String habitDate = _habitDateTextView.getText().toString();
+                boolean habitPublic = _publicPrivateButtons.isHabitPublic();
 
                 // if the habit is valid, add it to the local list and external db
                 if (habitValidator.isHabitValid(habitTitle,
@@ -92,6 +98,7 @@ public class AddHabitDialog extends HabitDialog {
                             habitReason,
                             habitValidator.checkHabitDateValid(habitDate),
                             _tracker.getDays(),
+                            habitPublic,
                             DatabaseEntity.generateId(),
                             new HabitEventList());
                     _errorText.setText("");

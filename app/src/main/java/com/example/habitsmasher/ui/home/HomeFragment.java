@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
 
         // This is the example habit to be displayed
         Habit testHabit = new Habit("This is a title", "This is my reason", new Date(), "MO",
-                DatabaseEntity.generateId(), new HabitEventList());
+                true, DatabaseEntity.generateId(), new HabitEventList());
 
         // Getting the corresponding textviews in the fragment_home.xml
         TextView titleView = binding.habitTitle;

@@ -13,6 +13,7 @@ import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitDialog;
+import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.R;
 
 import java.util.Date;
@@ -59,6 +60,10 @@ public class EditHabitDialog extends HabitDialog {
         // Gets days of week from habit to be edited and pass into tracker
         _tracker = new DaysTracker(_editHabit.getDays());
 
+        _publicPrivateButtons = new PublicPrivateButtons(view, _editHabit.getPublic());
+        _publicPrivateButtons.setClickListeners();
+
+
         //set up days of the week buttons
         initializeDaysOfTheWeekButtons();
         setListenersForDaysOfTheWeek();
@@ -85,6 +90,7 @@ public class EditHabitDialog extends HabitDialog {
                 String habitTitle = _habitTitleEditText.getText().toString();
                 String reasonText = _habitReasonEditText.getText().toString();
                 String dateText = _habitDateTextView.getText().toString();
+                boolean isPublic = _publicPrivateButtons.isHabitPublic();
 
                 // habit validator to ensure data is formatted appropriately
                 HabitValidator habitValidator = new HabitValidator(_editFragment);
@@ -97,6 +103,7 @@ public class EditHabitDialog extends HabitDialog {
                         reasonText,
                         newDate,
                         _tracker.getDays(),
+                        isPublic,
                         _editHabit.getId(),
                         _editHabit.getHabitEvents());
 
