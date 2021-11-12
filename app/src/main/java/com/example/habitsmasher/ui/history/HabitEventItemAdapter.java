@@ -68,8 +68,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         // Set UI elements of habit event
         holder._habitEventDate.setText(new SimpleDateFormat(DATE_FORMAT).format(habitEvent.getDate()));
         holder._habitEventComment.setText(habitEvent.getComment());
-        holder._habitEventDateWithButtons.setText(new SimpleDateFormat(DATE_FORMAT).format(habitEvent.getDate()));
-        holder._get_habitEventCommentWithButtons.setText(habitEvent.getComment());
         // TODO: Implement image setting too
     }
 
@@ -87,8 +85,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         // List of UI elements
         private final TextView _habitEventDate;
         private final TextView _habitEventComment;
-        private final TextView _habitEventDateWithButtons;
-        private final TextView _get_habitEventCommentWithButtons;
         // private final ImageView _habitEventImage;
 
         /**
@@ -105,8 +101,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
             // Connect UI elements
             _habitEventDate = itemView.findViewById(R.id.habit_event_date);
             _habitEventComment = itemView.findViewById(R.id.habit_event_comment);
-            _habitEventDateWithButtons = itemView.findViewById(R.id.habit_event_date_with_buttons);
-            _get_habitEventCommentWithButtons = itemView.findViewById(R.id.habit_event_comment_with_buttons);
             // _habitEventImage = itemView.findViewById(R.id.habit_event_image);
         }
     }

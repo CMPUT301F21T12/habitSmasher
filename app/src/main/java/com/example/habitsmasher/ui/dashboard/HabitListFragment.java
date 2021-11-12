@@ -1,5 +1,7 @@
 package com.example.habitsmasher.ui.dashboard;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,12 +26,16 @@ import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 import java.util.Map;
@@ -261,10 +267,53 @@ public class HabitListFragment extends ListFragment<Habit> {
     // add to list fragment class once swipe is fixed in habit events
     public void updateListAfterDelete(int position) {
         Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+
+        deleteHabitEvents(_user.getId(), habitToDelete);
+
         _habitList.deleteHabit(getActivity(),
                 _user.getId(),
                 habitToDelete,
                 position);
+    }
+
+    /**
+     * Deletes all child habit events of a habit
+     * @param userId (String) The current user's username
+     * @param parentHabit (Habit) The habit to delete
+     */
+    public void deleteHabitEvents(String userId, Habit parentHabit) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // get all of the habit events
+        Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
+                .document(userId)
+                .collection("Habits")
+                .document(parentHabit.getId())
+                .collection("Events")
+                .get();
+
+        // waiting for all the documents
+        while (!querySnapshotTask.isComplete());
+
+        // make a list of all the documents
+        List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+
+        // delete all the events
+        WriteBatch batch = db.batch();
+        for (int i = 0; i < snapshotList.size(); i++) {
+            batch.delete(snapshotList.get(i).getReference());
+        }
+        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "Deleted habit events");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to delete habit events");
+            }
+        });
     }
 
     @NonNull

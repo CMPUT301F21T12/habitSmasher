@@ -152,7 +152,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
             }
         })
                 .setSwipeOptionViews(R.id.edit_habit_event_button, R.id.delete_habit_event_button)
-                .setSwipeable(R.id.habit_event_row_normal_view, R.id.habit_event_row_button_view, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                .setSwipeable(R.id.habit_event_view, R.id.edit_habit_event_swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                     @Override
                     public void onSwipeOptionClicked(int viewID, int position) {
                         // edit and delete functionality below
