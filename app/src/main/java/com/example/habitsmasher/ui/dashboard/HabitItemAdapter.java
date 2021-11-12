@@ -1,12 +1,13 @@
 package com.example.habitsmasher.ui.dashboard;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -14,10 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
+import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -33,10 +33,9 @@ import java.util.List;
  * Custom adapter class that is used to connect the Firestore database and the
  * RecyclerView displaying the habits
  */
-public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
+public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
     private static HabitList _habits;
     private final String _userId;
-    public final ObservableSnapshotArray<Habit> _snapshots;
     private Context _context;
 
     /**
@@ -44,14 +43,12 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
      * FirestoreRecyclerOptions} for configuration options.
      * @param options the firestore entities
      * @param habits the habit list
-     * @param fragment the habitListFragment
      * @param userId the username of the current user
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
                             HabitList habits,
                             String userId) {
         super(options);
-        _snapshots = options.getSnapshots();
         _habits = habits;
         _userId = userId;
     }
@@ -72,11 +69,6 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
                                     @NonNull Habit habit) {
         // set necessary elements of the habit
         holder._habitTitle.setText(habit.getTitle());
-    }
-
-    @Override
-    public int getItemCount() {
-        return _snapshots.size();
     }
 
 

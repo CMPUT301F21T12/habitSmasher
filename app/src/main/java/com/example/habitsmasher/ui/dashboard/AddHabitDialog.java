@@ -40,7 +40,7 @@ import com.example.habitsmasher.R;
  * Name: Mitch Tabian
  * Video Date: March 11, 2019
  *
- * @author Jacob Nyugen
+ * @author Jacob Nguyen
  * @version 1.0
  */
 public class AddHabitDialog extends DialogFragment {
