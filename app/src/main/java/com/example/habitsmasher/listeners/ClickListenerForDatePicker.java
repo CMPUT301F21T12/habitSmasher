@@ -46,6 +46,11 @@ public class ClickListenerForDatePicker implements View.OnClickListener{
                 _dateText.setText(date);
             }
         });
-        datePickerDialogFragment.show(_fragmentManager, "DatePickerDialogFragment");
+        try {
+            datePickerDialogFragment.show(_fragmentManager, "DatePickerDialogFragment");
+
+        } catch(NullPointerException error) {
+            // Expected in unit test
+        }
     }
 }

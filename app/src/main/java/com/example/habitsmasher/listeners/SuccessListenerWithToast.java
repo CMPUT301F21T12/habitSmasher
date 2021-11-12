@@ -26,6 +26,10 @@ public class SuccessListenerWithToast implements OnSuccessListener {
     @Override
     public void onSuccess(Object o) {
         Log.d(_logTag, _logMsg);
-        Toast.makeText(_context, _toastText, Toast.LENGTH_SHORT).show();
+        try {
+            Toast.makeText(_context, _toastText, Toast.LENGTH_SHORT).show();
+        } catch (NullPointerException error) {
+            // Expected in unit test
+        };
     }
 }

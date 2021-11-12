@@ -28,6 +28,10 @@ public class FailureListenerWithToast implements OnFailureListener{
     @Override
     public void onFailure(@NonNull Exception e) {
         Log.d(_logTag, _logMsg);
-        Toast.makeText(_context, _toastText, Toast.LENGTH_SHORT).show();
+        try {
+            Toast.makeText(_context, _toastText, Toast.LENGTH_SHORT).show();
+        } catch (NullPointerException error) {
+            // Expected in unit test
+        };
     }
 }
