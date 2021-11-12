@@ -27,6 +27,8 @@ import java.util.UUID;
 /**
  * Test class for MainActivity. All the UI tests are written here. Robotium test framework is
  used
+
+ Note: The tests have been verified to run on Pixel 5 API 29
  */
 public class MainActivityTest {
     private static final String HABIT_TITLE_FIELD = "Habit title";
