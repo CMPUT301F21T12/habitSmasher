@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.R;
 
 import java.util.Date;
@@ -41,6 +42,7 @@ public class EditHabitFragment extends DialogFragment{
     private Button _fridayButton;
     private Button _saturdayButton;
     private Button _sundayButton;
+    private PublicPrivateButtons _publicPrivateButtons;
 
     private final Habit _editHabit;
     private final int _index;
@@ -73,6 +75,9 @@ public class EditHabitFragment extends DialogFragment{
         _reasonText = view.findViewById(R.id.habit_reason_edit_text);
         _dateText = view.findViewById(R.id.habit_date_selection);
         _tracker = new DaysTracker(_editHabit.getDays());
+        _publicPrivateButtons = new PublicPrivateButtons(view, _editHabit.getPublic());
+        _publicPrivateButtons.setClickListeners();
+
 
         //buttons for the days of the week, apologies for so many of them
         _mondayButton = view.findViewById(R.id.monday_button);
@@ -106,6 +111,7 @@ public class EditHabitFragment extends DialogFragment{
                 String habitTitle = _titleText.getText().toString();
                 String reasonText = _reasonText.getText().toString();
                 String dateText = _dateText.getText().toString();
+                boolean isPublic = _publicPrivateButtons.isHabitPublic();
 
                 // habit validator to ensure data is formatted appropriately
                 HabitValidator habitValidator = new HabitValidator(getActivity());
@@ -118,6 +124,7 @@ public class EditHabitFragment extends DialogFragment{
                                         reasonText,
                                         newDate,
                                         _tracker.getDays(),
+                                        isPublic,
                                         _editHabit.getId(),
                                         _editHabit.getHabitEvents());
 
