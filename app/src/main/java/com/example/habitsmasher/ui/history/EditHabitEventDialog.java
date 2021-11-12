@@ -5,14 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
@@ -25,25 +22,22 @@ import java.util.Date;
  * The EditHabitEventFragment class
  * Based on EditEventFragment, dialog which pops up and allows a user to edit habit events
  */
-public class EditHabitEventFragment extends HabitEventDialog {
+public class EditHabitEventDialog extends HabitEventDialog {
     // Initialize global variables
     private final int _index;
     private final HabitEvent _editHabitEvent;
-    private final HabitEventListFragment _listener;
-    private final EditHabitEventFragment _editFragment = this;
+    private final EditHabitEventDialog _editFragment = this;
     private final HabitEventItemAdapter.HabitEventViewHolder _viewHolder;
 
     /**
      * Default constructor
      * @param index (int) The index of the habit to edit within the list
      * @param editHabitEvent (HabitEvent) The habit event to edit
-     * @param listener (HabitEventListFragment) The parent fragment
      * @param habitEventViewHolder (HabitEventViewHolder) The view holder associated with the habit event
      */
-    public EditHabitEventFragment (int index, HabitEvent editHabitEvent, HabitEventListFragment listener, HabitEventItemAdapter.HabitEventViewHolder habitEventViewHolder) {
+    public EditHabitEventDialog(int index, HabitEvent editHabitEvent, HabitEventItemAdapter.HabitEventViewHolder habitEventViewHolder) {
         _index = index;
         _editHabitEvent = editHabitEvent;
-        _listener = listener;
         _viewHolder = habitEventViewHolder;
     }
 
@@ -52,29 +46,22 @@ public class EditHabitEventFragment extends HabitEventDialog {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Used same UI xml as Add Habit Event, since the dialog box is the same
         View view = inflater.inflate(R.layout.add_habit_event_dialog, container, false);
-
         // Connect UI elements
-        Button confirmButton = view.findViewById(R.id.confirm_habit_event);
-        Button cancelButton = view.findViewById(R.id.cancel_habit_event);
-        TextView header = view.findViewById(R.id.add_habit_event_header);
+        initializeUIElements(view);
 
-        header.setText("Edit Habit Event");
-        _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
-        _eventDateText = view.findViewById(R.id.habit_event_date_selection);
-        _errorText = view.findViewById(R.id.error_text_event);
+        // set header
+        _header.setText("Edit Habit Event");
+
+        //set error text to blank
+        _errorText.setText("");
 
         // Prefill values
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
-        _errorText.setText("");
+
 
         // Add listener to date text to open date picker
-        _eventDateText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDatePickerDialog();
-            }
-        });
+
 
         // Add listener to confirm button that propagates habit event editing
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +83,7 @@ public class EditHabitEventFragment extends HabitEventDialog {
                                                             eventComment,
                                                             _editHabitEvent.getId());
                 _errorText.setText("");
-                _listener.updateListAfterEdit(editedHabitEvent,_index);
+                _habitEventListFragment.updateListAfterEdit(editedHabitEvent,_index);
 
                 // Close dialog
                 getDialog().dismiss();
@@ -104,35 +91,10 @@ public class EditHabitEventFragment extends HabitEventDialog {
         });
 
         // Add listener to cancel button that closes the dialog
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDialog().dismiss();
-            }
-        });
+
 
         return view;
     }
 
-    /**
-     * Opens the calendar dialog used for date selection
-     */
-    private void openDatePickerDialog() {
-        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
-            /**
-             * Sets the text of the date select view to reflect selected date
-             * @param view
-             * @param year year of selected date
-             * @param month month of selected date (integer from 0 to 11)
-             * @param day day of month of selected date
-             */
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                int correctedMonth = month + 1;
-                String date = day + "/" + correctedMonth + "/" + year;
-                _eventDateText.setText(date);
-            }
-        });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
-    }
+
 }

@@ -35,15 +35,8 @@ import com.example.habitsmasher.R;
  * Deals with UI and information handling of the add habit event popup
  */
 public class AddHabitEventDialog extends HabitEventDialog {
-    private static final String TAG = "AddHabitEventDialog";
 
-    // UI elements
-    private HabitEventListFragment _habitEventListFragment;
     private AddHabitEventDialog _addFragment = this;
-    private Button _cancelNewEvent;
-    private Button _confirmNewEvent;
-    private ImageView _eventPictureView;
-    private Uri _selectedImage;
 
     /**
      * Default constructor
@@ -51,45 +44,26 @@ public class AddHabitEventDialog extends HabitEventDialog {
     public AddHabitEventDialog() {
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate view
+        // Inflate view and attach view elements
         View view = inflater.inflate(R.layout.add_habit_event_dialog, container, false);
+        initializeUIElements(view);
 
-        // Attach UI elements
-        _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
-        _eventDateText = view.findViewById(R.id.habit_event_date_selection);
-
-        _errorText = view.findViewById(R.id.error_text_event);
-        _cancelNewEvent = view.findViewById(R.id.cancel_habit_event);
-        _confirmNewEvent = view.findViewById(R.id.confirm_habit_event);
-        _eventPictureView = view.findViewById(R.id.habit_event_add_photo);
-        TextView header = view.findViewById(R.id.add_habit_event_header);
-
-        header.setText("Add Habit Event");
+        // set header
+        _header.setText("Add Habit Event");
         _errorText.setText("");
 
         // Add listener to date text to open date picker
-        _eventDateText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDatePickerDialog();
-            }
-        });
+        setDateTextViewListener();
 
         // Add listener to cancel button which closes dialog
-        _cancelNewEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                _errorText.setText("");
-                Log.d(TAG, "Cancel");
-                getDialog().dismiss();
-            }
-        });
+        setCancelButtonListener();
 
         // Add listener to confirm button that adds events to database and closed dialog
-        _confirmNewEvent.setOnClickListener(new View.OnClickListener() {
+        _confirmButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
@@ -167,17 +141,5 @@ public class AddHabitEventDialog extends HabitEventDialog {
             }
         });
         datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            // Get habit event fragment for later use
-            _habitEventListFragment = (HabitEventListFragment) getTargetFragment();
-        }
-        catch (ClassCastException e) {
-            Log.e(TAG, "Exception" + e.getMessage());
-        }
     }
 }
