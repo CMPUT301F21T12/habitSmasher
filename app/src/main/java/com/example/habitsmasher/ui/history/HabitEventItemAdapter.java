@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
+import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 
@@ -26,11 +26,10 @@ import java.text.SimpleDateFormat;
  * Based on HabitItemAdapter, extension of FirestoreRecycler that shows habit events list with
  * live updates
  */
-public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
+public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
     // Initialize variables
+    private static String DATE_FORMAT = "dd/MM/yyyy";
     private Context _context;
-    private final String DATE_FORMAT = "dd/MM/yyyy";
-    public final ObservableSnapshotArray<HabitEvent> _snapshots;
     private static Habit _parentHabit;
     private static String _userId;
     private static HabitEventList _habitEvents;
@@ -49,7 +48,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
                                  HabitEventList habitEvents,
                                  HabitEventListFragment fragment) {
         super(options);
-        _snapshots = options.getSnapshots();
         _parentHabit = parentHabit;
         _userId = userId;
         _habitEvents = habitEvents;
@@ -74,13 +72,6 @@ public class HabitEventItemAdapter extends FirestoreRecyclerAdapter<HabitEvent, 
         holder._get_habitEventCommentWithButtons.setText(habitEvent.getComment());
         // TODO: Implement image setting too
     }
-
-    /**
-     * Necessary function for Firestore recycler view
-     * @return number of elements in snapshots
-     */
-    @Override
-    public int getItemCount() { return _snapshots.size(); }
 
     /**
      * This class holds any necessary elements of the habit event on the front-end
