@@ -8,11 +8,10 @@ import java.util.Date;
  * Its purpose is to store and retrieve the start date, comments, picture, and location of a habit event
  * Pictures for habit events are not yet implemented
  */
-public class HabitEvent {
+public class HabitEvent extends DatabaseEntity{
     private Date _date;
     private String _comment;
     private Uri _pictureUri;
-    private String _id;
 
     // TODO: Eventually add location
     // TODO: Fully integrate pictures
@@ -30,9 +29,9 @@ public class HabitEvent {
      * @param comment (String): The comment of the habit event
      */
     public HabitEvent(Date startDate, String comment, String id) {
+        super(id);
         _date = startDate;
         _comment = comment;
-        _id = id;
         // _pictureUri = pictureUri;
     }
 
@@ -86,18 +85,4 @@ public class HabitEvent {
     public void setPictureURL(Uri pictureUri) {
         this._pictureUri = pictureUri;
     }
-
-    /**
-     * Gets the ID of the current habit event
-     * @return habit event's id
-     */
-    @PropertyName("id")
-    public String getId() { return _id; }
-
-    /**
-     * Sets the ID of the habit event
-     * This function SHOULD not be used
-     * @param id new id for habit event
-     */
-    public void setId(String id) {_id = id; }
 }

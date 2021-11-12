@@ -2,6 +2,7 @@ package com.example.habitsmasher;
 
 import android.media.Image;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**

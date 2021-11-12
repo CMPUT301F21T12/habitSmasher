@@ -1,20 +1,15 @@
 package com.example.habitsmasher.ui.dashboard;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
@@ -25,7 +20,6 @@ import com.example.habitsmasher.listeners.SuccessListener;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
-import com.google.android.gms.common.api.Batch;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +29,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -44,31 +37,24 @@ import java.util.Locale;
  */
 public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
     private static HabitList _habits;
-    private static HabitListFragment _habitListFragment;
     private final String _userId;
     public final ObservableSnapshotArray<Habit> _snapshots;
-    private final FragmentActivity _activity;
     private Context _context;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      * @param options the firestore entities
-     * @param activity
      * @param habits the habit list
      * @param fragment the habitListFragment
      * @param userId the username of the current user
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
-                            FragmentActivity activity,
                             HabitList habits,
-                            HabitListFragment fragment,
                             String userId) {
         super(options);
         _snapshots = options.getSnapshots();
-        _activity = activity;
         _habits = habits;
-        _habitListFragment = fragment;
         _userId = userId;
     }
 
@@ -125,7 +111,7 @@ public class HabitItemAdapter extends FirestoreRecyclerAdapter<Habit, HabitItemA
             Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
                     .document(userId)
                     .collection("Habits")
-                    .document(Long.toString(parentHabit.getId()))
+                    .document(parentHabit.getId())
                     .collection("Events")
                     .get();
 

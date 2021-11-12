@@ -20,6 +20,8 @@ import com.example.habitsmasher.R;
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
 import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
 
+import java.util.Date;
+
 /**
  * The EditHabitEventFragment class
  * Based on EditEventFragment, dialog which pops up and allows a user to edit habit events
@@ -87,7 +89,11 @@ public class EditHabitEventFragment extends DialogFragment {
                 }
 
                 // Update the habit event in the database and locally
-                _listener.updateAfterEdit(eventComment, DatePickerDialogFragment.parseStringToDate(dateText),_index,_editHabitEvent.getId(), _viewHolder);
+                Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
+                HabitEvent editedHabitEvent = new HabitEvent(newDate,
+                                                            eventComment,
+                                                            _editHabitEvent.getId());
+                _listener.updateListAfterEdit(editedHabitEvent,_index);
 
                 // Close dialog
                 getDialog().dismiss();

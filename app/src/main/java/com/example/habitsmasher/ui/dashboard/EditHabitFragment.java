@@ -17,12 +17,13 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DatePickerDialogFragment;
-import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
 import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
 import com.example.habitsmasher.listeners.ClickListenerForDaysOfTheWeek;
+
+import java.util.Date;
 
 /**
  *  UI Class that represents and specifies the behaviour of the dialog
@@ -113,10 +114,16 @@ public class EditHabitFragment extends DialogFragment{
                 if (!habitValidator.isHabitValid(habitTitle, reasonText, dateText, _tracker)) {
                     return;
                 }
+                Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
+                Habit editedHabit = new Habit(habitTitle,
+                                        reasonText,
+                                        newDate,
+                                        _tracker.getDays(),
+                                        _editHabit.getId(),
+                                        _editHabit.getHabitEvents());
 
                 // update local list and display
-                _listener.updateAfterEdit(habitTitle, reasonText, DatePickerDialogFragment.parseStringToDate(dateText), _index, _tracker);
-
+                _listener.updateListAfterEdit(editedHabit, _index);
                 getDialog().dismiss();
             }
         });

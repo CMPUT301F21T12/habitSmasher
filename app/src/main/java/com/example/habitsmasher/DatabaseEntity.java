@@ -1,11 +1,16 @@
 package com.example.habitsmasher;
 
+
+import java.util.UUID;
+
 /**
  * This is the DatabaseEntity abstract class
  * Its purpose is to store the ID's of classes that extend it
  */
 public abstract class DatabaseEntity {
-    private long _id;
+
+    // IDs will be UUIDs converted into Strings
+    private String _id;
 
     /**
      * Empty constructor
@@ -16,7 +21,7 @@ public abstract class DatabaseEntity {
      * Constructor for database entity
      * @param id id of database entity
      */
-    DatabaseEntity(long id) {
+    DatabaseEntity(String id) {
         _id = id;
     }
 
@@ -24,7 +29,7 @@ public abstract class DatabaseEntity {
      * Sets the ID of the database entity
      * @param id new ID of the entity
      */
-    private void setId(long id) {
+    private void setId(String id) {
         _id = id;
     }
 
@@ -32,7 +37,16 @@ public abstract class DatabaseEntity {
      * Gets the ID of the database entity
      * @return the ID of the entity
      */
-    public long getId() {
+    public String getId() {
         return _id;
+    }
+
+    /**
+     * Generates a random UUID in the form of a string for the
+     * database entity
+     * @return
+     */
+    public static String generateId() {
+        return UUID.randomUUID().toString();
     }
 }
