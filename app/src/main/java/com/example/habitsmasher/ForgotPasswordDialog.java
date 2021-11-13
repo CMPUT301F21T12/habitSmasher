@@ -32,7 +32,7 @@ public class ForgotPasswordDialog extends DialogFragment {
         _auth = FirebaseAuth.getInstance();
 
         EditText forgotPasswordEdittext = view.findViewById(R.id.reset_password_dialog);
-        Button forgotPasswordButton = view.findViewById(R.id.reset_password_next);
+        Button forgotPasswordButton = view.findViewById(R.id.reset_password_button);
 
         setClickListenerForConfirmButton(forgotPasswordEdittext, forgotPasswordButton);
 
