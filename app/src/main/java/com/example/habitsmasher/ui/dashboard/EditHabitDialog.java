@@ -60,11 +60,11 @@ public class EditHabitDialog extends HabitDialog {
         // Gets days of week from habit to be edited and pass into tracker
         _tracker = new DaysTracker(_editHabit.getDays());
 
+        // setting up private and public buttons
         _publicPrivateButtons = new PublicPrivateButtons(view, _editHabit.getPublic());
         _publicPrivateButtons.setClickListeners();
 
-
-        //set up days of the week buttons
+        // set up days of the week buttons
         initializeDaysOfTheWeekButtons();
         setListenersForDaysOfTheWeek();
 
@@ -79,6 +79,7 @@ public class EditHabitDialog extends HabitDialog {
         _habitTitleEditText.setText(_editHabit.getTitle());
         _habitReasonEditText.setText(_editHabit.getReason());
         _habitDateTextView.setText(DatePickerDialogFragment.parseDateToString(_editHabit.getDate()));
+
         return view;
     }
 

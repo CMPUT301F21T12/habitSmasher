@@ -11,9 +11,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-
-import com.example.habitsmasher.DaysTracker;
-import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.ui.dashboard.HabitListFragment;
 
 
@@ -30,7 +27,6 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
     public static final int INCORRECT_DATE = 3;
     public static final int INCORRECT_DAYS = 4;
 
-
     // tag of dialog for logging
     protected String TAG;
 
@@ -41,6 +37,8 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
     protected EditText _habitTitleEditText;
     protected EditText _habitReasonEditText;
     protected TextView _habitDateTextView;
+
+    // error message text views
     protected TextView _errorText;
 
     // buttons for days of the week on habit dialog
@@ -52,8 +50,8 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
     protected Button _saturdayButton;
     protected Button _sundayButton;
 
+    // private and public buttons
     protected PublicPrivateButtons _publicPrivateButtons;
-
 
     // confirm and cancel button for habit dialog
     protected Button _confirmButton;
@@ -61,7 +59,6 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
 
     // days tracker used to keep track of weekly schedule of habits
     protected DaysTracker _tracker;
-
 
     /**
      * Initializes the variables holding the
@@ -72,7 +69,8 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
         _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
         _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
         _habitDateTextView = view.findViewById(R.id.habit_date_selection);
-        _errorText = view.findViewById(R.id.error_text);
+
+        _errorText = view.findViewById(R.id.error_text_habit);
 
         //buttons for the days of the week, apologies for so many of them
         _mondayButton = view.findViewById(R.id.monday_button);
@@ -208,7 +206,6 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
         _cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _errorText.setText("");
                 getDialog().dismiss();
             }
         });

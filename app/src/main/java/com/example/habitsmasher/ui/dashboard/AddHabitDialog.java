@@ -53,11 +53,11 @@ public class AddHabitDialog extends HabitDialog {
         // set error text to blank
         _errorText.setText("");
 
-        // public and private buttons
+        // setting up public and private buttons
         _publicPrivateButtons = new PublicPrivateButtons(view);
         _publicPrivateButtons.setClickListeners();
 
-        //logic handler for tracking all those days
+        // logic handler for tracking all those days
         _tracker = new DaysTracker();
 
         // set the listeners for the days of the week buttons
