@@ -50,4 +50,5 @@
     <string name="home_day">null</string>
     <string name="home_welcome_message">Today will be a good day.</string>
     <string name="home_habit_header">Today\'s Habits</string>
+    <string name="home_new_event">Add Event</string>
 </resources>

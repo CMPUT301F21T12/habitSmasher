@@ -1,10 +1,7 @@
 package com.example.habitsmasher.ui.home;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -22,8 +17,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.habitsmasher.DatabaseEntity;
-import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.HabitList;
@@ -31,13 +24,14 @@ import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
-import com.example.habitsmasher.ui.dashboard.HabitListFragment;
+import com.example.habitsmasher.ui.dashboard.HomeHabitItemAdapter;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
+import com.example.habitsmasher.ui.history.AddHabitEventDialog;
+import com.example.habitsmasher.ui.history.HabitEventListFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -62,7 +56,7 @@ public class HomeFragment extends ListFragment {
     // list of habits being displayed
     private HabitList _habitList;
 
-    private HabitItemAdapter _habitItemAdapter;
+    private HomeHabitItemAdapter _habitItemAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -88,14 +82,13 @@ public class HomeFragment extends ListFragment {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
+        _habitItemAdapter = new HomeHabitItemAdapter(options, _habitList, _user.getUsername());
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                 LinearLayoutManager.VERTICAL,
                 false);
 
         //View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
         initializeRecyclerView(layoutManager, view);
-
 
 
         return view;
@@ -113,8 +106,7 @@ public class HomeFragment extends ListFragment {
     }
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         super.onStop();
         _habitItemAdapter.stopListening();
     }
@@ -210,22 +202,12 @@ public class HomeFragment extends ListFragment {
                 openViewWindowForItem(position);
             }
         })
-                .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
+                .setSwipeOptionViews(R.id.home_add_event_button)
                 .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                     @Override
                     public void onSwipeOptionClicked(int viewID, int position) {
-                        // edit and delete functionality below
-                        switch (viewID){
-                            // if edit button clicked
-                            case R.id.edit_button:
-                                //openEditDialogBox(position);
-                                break;
-                            // if delete button clicked
-                            case R.id.delete_button:
-                                //updateListAfterDelete(position);
-                                break;
-                        }
-
+                        // open the habit event dialog
+                        openHabitEventsView(position);
                     }
                 });
 
@@ -234,7 +216,9 @@ public class HomeFragment extends ListFragment {
 
     @Override
     protected void openAddDialogBox() {
-        //not needed
+        // Originally went to the dialog box but the box relies on the  list to function
+        //no longer possible
+
     }
 
     @Override
@@ -247,7 +231,7 @@ public class HomeFragment extends ListFragment {
         //not needed
     }
 
-    private Habit makeHabit(Map<String, Object> extractMap){
+    private Habit makeHabit(Map<String, Object> extractMap) {
         // get all of the data from the snapshot
         String title = (String) extractMap.get("title");
         String reason = (String) extractMap.get("reason");
@@ -259,15 +243,15 @@ public class HomeFragment extends ListFragment {
         return new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
     }
 
-    private String getCurrentDay(){
+    private String getCurrentDay() {
         LocalDate currentDate = LocalDate.now();
         return currentDate.getDayOfWeek().toString().toUpperCase().substring(0, 2);
     }
 
-    private String getDateString(){
+    private String getDateString() {
         LocalDate currentDate = LocalDate.now();
         String abbreviatedMonth = currentDate.getMonth().toString().substring(0, 3).toLowerCase();
-        abbreviatedMonth = abbreviatedMonth.substring(0,1).toUpperCase() + abbreviatedMonth.substring(1);
+        abbreviatedMonth = abbreviatedMonth.substring(0, 1).toUpperCase() + abbreviatedMonth.substring(1);
         return abbreviatedMonth + " " + currentDate.getDayOfMonth();
     }
 
@@ -284,5 +268,21 @@ public class HomeFragment extends ListFragment {
 
         // Navigate to the habitViewFragment
         controller.navigate(R.id.action_navigation_home_to_habitViewFragment, bundle);
+    }
+
+    /**
+     * Used to open up the list of habit events associated with this habit
+     */
+    private void openHabitEventsView(int position) {
+        // Create a bundle to be passed into the HabitEventListFragment
+        Habit currentHabit = _habitItemAdapter._snapshots.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("parentHabit", currentHabit);
+        bundle.putSerializable("parentUser", _user.getId());
+
+        NavController controller = NavHostFragment.findNavController(this);
+
+        // Navigate to the habitEventListFragment
+        controller.navigate(R.id.action_navigation_home_to_habitEventListFragment, bundle);
     }
 }

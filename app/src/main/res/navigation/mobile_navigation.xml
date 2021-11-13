@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_navigation_home_to_habitViewFragment"
             app:destination="@id/habitViewFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_habitEventListFragment"
+            app:destination="@id/habitEventListFragment" />
     </fragment>
 
     <fragment

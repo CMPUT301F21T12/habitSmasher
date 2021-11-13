@@ -17,6 +17,7 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.ui.home.HomeFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
