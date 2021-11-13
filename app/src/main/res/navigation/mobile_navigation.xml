@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_LoginFragment"
             app:destination="@id/user_login"/>
+        <action
+            android:id="@+id/action_navigation_home_to_habitViewFragment"
+            app:destination="@id/habitViewFragment" />
     </fragment>
 
     <fragment

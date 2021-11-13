@@ -106,6 +106,19 @@ public class HomeFragment extends ListFragment {
         super.onDestroyView();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        _habitItemAdapter.startListening();
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        _habitItemAdapter.stopListening();
+    }
+
     @NonNull
     private User getCurrentUser() {
         SharedPreferences sharedPref = _context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
@@ -196,7 +209,27 @@ public class HomeFragment extends ListFragment {
             public void onRowClicked(int position) {
                 openViewWindowForItem(position);
             }
-        });
+        })
+                .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
+                .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                    @Override
+                    public void onSwipeOptionClicked(int viewID, int position) {
+                        // edit and delete functionality below
+                        switch (viewID){
+                            // if edit button clicked
+                            case R.id.edit_button:
+                                //openEditDialogBox(position);
+                                break;
+                            // if delete button clicked
+                            case R.id.delete_button:
+                                //updateListAfterDelete(position);
+                                break;
+                        }
+
+                    }
+                });
+
+        recyclerView.addOnItemTouchListener(touchListener);
     }
 
     @Override
@@ -250,6 +283,6 @@ public class HomeFragment extends ListFragment {
         NavController controller = NavHostFragment.findNavController(this);
 
         // Navigate to the habitViewFragment
-        controller.navigate(R.id.action_navigation_dashboard_to_habitViewFragment, bundle);
+        controller.navigate(R.id.action_navigation_home_to_habitViewFragment, bundle);
     }
 }
