@@ -1202,6 +1202,9 @@ public class MainActivityTest {
         assertTextOnScreen(EMAIL_IS_REQUIRED);
     }
 
+    //Accessing edit text came from the following link:
+    //https://stackoverflow.com/a/40652532
+    //Username: Motsane M
     @Test
     public void forgotPassword_invalidEmail_emailSentFails() {
         _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
