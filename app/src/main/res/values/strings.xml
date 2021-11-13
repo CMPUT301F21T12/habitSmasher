@@ -47,4 +47,5 @@
     <string name="username_capitalU">Username</string>
     <string name="public_habit">Public</string>
     <string name="private_habit">Private</string>
+    <string name="forgot_password_message_dialog">Please enter your email</string>
 </resources>
