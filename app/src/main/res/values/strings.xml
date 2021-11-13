@@ -47,4 +47,7 @@
     <string name="username_capitalU">Username</string>
     <string name="public_habit">Public</string>
     <string name="private_habit">Private</string>
+    <string name="home_day">null</string>
+    <string name="home_welcome_message">Today will be a good day.</string>
+    <string name="home_habit_header">Today\'s Habits</string>
 </resources>
