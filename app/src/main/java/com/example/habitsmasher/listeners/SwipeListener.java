@@ -28,19 +28,34 @@ public class SwipeListener implements RecyclerTouchListener.OnSwipeOptionsClickL
 
     @Override
     public void onSwipeOptionClicked(int viewID, int position) {
+        // edit and delete functionality below
         switch (viewID){
-            // if edit clicked
+            // if edit button clicked
             case R.id.edit_button:
-                EditHabitFragment editHabitFragment = new EditHabitFragment(position,
-                        _habitItemAdapter._snapshots.get(position),
-                        _fragment);
-                editHabitFragment.show(_fragment.getFragmentManager(), "Edit Habit");
+                openEditDialogBox(position);
                 break;
-            // if delete clicked
+            // if delete button clicked
             case R.id.delete_button:
-                Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
-                _habitList.deleteHabit(_fragment.getActivity(), _user.getUsername(), habitToDelete, position);
+                updateListAfterDelete(position);
                 break;
         }
+    }
+
+    // note: add this to list fragment class once swipe is complete in habit event list
+    protected void openEditDialogBox(int position) {
+        EditHabitFragment editHabitFragment = new EditHabitFragment(position,
+                _habitItemAdapter._snapshots.get(position),
+                _fragment);
+        editHabitFragment.show(_fragment.getFragmentManager(),
+                "Edit Habit");
+    }
+
+    // add to list fragment class once swipe is fixed in habit events
+    public void updateListAfterDelete(int position) {
+        Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+        _habitList.deleteHabit(_fragment.getActivity(),
+                _user.getId(),
+                habitToDelete,
+                position);
     }
 }
