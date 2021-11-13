@@ -23,32 +23,37 @@ public class ForgotPasswordDialog extends DialogFragment {
 
     private static final String EMAIL_SENT_MESSAGE = "Email sent, please check your email";
 
+    FirebaseAuth _auth;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.forgot_user_password_dialog, container, false);
 
+        _auth = FirebaseAuth.getInstance();
+
         EditText forgotPasswordEdittext = view.findViewById(R.id.reset_password_dialog);
         Button forgotPasswordButton = view.findViewById(R.id.reset_password_next);
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        setClickListenerForConfirmButton(forgotPasswordEdittext, forgotPasswordButton);
 
-        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+        return view;
+    }
+
+    private void setClickListenerForConfirmButton(EditText emailInput, Button confirmButton) {
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserValidator userValidator = new UserValidator(forgotPasswordEdittext);
-                if (!userValidator.isEmailValid(forgotPasswordEdittext.getText().toString().trim())) {
-                    userValidator.showLoginErrors();
+                UserValidator userValidator = new UserValidator(emailInput);
+                if (!userValidator.isEmailValid(emailInput.getText().toString().trim())) {
+                    userValidator.showForgotPasswordErrors();
                 } else {
-                    auth.sendPasswordResetEmail(forgotPasswordEdittext.getText().toString().trim());
+                    _auth.sendPasswordResetEmail(emailInput.getText().toString().trim());
                     showMessage(EMAIL_SENT_MESSAGE);
                     getDialog().dismiss();
                 }
             }
         });
-        return view;
     }
-
     /**
      * This helper method shows a toast message to the screen
      * @param message message to display

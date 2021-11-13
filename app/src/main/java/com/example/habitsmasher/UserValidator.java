@@ -163,4 +163,18 @@ public class UserValidator {
             return;
         }
     }
+
+    public void showForgotPasswordErrors() {
+        if (_email.isEmpty()) {
+            _emailInput.setError(EMAIL_IS_REQUIRED_MESSAGE);
+            _emailInput.requestFocus();
+            return;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(_email).matches()) {
+            _emailInput.setError(INVALID_EMAIL_FORMAT_MESSAGE);
+            _emailInput.requestFocus();
+            return;
+        }
+    }
 }
