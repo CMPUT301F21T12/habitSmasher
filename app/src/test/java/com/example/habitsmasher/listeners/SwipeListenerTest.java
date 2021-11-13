@@ -27,8 +27,7 @@ public class SwipeListenerTest {
 
     @Before
     public void setUp() {
-        _swipeListener = Mockito.spy(new SwipeListener(mock(HabitItemAdapter.class),
-                mock(HabitListFragment.class), mock(HabitList.class), mock(User.class)));
+        _swipeListener = Mockito.spy(new SwipeListener(mock(HabitListFragment.class)));
     }
 
     @Test

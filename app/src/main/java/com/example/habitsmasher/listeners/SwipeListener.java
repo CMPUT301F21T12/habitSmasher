@@ -14,16 +14,10 @@ import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
  * Its purpose is to perform the onSwipeOptionClicked listener actions
  */
 public class SwipeListener implements RecyclerTouchListener.OnSwipeOptionsClickListener{
-    private HabitItemAdapter _habitItemAdapter;
     private HabitListFragment _fragment;
-    private HabitList _habitList;
-    private User _user;
 
-    public SwipeListener(HabitItemAdapter habitItemAdapter, HabitListFragment fragment, HabitList habitList, User user) {
-        _habitItemAdapter = habitItemAdapter;
+    public SwipeListener(HabitListFragment fragment) {
         _fragment = fragment;
-        _habitList = habitList;
-        _user = user;
     }
 
     @Override
@@ -32,30 +26,12 @@ public class SwipeListener implements RecyclerTouchListener.OnSwipeOptionsClickL
         switch (viewID){
             // if edit button clicked
             case R.id.edit_button:
-                openEditDialogBox(position);
+                _fragment.openEditDialogBox(position);
                 break;
             // if delete button clicked
             case R.id.delete_button:
-                updateListAfterDelete(position);
+                _fragment.updateListAfterDelete(position);
                 break;
         }
-    }
-
-    // note: add this to list fragment class once swipe is complete in habit event list
-    protected void openEditDialogBox(int position) {
-        EditHabitFragment editHabitFragment = new EditHabitFragment(position,
-                _habitItemAdapter._snapshots.get(position),
-                _fragment);
-        editHabitFragment.show(_fragment.getFragmentManager(),
-                "Edit Habit");
-    }
-
-    // add to list fragment class once swipe is fixed in habit events
-    public void updateListAfterDelete(int position) {
-        Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
-        _habitList.deleteHabit(_fragment.getActivity(),
-                _user.getId(),
-                habitToDelete,
-                position);
     }
 }

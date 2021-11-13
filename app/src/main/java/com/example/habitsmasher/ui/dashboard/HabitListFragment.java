@@ -123,7 +123,7 @@ public class HabitListFragment extends ListFragment<Habit> {
         })
                 .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
                 .setSwipeable(R.id.habit_view, R.id.swipe_options,
-                        new SwipeListener(_habitItemAdapter, this, _habitList, _user));
+                        new SwipeListener(this));
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
     }
@@ -247,5 +247,22 @@ public class HabitListFragment extends ListFragment<Habit> {
         return new User(userId, username, email, password);
     }
 
+    // note: add this to list fragment class once swipe is complete in habit event list
+    public void openEditDialogBox(int position) {
+        EditHabitFragment editHabitFragment = new EditHabitFragment(position,
+                _habitItemAdapter._snapshots.get(position),
+                this);
+        editHabitFragment.show(getFragmentManager(),
+                "Edit Habit");
+    }
+
+    // add to list fragment class once swipe is fixed in habit events
+    public void updateListAfterDelete(int position) {
+        Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+        _habitList.deleteHabit(getActivity(),
+                _user.getId(),
+                habitToDelete,
+                position);
+    }
 
 }
