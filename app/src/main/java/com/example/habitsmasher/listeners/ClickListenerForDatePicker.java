@@ -1,6 +1,7 @@
 package com.example.habitsmasher.listeners;
 
 import android.app.DatePickerDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -51,6 +52,8 @@ public class ClickListenerForDatePicker implements View.OnClickListener{
 
         } catch(NullPointerException error) {
             // Expected in unit test
+            Log.d("ClickListenerForDatePicker", "ClickListenerForDatePicker Listener NPE."
+                    + error.toString());
         }
     }
 }

@@ -2,17 +2,11 @@ package com.example.habitsmasher;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
+
 import static android.content.ContentValues.TAG;
-import androidx.annotation.NonNull;
 
 import com.example.habitsmasher.listeners.FailureListener;
-import com.example.habitsmasher.listeners.FailureListenerWithToast;
 import com.example.habitsmasher.listeners.SuccessListener;
-import com.example.habitsmasher.listeners.SuccessListenerWithToast;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -117,10 +111,10 @@ public class HabitEventList extends ArrayList{
                 .collection("Events")
                 .document(toDelete.getId())
                 .delete()
-                .addOnSuccessListener(new SuccessListenerWithToast(context,
+                .addOnSuccessListener(new SuccessListener(context,
                         "deleteHabitEvent", "Data successfully deleted.",
                         "Habit Event deleted!"))
-                .addOnFailureListener(new FailureListenerWithToast(context,
+                .addOnFailureListener(new FailureListener(context,
                         "deleteHabitEvent", "Data failed to be deleted.",
                         "Something went wrong!"));
     }

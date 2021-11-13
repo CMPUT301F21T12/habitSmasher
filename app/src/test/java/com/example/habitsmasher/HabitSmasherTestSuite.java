@@ -1,6 +1,11 @@
 package com.example.habitsmasher;
 
-import com.example.habitsmasher.test.ListenersTest;
+import com.example.habitsmasher.listeners.ClickListenerForCancelTest;
+import com.example.habitsmasher.listeners.ClickListenerForDatePickerTest;
+import com.example.habitsmasher.listeners.ClickListenerForDaysOfTheWeekTest;
+import com.example.habitsmasher.listeners.FailureListenerTest;
+import com.example.habitsmasher.listeners.SuccessListenerTest;
+import com.example.habitsmasher.listeners.SwipeListenerTest;
 import com.example.habitsmasher.test.UserTest;
 import com.example.habitsmasher.test.DatePickerDialogFragmentTest;
 import com.example.habitsmasher.ui.dashboard.HabitListTest;
@@ -19,6 +24,11 @@ import org.junit.runners.Suite;
                      HabitEventValidatorTest.class,
                      DatePickerDialogFragmentTest.class,
                      UserValidatorTest.class,
-                     ListenersTest.class})
+                     ClickListenerForCancelTest.class,
+                     ClickListenerForDatePickerTest.class,
+                     ClickListenerForDaysOfTheWeekTest.class,
+                     FailureListenerTest.class,
+                     SuccessListenerTest.class,
+                     SwipeListenerTest.class})
 public class HabitSmasherTestSuite {
 }
