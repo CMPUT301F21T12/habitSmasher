@@ -10,7 +10,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -67,6 +66,7 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("date", newHabit.getDate());
         habitData.put("id", habitId);
         habitData.put("days", newHabit.getDays());
+        habitData.put("public", newHabit.getPublic());
 
         // add habit to database, using it's habit ID as the document name
         setHabitDataInDatabase(userId, habitId, habitData);
@@ -85,23 +85,7 @@ public class HabitList extends ArrayList<Habit>{
         habit.setReason(editedHabit.getReason());
         habit.setDate(editedHabit.getDate());
         habit.setDays(editedHabit.getDays());
-    }
-
-    /**
-     * Method that a edits a Habit in the specified pos in the local HabitList
-     * @param newTitle
-     * @param newReason
-     * @param newDate
-     * @param tracker
-     * @param pos
-     */
-    public void editHabitLocal(String newTitle, String newReason, Date newDate ,
-                               DaysTracker tracker, int pos) {
-        Habit habit = _habits.get(pos);
-        habit.setTitle(newTitle);
-        habit.setReason(newReason);
-        habit.setDate(newDate);
-        habit.setDays(tracker.getDays());
+        habit.setPublic(editedHabit.getPublic());
     }
 
     /**
@@ -121,6 +105,7 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("date", editedHabit.getDate());
         habitData.put("id", habitId);
         habitData.put("days", editedHabit.getDays());
+        habitData.put("public", editedHabit.getPublic());
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
         setHabitDataInDatabase(userId, habitId, habitData);

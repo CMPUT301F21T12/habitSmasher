@@ -45,4 +45,6 @@
     <string name="login">Login</string>
     <string name="go_back">Go back</string>
     <string name="username_capitalU">Username</string>
+    <string name="public_habit">Public</string>
+    <string name="private_habit">Private</string>
 </resources>
