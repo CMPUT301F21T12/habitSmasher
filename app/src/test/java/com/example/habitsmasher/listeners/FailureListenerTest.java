@@ -33,7 +33,7 @@ public class FailureListenerTest {
 
     @Test
     public void failureListener_validInput_expectNoErrors(){
-        Exception mockException = mock(Exception.class);
+        NullPointerException mockException = mock(NullPointerException.class);
         _failureListener.onFailure(mockException);
         //Here we can verify whether the methods "onFailure" executed
         verify(_failureListener, times(1)).onFailure(mockException);
@@ -41,7 +41,7 @@ public class FailureListenerTest {
 
     @Test
     public void failureListenerWithToast_validInput_expectNoErrors(){
-        Exception mockException = mock(Exception.class);
+        NullPointerException mockException = mock(NullPointerException.class);
         _failureListenerWithToast.onFailure(mockException);
         //Here we can verify whether the methods "onFailure" executed
         verify(_failureListenerWithToast, times(1)).onFailure(mockException);
