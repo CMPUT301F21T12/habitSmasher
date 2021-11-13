@@ -39,6 +39,11 @@ public class ForgotPasswordDialog extends DialogFragment {
         return view;
     }
 
+    /**
+     * This method listens for when the user presses the confirm button to get an email sent to them to reset their email.
+     * @param emailInput email inputted by user
+     * @param confirmButton button user presses to get email sent to them
+     */
     private void setClickListenerForConfirmButton(EditText emailInput, Button confirmButton) {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
