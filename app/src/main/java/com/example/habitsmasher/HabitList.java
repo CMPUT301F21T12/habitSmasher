@@ -3,13 +3,9 @@ package com.example.habitsmasher;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.habitsmasher.listeners.FailureListener;
+import com.example.habitsmasher.listeners.SuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -132,18 +128,8 @@ public class HabitList extends ArrayList<Habit>{
         // create the new document and add it
         _collectionReference.document(id)
                 .set(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Data successfully added.");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Data failed to be added." + e.toString());
-                    }
-                });
+                .addOnSuccessListener(new SuccessListener(TAG, "Data successfully added."))
+                .addOnFailureListener(new FailureListener(TAG, "Data failed to be added."));
     }
 
     /**
@@ -187,18 +173,11 @@ public class HabitList extends ArrayList<Habit>{
           .collection("Habits")
           .document(String.valueOf(habitToDelete.getId()))
           .delete()
-          .addOnSuccessListener(new OnSuccessListener<Void>() {
-              @Override
-              public void onSuccess(Void unused) {
-                  Log.d("deleteHabit", "Data successfully deleted.");
-                  Toast.makeText(context, "Habit deleted!", Toast.LENGTH_SHORT).show();
-              }
-          }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("deleteHabit", "Data failed to be deleted.");
-                Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show();
-            }
-        });
+          .addOnSuccessListener(new SuccessListener(context,
+                  "deleteHabit", "Data successfully deleted.",
+                  "Habit deleted!"))
+                .addOnFailureListener(new FailureListener(context,
+                        "deleteHabit", "Data failed to be deleted.",
+                                "Something went wrong!"));
     }
 }
