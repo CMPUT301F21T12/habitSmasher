@@ -12,6 +12,9 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.ui.dashboard.HabitListFragment;
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
+import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
+import com.example.habitsmasher.listeners.ClickListenerForDaysOfTheWeek;
 
 
 /**
@@ -90,99 +93,19 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
      * different days of the week in the habit dialog
      */
     protected void setListenersForDaysOfTheWeek(){
-        //button onClick methods follow below
-        _mondayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //if monday is already selected, set it to false
-                if (_tracker.getMonday()){
-                    _tracker.setMonday(false);
-                }
-                //if monday wasn't already selected, select it
-                else{
-                    _tracker.setMonday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _mondayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "MO"));
 
-        _tuesdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getTuesday()){
-                    _tracker.setTuesday(false);
-                }
-                else{
-                    _tracker.setTuesday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _tuesdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "TU"));
 
-        _wednesdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getWednesday()){
-                    _tracker.setWednesday(false);
-                }
-                else{
-                    _tracker.setWednesday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _wednesdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "WE"));
 
-        _thursdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getThursday()){
-                    _tracker.setThursday(false);
-                }
-                else{
-                    _tracker.setThursday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _thursdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "TH"));
 
-        _fridayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getFriday()){
-                    _tracker.setFriday(false);
-                }
-                else{
-                    _tracker.setFriday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _fridayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "FR"));
 
-        _saturdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getSaturday()){
-                    _tracker.setSaturday(false);
-                }
-                else{
-                    _tracker.setSaturday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _saturdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "SA"));
 
-        _sundayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(_tracker.getSunday()){
-                    _tracker.setSunday(false);
-                }
-                else{
-                    _tracker.setSunday(true);
-                }
-                Log.d("Tracker Status", _tracker.getDays());
-            }
-        });
+        _sundayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "SU"));
     }
 
     /**
@@ -190,12 +113,8 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
      * the habit dialog
      */
     protected void setDateTextViewListener() {
-        _habitDateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDatePickerDialog();
-            }
-        });
+        _habitDateTextView.setOnClickListener(new ClickListenerForDatePicker(getFragmentManager(),
+                                                  _habitDateTextView));
     }
 
     /**
@@ -203,12 +122,7 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
      * clicked on habit dialog
      */
     protected void setCancelButtonListener() {
-        _cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        _cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
     }
 
     /**
@@ -217,28 +131,6 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
      */
     protected abstract void setConfirmButtonListener();
 
-    /**
-     * Opens the calendar dialog used for date selection
-     * in the habit dialog
-     */
-    protected void openDatePickerDialog() {
-        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
-            /**
-             * Sets the text of the date select view to reflect selected date
-             * @param view
-             * @param year year of selected date
-             * @param month month of selected date (integer from 0 to 11)
-             * @param day day of month of selected date
-             */
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                int correctedMonth = month + 1;
-                String date = day + "/" + correctedMonth + "/" + year;
-                _habitDateTextView.setText(date);
-            }
-        });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {

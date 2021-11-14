@@ -23,6 +23,7 @@ import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
+import com.example.habitsmasher.listeners.SwipeListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -121,23 +122,8 @@ public class HabitListFragment extends ListFragment<Habit> {
             }
         })
                 .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
-                .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-                    @Override
-                    public void onSwipeOptionClicked(int viewID, int position) {
-                        // edit and delete functionality below
-                        switch (viewID){
-                            // if edit button clicked
-                            case R.id.edit_button:
-                                openEditDialogBox(position);
-                                break;
-                            // if delete button clicked
-                            case R.id.delete_button:
-                                updateListAfterDelete(position);
-                                break;
-                        }
-
-                    }
-                });
+                .setSwipeable(R.id.habit_view, R.id.swipe_options,
+                        new SwipeListener(this));
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
     }

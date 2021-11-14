@@ -14,6 +14,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
+import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
 import com.example.habitsmasher.ui.history.HabitEventListFragment;
 
 /**
@@ -68,26 +70,15 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
      * Sets up the listener for the date text view
      */
     protected void setDateTextViewListener() {
-        _eventDateText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDatePickerDialog();
-            }
-        });
+        _eventDateText.setOnClickListener(new ClickListenerForDatePicker(getFragmentManager(),
+                                              _eventDateText));
     }
 
     /**
      * Defines the logic when the cancel button is clicked
      */
     protected void setCancelButtonListener() {
-        _cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                _errorText.setText("");
-                Log.d(TAG, "Cancel");
-                getDialog().dismiss();
-            }
-        });
+        _cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG)));
     }
 
     /**

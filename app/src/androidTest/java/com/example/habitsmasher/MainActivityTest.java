@@ -28,6 +28,8 @@ import java.util.UUID;
 /**
  * Test class for MainActivity. All the UI tests are written here. Robotium test framework is
  used
+
+ Note: The tests have been verified to run on Pixel 5 API 29
  */
 public class MainActivityTest {
     private static final String HABIT_TITLE_FIELD = "Habit title";
@@ -1347,6 +1349,7 @@ public class MainActivityTest {
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
 
         _solo.clickOnButton(LOGIN_TEXT);
-        _solo.sleep(4000);
+        // Wait for Profile fragment to load
+        _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
     }
 }

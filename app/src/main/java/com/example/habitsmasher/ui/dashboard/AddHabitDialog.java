@@ -18,6 +18,7 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
 
+
 /**
  * UI Class that represents and specifies the behaviour of the dialog
  * that is spawned when a user wants to add a habit to their habit list
@@ -92,16 +93,15 @@ public class AddHabitDialog extends HabitDialog {
 
                 // if the habit is valid, add it to the local list and external db
                 if (habitValidator.isHabitValid(habitTitle,
-                        habitReason,
-                        habitDate, _tracker)){
+                                                habitReason,
+                                                habitDate, _tracker)){
                     Habit newHabit = new Habit(habitTitle,
-                            habitReason,
-                            habitValidator.checkHabitDateValid(habitDate),
-                            _tracker.getDays(),
-                            habitPublic,
-                            DatabaseEntity.generateId(),
-                            new HabitEventList());
-                    _errorText.setText("");
+                                               habitReason,
+                                               habitValidator.checkHabitDateValid(habitDate),
+                                               _tracker.getDays(),
+                                               habitPublic,
+                                               DatabaseEntity.generateId(),
+                                                new HabitEventList());
                     _habitListFragment.updateListAfterAdd(newHabit);
                     getDialog().dismiss();
                 }
