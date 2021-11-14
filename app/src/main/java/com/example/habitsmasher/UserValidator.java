@@ -3,9 +3,7 @@ package com.example.habitsmasher;
 import android.util.Patterns;
 import android.widget.EditText;
 
-import androidx.core.util.PatternsCompat;
-
-public class UserValidator {
+public class UserValidator extends EmailValidator{
     private static final String USERNAME_IS_REQUIRED_MESSAGE = "Username is required!";
     private static final String USERNAME_LENGTH_MUST_BE_LESS_THAN_16_MESSAGE = "Username length must be less than 16!";
     private static final String EMAIL_IS_REQUIRED_MESSAGE = "Email is required!";
@@ -25,12 +23,15 @@ public class UserValidator {
     String _password;
 
     // for testing
-    public UserValidator() {}
+    public UserValidator() {
+        super();
+    }
 
     // for sign up
     public UserValidator(EditText usernameInput,
                          EditText emailInput,
                          EditText passwordInput) {
+        super();
         _usernameInput = usernameInput;
         _emailInput = emailInput;
         _passwordInput = passwordInput;
@@ -44,6 +45,7 @@ public class UserValidator {
     // for log in
     public UserValidator(EditText emailInput,
                          EditText passwordInput) {
+        super();
         _usernameInput = null;
         _emailInput = emailInput;
         _passwordInput = passwordInput;
@@ -99,10 +101,10 @@ public class UserValidator {
     }
 
     public boolean isLoginValid(String email, String password) {
-        return !(email.isEmpty() | password.isEmpty() |
-                !PatternsCompat.EMAIL_ADDRESS.matcher(email).matches() |
+        return !(password.isEmpty() |
                 password.length() < LOWER_CHARACTER_LIMIT |
-                password.length() > UPPER_CHARACTER_LIMIT);
+                password.length() > UPPER_CHARACTER_LIMIT |
+                !super.isEmailValid(email));
     }
 
 

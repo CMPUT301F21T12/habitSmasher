@@ -18,11 +18,15 @@ public class EmailValidator {
 
     String _email;
 
+    //For Forgot Password
     public EmailValidator(EditText emailInput) {
         _emailInput = emailInput;
 
         _email = _emailInput.getText().toString().trim();
     }
+
+    //Required Empty Constructor, for UserValidator
+    public EmailValidator() { }
 
     public boolean isEmailValid(String email) {
         return !(email.isEmpty() | !PatternsCompat.EMAIL_ADDRESS.matcher(email).matches());
