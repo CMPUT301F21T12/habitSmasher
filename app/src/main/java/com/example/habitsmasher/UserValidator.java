@@ -54,13 +54,6 @@ public class UserValidator {
         _username = "";  // since there is no username for logging in, empty
     }
 
-    //for forgot password
-    public UserValidator(EditText emailInput) {
-        _emailInput = emailInput;
-
-        _email = _emailInput.getText().toString().trim();
-    }
-
     public String getValidUsernameForSignUp() {
         if (isNewUserValid()) {
             return _username;
@@ -112,11 +105,6 @@ public class UserValidator {
                 password.length() > UPPER_CHARACTER_LIMIT);
     }
 
-    public boolean isEmailValid(String email) {
-        return !(email.isEmpty() | !PatternsCompat.EMAIL_ADDRESS.matcher(email).matches());
-    }
-
-
     public void showSignUpErrors() {
         if (_username.isEmpty()) {
             _usernameInput.setError(USERNAME_IS_REQUIRED_MESSAGE);
@@ -160,20 +148,6 @@ public class UserValidator {
         if (_password.length() > UPPER_CHARACTER_LIMIT) {
             _passwordInput.setError(PASSWORD_LENGTH_MUST_BE_LESS_THAN_16_MESSAGE);
             _passwordInput.requestFocus();
-            return;
-        }
-    }
-
-    public void showForgotPasswordErrors() {
-        if (_email.isEmpty()) {
-            _emailInput.setError(EMAIL_IS_REQUIRED_MESSAGE);
-            _emailInput.requestFocus();
-            return;
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(_email).matches()) {
-            _emailInput.setError(INVALID_EMAIL_FORMAT_MESSAGE);
-            _emailInput.requestFocus();
             return;
         }
     }

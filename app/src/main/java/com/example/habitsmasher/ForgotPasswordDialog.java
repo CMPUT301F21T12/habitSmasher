@@ -48,9 +48,9 @@ public class ForgotPasswordDialog extends DialogFragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserValidator userValidator = new UserValidator(emailInput);
-                if (!userValidator.isEmailValid(emailInput.getText().toString().trim())) {
-                    userValidator.showForgotPasswordErrors();
+                EmailValidator emailValidator = new EmailValidator(emailInput);
+                if (!emailValidator.isEmailValid(emailInput.getText().toString().trim())) {
+                    emailValidator.showForgotPasswordErrors();
                 } else {
                     _auth.sendPasswordResetEmail(emailInput.getText().toString().trim());
                     showMessage(EMAIL_SENT_MESSAGE);
