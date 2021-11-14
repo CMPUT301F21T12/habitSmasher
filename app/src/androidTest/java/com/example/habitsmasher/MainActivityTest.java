@@ -69,6 +69,8 @@ public class MainActivityTest {
     private static final String FORGOT_PASSWORD_TEXTVIEW = "Forgot Password?";
     private static final String CONFIRM_BUTTON = "Confirm";
     private static final String EMAIL_SENT_MESSAGE = "Email sent, please check your email";
+    private static final String UNREGISTERED_EMAIL = "unregisteredEmail@gamil.com";
+    private static final String EMAIL_DOES_NOT_EXIST = "Entered email is not registered";
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
@@ -1194,9 +1196,9 @@ public class MainActivityTest {
 
     //Accessing edit text came from the following link:
     //https://stackoverflow.com/a/40652532
-    //Username: Motsane M
+    //Author username: Motsane M
     @Test
-    public void forgotPassword_emptyEmail_emailSentFails() {
+    public void forgotPassword_emptyEmail_emailNotSent() {
         _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
         EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
         _solo.enterText(emailEditText, "");
@@ -1206,7 +1208,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void forgotPassword_invalidEmail_emailSentFails() {
+    public void forgotPassword_invalidEmail_emailNotSent() {
         _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
         EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
         _solo.enterText(emailEditText, INVALID_EMAIL);
@@ -1217,7 +1219,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void forgotPassword_validEmail_emailSent() {
+    public void forgotPassword_validEmailRegistered_emailSent() {
         _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
         EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
         _solo.enterText(emailEditText, VALID_EMAIL);
@@ -1225,6 +1227,17 @@ public class MainActivityTest {
         _solo.clickOnButton(CONFIRM_BUTTON);
 
         assertTextOnScreen(EMAIL_SENT_MESSAGE);
+    }
+
+    @Test
+    public void forgotPassword_emailNotRegistered_emailNotSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, UNREGISTERED_EMAIL);
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+
+        assertTextOnScreen(EMAIL_DOES_NOT_EXIST);
     }
 
     private void deleteTestHabit(Habit habitToDelete) {
