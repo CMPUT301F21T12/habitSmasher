@@ -17,6 +17,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
+import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
 
 import java.util.Date;
 
@@ -25,6 +27,7 @@ import java.util.Date;
  * Based on EditEventFragment, dialog which pops up and allows a user to edit habit events
  */
 public class EditHabitEventFragment extends DialogFragment {
+    private static final String TAG = "EditHabitEventFragment";
     // Initialize UI variables
     private EditText _commentText;
     private TextView _dateText;
@@ -69,12 +72,7 @@ public class EditHabitEventFragment extends DialogFragment {
         _dateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
 
         // Add listener to date text to open date picker
-        _dateText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDatePickerDialog();
-            }
-        });
+        _dateText.setOnClickListener(new ClickListenerForDatePicker(getFragmentManager(), _dateText));
 
         // Add listener to confirm button that propagates habit event editing
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -103,35 +101,8 @@ public class EditHabitEventFragment extends DialogFragment {
         });
 
         // Add listener to cancel button that closes the dialog
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDialog().dismiss();
-            }
-        });
+        cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
 
         return view;
-    }
-
-    /**
-     * Opens the calendar dialog used for date selection
-     */
-    private void openDatePickerDialog() {
-        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
-            /**
-             * Sets the text of the date select view to reflect selected date
-             * @param view
-             * @param year year of selected date
-             * @param month month of selected date (integer from 0 to 11)
-             * @param day day of month of selected date
-             */
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                int correctedMonth = month + 1;
-                String date = day + "/" + correctedMonth + "/" + year;
-                _dateText.setText(date);
-            }
-        });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 }
