@@ -105,6 +105,7 @@ public class UserValidator {
                 password.length() > UPPER_CHARACTER_LIMIT);
     }
 
+
     public void showSignUpErrors() {
         if (_username.isEmpty()) {
             _usernameInput.setError(USERNAME_IS_REQUIRED_MESSAGE);
