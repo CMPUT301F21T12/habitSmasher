@@ -78,7 +78,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
      * Defines the logic when the cancel button is clicked
      */
     protected void setCancelButtonListener() {
-        _cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG)));
+        _cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
     }
 
     /**

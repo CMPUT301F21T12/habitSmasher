@@ -204,7 +204,7 @@ public class HabitListFragment extends ListFragment<Habit> {
 
 
     // note: add this to list fragment class once swipe is complete in habit event list
-    protected void openEditDialogBox(int position) {
+    public void openEditDialogBox(int position) {
         EditHabitDialog editHabitFragment = new EditHabitDialog(position,
                 _habitItemAdapter._snapshots.get(position));
         editHabitFragment.setCancelable(true);

@@ -1,11 +1,6 @@
 package com.example.habitsmasher.listeners;
 
-import com.example.habitsmasher.Habit;
-import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.User;
-import com.example.habitsmasher.ui.dashboard.EditHabitFragment;
-import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
 import com.example.habitsmasher.ui.dashboard.HabitListFragment;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 /**
