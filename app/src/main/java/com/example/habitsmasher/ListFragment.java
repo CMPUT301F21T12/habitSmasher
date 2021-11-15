@@ -63,7 +63,7 @@ public abstract class ListFragment<T> extends Fragment {
     protected abstract void openAddDialogBox();
 
     // add after swipe is fixed for habit events
-    //protected abstract void openEditDialogBox();
+    //public abstract void openEditDialogBox();
 
     // add after view is implemented for habit events
     //protected abstract void openViewWindowForItem();

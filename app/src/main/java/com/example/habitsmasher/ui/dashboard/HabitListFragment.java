@@ -202,6 +202,17 @@ public class HabitListFragment extends ListFragment<Habit> {
         addHabitDialog.show(getFragmentManager(), "AddHabitDialog");
     }
 
+
+    // note: add this to list fragment class once swipe is complete in habit event list
+    public void openEditDialogBox(int position) {
+        EditHabitDialog editHabitFragment = new EditHabitDialog(position,
+                _habitItemAdapter._snapshots.get(position));
+        editHabitFragment.setCancelable(true);
+        editHabitFragment.setTargetFragment(this, 1);
+        editHabitFragment.show(getFragmentManager(),
+                "Edit Habit");
+    }
+
     // note: add this to list fragment class once view is implemented for habitevents
     protected void openViewWindowForItem(int position) {
         // Get the selected habit
@@ -235,6 +246,15 @@ public class HabitListFragment extends ListFragment<Habit> {
         _habitItemAdapter.notifyItemChanged(pos);
     }
 
+    // add to list fragment class once swipe is fixed in habit events
+    public void updateListAfterDelete(int position) {
+        Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+        _habitList.deleteHabit(getActivity(),
+                _user.getId(),
+                habitToDelete,
+                position);
+    }
+
     @NonNull
     private User getCurrentUser() {
         SharedPreferences sharedPref = _context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
@@ -247,22 +267,5 @@ public class HabitListFragment extends ListFragment<Habit> {
         return new User(userId, username, email, password);
     }
 
-    // note: add this to list fragment class once swipe is complete in habit event list
-    public void openEditDialogBox(int position) {
-        EditHabitFragment editHabitFragment = new EditHabitFragment(position,
-                _habitItemAdapter._snapshots.get(position),
-                this);
-        editHabitFragment.show(getFragmentManager(),
-                "Edit Habit");
-    }
-
-    // add to list fragment class once swipe is fixed in habit events
-    public void updateListAfterDelete(int position) {
-        Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
-        _habitList.deleteHabit(getActivity(),
-                _user.getId(),
-                habitToDelete,
-                position);
-    }
 
 }

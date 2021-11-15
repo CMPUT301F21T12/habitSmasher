@@ -1,32 +1,23 @@
 package com.example.habitsmasher.ui.dashboard;
 
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatabaseEntity;
-import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.DaysTracker;
+import com.example.habitsmasher.HabitDialog;
 import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.listeners.ClickListenerForCancel;
-import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
-import com.example.habitsmasher.listeners.ClickListenerForDaysOfTheWeek;
+
 
 /**
  * UI Class that represents and specifies the behaviour of the dialog
@@ -47,81 +38,58 @@ import com.example.habitsmasher.listeners.ClickListenerForDaysOfTheWeek;
  * @author Jacob Nguyen
  * @version 1.0
  */
-public class AddHabitDialog extends DialogFragment {
+public class AddHabitDialog extends HabitDialog {
 
-    private static final String TAG = "AddHabitDialog";
-
-    private HabitListFragment _habitListFragment;
-    private EditText _habitTitleEditText;
-    private EditText _habitReasonEditText;
-    private TextView _habitDateTextView;
-
-    // buttons for the days of the week
-    private Button _mondayButton;
-    private Button _tuesdayButton;
-    private Button _wednesdayButton;
-    private Button _thursdayButton;
-    private Button _fridayButton;
-    private Button _saturdayButton;
-    private Button _sundayButton;
-
-    // public and private buttons
-    private Button _publicButton;
-    private Button _privateButton;
-
-    private DaysTracker _tracker;
+    private final AddHabitDialog _addFragment = this;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_habit_dialog_box, container, false);
+        initializeUIElements(view);
 
-        // grab all the editTexts and buttons
-        _habitTitleEditText = view.findViewById(R.id.habit_title_edit_text);
-        _habitReasonEditText = view.findViewById(R.id.habit_reason_edit_text);
-        _habitDateTextView = view.findViewById(R.id.habit_date_selection);
-        Button confirmNewHabit = view.findViewById(R.id.confirm_habit);
-        Button cancelNewHabit = view.findViewById(R.id.cancel_habit);
+        // setting tags for logging
+        TAG = "AddHabitDialog";
 
-        //buttons for the days of the week, apologies for so many of them
-        _mondayButton = view.findViewById(R.id.monday_button);
-        _tuesdayButton = view.findViewById(R.id.tuesday_button);
-        _wednesdayButton = view.findViewById(R.id.wednesday_button);
-        _thursdayButton = view.findViewById(R.id.thursday_button);
-        _fridayButton = view.findViewById(R.id.friday_button);
-        _saturdayButton = view.findViewById(R.id.saturday_button);
-        _sundayButton =view.findViewById(R.id.sunday_button);
+        // set error text to blank
+        _errorText.setText("");
 
-        // public and private buttons
-        PublicPrivateButtons publicPrivateButtons = new PublicPrivateButtons(view);
-        publicPrivateButtons.setClickListeners();
+        // setting up public and private buttons
+        _publicPrivateButtons = new PublicPrivateButtons(view);
+        _publicPrivateButtons.setClickListeners();
 
-        //logic handler for tracking all those days
+        // logic handler for tracking all those days
         _tracker = new DaysTracker();
 
         // set the listeners for the days of the week buttons
         setListenersForDaysOfTheWeek();
 
+        // set listeners for the confirm and cancel buttons
+        setCancelButtonListener();
+        setConfirmButtonListener();
+
         // set the listener for the date picker
-        _habitDateTextView.setOnClickListener(new ClickListenerForDatePicker(getFragmentManager(), _habitDateTextView));
+        setDateTextViewListener();
 
-        // cancel button logic
-        cancelNewHabit.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
+        return view;
+    }
 
-        // confirm button logic
-        confirmNewHabit.setOnClickListener(new View.OnClickListener() {
+
+    @Override
+    protected void setConfirmButtonListener() {
+        _confirmButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Confirm");
 
                 // validator for the habit, ensures everything is valid
-                HabitValidator habitValidator = new HabitValidator(getActivity());
+                HabitValidator habitValidator = new HabitValidator(_addFragment);
 
                 String habitTitle = _habitTitleEditText.getText().toString();
                 String habitReason = _habitReasonEditText.getText().toString();
                 String habitDate = _habitDateTextView.getText().toString();
-                boolean habitPublic = publicPrivateButtons.isHabitPublic();
+                boolean habitPublic = _publicPrivateButtons.isHabitPublic();
 
                 // if the habit is valid, add it to the local list and external db
                 if (habitValidator.isHabitValid(habitTitle,
@@ -139,39 +107,5 @@ public class AddHabitDialog extends DialogFragment {
                 }
             }
         });
-
-        return view;
-    }
-
-    /**
-     * Sets the onClickListeners for the different buttons representing the
-     * different days of the week
-     */
-    private void setListenersForDaysOfTheWeek(){
-
-        //button onClick methods follow below
-        _mondayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "MO"));
-
-        _tuesdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "TU"));
-
-        _wednesdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "WE"));
-
-        _thursdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "TH"));
-
-        _fridayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "FR"));
-
-        _saturdayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "SA"));
-
-        _sundayButton.setOnClickListener(new ClickListenerForDaysOfTheWeek(_tracker, "SU"));
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            _habitListFragment = (HabitListFragment) getTargetFragment();
-        } catch (ClassCastException e){
-            Log.e(TAG, "Exception" + e.getMessage());
-        }
     }
 }

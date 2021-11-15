@@ -27,78 +27,40 @@ import androidx.fragment.app.DialogFragment;
 import com.example.habitsmasher.DatabaseEntity;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
+import com.example.habitsmasher.HabitEventDialog;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.listeners.ClickListenerForCancel;
-import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
 
 /**
  * The AddHabitEventDialog
  * Deals with UI and information handling of the add habit event popup
  */
-public class AddHabitEventDialog extends DialogFragment {
-    private static final String TAG = "AddHabitEventDialog";
+public class AddHabitEventDialog extends HabitEventDialog {
 
-    // UI elements
-    private HabitEventListFragment _habitEventListFragment;
-    private EditText _eventCommentText;
-    private TextView _eventDateText;
-    private Button _cancelNewEvent;
-    private Button _confirmNewEvent;
-    private ImageView _eventPictureView;
-    private Uri _selectedImage;
-
-    /**
-     * Default constructor
-     */
-    public AddHabitEventDialog() {
-    }
+    private AddHabitEventDialog _addFragment = this;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate view
+        // Inflate view and attach view elements
         View view = inflater.inflate(R.layout.add_habit_event_dialog, container, false);
+        initializeUIElements(view);
 
-        // Attach UI elements
-        _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
-        _eventDateText = view.findViewById(R.id.habit_event_date_selection);
-        _cancelNewEvent = view.findViewById(R.id.cancel_habit_event);
-        _confirmNewEvent = view.findViewById(R.id.confirm_habit_event);
-        _eventPictureView = view.findViewById(R.id.habit_event_add_photo);
-        TextView header = view.findViewById(R.id.add_habit_event_header);
+        // set header
+        _header.setText("Add Habit Event");
+        _errorText.setText("");
 
-        header.setText("Add Habit Event");
+        TAG = "AddHabitEventDialog";
 
         // Add listener to date text to open date picker
-        _eventDateText.setOnClickListener(new ClickListenerForDatePicker(getFragmentManager(), _eventDateText));
+        setDateTextViewListener();
 
         // Add listener to cancel button which closes dialog
-        _cancelNewEvent.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
+        setCancelButtonListener();
 
         // Add listener to confirm button that adds events to database and closed dialog
-        _confirmNewEvent.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View view) {
-                HabitEventValidator habitEventValidator = new HabitEventValidator(getActivity());
+        setConfirmButtonListener();
 
-                String habitEventComment = _eventCommentText.getText().toString();
-                String habitEventDate = _eventDateText.getText().toString();
-
-                // Check if event data is valid
-                if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
-                    // If everything is valid, add event to database, events list, and close dialog
-                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
-                                                        habitEventComment,
-                                                        DatabaseEntity.generateId());
-                    _habitEventListFragment.updateListAfterAdd(newEvent);
-                    getDialog().dismiss();
-                }
-
-            }
-        });
-
-        // Add listener to image view
+        // Add listener to image view (not touching this during refactoring until images are done)
         _eventPictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +73,34 @@ public class AddHabitEventDialog extends DialogFragment {
         return view;
     }
 
+    @Override
+    protected void setConfirmButtonListener() {
+        _confirmButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View view) {
+                HabitEventValidator habitEventValidator = new HabitEventValidator(_addFragment);
+
+                String habitEventComment = _eventCommentText.getText().toString();
+                String habitEventDate = _eventDateText.getText().toString();
+
+                // Check if event data is valid
+                if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
+                    // If everything is valid, add event to database, events list, and close dialog
+                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
+                            habitEventComment,
+                            DatabaseEntity.generateId());
+                    _errorText.setText("");
+                    _habitEventListFragment.updateListAfterAdd(newEvent);
+                    getDialog().dismiss();
+                }
+
+            }
+        });
+    }
+
     /**
+     * Not touching this when refactoring until images are fully implemented for habit events
      * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
      * Override onActivityResult to handle when user has selected image
      * @param requestCode
@@ -130,18 +119,6 @@ public class AddHabitEventDialog extends DialogFragment {
                     _eventPictureView.setImageURI(_selectedImage);
                 }
                 break;
-        }
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            // Get habit event fragment for later use
-            _habitEventListFragment = (HabitEventListFragment) getTargetFragment();
-        }
-        catch (ClassCastException e) {
-            Log.e(TAG, "Exception" + e.getMessage());
         }
     }
 }
