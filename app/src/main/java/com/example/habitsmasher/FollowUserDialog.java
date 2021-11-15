@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String EMPTY_USERNAME_ERROR_MESSAGE = "Please enter a username!";
+    private static final String USER_FOLLOWED_SUCCESS_MESSAGE = "User followed!";
     private static final int INVALID_USERNAME_ERROR = 1;
     private static final int EMPTY_USERNAME_ERROR = 2;
 
@@ -97,6 +99,8 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                                         addUserToFollowingForUserInDatabase(currentUserId,
                                                                             userToFollow.getId());
 
+                                        showFollowSuccessMessage();
+
                                         followUserDialog.dismiss();
 
                                         return;
@@ -115,6 +119,13 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
             }
         });
         return view;
+    }
+
+    private void showFollowSuccessMessage() {
+        Toast.makeText(getContext(),
+                       USER_FOLLOWED_SUCCESS_MESSAGE,
+                       Toast.LENGTH_LONG)
+             .show();
     }
 
     private void addUserToFollowingForUserInDatabase(String userId, String followedUserId) {
