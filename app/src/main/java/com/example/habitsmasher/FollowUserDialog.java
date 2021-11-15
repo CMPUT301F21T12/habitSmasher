@@ -24,14 +24,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class FollowUserDialog extends DialogFragment {
+public class FollowUserDialog extends DialogFragment implements DisplaysErrorMessages {
     private static final String TAG = "FollowUserDialog";
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String EMPTY_USERNAME_ERROR_MESSAGE = "Please enter a username!";
+    private static final int INVALID_USERNAME_ERROR = 1;
+    private static final int EMPTY_USERNAME_ERROR = 2;
 
     private FirebaseFirestore _db;
+    private EditText _userToFollow;
 
     @Nullable
     @Override
@@ -45,7 +48,7 @@ public class FollowUserDialog extends DialogFragment {
         final Dialog followUserDialog = getDialog();
 
         // Attach UI elements
-        EditText userToFollow = view.findViewById(R.id.user_search_text);
+        _userToFollow = view.findViewById(R.id.user_search_text);
         Button cancelButton = view.findViewById(R.id.cancel_user_follow);
         Button followButton = view.findViewById(R.id.follow_user_button);
 
@@ -63,11 +66,10 @@ public class FollowUserDialog extends DialogFragment {
             public void onClick(View view) {
                 Log.d(TAG, "Follow");
 
-                String usernameInput = userToFollow.getText().toString().trim();
+                String usernameInput = _userToFollow.getText().toString().trim();
 
                 if (usernameInput.isEmpty()) {
-                    userToFollow.setError(EMPTY_USERNAME_ERROR_MESSAGE);
-                    userToFollow.requestFocus();
+                    displayErrorMessage(EMPTY_USERNAME_ERROR);
                     return;
                 }
 
@@ -104,8 +106,7 @@ public class FollowUserDialog extends DialogFragment {
                             // if username does not exist, throw error message on the front-end
                             Log.d(TAG, "Username does not exist");
 
-                            userToFollow.setError(INVALID_USERNAME_ERROR_MESSAGE);
-                            userToFollow.requestFocus();
+                            displayErrorMessage(INVALID_USERNAME_ERROR);
                         } else {
                             Log.d(TAG, "Failed with: ", task.getException());
                         }
@@ -130,5 +131,19 @@ public class FollowUserDialog extends DialogFragment {
     public String getCurrentUserId() {
         SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
         return sharedPref.getString(USER_ID_SHARED_PREF_TAG, "id");
+    }
+
+    @Override
+    public void displayErrorMessage(int messageType) {
+        switch(messageType) {
+            case EMPTY_USERNAME_ERROR:
+                _userToFollow.setError(EMPTY_USERNAME_ERROR_MESSAGE);
+                _userToFollow.requestFocus();
+                break;
+            case INVALID_USERNAME_ERROR:
+                _userToFollow.setError(INVALID_USERNAME_ERROR_MESSAGE);
+                _userToFollow.requestFocus();
+                break;
+        }
     }
 }
