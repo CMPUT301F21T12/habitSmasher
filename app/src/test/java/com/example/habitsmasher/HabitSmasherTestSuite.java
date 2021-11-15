@@ -29,6 +29,7 @@ import org.junit.runners.Suite;
                      ClickListenerForDaysOfTheWeekTest.class,
                      FailureListenerTest.class,
                      SuccessListenerTest.class,
-                     SwipeListenerTest.class})
+                     SwipeListenerTest.class,
+                     EmailValidatorTest.class})
 public class HabitSmasherTestSuite {
 }
