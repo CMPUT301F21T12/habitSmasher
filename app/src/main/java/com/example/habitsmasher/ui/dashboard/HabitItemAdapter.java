@@ -17,6 +17,9 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.FailureListener;
+import com.example.habitsmasher.listeners.SuccessListener;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -116,17 +119,8 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
             for (int i = 0; i < snapshotList.size(); i++) {
                 batch.delete(snapshotList.get(i).getReference());
             }
-            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Log.d(TAG, "Deleted habit events");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "Failed to delete habit events");
-                }
-            });
+            batch.commit().addOnSuccessListener(new SuccessListener(TAG, "Deleted habit events"))
+            .addOnFailureListener(new FailureListener(TAG, "Failed to delete habit events"));
         }
     }
 }

@@ -7,9 +7,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -28,6 +28,8 @@ import java.util.UUID;
 /**
  * Test class for MainActivity. All the UI tests are written here. Robotium test framework is
  used
+
+ Note: The tests have been verified to run on Pixel 5 API 29
  */
 public class MainActivityTest {
     private static final String HABIT_TITLE_FIELD = "Habit title";
@@ -43,7 +45,7 @@ public class MainActivityTest {
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
-    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule.";
+    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule";
     private static final String HABIT_EVENT_COMMENT_ERROR_MESSAGE = "Incorrect habit event comment entered";
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
@@ -66,6 +68,11 @@ public class MainActivityTest {
     private static final String TEST_USER_USERNAME = "TestUser";
     private static final String TEST_USER_EMAIL = "test@gmail.com";
     private static final String TEST_USER_PASSWORD = "123456";
+    private static final String FORGOT_PASSWORD_TEXTVIEW = "Forgot Password?";
+    private static final String CONFIRM_BUTTON = "Confirm";
+    private static final String EMAIL_SENT_MESSAGE = "Email sent, please check your email";
+    private static final String UNREGISTERED_EMAIL = "unregisteredEmail@gamil.com";
+    private static final String EMAIL_DOES_NOT_EXIST = "Entered email is not registered";
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
@@ -254,7 +261,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_TITLE_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add habit title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -303,7 +310,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_TITLE_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add shorter habit title
         _solo.clearEditText(_solo.getEditText(testHabit.getTitle()));
@@ -354,7 +361,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_REASON_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
 
         // Add shorter habit title
         _solo.clearEditText(_solo.getEditText(testHabit.getReason()));
@@ -405,7 +412,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_REASON_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
 
         // Add habit reason
         testHabit.setReason("acceptable reason");
@@ -452,7 +459,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(EMPTY_DATE_ERROR_MESSAGE);
+        assertTextOnScreen(EMPTY_DATE_ERROR_MESSAGE);
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
@@ -498,7 +505,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check for toast message
-        checkForToastMessage(NO_DAYS_SELECTED_ERROR_MESSAGE);
+        assertTextOnScreen(NO_DAYS_SELECTED_ERROR_MESSAGE);
 
         // Select days
         setDaysInAddHabitDialogBox();
@@ -825,7 +832,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
 
         // Add habit comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -876,7 +883,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
 
         // Change habit comment
         _solo.clearEditText(_solo.getEditText(testEvent.getComment()));
@@ -926,7 +933,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(EMPTY_DATE_ERROR_MESSAGE);
+        assertTextOnScreen(EMPTY_DATE_ERROR_MESSAGE);
 
         // Enter date
         enterCurrentDateInAddHabitEventDialogBox();
@@ -1189,6 +1196,52 @@ public class MainActivityTest {
         assertTextOnScreen(PASSWORD_IS_REQUIRED);
     }
 
+    //Accessing edit text came from the following link:
+    //https://stackoverflow.com/a/40652532
+    //Author username: Motsane M
+    @Test
+    public void forgotPassword_emptyEmail_emailNotSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, "");
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+        assertTextOnScreen(EMAIL_IS_REQUIRED);
+    }
+
+    @Test
+    public void forgotPassword_invalidEmail_emailNotSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, INVALID_EMAIL);
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+
+        assertTextOnScreen(INVALID_EMAIL_FORMAT);
+    }
+
+    @Test
+    public void forgotPassword_validEmailRegistered_emailSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, TEST_USER_EMAIL);
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+
+        assertTextOnScreen(EMAIL_SENT_MESSAGE);
+    }
+
+    @Test
+    public void forgotPassword_validEmailNotRegistered_emailNotSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, UNREGISTERED_EMAIL);
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+
+        assertTextOnScreen(EMAIL_DOES_NOT_EXIST);
+    }
+
     private void deleteTestHabit(Habit habitToDelete) {
         swipeLeftOnHabit(habitToDelete);
         _solo.waitForView(R.id.delete_button);
@@ -1347,6 +1400,7 @@ public class MainActivityTest {
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
 
         _solo.clickOnButton(LOGIN_TEXT);
+        // Wait for Profile fragment to load
         _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
     }
 }
