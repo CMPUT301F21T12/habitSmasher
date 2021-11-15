@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
+import com.example.habitsmasher.UserDatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -24,7 +25,12 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class ProfileFragment extends Fragment {
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
+    private static final String USERNAME_SHARED_PREF_TAG = "username";
+    private static final String USER_ID_SHARED_PREF_TAG = "userId";
+
     private ProfileFragment _fragment = this;
+    private TextView _numberOfFollowers;
+    private TextView _numberOfFollowing;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -33,18 +39,24 @@ public class ProfileFragment extends Fragment {
         User user = new User("1", "TestUser", "123@gmail.com", "123");
 
         SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
-        user.setUsername(sharedPref.getString("username", "user"));
+        user.setUsername(sharedPref.getString(USERNAME_SHARED_PREF_TAG, "user"));
+        String currentUserId = sharedPref.getString(USER_ID_SHARED_PREF_TAG, "id");
 
         // get the UI elements
         TextView usernameTextView = view.findViewById(R.id.username);
-        TextView followers = view.findViewById(R.id.number_followers);
-        TextView following = view.findViewById(R.id.number_following);
+        _numberOfFollowers = view.findViewById(R.id.number_followers);
+        _numberOfFollowing = view.findViewById(R.id.number_following);
         FloatingActionButton logoutButton = view.findViewById(R.id.logout_button);
 
         // set the UI elements
+        UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(currentUserId,
+                                                                       _numberOfFollowers,
+                                                                       _numberOfFollowing);
         usernameTextView.setText("@" + user.getUsername());
-        followers.setText(String.valueOf(user.getFollowerCount()));
-        following.setText(String.valueOf(user.getFollowingCount()));
+//        getFollowerCountOfUser(currentUserId);
+//        getFollowingCountOfUser(currentUserId);
+        userDatabaseHelper.setFollowingCountOfUser();
+        userDatabaseHelper.setFollowerCountOfUser();
 
         setClickListenerForLogoutButton(logoutButton);
 

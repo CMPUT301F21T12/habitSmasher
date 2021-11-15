@@ -47,4 +47,6 @@
     <string name="username_capitalU">Username</string>
     <string name="public_habit">Public</string>
     <string name="private_habit">Private</string>
+    <string name="follow_user">Follow User</string>
+    <string name="follow">Follow</string>
 </resources>
