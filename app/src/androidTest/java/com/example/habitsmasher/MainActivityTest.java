@@ -1224,7 +1224,7 @@ public class MainActivityTest {
     public void forgotPassword_validEmailRegistered_emailSent() {
         _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
         EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
-        _solo.enterText(emailEditText, VALID_EMAIL);
+        _solo.enterText(emailEditText, TEST_USER_EMAIL);
 
         _solo.clickOnButton(CONFIRM_BUTTON);
 
@@ -1232,7 +1232,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void forgotPassword_emailNotRegistered_emailNotSent() {
+    public void forgotPassword_validEmailNotRegistered_emailNotSent() {
         _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
         EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
         _solo.enterText(emailEditText, UNREGISTERED_EMAIL);

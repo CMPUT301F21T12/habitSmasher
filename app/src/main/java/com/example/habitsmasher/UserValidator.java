@@ -3,7 +3,7 @@ package com.example.habitsmasher;
 import android.util.Patterns;
 import android.widget.EditText;
 
-public class UserValidator extends EmailValidator{
+public class UserValidator {
     private static final String USERNAME_IS_REQUIRED_MESSAGE = "Username is required!";
     private static final String USERNAME_LENGTH_MUST_BE_LESS_THAN_16_MESSAGE = "Username length must be less than 16!";
     private static final String EMAIL_IS_REQUIRED_MESSAGE = "Email is required!";
@@ -22,16 +22,17 @@ public class UserValidator extends EmailValidator{
     String _email;
     String _password;
 
+    private EmailValidator _emailValidator = new EmailValidator();
+
     // for testing
     public UserValidator() {
-        super();
+
     }
 
     // for sign up
     public UserValidator(EditText usernameInput,
                          EditText emailInput,
                          EditText passwordInput) {
-        super();
         _usernameInput = usernameInput;
         _emailInput = emailInput;
         _passwordInput = passwordInput;
@@ -45,7 +46,6 @@ public class UserValidator extends EmailValidator{
     // for log in
     public UserValidator(EditText emailInput,
                          EditText passwordInput) {
-        super();
         _usernameInput = null;
         _emailInput = emailInput;
         _passwordInput = passwordInput;
@@ -104,7 +104,7 @@ public class UserValidator extends EmailValidator{
         return !(password.isEmpty() |
                 password.length() < LOWER_CHARACTER_LIMIT |
                 password.length() > UPPER_CHARACTER_LIMIT |
-                !super.isEmailValid(email));
+                !_emailValidator.isEmailValid(email));
     }
 
 

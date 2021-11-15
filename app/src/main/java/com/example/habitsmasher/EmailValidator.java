@@ -25,7 +25,7 @@ public class EmailValidator {
         _email = _emailInput.getText().toString().trim();
     }
 
-    //Required Empty Constructor, for UserValidator
+    //Empty Constructor used for tests and using in user validator
     public EmailValidator() { }
 
     public boolean isEmailValid(String email) {
