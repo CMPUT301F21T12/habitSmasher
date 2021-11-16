@@ -25,6 +25,8 @@ import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.FailureListener;
+import com.example.habitsmasher.listeners.SuccessListener;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -244,12 +246,10 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
 
     // TODO: add this to list fragment class once swipe is complete in habit event list
     protected void openEditDialogBox(int position) {
-        EditHabitEventFragment editHabitEventFragment = new EditHabitEventFragment(position,
-                _habitEventItemAdapter._snapshots.get(position),
-                this
-                );
-        editHabitEventFragment.show(getFragmentManager(),
-                "Edit Habit Event");
+        EditHabitEventDialog editHabitEventDialog = new EditHabitEventDialog(position, _habitEventItemAdapter._snapshots.get(position));
+        editHabitEventDialog.setCancelable(true);
+        editHabitEventDialog.setTargetFragment(this, 1);
+        editHabitEventDialog.show(getFragmentManager(), "Edit Habit Event");
     }
 
     /**
