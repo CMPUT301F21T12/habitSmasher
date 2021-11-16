@@ -36,15 +36,7 @@ public class UserDatabaseHelper {
 
                     List<Object> following = (List<Object>) userSnapshot.get("following");
 
-                    if (following != null && !following.isEmpty()) {
-                        if (following.get(0) == "" && !following.isEmpty()) {
-                            _numberOfFollowing.setText("0");
-                        } else {
-                            _numberOfFollowing.setText(String.valueOf(following.size()));
-                        }
-                    } else {
-                        _numberOfFollowing.setText("0");
-                    }
+                    setNumberOfFollowing(following);
                 }
             }
         });
@@ -63,18 +55,34 @@ public class UserDatabaseHelper {
 
                     List<Object> followers = (List<Object>) userSnapshot.get("followers");
 
-                    if (followers != null && !followers.isEmpty()) {
-                        if (followers.get(0) == "") {
-                            _numberOfFollowers.setText("0");
-                        } else {
-                            _numberOfFollowers.setText(String.valueOf(followers.size()));
-                        }
-                    } else {
-                        _numberOfFollowers.setText("0");
-                    }
+                    setNumberOfFollowers(followers);
                 }
             }
         });
 
+    }
+
+    private void setNumberOfFollowing(List<Object> following) {
+        if (following != null && !following.isEmpty()) {
+            if (following.get(0) == "" && !following.isEmpty()) {
+                _numberOfFollowing.setText("0");
+            } else {
+                _numberOfFollowing.setText(String.valueOf(following.size()));
+            }
+        } else {
+            _numberOfFollowing.setText("0");
+        }
+    }
+
+    private void setNumberOfFollowers(List<Object> followers) {
+        if (followers != null && !followers.isEmpty()) {
+            if (followers.get(0) == "") {
+                _numberOfFollowers.setText("0");
+            } else {
+                _numberOfFollowers.setText(String.valueOf(followers.size()));
+            }
+        } else {
+            _numberOfFollowers.setText("0");
+        }
     }
 }
