@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -34,6 +35,10 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     private static final String USER_FOLLOWED_SUCCESS_MESSAGE = "User followed!";
     private static final int INVALID_USERNAME_ERROR = 1;
     private static final int EMPTY_USERNAME_ERROR = 2;
+    private static final String USERS_COLLECTION_PATH = "Users";
+    private static final String USERNAME_FIELD = "username";
+    private static final String FOLLOWING_FIELD = "following";
+    private static final String FOLLOWERS_FIELD = "followers";
 
     private FirebaseFirestore _db;
     private EditText _userToFollow;
@@ -55,12 +60,7 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
         Button followButton = view.findViewById(R.id.follow_user_button);
 
         // cancel button logic
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                followUserDialog.dismiss();
-            }
-        });
+        cancelButton.setOnClickListener(new ClickListenerForCancel(followUserDialog, TAG));
 
         // follow button logic
         followButton.setOnClickListener(new View.OnClickListener() {
@@ -75,14 +75,14 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                     return;
                 }
 
-                CollectionReference usersCollectionRef = _db.collection("Users");
+                CollectionReference usersCollectionRef = _db.collection(USERS_COLLECTION_PATH);
                 usersCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for(QueryDocumentSnapshot document: task.getResult()){
                                 if (document.exists()) {
-                                    if (document.get("username").toString().equals(usernameInput)){
+                                    if (document.get(USERNAME_FIELD).toString().equals(usernameInput)){
                                         Log.d(TAG, "Username exists");
 
                                         // if username exists, update follower/following counts
@@ -129,13 +129,13 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     }
 
     private void addUserToFollowingForUserInDatabase(String userId, String followedUserId) {
-        DocumentReference userRef = _db.collection("Users").document(userId);
-        userRef.update("following", FieldValue.arrayUnion(followedUserId));
+        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
+        userRef.update(FOLLOWING_FIELD, FieldValue.arrayUnion(followedUserId));
     }
 
     private void addNewFollowerForUserInDatabase(String userId, String newFollowerId) {
-        DocumentReference userRef = _db.collection("Users").document(userId);
-        userRef.update("followers", FieldValue.arrayUnion(newFollowerId));
+        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
+        userRef.update(FOLLOWERS_FIELD, FieldValue.arrayUnion(newFollowerId));
     }
 
 
