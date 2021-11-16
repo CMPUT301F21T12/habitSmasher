@@ -53,8 +53,6 @@ public class ProfileFragment extends Fragment {
                                                                        _numberOfFollowers,
                                                                        _numberOfFollowing);
         usernameTextView.setText("@" + user.getUsername());
-//        getFollowerCountOfUser(currentUserId);
-//        getFollowingCountOfUser(currentUserId);
         userDatabaseHelper.setFollowingCountOfUser();
         userDatabaseHelper.setFollowerCountOfUser();
 
