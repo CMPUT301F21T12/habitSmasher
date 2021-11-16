@@ -12,8 +12,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+/**
+ * The UserDatabaseHelper is a collection of common db operations relating to the current logged in
+ * user like getting/setting the number of followers/following from the database
+ * @author Rudy Patel
+ */
 public class UserDatabaseHelper {
-    private String _userID;
+    private final String _userID;
     private final TextView _numberOfFollowers;
     private final TextView _numberOfFollowing;
 
@@ -23,6 +28,9 @@ public class UserDatabaseHelper {
         _userID = userID;
     }
 
+    /**
+     * This method sets the following count of the user specified on the profile page
+     */
     public void setFollowingCountOfUser() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -42,6 +50,9 @@ public class UserDatabaseHelper {
         });
     }
 
+    /**
+     * This method sets the follower count of the current user in the profile screen
+     */
     public void setFollowerCountOfUser() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -62,6 +73,10 @@ public class UserDatabaseHelper {
 
     }
 
+    /**
+     * This helper method sets the number of following edit text on the profile screen
+     * @param following the following collection of the user
+     */
     private void setNumberOfFollowing(List<Object> following) {
         if (following != null && !following.isEmpty()) {
             if (following.get(0) == "" && !following.isEmpty()) {
@@ -74,6 +89,10 @@ public class UserDatabaseHelper {
         }
     }
 
+    /**
+     * This helper method sets the number of followers edit text on the profile screen
+     * @param followers the followers collection of the user
+     */
     private void setNumberOfFollowers(List<Object> followers) {
         if (followers != null && !followers.isEmpty()) {
             if (followers.get(0) == "") {

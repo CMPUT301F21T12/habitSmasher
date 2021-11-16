@@ -26,6 +26,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+/**
+ * This FollowUserDialog class implements the user search pop-up, where a user can follow another
+ * user by specifying their username
+ * @author Rudy Patel
+ */
 public class FollowUserDialog extends DialogFragment implements DisplaysErrorMessages {
     private static final String TAG = "FollowUserDialog";
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
@@ -121,6 +126,9 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
         return view;
     }
 
+    /**
+     * A helper method that shows a toast message after the user follow operation is successful
+     */
     private void showFollowSuccessMessage() {
         Toast.makeText(getContext(),
                        USER_FOLLOWED_SUCCESS_MESSAGE,
@@ -128,22 +136,39 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
              .show();
     }
 
+    /**
+     * This method is responsible for adding a new user to the following array of the given user
+     * @param userId the user performing the operation
+     * @param followedUserId the followed user to add to the collection
+     */
     private void addUserToFollowingForUserInDatabase(String userId, String followedUserId) {
         DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
         userRef.update(FOLLOWING_FIELD, FieldValue.arrayUnion(followedUserId));
     }
 
+    /**
+     * This method is responsible for adding a new user to the follower array of the given user
+     * @param userId the user performing the operation
+     * @param newFollowerId the user that is now a new follower of the given user
+     */
     private void addNewFollowerForUserInDatabase(String userId, String newFollowerId) {
         DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
         userRef.update(FOLLOWERS_FIELD, FieldValue.arrayUnion(newFollowerId));
     }
 
-
+    /**
+     * This helper method gets the userID of the current user that is logged in
+     * @return the current user's ID
+     */
     public String getCurrentUserId() {
         SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
         return sharedPref.getString(USER_ID_SHARED_PREF_TAG, "id");
     }
 
+    /**
+     * This helper method displays error messages in the dialog box
+     * @param messageType code indicating the type of error message to
+     */
     @Override
     public void displayErrorMessage(int messageType) {
         switch(messageType) {

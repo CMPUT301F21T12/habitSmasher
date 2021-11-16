@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    /**
+     * This method allows us to inflate the menu bar, where we can add items if the bar is present
+     * @param menu menu to inflate
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu, adding items to the action bar if present
@@ -67,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This method is called when an item is selected in the action bar
+     * @param item the item selected
+     * @return true if item selected, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.follow_user_search_button) {
@@ -77,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This helper method is responsible for opening the FollowUserDialog box
+     */
     private void openFollowUserDialog() {
         FollowUserDialog followUserDialog = new FollowUserDialog();
         followUserDialog.setCancelable(true);
