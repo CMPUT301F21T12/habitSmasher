@@ -1,8 +1,9 @@
 package com.example.habitsmasher;
 
+import android.view.View;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import android.view.View;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -62,7 +63,7 @@ public abstract class ListFragment<T> extends Fragment {
     protected abstract void openAddDialogBox();
 
     // add after swipe is fixed for habit events
-    //protected abstract void openEditDialogBox();
+    //public abstract void openEditDialogBox();
 
     // add after view is implemented for habit events
     //protected abstract void openViewWindowForItem();

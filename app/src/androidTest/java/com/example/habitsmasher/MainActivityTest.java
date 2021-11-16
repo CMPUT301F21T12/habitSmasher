@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -26,6 +28,8 @@ import java.util.UUID;
 /**
  * Test class for MainActivity. All the UI tests are written here. Robotium test framework is
  used
+
+ Note: The tests have been verified to run on Pixel 5 API 29
  */
 public class MainActivityTest {
     private static final String HABIT_TITLE_FIELD = "Habit title";
@@ -35,11 +39,13 @@ public class MainActivityTest {
     private static final String WRONG_ACTIVITY_MESSAGE = "Wrong Activity";
     private static final String PROFILE_TEXT = "Profile";
     private static final String HOME_TEXT = "Home";
+    private static final boolean PUBLIC_HABIT = true;
+    private static final boolean PRIVATE_HABIT = false;
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
-    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule.";
+    private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule";
     private static final String HABIT_EVENT_COMMENT_ERROR_MESSAGE = "Incorrect habit event comment entered";
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
@@ -64,6 +70,11 @@ public class MainActivityTest {
     private static final String TEST_USER_PASSWORD = "123456";
     private static final String HABIT_EVENT_TEXT = "Habit Event";
     private static final String HABIT_EVENT_LIST_TEXT = "Habit Event List";
+    private static final String FORGOT_PASSWORD_TEXTVIEW = "Forgot Password?";
+    private static final String CONFIRM_BUTTON = "Confirm";
+    private static final String EMAIL_SENT_MESSAGE = "Email sent, please check your email";
+    private static final String UNREGISTERED_EMAIL = "unregisteredEmail@gamil.com";
+    private static final String EMAIL_DOES_NOT_EXIST = "Entered email is not registered";
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
@@ -139,7 +150,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("viewHabitTest", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("viewHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -171,6 +182,9 @@ public class MainActivityTest {
         // Check that the days are correct
         assertCorrectDays();
 
+        //check the privacy is right
+        assertCorrectPrivacy(testHabit.getPublic(), PUBLIC_HABIT);
+
         // Click up/back button
         _solo.goBack();
 
@@ -194,7 +208,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -234,7 +248,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyTitle", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyTitle", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter reason
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
@@ -249,7 +263,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_TITLE_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add habit title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -280,7 +294,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -298,7 +312,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_TITLE_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_TITLE_ERROR_MESSAGE);
 
         // Add shorter habit title
         _solo.clearEditText(_solo.getEditText(testHabit.getTitle()));
@@ -331,7 +345,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitReasonLong", "AnExampleHabitReasonThatIsTooLong", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitReasonLong", "AnExampleHabitReasonThatIsTooLong", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -349,7 +363,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_REASON_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
 
         // Add shorter habit title
         _solo.clearEditText(_solo.getEditText(testHabit.getReason()));
@@ -382,7 +396,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyReason", "", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyReason", "", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -400,7 +414,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_REASON_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_REASON_ERROR_MESSAGE);
 
         // Add habit reason
         testHabit.setReason("acceptable reason");
@@ -432,7 +446,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyDate", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyDate", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -447,7 +461,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(EMPTY_DATE_ERROR_MESSAGE);
+        assertTextOnScreen(EMPTY_DATE_ERROR_MESSAGE);
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
@@ -478,7 +492,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitNoDays", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitNoDays", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -493,7 +507,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitDialogBox();
 
         // Check for toast message
-        checkForToastMessage(NO_DAYS_SELECTED_ERROR_MESSAGE);
+        assertTextOnScreen(NO_DAYS_SELECTED_ERROR_MESSAGE);
 
         // Select days
         setDaysInAddHabitDialogBox();
@@ -510,6 +524,118 @@ public class MainActivityTest {
 
         deleteTestHabit(testHabit);
 
+    }
+
+    @Test
+    public void ensurePublicHabitAdditionCorrect(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create public test habit
+        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
+
+        // Select Public (public by default, leaving single fragment for consistancy
+        // setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        //get the habit we just made
+        _solo.clickOnText(testHabit.getTitle());
+
+        // assert that the correct buttons are selected, not just the underlying habit
+        CheckBox publicBox = (CheckBox) _solo.getView(R.id.public_button);
+        CheckBox privateBox = (CheckBox) _solo.getView(R.id.private_button);
+        assertTrue(publicBox.isChecked());
+        assertFalse(privateBox.isChecked());
+
+        _solo.goBack();
+
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensurePrivateHabitAdditionCorrect(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create public test habit
+        Habit testHabit = new Habit("privateHabitCheck", "Test Reason", new Date(), "MO WE FR", PRIVATE_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
+
+        // select private
+        setPrivacyInAddHabitDialogBox(PRIVATE_HABIT);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        //get the habit we just made
+        _solo.clickOnText(testHabit.getTitle());
+
+        //get the checkboxes to check
+        CheckBox publicBox = (CheckBox) _solo.getView(R.id.public_button);
+        CheckBox privateBox = (CheckBox) _solo.getView(R.id.private_button);
+
+        // assert that the correct buttons are selected, not just the underlying habit
+        assertTrue(privateBox.isChecked());
+        assertFalse(publicBox.isChecked());
+
+        _solo.goBack();
+
+        deleteTestHabit(testHabit);
     }
 
     /**
@@ -533,7 +659,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("editHabitTest", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("editHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -567,7 +693,7 @@ public class MainActivityTest {
         _solo.clearEditText(0);
         _solo.clearEditText(1);
 
-        Habit testEditHabit = new Habit("editHabitWorked", "testReason1", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testEditHabit = new Habit("editHabitWorked", "testReason1", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
         // enter new values
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testEditHabit.getTitle());
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testEditHabit.getReason());
@@ -593,7 +719,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -708,7 +834,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
 
         // Add habit comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -759,7 +885,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
+        assertTextOnScreen(HABIT_EVENT_COMMENT_ERROR_MESSAGE);
 
         // Change habit comment
         _solo.clearEditText(_solo.getEditText(testEvent.getComment()));
@@ -809,7 +935,7 @@ public class MainActivityTest {
         clickConfirmButtonInAddHabitEventDialogBox();
 
         // Check that the error message is displayed
-        checkForToastMessage(EMPTY_DATE_ERROR_MESSAGE);
+        assertTextOnScreen(EMPTY_DATE_ERROR_MESSAGE);
 
         // Enter date
         enterCurrentDateInAddHabitEventDialogBox();
@@ -1132,6 +1258,52 @@ public class MainActivityTest {
         assertTextOnScreen(PASSWORD_IS_REQUIRED);
     }
 
+    //Accessing edit text came from the following link:
+    //https://stackoverflow.com/a/40652532
+    //Author username: Motsane M
+    @Test
+    public void forgotPassword_emptyEmail_emailNotSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, "");
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+        assertTextOnScreen(EMAIL_IS_REQUIRED);
+    }
+
+    @Test
+    public void forgotPassword_invalidEmail_emailNotSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, INVALID_EMAIL);
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+
+        assertTextOnScreen(INVALID_EMAIL_FORMAT);
+    }
+
+    @Test
+    public void forgotPassword_validEmailRegistered_emailSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, TEST_USER_EMAIL);
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+
+        assertTextOnScreen(EMAIL_SENT_MESSAGE);
+    }
+
+    @Test
+    public void forgotPassword_validEmailNotRegistered_emailNotSent() {
+        _solo.clickOnText(FORGOT_PASSWORD_TEXTVIEW);
+        EditText emailEditText = (EditText) _solo.getView(R.id.reset_password_dialog);
+        _solo.enterText(emailEditText, UNREGISTERED_EMAIL);
+
+        _solo.clickOnButton(CONFIRM_BUTTON);
+
+        assertTextOnScreen(EMAIL_DOES_NOT_EXIST);
+    }
+
     private void deleteTestHabit(Habit habitToDelete) {
         swipeLeftOnHabit(habitToDelete);
         _solo.waitForView(R.id.delete_habit_event_button);
@@ -1196,7 +1368,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit(testName, "Test Reason", new Date(), "MO WE FR", HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit(testName, "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1247,6 +1419,14 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.friday_button));
     }
 
+    private void setPrivacyInAddHabitDialogBox(boolean privacy){
+        if (privacy) {
+            _solo.clickOnView(_solo.getView(R.id.public_button));
+        } else {
+            _solo.clickOnView(_solo.getView(R.id.private_button));
+        }
+    }
+
     private void checkForToastMessage(String errorMessage) {
         assertTrue(_solo.searchText(errorMessage));
     }
@@ -1273,9 +1453,16 @@ public class MainActivityTest {
         //Log.d("Tuesday Background", _solo.getView(R.id.tuesday_button).getBackground().toString());
     }
 
+    private void assertCorrectPrivacy(boolean privacy, boolean expected_Privacy){
+        //assert the habit is correctly labeled as private or public
+        assertEquals(privacy, expected_Privacy);
+    }
+
     private void logInTestUser() {
         _solo.enterText(_solo.getEditText("Email"), _testUser.getEmail());
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
         _solo.clickOnButton(LOGIN_TEXT);
+        // Wait for Profile fragment to load
+        _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
     }
 }

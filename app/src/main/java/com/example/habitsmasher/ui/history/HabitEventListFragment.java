@@ -1,5 +1,7 @@
 package com.example.habitsmasher.ui.history;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -298,20 +300,10 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         UploadTask uploadTask = imageStorageRef.putFile(image);
 
         // Handle upload success
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Data failed to be added." + e.toString());
-            }
-        });
+        uploadTask.addOnSuccessListener(new SuccessListener(TAG, "Data successfully added."));
 
         // Handle upload failure
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d(TAG, "Data successfully added.");
-            }
-        });
+        uploadTask.addOnFailureListener(new FailureListener(TAG, "Data failed to be added."));
     }
 
     // TODO: add this to list fragment class once view is implemented for habitevents

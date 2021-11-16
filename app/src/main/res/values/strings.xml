@@ -48,4 +48,7 @@
     <string name="view_event_date_label">DATE OF EVENT</string>
     <string name="view_event_comment_label">COMMENT</string>
     <string name="view_event_location_label">LOCATION</string>
+    <string name="public_habit">Public</string>
+    <string name="private_habit">Private</string>
+    <string name="forgot_password_message_dialog">Please enter your email</string>
 </resources>

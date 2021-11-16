@@ -15,4 +15,5 @@
     <color name="menu_bar">#8FC0A9</color>
     <color name="menu_bar_variant">#68B0AB</color>
     <color name="background_color">#FAF3DD</color>
+    <color name ="red">	#FF0000</color>
 </resources>

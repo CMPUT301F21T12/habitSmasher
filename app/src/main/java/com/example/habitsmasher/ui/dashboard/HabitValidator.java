@@ -1,12 +1,8 @@
 package com.example.habitsmasher.ui.dashboard;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
-
-import androidx.fragment.app.FragmentActivity;
-
 import com.example.habitsmasher.DaysTracker;
+import com.example.habitsmasher.DisplaysErrorMessages;
+import com.example.habitsmasher.HabitDialog;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,14 +14,22 @@ import java.util.Date;
  * when adding or editing a habit
  */
 public class HabitValidator {
-    private final FragmentActivity _context;
+
+    /* takes in a fragment that can display error messages, this allows it
+    to pass in fragments from Habit and HabitEvent (since habitEventValidator
+    extends this class) */
+    protected final DisplaysErrorMessages _fragment;
+
+    private final int MINIMUM_LENGTH = 0;
+    private final int MAXIMUM_HABIT_TITLE_LENGTH = 20;
+    private final int MAXIMUM_HABIT_REASON_LENGTH = 30;
 
     /**
      * Creates the validator
-     * @param context fragment that spawned this validator
+     * @param fragment that spawned this validator
      */
-    public HabitValidator(FragmentActivity context) {
-        _context = context;
+    public HabitValidator(DisplaysErrorMessages fragment) {
+        _fragment = fragment;
     }
 
     /**
@@ -43,26 +47,28 @@ public class HabitValidator {
         Date parsedDate = checkHabitDateValid(habitDate);
 
         // checking title length
-        if ((habitTitle.length() <= 0) || (habitTitle.length() > 20)) {
-            showToastMessage("Incorrect habit title entered");
+        if ((habitTitle.length() <= MINIMUM_LENGTH) ||
+                (habitTitle.length() > MAXIMUM_HABIT_TITLE_LENGTH)) {
+            _fragment.displayErrorMessage(HabitDialog.INCORRECT_TITLE);
             return false;
         }
 
         // checking reason length
-        if ((habitReason.length() <= 0) || (habitReason.length() > 30)) {
-            showToastMessage("Incorrect habit reason entered");
+        if ((habitReason.length() <= MINIMUM_LENGTH) ||
+                (habitReason.length() > MAXIMUM_HABIT_REASON_LENGTH)) {
+            _fragment.displayErrorMessage(HabitDialog.INCORRECT_REASON);
             return false;
         }
 
         // check that a date was picked
         if (parsedDate == null) {
-            showToastMessage("Please enter a start date");
+            _fragment.displayErrorMessage(HabitDialog.INCORRECT_DATE);
             return false;
         }
 
         // check that at least one day of the week was selected
         if (tracker.getDays().isEmpty()){
-            showToastMessage("Please select a weekly schedule.");
+            _fragment.displayErrorMessage(HabitDialog.INCORRECT_DAYS);
             return false;
         }
 
@@ -70,23 +76,6 @@ public class HabitValidator {
         return true;
     }
 
-    /**
-     * This helper method displays a message to the screen
-     * Implementation from:
-     * https://stackoverflow.com/questions/3875184/cant-create-handler-inside-thread-that-has-not-called-looper-prepare
-     * User: Ayaz Alifov
-     * Date: January 24, 2016
-     * @param message the message to display
-     */
-    protected void showToastMessage(String message) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Toast toast = Toast.makeText(_context, message, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-    }
 
     /**
      * This helper method parses a given date in string form
