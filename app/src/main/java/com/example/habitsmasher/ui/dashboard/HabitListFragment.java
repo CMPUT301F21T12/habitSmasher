@@ -281,7 +281,7 @@ public class HabitListFragment extends ListFragment<Habit> {
      * @param userId (String) The current user's username
      * @param parentHabit (Habit) The habit to delete
      */
-    public void deleteHabitEvents(String userId, Habit parentHabit) {
+    private void deleteHabitEvents(String userId, Habit parentHabit) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // get all of the habit events

@@ -1276,10 +1276,6 @@ public class MainActivityTest {
     private void logInTestUser() {
         _solo.enterText(_solo.getEditText("Email"), _testUser.getEmail());
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
-       //  _solo.enterText(_solo.getEditText("Email"), "julie@gmail.com");
-        // _solo.enterText(_solo.getEditText("Password"), "password");
-
         _solo.clickOnButton(LOGIN_TEXT);
-        _solo.sleep(4000);
     }
 }
