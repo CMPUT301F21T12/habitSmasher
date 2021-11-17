@@ -36,6 +36,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -126,10 +127,11 @@ public class HomeFragment extends ListFragment {
     @Override
     protected Query getListFromFirebase() {
 
-        // returns all of the habits
+        // returns all of the habits that take place on the same day (Today)
         return _db.collection("Users")
                 .document(_user.getId())
-                .collection("Habits");
+                .collection("Habits")
+                .whereArrayContains("days", getCurrentDay());
     }
 
     @Override
@@ -153,19 +155,6 @@ public class HomeFragment extends ListFragment {
             for (int i = 0; i < snapshotList.size(); i++) {
                 // get the data and convert to hashmap
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
-
-                String days = (String) extractMap.get("days");
-
-                /*
-                if(days.contains(getCurrentDay())){
-                    // create a new habit with the snapshot data
-                    Habit addHabit = makeHabit(extractMap);
-
-                    // add the habit to the local list
-                    _habitList.addHabitLocal(addHabit);
-                    Log.d("HomeFragmentAdding", "New Habit Added");
-                }
-                 */
 
                 // create a new habit with the snapshot data
                 Habit addHabit = makeHabit(extractMap);
@@ -237,7 +226,7 @@ public class HomeFragment extends ListFragment {
         String reason = (String) extractMap.get("reason");
         Timestamp date = (Timestamp) extractMap.get("date");
         String id = (String) extractMap.get("id");
-        String days = (String) extractMap.get("days");
+        String days = extractMap.get("days").toString();
         boolean isPublic = (boolean) extractMap.get("public");
 
         return new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
