@@ -62,6 +62,15 @@ public class DaysTracker {
     }
 
     /**
+     * Creates a DaysTracker with arrayList input. This version of the constructor is used to convert data
+     * from the database to an object.
+     * @param days The list of days, either true for tracking that day or false for not.
+     */
+    public DaysTracker(ArrayList<Boolean> days){
+        _days = days;
+    }
+
+    /**
      * Sets all of the days to false. Easier way to make a new DaysTracker without making a new DaysTracker.
      */
     public void setFalse(){
@@ -144,6 +153,12 @@ public class DaysTracker {
             }
         }
     }
+
+    /**
+     * Returns the list of days.
+     * @return Entire list of days
+     */
+    public ArrayList<Boolean> getList(){return _days;}
 
     /**
      * Returns the value set to Monday, either true or false.
