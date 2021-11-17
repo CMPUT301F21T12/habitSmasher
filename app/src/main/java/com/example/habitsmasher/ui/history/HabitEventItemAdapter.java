@@ -134,11 +134,10 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
                     HabitEvent toEdit = _snapshots.get(eventPosition);
 
                     // Open edit habit event dialog
-                    EditHabitEventFragment editHabitEventFragment = new EditHabitEventFragment(eventPosition,
-                                                                            toEdit,
-                                                                            _habitEventListFragment,
-                                                                            _habitEventViewHolder);
-                    editHabitEventFragment.show(_habitEventListFragment.getFragmentManager(), "Edit Habit Event");
+                    EditHabitEventDialog editHabitEventDialog= new EditHabitEventDialog(eventPosition,
+                                                                            toEdit);
+                    editHabitEventDialog.setTargetFragment(_habitEventListFragment, 1);
+                    editHabitEventDialog.show(_habitEventListFragment.getFragmentManager(), "Edit Habit Event");
                 }
             });
         }

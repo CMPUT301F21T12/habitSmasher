@@ -3,8 +3,6 @@ package com.example.habitsmasher;
 import android.util.Patterns;
 import android.widget.EditText;
 
-import androidx.core.util.PatternsCompat;
-
 public class UserValidator {
     private static final String USERNAME_IS_REQUIRED_MESSAGE = "Username is required!";
     private static final String USERNAME_LENGTH_MUST_BE_LESS_THAN_16_MESSAGE = "Username length must be less than 16!";
@@ -24,8 +22,12 @@ public class UserValidator {
     String _email;
     String _password;
 
+    private EmailValidator _emailValidator = new EmailValidator();
+
     // for testing
-    public UserValidator() {}
+    public UserValidator() {
+
+    }
 
     // for sign up
     public UserValidator(EditText usernameInput,
@@ -99,10 +101,10 @@ public class UserValidator {
     }
 
     public boolean isLoginValid(String email, String password) {
-        return !(email.isEmpty() | password.isEmpty() |
-                !PatternsCompat.EMAIL_ADDRESS.matcher(email).matches() |
+        return !(password.isEmpty() |
                 password.length() < LOWER_CHARACTER_LIMIT |
-                password.length() > UPPER_CHARACTER_LIMIT);
+                password.length() > UPPER_CHARACTER_LIMIT |
+                !_emailValidator.isEmailValid(email));
     }
 
 

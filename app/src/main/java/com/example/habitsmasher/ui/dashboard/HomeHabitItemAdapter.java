@@ -17,9 +17,7 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.listeners.FailureListener;
-import com.example.habitsmasher.listeners.SuccessListener;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.example.habitsmasher.ui.home.HomeFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,7 +34,7 @@ import java.util.List;
  * Custom adapter class that is used to connect the Firestore database and the
  * RecyclerView displaying the habits
  */
-public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitViewHolder> {
+public class HomeHabitItemAdapter extends ItemAdapter<Habit, HomeHabitItemAdapter.HabitViewHolder> {
     private static HabitList _habits;
     private final String _userId;
     private Context _context;
@@ -48,7 +46,7 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
      * @param habits the habit list
      * @param userId the username of the current user
      */
-    public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
+    public HomeHabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
                             HabitList habits,
                             String userId) {
         super(options);
@@ -62,7 +60,7 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
     @Override
     public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         _context = parent.getContext();
-        View view = LayoutInflater.from(_context).inflate(R.layout.habit_row, parent, false);
+        View view = LayoutInflater.from(_context).inflate(R.layout.home_habit_row, parent, false);
         return new HabitViewHolder(view);
     }
 
@@ -119,8 +117,17 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
             for (int i = 0; i < snapshotList.size(); i++) {
                 batch.delete(snapshotList.get(i).getReference());
             }
-            batch.commit().addOnSuccessListener(new SuccessListener(TAG, "Deleted habit events"))
-            .addOnFailureListener(new FailureListener(TAG, "Failed to delete habit events"));
+            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.d(TAG, "Deleted habit events");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Failed to delete habit events");
+                }
+            });
         }
     }
 }
