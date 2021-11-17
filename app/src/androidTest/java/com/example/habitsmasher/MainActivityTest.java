@@ -73,6 +73,10 @@ public class MainActivityTest {
     private static final String EMAIL_SENT_MESSAGE = "Email sent, please check your email";
     private static final String UNREGISTERED_EMAIL = "unregisteredEmail@gamil.com";
     private static final String EMAIL_DOES_NOT_EXIST = "Entered email is not registered";
+    private static final String EMPTY_USERNAME_ERROR_MESSAGE = "Please enter a username!";
+    private static final String FOLLOW = "Follow";
+    private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
+    private static final String INVALID_USERNAME = "abcdefg";
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
@@ -132,6 +136,55 @@ public class MainActivityTest {
 
         // ensure that the app has transitioned to the Notifications screen
         assertTextOnScreen(PROFILE_TEXT);
+    }
+
+    @Test
+    public void followUserWithEmptyUsername(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click follow user search button
+        _solo.clickOnView(_solo.getView(R.id.follow_user_search_button));
+
+        // click follow button
+        _solo.clickOnButton(FOLLOW);
+
+        // ensure proper error message displayed
+        assertTextOnScreen(EMPTY_USERNAME_ERROR_MESSAGE);
+    }
+
+    @Test
+    public void followUserWithInvalidUsername(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click follow user search button
+        _solo.clickOnView(_solo.getView(R.id.follow_user_search_button));
+
+        // enter an invalid username
+        _solo.enterText(_solo.getEditText("Username"), INVALID_USERNAME);
+
+        // click follow button
+        _solo.clickOnButton(FOLLOW);
+
+        // ensure proper error message displayed
+        assertTextOnScreen(INVALID_USERNAME_ERROR_MESSAGE);
     }
 
     @Test

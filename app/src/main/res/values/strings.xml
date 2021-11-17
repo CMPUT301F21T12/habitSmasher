@@ -48,4 +48,6 @@
     <string name="public_habit">Public</string>
     <string name="private_habit">Private</string>
     <string name="forgot_password_message_dialog">Please enter your email</string>
+    <string name="follow_user">Follow User</string>
+    <string name="follow">Follow</string>
 </resources>
