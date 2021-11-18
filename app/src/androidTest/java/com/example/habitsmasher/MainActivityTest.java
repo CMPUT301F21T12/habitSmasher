@@ -40,11 +40,9 @@ public class MainActivityTest {
     private static final String HABIT_EVENT_COMMENT_FIELD = "Enter Comment...";
     private static final String WRONG_ACTIVITY_MESSAGE = "Wrong Activity";
     private static final String PROFILE_TEXT = "Profile";
-    private static final String HOME_TEXT = "Home";
     private static final boolean PUBLIC_HABIT = true;
     private static final boolean PRIVATE_HABIT = false;
     private static final String DATE_PATTERN = "dd-MM-yyyy";
-    private static final String CURRENT_DAY = "WE";
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
