@@ -69,6 +69,8 @@ public class MainActivityTest {
     private static final String TEST_USER_USERNAME = "TestUser";
     private static final String TEST_USER_EMAIL = "test@gmail.com";
     private static final String TEST_USER_PASSWORD = "123456";
+    private static final String HABIT_EVENT_TEXT = "Habit Event";
+    private static final String HABIT_EVENT_LIST_TEXT = "Habit Event List";
     private static final String FORGOT_PASSWORD_TEXTVIEW = "Forgot Password?";
     private static final String CONFIRM_BUTTON = "Confirm";
     private static final String EMAIL_SENT_MESSAGE = "Email sent, please check your email";
@@ -845,7 +847,7 @@ public class MainActivityTest {
         assertTextOnScreen(testHabit.getTitle());
 
         swipeLeftOnHabit(testHabit);
-        _solo.waitForView(R.id.edit_button);
+        _solo.waitForView(R.id.edit_habit_event_button);
         _solo.clickOnButton(EDIT_BUTTON);
 
         // wait for edit habit dialog to spawn after edit is clicked
@@ -1359,6 +1361,66 @@ public class MainActivityTest {
     }
 
     @Test
+    public void navigateToHabitEventViewFragment() {
+        logInTestUser();
+
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("AddEventTest");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on habit event
+        _solo.clickOnText(testEvent.getComment());
+
+        // Ensure that event page is present
+        assertTextOnScreen(HABIT_EVENT_TEXT);
+
+        // Check that Comment is correct
+        assertTextOnScreen(testEvent.getComment());
+
+        // Check that the date is correct
+        assertTextOnScreen(new SimpleDateFormat(DATE_PATTERN).format(testEvent.getDate()));
+
+        // Click up/back button
+        _solo.goBack();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_EVENT_LIST_TEXT);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
     public void signUpNewUser_emptyUsername_signUpFails() {
         User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD);
 
@@ -1491,7 +1553,7 @@ public class MainActivityTest {
 
     private void deleteTestHabit(Habit habitToDelete) {
         swipeLeftOnHabit(habitToDelete);
-        _solo.waitForView(R.id.delete_button);
+        _solo.waitForView(R.id.delete_habit_event_button);
         _solo.clickOnButton(DELETE_BUTTON);
 
         assertFalse(isTextOnScreen(habitToDelete.getTitle()));
@@ -1532,12 +1594,13 @@ public class MainActivityTest {
         int[] location = new int[2];
         view.getLocationOnScreen(location);
 
+        // larger padding from righthand side of screen to ensure swipe functions
         int displayWidth = _solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
-
-        int fromX = displayWidth - 10;
+        int fromX = displayWidth - 100;
         int fromY = location[1];
-        _solo.drag(location[0], 0, fromY, fromY, 10);
-        _solo.drag(location[0], 0, fromY, fromY, 10);
+
+        // 0 so Robotium swipes to leftmost side of screen
+        _solo.drag(fromX, 0, fromY, fromY, 10);
     }
 
 
@@ -1615,7 +1678,7 @@ public class MainActivityTest {
         else if (currentDay.equals("WE")){
             _solo.clickOnView(_solo.getView(R.id.wednesday_button));
         }
-        else if (currentDay.equals("TU")){
+        else if (currentDay.equals("TH")){
             _solo.clickOnView(_solo.getView(R.id.thursday_button));
         }
         else if (currentDay.equals("FR")){
@@ -1687,7 +1750,6 @@ public class MainActivityTest {
     private void logInTestUser() {
         _solo.enterText(_solo.getEditText("Email"), _testUser.getEmail());
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
-
         _solo.clickOnButton(LOGIN_TEXT);
         // Wait for Profile fragment to load
         _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
