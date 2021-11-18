@@ -54,7 +54,7 @@ public class HabitListTest {
         assertEquals(newReason, editedHabit.getReason());
         assertEquals(newDate, editedHabit.getDate());
         assertEquals(habitId, editedHabit.getId());
-        assertEquals(tracker.getDays(),editedHabit.getDays());
+        assertEquals(tracker.getListWithStrings(),editedHabit.getDays());
     }
 
     @Test
