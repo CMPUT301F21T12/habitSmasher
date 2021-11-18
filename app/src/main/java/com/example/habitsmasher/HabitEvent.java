@@ -1,6 +1,8 @@
 package com.example.habitsmasher;
 import android.net.Uri;
 import com.google.firebase.firestore.PropertyName;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Date;
  * Its purpose is to store and retrieve the start date, comments, picture, and location of a habit event
  * Pictures for habit events are not yet implemented
  */
-public class HabitEvent extends DatabaseEntity{
+public class HabitEvent extends DatabaseEntity implements Serializable {
     private Date _date;
     private String _comment;
     private Uri _pictureUri;
