@@ -23,11 +23,8 @@ import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
-import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
 import com.example.habitsmasher.ui.dashboard.HomeHabitItemAdapter;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
-import com.example.habitsmasher.ui.history.AddHabitEventDialog;
-import com.example.habitsmasher.ui.history.HabitEventListFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -36,7 +33,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -42,6 +44,7 @@ public class MainActivityTest {
     private static final boolean PUBLIC_HABIT = true;
     private static final boolean PRIVATE_HABIT = false;
     private static final String DATE_PATTERN = "dd-MM-yyyy";
+    private static final String CURRENT_DAY = "WE";
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
@@ -283,6 +286,116 @@ public class MainActivityTest {
         assertTextOnScreen(testHabit.getTitle());
 
         deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitOnHomeScreen(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create test habit
+        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select today
+        setCurrentDayInAddHabitDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Go to home screen
+        _solo.clickOnView(_solo.getView(R.id.navigation_home));
+
+        // Assert that the habit is there
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Go back to list tab
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // Delete the habit
+        deleteTestHabit(testHabit);
+
+    }
+
+    @Test
+    public void ensureHabitNotOnHomeScreen(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        String notToday;
+        if (getCurrentDay().equals("WE")){
+            notToday = "TH";
+        }
+        else{
+            notToday = "WE";
+        }
+
+        // Create test habit
+        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), notToday, PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setNonCurrentDayInAddHabitDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Go to home screen
+        _solo.clickOnView(_solo.getView(R.id.navigation_home));
+
+        // Assert that the habit is NOT there
+        assertTextNotOnScreen(testHabit.getTitle());
+
+        // Go back to list tab
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // Delete the habit
+        deleteTestHabit(testHabit);
+
     }
 
     @Test
@@ -859,6 +972,89 @@ public class MainActivityTest {
     }
 
     @Test
+    public void ensureHabitEventAddedSuccessfullyFromHomeScreen(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create test habit
+        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select today
+        setCurrentDayInAddHabitDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Go to home screen
+        _solo.clickOnView(_solo.getView(R.id.navigation_home));
+
+        // Assert that the habit is there
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Click on the add event button
+        swipeLeftOnHabit(testHabit);
+        _solo.clickOnView(_solo.getView(R.id.home_add_event_button));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Go back and delete habit
+        _solo.goBack();
+
+        // Go back to list tab
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // Delete the habit
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
     public void ensureHabitEventFails_emptyComment() {
         logInTestUser();
 
@@ -1409,12 +1605,52 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.friday_button));
     }
 
+    private void setCurrentDayInAddHabitDialogBox(){
+        String currentDay = getCurrentDay();
+
+        if (currentDay.equals("MO")){
+            _solo.clickOnView(_solo.getView(R.id.monday_button));
+        }
+        else if (currentDay.equals("TU")){
+            _solo.clickOnView(_solo.getView(R.id.tuesday_button));
+        }
+        else if (currentDay.equals("WE")){
+            _solo.clickOnView(_solo.getView(R.id.wednesday_button));
+        }
+        else if (currentDay.equals("TU")){
+            _solo.clickOnView(_solo.getView(R.id.thursday_button));
+        }
+        else if (currentDay.equals("FR")){
+            _solo.clickOnView(_solo.getView(R.id.friday_button));
+        }
+        else if (currentDay.equals("SA")){
+            _solo.clickOnView(_solo.getView(R.id.saturday_button));
+        }
+        else if (currentDay.equals("SU")){
+            _solo.clickOnView(_solo.getView(R.id.sunday_button));
+        }
+    }
+
+    private void setNonCurrentDayInAddHabitDialogBox(){
+        if (getCurrentDay().equals("WE")){
+            _solo.clickOnView(_solo.getView(R.id.thursday_button));
+        }
+        else{
+            _solo.clickOnView(_solo.getView(R.id.wednesday_button));
+        }
+    }
+
     private void setPrivacyInAddHabitDialogBox(boolean privacy){
         if (privacy) {
             _solo.clickOnView(_solo.getView(R.id.public_button));
         } else {
             _solo.clickOnView(_solo.getView(R.id.private_button));
         }
+    }
+
+    private String getCurrentDay() {
+        LocalDate currentDate = LocalDate.now();
+        return currentDate.getDayOfWeek().toString().toUpperCase().substring(0, 2);
     }
 
     private void checkForToastMessage(String errorMessage) {
@@ -1424,6 +1660,8 @@ public class MainActivityTest {
     private void assertTextOnScreen(String text) {
         assertTrue(isTextOnScreen(text));
     }
+
+    private void assertTextNotOnScreen(String text){ assertFalse(isTextOnScreen(text));}
 
     private boolean isTextOnScreen(String text) {
         return _solo.waitForText(text, 1, 2000);

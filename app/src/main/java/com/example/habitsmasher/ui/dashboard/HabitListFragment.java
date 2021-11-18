@@ -166,7 +166,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
                 String id = (String) extractMap.get("id");
-                String days = (String) extractMap.get("days");
+                String days = extractMap.get("days").toString();
                 boolean isPublic = (boolean) extractMap.get("public");
 
                 // create a new habit with the snapshot data
