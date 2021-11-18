@@ -1,5 +1,7 @@
 package com.example.habitsmasher;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import java.util.List;
  * @author Rudy Patel
  */
 public class UserDatabaseHelper {
+    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
     private final String _userID;
     private final TextView _numberOfFollowers;
     private final TextView _numberOfFollowing;
@@ -103,5 +106,22 @@ public class UserDatabaseHelper {
         } else {
             _numberOfFollowers.setText("0");
         }
+    }
+
+    /**
+     * This method returns the current user logged in.
+     * @param context The context of the call. Needed to get the info of the user.
+     * @return Newly created user object
+     */
+    @NonNull
+    public static User getCurrentUser(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
+
+        String username = sharedPref.getString("username", "user");
+        String userId = sharedPref.getString("userId", "id");
+        String email = sharedPref.getString("email", "email");
+        String password = sharedPref.getString("password", "password");
+
+        return new User(userId, username, email, password);
     }
 }

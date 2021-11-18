@@ -23,6 +23,7 @@ import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
+import com.example.habitsmasher.UserDatabaseHelper;
 import com.example.habitsmasher.ui.dashboard.HomeHabitItemAdapter;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -38,12 +39,13 @@ import java.util.Map;
 
 
 /**
- * UI class that represents and specifies the behaviour of the home screen
- * Home screen only displays attributes of test habit for now
+ * This fragment produces the home screen, which displays all of the habits that take place on
+ * the current day. This class also allows upfront habit event addition for an easy way to
+ * add an event.
+ *
+ * @author Cameron Matthew
  */
 public class HomeFragment extends ListFragment {
-
-    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
 
     // user who owns this list of habits displayed
     private User _user;
@@ -55,6 +57,14 @@ public class HomeFragment extends ListFragment {
 
     private HomeHabitItemAdapter _habitItemAdapter;
 
+    /**
+     * This is the main function of the class, which creates and inflates the fragment layout, and
+     * sets all of the elements
+     * @param inflater The inflater used to inflate the layout
+     * @param container The viewgroup used to inflate the layout
+     * @param savedInstanceState The bundle passed on the call to create the view
+     * @return The HomeFragment view
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -62,7 +72,7 @@ public class HomeFragment extends ListFragment {
 
         _context = getContext();
 
-        _user = getCurrentUser();
+        _user = UserDatabaseHelper.getCurrentUser(_context);
         _habitList = _user.getHabits();
 
         // getting the local date and updating the date string in the layout
@@ -108,18 +118,10 @@ public class HomeFragment extends ListFragment {
         _habitItemAdapter.stopListening();
     }
 
-    @NonNull
-    private User getCurrentUser() {
-        SharedPreferences sharedPref = _context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
-
-        String username = sharedPref.getString("username", "user");
-        String userId = sharedPref.getString("userId", "id");
-        String email = sharedPref.getString("email", "email");
-        String password = sharedPref.getString("password", "password");
-
-        return new User(userId, username, email, password);
-    }
-
+    /**
+     * This function queries the DB for the habits with the same day as the current day.
+     * @return all of said habits
+     */
     @Override
     protected Query getListFromFirebase() {
 
@@ -130,6 +132,11 @@ public class HomeFragment extends ListFragment {
                 .whereArrayContains("days", getCurrentDay());
     }
 
+    /**
+     * This function populates the list with all of the habits that have the same day as the
+     * current day.
+     * @param query The query that contains all of the habits with the same day as the current day
+     */
     @Override
     protected void populateList(Query query) {
         //get all of the habits
@@ -165,6 +172,11 @@ public class HomeFragment extends ListFragment {
         }
     }
 
+    /**
+     * This helper method initializes the RecyclerView
+     * @param layoutManager the associated LinearLayoutManager
+     * @param view the associated View
+     */
     @Override
     protected void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
         RecyclerView recyclerView = view.findViewById(R.id.home_recycler_view);
@@ -201,8 +213,7 @@ public class HomeFragment extends ListFragment {
 
     @Override
     protected void openAddDialogBox() {
-        // Originally went to the dialog box but the box relies on the  list to function
-        //no longer possible
+        // not needed
 
     }
 
@@ -216,6 +227,7 @@ public class HomeFragment extends ListFragment {
         //not needed
     }
 
+    // helper method to make a habit
     private Habit makeHabit(Map<String, Object> extractMap) {
         // get all of the data from the snapshot
         String title = (String) extractMap.get("title");
@@ -228,11 +240,15 @@ public class HomeFragment extends ListFragment {
         return new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
     }
 
+    // get the current day of the week formatted as the first two letters of the day capitalized
+    // ex) "MO" or "TU"
     private String getCurrentDay() {
         LocalDate currentDate = LocalDate.now();
         return currentDate.getDayOfWeek().toString().toUpperCase().substring(0, 2);
     }
 
+    // get the current day, in the format of "Month day".
+    // ex) "Nov 16"
     private String getDateString() {
         LocalDate currentDate = LocalDate.now();
         String abbreviatedMonth = currentDate.getMonth().toString().substring(0, 3).toLowerCase();
@@ -240,8 +256,8 @@ public class HomeFragment extends ListFragment {
         return abbreviatedMonth + " " + currentDate.getDayOfMonth();
     }
 
-    // note: add this to list fragment class once view is implemented for habitevents
-    protected void openViewWindowForItem(int position) {
+    // Open the habit view when the habit is clicked on in the list
+    private void openViewWindowForItem(int position) {
         // Get the selected habit
         Habit currentHabit = _habitItemAdapter._snapshots.get(position);
 
@@ -255,9 +271,7 @@ public class HomeFragment extends ListFragment {
         controller.navigate(R.id.action_navigation_home_to_habitViewFragment, bundle);
     }
 
-    /**
-     * Used to open up the list of habit events associated with this habit
-     */
+    // Open the habit event list view when the add event button is pressed.
     private void openHabitEventsView(int position) {
         // Create a bundle to be passed into the HabitEventListFragment
         Habit currentHabit = _habitItemAdapter._snapshots.get(position);

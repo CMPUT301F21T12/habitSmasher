@@ -89,46 +89,6 @@ public class HomeHabitItemAdapter extends ItemAdapter<Habit, HomeHabitItemAdapte
             _habitRows = itemView.findViewById(R.id.habit_rows);
             _habitTitle = itemView.findViewById(R.id.habit_title);
         }
-
-        /**
-         * Deletes all child habit events of a habit
-         * @param userId (String) The current user's username
-         * @param parentHabit (Habit) The habit to delete
-         */
-        public void deleteHabitEvents(String userId, Habit parentHabit) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            // get all of the habit events
-            Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
-                    .document(userId)
-                    .collection("Habits")
-                    .document(parentHabit.getId())
-                    .collection("Events")
-                    .get();
-
-            // waiting for all the documents
-            while (!querySnapshotTask.isComplete());
-
-            // make a list of all the documents
-            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
-
-            // delete all the events
-            WriteBatch batch = db.batch();
-            for (int i = 0; i < snapshotList.size(); i++) {
-                batch.delete(snapshotList.get(i).getReference());
-            }
-            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Log.d(TAG, "Deleted habit events");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "Failed to delete habit events");
-                }
-            });
-        }
     }
 }
 
