@@ -1,10 +1,16 @@
 package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +22,10 @@ import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 
@@ -32,6 +42,7 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
     private static String _userId;
     private static HabitEventList _habitEvents;
     private static HabitEventListFragment _habitEventListFragment;
+    private Bitmap _imageReference;
 
 
     /**
@@ -63,10 +74,36 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
 
     @Override
     public void onBindViewHolder(@NonNull HabitEventViewHolder holder, int position, @NonNull HabitEvent habitEvent) {
+        // Fetch image
+        fetchEventImageFromDB(holder, habitEvent);
+
         // Set UI elements of habit event
         holder._habitEventDate.setText(new SimpleDateFormat(DATE_FORMAT).format(habitEvent.getDate()));
         holder._habitEventComment.setText(habitEvent.getComment());
         // TODO: Implement image setting too
+    }
+
+    private void fetchEventImageFromDB(@NonNull HabitEventViewHolder holder, HabitEvent event) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        StorageReference ref = storageReference.child("images/" + _userId + "/" + _parentHabit.getId() + "/" + event.getId() + "/eventImage");
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                _imageReference = bm;
+                holder._habitEventImage.setImageBitmap(_imageReference);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to get image");
+            }
+        });
     }
 
     /**
@@ -76,7 +113,7 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         // List of UI elements
         private final TextView _habitEventDate;
         private final TextView _habitEventComment;
-        // private final ImageView _habitEventImage;
+        private final ImageView _habitEventImage;
 
         /**
          * Default constructor
@@ -92,7 +129,7 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
             // Connect UI elements
             _habitEventDate = itemView.findViewById(R.id.habit_event_date);
             _habitEventComment = itemView.findViewById(R.id.habit_event_comment);
-            // _habitEventImage = itemView.findViewById(R.id.habit_event_image);
+            _habitEventImage = itemView.findViewById(R.id.habit_event_image);
         }
     }
 

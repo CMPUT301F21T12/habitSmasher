@@ -1,14 +1,23 @@
 package com.example.habitsmasher;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
+
 import com.example.habitsmasher.listeners.FailureListener;
 import com.example.habitsmasher.listeners.SuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,7 +62,7 @@ public class HabitEventList extends ArrayList{
     /**
      * Add a new habit event to the database
      * @param addedHabitEvent
-     * @param username Username of the user adding the habit event
+     * @param userId Username of the user adding the habit event
      */
     public void addHabitEventToDatabase(HabitEvent addedHabitEvent, String userId, Habit parentHabit) {
         // get collection of specified user
@@ -117,6 +126,7 @@ public class HabitEventList extends ArrayList{
                 .addOnFailureListener(new FailureListener(context,
                         "deleteHabitEvent", "Data failed to be deleted.",
                         "Something went wrong!"));
+        deleteHabitEventImageFromDb(userId, parentHabit, toDelete);
     }
 
     /**
@@ -133,16 +143,13 @@ public class HabitEventList extends ArrayList{
 
     /**
      * This method is responsible for editing a habit in the database
-     * @param editedHabitEvent
-     * @param username (String) The username of the current user
-     * @param newComment (String) The edited comment
-     * @param newDate (Date) The edited date
-     * @param toEditId (String) The ID of the habit event to edit
+     * @param editedHabitEvent (HabitEvent) The edited event
+     * @param userId (String) The username of the current user
      * @param userId (String) The id of the current user
      * @param parentHabit (Habit) The current habit
      */
     public void editHabitInDatabase(HabitEvent editedHabitEvent, String userId,
-                                    Habit parentHabit) {
+                                    Habit parentHabit, Uri newImage) {
         String toEditId = editedHabitEvent.getId();
         // Create hashmap to hold data
         HashMap<String, Object> habitEventData = new HashMap<>();
@@ -152,6 +159,12 @@ public class HabitEventList extends ArrayList{
 
         // Set edited data in the database
         setHabitEventDataInDatabase(userId,parentHabit, toEditId, habitEventData);
+
+        // Delete old image
+        deleteHabitEventImageFromDb(userId, parentHabit, editedHabitEvent);
+
+        // Add new image
+        addImageToDatabase(userId, parentHabit, newImage, editedHabitEvent.getId());
     }
 
     /**
@@ -178,5 +191,50 @@ public class HabitEventList extends ArrayList{
                 .set(data)
                 .addOnSuccessListener(new SuccessListener(TAG, "Data successfully added."))
                 .addOnFailureListener(new FailureListener(TAG, "Data failed to be added."));
+    }
+
+    /**
+     * @param image The image to add to the database
+     * @param id The ID of the habit event corresponding to the image
+     */
+    public void addImageToDatabase(String userId, Habit parentHabit, Uri image, String id) {
+        // Get firebase storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        StorageReference ref = storageReference.child("images/" + userId + "/" + parentHabit.getId() + "/" + id + "/" + "eventImage");
+
+        ref.putFile(image)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d(TAG, "Image uploaded.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Image failed to upload");
+                    }
+                });
+    }
+
+    private void deleteHabitEventImageFromDb(String userId, Habit parentHabit, HabitEvent toDelete) {
+        // Get firebase storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        StorageReference ref = storageReference.child("images/" + userId + "/" + parentHabit.getId() + "/" + toDelete.getId() + "/" + "eventImage");
+        ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "Image deleted successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to delete image");
+            }
+        });
     }
 }
