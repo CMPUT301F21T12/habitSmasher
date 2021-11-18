@@ -1,7 +1,12 @@
 package com.example.habitsmasher.ui.history;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.DatePickerDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
+import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventDialog;
 import com.example.habitsmasher.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
 
@@ -27,15 +37,20 @@ public class EditHabitEventDialog extends HabitEventDialog {
     private final int _index;
     private final HabitEvent _editHabitEvent;
     private final EditHabitEventDialog _editFragment = this;
+    private final String _userId;
+    private final Habit _parentHabit;
+    private Bitmap _habitImage;
 
     /**
      * Default constructor
      * @param index (int) The index of the habit to edit within the list
      * @param editHabitEvent (HabitEvent) The habit event to edit
      */
-    public EditHabitEventDialog(int index, HabitEvent editHabitEvent) {
+    public EditHabitEventDialog(int index, HabitEvent editHabitEvent, String userId, Habit parentHabit) {
         _index = index;
         _editHabitEvent = editHabitEvent;
+        _userId = userId;
+        _parentHabit = parentHabit;
 
         // tag for logging
         TAG = "EditHabitEventDialog";
@@ -64,9 +79,14 @@ public class EditHabitEventDialog extends HabitEventDialog {
         // Add listener to cancel button that closes the dialog
         setCancelButtonListener();
 
+        // Add listener to image view (not touching this during refactoring until images are done)
+        setImageViewListener();
+
         // Prefill values
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
+
+        fetchEventImageFromDB();
 
         return view;
     }
@@ -92,10 +112,33 @@ public class EditHabitEventDialog extends HabitEventDialog {
                         eventComment,
                         _editHabitEvent.getId());
                 _errorText.setText("");
-                _habitEventListFragment.updateListAfterEdit(editedHabitEvent,_index);
+                _habitEventListFragment.editHabitEvent(editedHabitEvent,_index, _selectedImage);
 
                 // Close dialog
                 getDialog().dismiss();
+            }
+        });
+    }
+
+    private void fetchEventImageFromDB() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        StorageReference ref = storageReference.child("images/" + _userId + "/" + _parentHabit.getId() + "/" + _editHabitEvent.getId() + "/eventImage");
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                _habitImage = bm;
+                _eventPictureView.setImageBitmap(_habitImage);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to get image");
             }
         });
     }

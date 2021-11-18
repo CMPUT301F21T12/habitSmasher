@@ -1,8 +1,12 @@
 package com.example.habitsmasher;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -86,6 +90,17 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
      */
     protected abstract void setConfirmButtonListener();
 
+    protected void setImageViewListener() {
+        _eventPictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open gallery to let user pick photo
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, 1);
+            }
+        });
+    }
+
     /**
      * Opens the calendar dialog used for date selection
      */
@@ -131,6 +146,29 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         }
         catch (ClassCastException e) {
             Log.e(TAG, "Exception" + e.getMessage());
+        }
+    }
+
+    /**
+     * Not touching this when refactoring until images are fully implemented for habit events
+     * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
+     * Override onActivityResult to handle when user has selected image
+     * @param requestCode
+     * @param resultCode
+     * @param imageReturnedIntent
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch(requestCode) {
+            case 0:
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    // Set selected picture
+                    _selectedImage = imageReturnedIntent.getData();
+                    _eventPictureView.setImageURI(_selectedImage);
+                }
+                break;
         }
     }
 }
