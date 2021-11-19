@@ -138,6 +138,7 @@ public class EditHabitEventDialog extends HabitEventDialog {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                fetchEventImageFromDB();
                 Log.d(TAG, "Failed to get image");
             }
         });

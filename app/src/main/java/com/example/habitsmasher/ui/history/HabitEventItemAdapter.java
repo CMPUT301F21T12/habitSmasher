@@ -102,6 +102,9 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "Failed to get image");
+                // If the image hasn't finished uploading to the db yet, try again
+                fetchEventImageFromDB(holder, event);
+
             }
         });
     }
