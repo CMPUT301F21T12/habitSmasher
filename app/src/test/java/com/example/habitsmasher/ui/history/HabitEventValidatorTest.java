@@ -6,6 +6,8 @@ import static org.mockito.Mockito.mock;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.habitsmasher.DisplaysErrorMessages;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +29,7 @@ public class HabitEventValidatorTest {
 
     @Before
     public void setUp() {
-        _validator = new HabitEventValidator(mock(FragmentActivity.class));
+        _validator = new HabitEventValidator(mock(DisplaysErrorMessages.class));
     }
 
     @Test

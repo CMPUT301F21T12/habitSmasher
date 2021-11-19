@@ -30,9 +30,9 @@ public class UserTest {
     public void followNewUser_followingNewUser_expectCountUpdated() {
         assertEquals(0, _user.getFollowingCount());
 
-        _user.followNewUser("newUser1");
-        _user.followNewUser("newUser2");
-        _user.followNewUser("newUser3");
+        _user.followUser("newUser1");
+        _user.followUser("newUser2");
+        _user.followUser("newUser3");
 
         assertEquals(3, _user.getFollowingCount());
     }

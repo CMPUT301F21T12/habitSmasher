@@ -78,6 +78,8 @@ public class LoginFragment extends Fragment {
 
         setClickListenerForRegisterButton(registerButton);
 
+        setClickListenerForForgotPasswordButton(forgotPassword);
+
         return view;
     }
 
@@ -155,6 +157,29 @@ public class LoginFragment extends Fragment {
                 _bottomNav.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    /**
+     * This method listens for when the forgot password text view is clicked
+     * @param forgotPasswordButton the reset password text view
+     */
+    public void setClickListenerForForgotPasswordButton(TextView forgotPasswordButton) {
+        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openForgotPasswordDialog();
+            }
+        });
+    }
+
+    /**
+     * This is a helper method that opens the forgot password dialog.
+     */
+    protected void openForgotPasswordDialog() {
+        ForgotPasswordDialog forgotPasswordDialog = new ForgotPasswordDialog();
+        forgotPasswordDialog.setCancelable(true);
+        forgotPasswordDialog.setTargetFragment(this, 1);
+        forgotPasswordDialog.show(getFragmentManager(), "ForgotPasswordDialog");
     }
 
     /**

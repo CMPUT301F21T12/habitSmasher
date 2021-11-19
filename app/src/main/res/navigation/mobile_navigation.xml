@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_navigation_home_to_LoginFragment"
             app:destination="@id/user_login"/>
+        <action
+            android:id="@+id/action_navigation_home_to_habitViewFragment"
+            app:destination="@id/habitViewFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_habitEventListFragment"
+            app:destination="@id/habitEventListFragment" />
     </fragment>
 
     <fragment
@@ -72,6 +78,16 @@
     <fragment
         android:id="@+id/habitEventListFragment"
         android:name="com.example.habitsmasher.ui.history.HabitEventListFragment"
-        android:label="HabitEventListFragment" />
+        android:label="HabitEventListFragment">
+        <action
+            android:id="@+id/action_navigation_habitEventList_to_habitEventView"
+            app:destination="@id/habitEventViewFragment"
+        />
+    </fragment>
+    <fragment
+        android:id="@+id/habitEventViewFragment"
+        android:name="com.example.habitsmasher.ui.history.HabitEventViewFragment"
+        android:label="HabitEventViewFragment"
+        />
 
 </navigation>

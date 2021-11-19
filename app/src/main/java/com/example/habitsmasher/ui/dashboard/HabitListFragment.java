@@ -1,5 +1,7 @@
 package com.example.habitsmasher.ui.dashboard;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,13 +25,19 @@ import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
+import com.example.habitsmasher.UserDatabaseHelper;
+import com.example.habitsmasher.listeners.SwipeListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +49,6 @@ import java.util.Map;
 public class HabitListFragment extends ListFragment<Habit> {
 
     private static final String TAG = "HabitListFragment";
-    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
 
     // user who owns this list of habits displayed
     private User _user;
@@ -60,7 +67,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                              ViewGroup container, Bundle savedInstanceState) {
         _context = getContext();
 
-        _user = getCurrentUser();
+        _user = UserDatabaseHelper.getCurrentUser(_context);
         _habitList = _user.getHabits();
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit List");
@@ -121,23 +128,8 @@ public class HabitListFragment extends ListFragment<Habit> {
             }
         })
                 .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
-                .setSwipeable(R.id.habit_view, R.id.swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-                    @Override
-                    public void onSwipeOptionClicked(int viewID, int position) {
-                        // edit and delete functionality below
-                        switch (viewID){
-                            // if edit button clicked
-                            case R.id.edit_button:
-                                openEditDialogBox(position);
-                                break;
-                            // if delete button clicked
-                            case R.id.delete_button:
-                                updateListAfterDelete(position);
-                                break;
-                        }
-
-                    }
-                });
+                .setSwipeable(R.id.habit_view, R.id.swipe_options,
+                        new SwipeListener(this));
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
     }
@@ -180,10 +172,11 @@ public class HabitListFragment extends ListFragment<Habit> {
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
                 String id = (String) extractMap.get("id");
-                String days = (String) extractMap.get("days");
+                String days = extractMap.get("days").toString();
+                boolean isPublic = (boolean) extractMap.get("public");
 
                 // create a new habit with the snapshot data
-                Habit addHabit = new Habit(title, reason, date.toDate(), days, id, new HabitEventList());
+                Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
 
                 // add the habit to the local list
                 _habitList.addHabitLocal(addHabit);
@@ -217,10 +210,11 @@ public class HabitListFragment extends ListFragment<Habit> {
 
 
     // note: add this to list fragment class once swipe is complete in habit event list
-    protected void openEditDialogBox(int position) {
-        EditHabitFragment editHabitFragment = new EditHabitFragment(position,
-                _habitItemAdapter._snapshots.get(position),
-                this);
+    public void openEditDialogBox(int position) {
+        EditHabitDialog editHabitFragment = new EditHabitDialog(position,
+                _habitItemAdapter._snapshots.get(position));
+        editHabitFragment.setCancelable(true);
+        editHabitFragment.setTargetFragment(this, 1);
         editHabitFragment.show(getFragmentManager(),
                 "Edit Habit");
     }
@@ -261,23 +255,52 @@ public class HabitListFragment extends ListFragment<Habit> {
     // add to list fragment class once swipe is fixed in habit events
     public void updateListAfterDelete(int position) {
         Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+
+        deleteHabitEvents(_user.getId(), habitToDelete);
+
         _habitList.deleteHabit(getActivity(),
                 _user.getId(),
                 habitToDelete,
                 position);
     }
 
-    @NonNull
-    private User getCurrentUser() {
-        SharedPreferences sharedPref = _context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
+    /**
+     * Deletes all child habit events of a habit
+     * @param userId (String) The current user's username
+     * @param parentHabit (Habit) The habit to delete
+     */
+    private void deleteHabitEvents(String userId, Habit parentHabit) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        String username = sharedPref.getString("username", "user");
-        String userId = sharedPref.getString("userId", "id");
-        String email = sharedPref.getString("email", "email");
-        String password = sharedPref.getString("password", "password");
+        // get all of the habit events
+        Task<QuerySnapshot> querySnapshotTask = db.collection("Users")
+                .document(userId)
+                .collection("Habits")
+                .document(parentHabit.getId())
+                .collection("Events")
+                .get();
 
-        return new User(userId, username, email, password);
+        // waiting for all the documents
+        while (!querySnapshotTask.isComplete());
+
+        // make a list of all the documents
+        List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+
+        // delete all the events
+        WriteBatch batch = db.batch();
+        for (int i = 0; i < snapshotList.size(); i++) {
+            batch.delete(snapshotList.get(i).getReference());
+        }
+        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "Deleted habit events");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to delete habit events");
+            }
+        });
     }
-
-
 }

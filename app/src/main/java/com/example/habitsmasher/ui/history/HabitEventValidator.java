@@ -1,7 +1,7 @@
 package com.example.habitsmasher.ui.history;
 
-import androidx.fragment.app.FragmentActivity;
-
+import com.example.habitsmasher.DisplaysErrorMessages;
+import com.example.habitsmasher.HabitEventDialog;
 import com.example.habitsmasher.ui.dashboard.HabitValidator;
 
 import java.util.Date;
@@ -13,11 +13,14 @@ import java.util.Date;
 public class HabitEventValidator extends HabitValidator {
     /**
      * Default constructor
-     * @param context (FragmentActivity) The parent fragment activity
+     * @param fragment The parent fragment
      */
-    public HabitEventValidator(FragmentActivity context) {
-        super(context);
+    public HabitEventValidator(DisplaysErrorMessages fragment) {
+        super(fragment);
     }
+
+    private final int MINIMUM_COMMENT_LENGTH = 0;
+    private final int MAXIMUM_COMMENT_LENGTH = 20;
 
     /**
      * Checks if a habit event is valid
@@ -29,14 +32,15 @@ public class HabitEventValidator extends HabitValidator {
         Date parsedDate = checkHabitDateValid(habitEventDate);
 
         // check that the comment conforms to requirements
-        if ((habitEventComment.length() <=0) || (habitEventComment.length() > 20)) {
-            showToastMessage("Incorrect habit event comment entered");
+        if ((habitEventComment.length() <= MINIMUM_COMMENT_LENGTH)
+                || (habitEventComment.length() > MAXIMUM_COMMENT_LENGTH)) {
+            _fragment.displayErrorMessage(HabitEventDialog.INCORRECT_COMMENT);
             return false;
         }
 
         // check that a date was selected
         if (parsedDate == null) {
-            showToastMessage("Please enter a start date");
+            _fragment.displayErrorMessage(HabitEventDialog.INCORRECT_DATE);
             return false;
         }
 

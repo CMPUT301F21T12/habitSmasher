@@ -2,7 +2,6 @@ package com.example.habitsmasher;
 
 import android.media.Image;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -16,8 +15,8 @@ public class User {
     private String _password;
     private String _email;
     private String _id;
-    private final ArrayList<String> _followerList = new ArrayList<>();
-    private final ArrayList<String> _followingList = new ArrayList<>();
+    private final ArrayList<String> _followers = new ArrayList<>();
+    private final ArrayList<String> _following = new ArrayList<>();
     private Image _profilePicture;
     private static final HabitList _habits = new HabitList();
 
@@ -110,7 +109,7 @@ public class User {
      * @return list of usernames following this user
      */
     public ArrayList<String> getFollowers() {
-        return _followerList;
+        return _followers;
     }
 
     /**
@@ -118,7 +117,7 @@ public class User {
      * @param followerUsername the new follower user
      */
     public void addNewFollower(String followerUsername) {
-        _followerList.add(followerUsername);
+        _followers.add(followerUsername);
     }
 
     /**
@@ -126,16 +125,16 @@ public class User {
      * this user is following
      * @return list of usernames this user is following
      */
-    public ArrayList<String> getFollowingList() {
-        return _followingList;
+    public ArrayList<String> getUsersFollowing() {
+        return _following;
     }
 
     /**
      * This method adds a new user to the following list
      * @param username the user to be followed
      */
-    public void followNewUser(String username) {
-        _followingList.add(username);
+    public void followUser(String username) {
+        _following.add(username);
     }
 
     /**
@@ -159,7 +158,7 @@ public class User {
      * @return number of followers
      */
     public int getFollowerCount() {
-        return _followerList.size();
+        return _followers.size();
     }
 
     /**
@@ -167,7 +166,7 @@ public class User {
      * @return the number of users following
      */
     public int getFollowingCount() {
-        return _followingList.size();
+        return _following.size();
     }
 
     /**

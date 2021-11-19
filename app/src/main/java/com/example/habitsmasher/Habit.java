@@ -3,6 +3,7 @@ package com.example.habitsmasher;
 import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -14,7 +15,8 @@ public class Habit extends DatabaseEntity implements Serializable {
     private String _reason;
     private Date _date;
     private HabitEventList _habitEvents;
-    private String _days;
+    private ArrayList<String> _days;
+    private boolean _isPublic;
 
     /**
      * Empty constructor needed for FireStore storage
@@ -31,14 +33,15 @@ public class Habit extends DatabaseEntity implements Serializable {
      * @param habitId id of habit
      * @param habitEvents list holding habit events
      */
-    public Habit (String title, String reason, Date date, String days, String habitId,
-                  HabitEventList habitEvents) {
+    public Habit (String title, String reason, Date date, String days, boolean isPublic,
+                  String habitId, HabitEventList habitEvents) {
         super(habitId);
         _title = title;
         _reason = reason;
         _date = date;
-        _days = days;
         _habitEvents = habitEvents;
+        _isPublic = isPublic;
+        _days = new DaysTracker(days).getListWithStrings();
     }
 
     /**
@@ -92,21 +95,18 @@ public class Habit extends DatabaseEntity implements Serializable {
         _date = date;
     }
 
-
     /**
      * Gets the days of the week the habit takes place
      * @return _days : The days the habit takes place
      */
     @PropertyName("days")
-    public String getDays() {return _days;}
-
+    public ArrayList<String> getDays(){return _days;}
     /**
      * Sets the days of the week the habit takes place
      * @param days : The new days of the week
      */
-    public void setDays(String days){
-        _days = days;
-    }
+
+    public void setDays(ArrayList<String> days){_days = days;}
 
     /**
      * Gets habit event list of a habit
@@ -120,4 +120,17 @@ public class Habit extends DatabaseEntity implements Serializable {
      * @param habitEvents (HabitEventList): The list of habit events to set
      */
     public void setHabitEvents(HabitEventList habitEvents) { _habitEvents = habitEvents; }
+
+    /**
+     * Gets whether the habit is public or private. If true, public. If false, private.
+     * @return true if public, false if private.
+     */
+    @PropertyName("public")
+    public boolean getPublic(){return _isPublic;}
+
+    /**
+     * Sets the habit to public.
+     */
+    public void setPublic(boolean isPublic){_isPublic = isPublic;}
+
 }

@@ -38,32 +38,28 @@
         android:id="@+id/confirm_habit_event"
         android:layout_width="135dp"
         android:layout_height="50dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="540dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="72dp"
         android:background="@color/menu_bar_variant"
         android:text="@string/confirm"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cancel_habit_event"
-        app:layout_constraintTop_toTopOf="@+id/add_habit_header" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/cancel_habit_event"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/cancel_habit_event"
         android:layout_width="135dp"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="540dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="10dp"
         android:background="@color/menu_bar_variant"
         android:text="@string/cancel"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/confirm_habit_event"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/add_habit_header" />
+        app:layout_constraintTop_toBottomOf="@+id/error_text_event" />
 
     <TextView
         android:id="@+id/comment_label"
@@ -164,5 +160,16 @@
         android:src="@drawable/add_photo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_habit_header" />
+
+    <TextView
+        android:id="@+id/error_text_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="24dp"
+        android:text=""
+        android:textColor="@color/red"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_habit_date_label" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
