@@ -22,6 +22,7 @@ import java.util.Set;
 public class DaysTracker {
     //instance variables to represent days of the week
     private ArrayList<Boolean> _days;
+    private String[] _daysIndexHelper = {"MO", "TU", "WE", "TH", "FR", "SA", "SU"};
 
     /**
      * Creates a DaysTracker object with all values set to false. This constructor is the default
@@ -56,9 +57,27 @@ public class DaysTracker {
         setFalse();
 
         //set the specific days
-        setDays(days);
+        setDaysFromString(days);
 
 
+    }
+
+    /**
+     * Creates a DaysTracker with arrayList input. This version of the constructor is used to convert data
+     * from the database to an object.
+     * @param days The list of days as {@link String}
+     */
+    public DaysTracker(ArrayList<String> days){
+
+
+        //create the arrayList
+        _days = new ArrayList<Boolean>(Arrays.asList(new Boolean[7]));
+
+        //set all to false
+        setFalse();
+
+        // convert from string to bool
+        setDaysFromList(days);
     }
 
     /**
@@ -103,13 +122,21 @@ public class DaysTracker {
 
 
     /**
-     * Takes a string with the days and converts them to days of the week.
-     * The string takes the format "day1 day2 ... day7", where each day is the first 2 letters of that day, separated by a space. The string can be in any order.
-     * EX) "MO FR WE TH"
+     * This method is the public selector for setting days. It can take either a string or an arraylist
+     * and convert the values within into the proper format for the tracker.
      *
-     * @param days The days to select
+     * @param days The days to select, either {@link String} or {@link ArrayList}
      */
-    public void setDays(String days){
+    public void setDays(Object days){
+        if (days instanceof String) {
+            setDaysFromString((String) days);
+        }
+        else if (days instanceof ArrayList){      // can't specify types in list unfortunately
+            setDaysFromList((ArrayList<String>) days);
+        }
+    }
+
+    private void setDaysFromString(String days){
         //take the string and split it up based on what days are present
         //this will go under the assumption that the string will always be formatted correctly.
         days = days.toUpperCase();
@@ -144,6 +171,34 @@ public class DaysTracker {
             }
         }
     }
+
+    private void setDaysFromList(ArrayList<String> days){
+        // processes each line through the string processor
+        for (int i = 0; i < days.size(); i++) {
+            setDaysFromString(days.get(i));
+        }
+    }
+    /**
+     * Returns the list of days.
+     * @return Entire list of days
+     */
+    public ArrayList<Boolean> getList(){return _days;}
+
+    /**
+     * Returns the list of days with the days as strings instead of booleans
+     * @return List of all days
+     */
+    public ArrayList<String> getListWithStrings(){
+        ArrayList<String> returnList = new ArrayList<>();
+        // convert from bool to string
+        for (int i = 0; i < 7; i++) {
+            if (_days.get(i)){
+                returnList.add(_daysIndexHelper[i]);
+            }
+        }
+        return returnList;
+    }
+
 
     /**
      * Returns the value set to Monday, either true or false.

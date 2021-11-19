@@ -4,69 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    android:background="@color/habit_add_button"
+    tools:context=".ui.home.HomeFragment" >
 
     <TextView
-        android:id="@+id/titleLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="64dp"
-        android:text="@string/title_label"
-        android:textSize="20sp"
+        android:id="@+id/home_habit_header"
+        android:layout_width="413dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="24dp"
+        android:autoSizeMaxTextSize="80sp"
+        android:autoSizeMinTextSize="20sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="@string/home_habit_header"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
-    <TextView
-        android:id="@+id/habitTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:text="@string/habit_title"
-        android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/titleLabel"
-        app:layout_constraintStart_toEndOf="@+id/titleLabel" />
-
-    <TextView
-        android:id="@+id/reasonLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="64dp"
-        android:text="@string/reason_label"
-        android:textSize="20sp"
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="0dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/habit_day_selected"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleLabel" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/habitReason"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:text="@string/habit_reason"
-        android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/reasonLabel"
-        app:layout_constraintStart_toEndOf="@+id/reasonLabel" />
+        <TextView
+            android:id="@+id/home_date"
+            android:layout_width="106dp"
+            android:layout_height="105dp"
+            android:layout_gravity="center"
+            android:autoSizeMaxTextSize="70sp"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="Nov 12" />
+    </FrameLayout>
 
-    <TextView
-        android:id="@+id/dateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="64dp"
-        android:text="@string/date_label"
-        android:textSize="20sp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/home_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reasonLabel" />
-
-    <TextView
-        android:id="@+id/habitDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:text="@string/habit_date"
-        android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/dateLabel"
-        app:layout_constraintStart_toEndOf="@+id/dateLabel" />
-
+        app:layout_constraintTop_toBottomOf="@+id/home_habit_header"
+        tools:listitem="@layout/fragment_habit_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>
