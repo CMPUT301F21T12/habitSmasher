@@ -60,6 +60,9 @@ public class AddHabitEventDialog extends HabitEventDialog {
         // Add listener to confirm button that adds events to database and closed dialog
         setConfirmButtonListener();
 
+        // Add listener for location button
+        setLocationButtonListener();
+
         // Add listener to image view (not touching this during refactoring until images are done)
         _eventPictureView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,8 +1,13 @@
 package com.example.habitsmasher;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -11,12 +16,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
 import com.example.habitsmasher.listeners.ClickListenerForDatePicker;
 import com.example.habitsmasher.ui.history.HabitEventListFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 /**
  * Abstract UI class that describes any dialog
@@ -51,12 +66,30 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     protected Button _confirmButton;
     protected Button _cancelButton;
 
+    //add location button
+    protected FloatingActionButton _addLocationButton;
+
+    protected FusedLocationProviderClient _fusedLocationClient;
+
+    private ActivityResultLauncher<String[]> _requestPermissionsLauncher;
+
     /**
      * Initializes the variables holding the UI elements
      * of the habit event dialog
      * @param view view representing the habit event dialog
      */
     protected void initializeUIElements(View view) {
+        _requestPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+                isGranted -> {
+            if (isGranted.get(Manifest.permission.ACCESS_COARSE_LOCATION) &&
+            isGranted.get(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // do location stuff
+            }
+            else {
+                // denied location permissions
+                Log.d(TAG, "Location permission denied");
+            }
+                });
         _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
         _eventDateText = view.findViewById(R.id.habit_event_date_selection);
         _errorText = view.findViewById(R.id.error_text_event);
@@ -64,6 +97,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         _eventPictureView = view.findViewById(R.id.habit_event_add_photo);
         _confirmButton = view.findViewById(R.id.confirm_habit_event);
         _cancelButton = view.findViewById(R.id.cancel_habit_event);
+        _addLocationButton = view.findViewById(R.id.add_location_button);
     }
 
     /**
@@ -87,6 +121,40 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     protected abstract void setConfirmButtonListener();
 
     /**
+     *
+     */
+    protected void setLocationButtonListener() {
+        _addLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "clicked");
+                int coarsePermission = ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION);
+                int precisePermission = ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+                if (coarsePermission == PackageManager.PERMISSION_GRANTED &&
+                        precisePermission == PackageManager.PERMISSION_GRANTED) {
+                    // do location stuff
+                    _fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,
+                            null).addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                //current location provided
+                            }
+                        }
+                    });
+                }
+                else {
+                    String[] permissionsArray = {Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION};
+                    _requestPermissionsLauncher.launch(permissionsArray);
+                }
+            }
+        });
+    }
+
+    /**
      * Opens the calendar dialog used for date selection
      */
     protected void openDatePickerDialog() {
@@ -107,6 +175,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         });
         datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
+
 
     @Override
     public void displayErrorMessage(int messageType) {
@@ -132,5 +201,6 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         catch (ClassCastException e) {
             Log.e(TAG, "Exception" + e.getMessage());
         }
+        _fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
     }
 }

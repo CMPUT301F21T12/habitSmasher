@@ -64,6 +64,9 @@ public class EditHabitEventDialog extends HabitEventDialog {
         // Add listener to cancel button that closes the dialog
         setCancelButtonListener();
 
+        // Add listener for location button
+        setLocationButtonListener();
+
         // Prefill values
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
