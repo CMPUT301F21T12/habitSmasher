@@ -29,8 +29,6 @@ public class ProfileFragment extends Fragment {
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
 
     private ProfileFragment _fragment = this;
-    private TextView _numberOfFollowers;
-    private TextView _numberOfFollowing;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,8 +42,8 @@ public class ProfileFragment extends Fragment {
 
         // get the UI elements
         TextView usernameTextView = view.findViewById(R.id.username);
-        _numberOfFollowers = view.findViewById(R.id.number_followers);
-        _numberOfFollowing = view.findViewById(R.id.number_following);
+        TextView _numberOfFollowers = view.findViewById(R.id.number_followers);
+        TextView _numberOfFollowing = view.findViewById(R.id.number_following);
         FloatingActionButton logoutButton = view.findViewById(R.id.logout_button);
 
         // set the UI elements
