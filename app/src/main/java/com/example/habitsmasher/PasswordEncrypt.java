@@ -12,7 +12,11 @@ public class PasswordEncrypt {
 
         newPassword += BEGINNING_RANDOM_CHARACTERS;
         for (int i = 0; i<password.length(); i++) {
-            newPassword += (char)(password.charAt(i) + _key);
+            if (password.charAt(i) > 127-_key) {
+                newPassword += (char)(password.charAt(i) - _key);
+            } else {
+                newPassword += (char)(password.charAt(i) + _key);
+            }
 
         }
         newPassword += ENDING_RANDOM_CHARACTERS;
