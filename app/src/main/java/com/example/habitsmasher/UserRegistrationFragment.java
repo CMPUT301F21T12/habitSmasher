@@ -118,6 +118,11 @@ public class UserRegistrationFragment extends Fragment {
         });
     }
 
+    /**
+     * This method checks if the username specified is already taken
+     * @param firestoreCallback an instance of the firestore callback to ensure the operation completes
+     * @param username the username to check
+     */
     private void checkForUniqueUsername(FirestoreCallback firestoreCallback, String username) {
         Log.d(TAG, "Fetching users");
 
