@@ -106,6 +106,9 @@ public class UserRegistrationFragment extends Fragment {
      * @param username the user's username
      */
     private void createNewUserWithEmailAndPassword(String email, String password, String username) {
+        PasswordEncrypt passwordEncrypt = new PasswordEncrypt();
+        password = passwordEncrypt.encrypt(password);
+        String finalPassword = password;
         _auth.createUserWithEmailAndPassword(email, password)
              .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                  @Override
@@ -114,7 +117,7 @@ public class UserRegistrationFragment extends Fragment {
                          User user = new User(_auth.getUid(),
                                               username,
                                               email,
-                                              password);
+                                 finalPassword);
 
                          addNewUserToDatabase(user);
 

@@ -131,6 +131,8 @@ public class LoginFragment extends Fragment {
      * @param password the user password
      */
     private void signInUserWithEmailAndPassword(String email, String password) {
+        PasswordEncrypt passwordEncrypt = new PasswordEncrypt();
+        password = passwordEncrypt.encrypt(password);
         _auth.signInWithEmailAndPassword(email, password)
              .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
