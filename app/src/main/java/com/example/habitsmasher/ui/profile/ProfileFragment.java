@@ -42,14 +42,14 @@ public class ProfileFragment extends Fragment {
 
         // get the UI elements
         TextView usernameTextView = view.findViewById(R.id.username);
-        TextView _numberOfFollowers = view.findViewById(R.id.number_followers);
-        TextView _numberOfFollowing = view.findViewById(R.id.number_following);
+        TextView numberOfFollowers = view.findViewById(R.id.number_followers);
+        TextView numberOfFollowing = view.findViewById(R.id.number_following);
         FloatingActionButton logoutButton = view.findViewById(R.id.logout_button);
 
         // set the UI elements
         UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(currentUserId,
-                                                                       _numberOfFollowers,
-                                                                       _numberOfFollowing);
+                                                                       numberOfFollowers,
+                                                                       numberOfFollowing);
         usernameTextView.setText("@" + user.getUsername());
         userDatabaseHelper.setFollowingCountOfUser();
         userDatabaseHelper.setFollowerCountOfUser();
