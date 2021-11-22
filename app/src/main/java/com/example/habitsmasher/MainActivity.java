@@ -16,6 +16,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.habitsmasher.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 /**
  * UI class that represents and specifies the behaviour of the main activity, which at the
@@ -25,30 +28,30 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-    AppBarConfiguration appBarConfiguration;
+    private ActivityMainBinding _binding;
+    AppBarConfiguration _appBarConfiguration;
+    private NavController _navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        _binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(_binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        appBarConfiguration = new AppBarConfiguration.Builder(
+        _appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications, R.id.user_login)
                 .build();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
-        NavController navController;
         if (navHostFragment != null) {
-            navController = navHostFragment.getNavController();
-            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-            NavigationUI.setupWithNavController(binding.navView, navController);
-            navController.navigate(R.id.action_navigation_home_to_LoginFragment);
+            _navController = navHostFragment.getNavController();
+            NavigationUI.setupActionBarWithNavController(this, _navController, _appBarConfiguration);
+            NavigationUI.setupWithNavController(_binding.navView, _navController);
+            _navController.navigate(R.id.user_login);
         }
     }
 
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
+        return NavigationUI.navigateUp(navController, _appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
 
@@ -86,8 +89,38 @@ public class MainActivity extends AppCompatActivity {
             openFollowUserDialog();
             return true;
         }
+        if (item.getItemId() == R.id.logout_button) {
+            FirebaseAuth.getInstance().signOut();
+            _navController.navigate(R.id.action_logout);
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This method is called when the back button is pressed in the application
+     */
+    @Override
+    public void onBackPressed(){
+        // if the back button is pressed on any top level destinations, do nothing
+        if (!isControllerOnTopLevelDestination()) {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * This method checks if the application is on any of the specified top-level nav destinations
+     * @return boolean true if on top-level, false otherwise
+     */
+    private boolean isControllerOnTopLevelDestination() {
+        return Objects.requireNonNull(_navController.getCurrentDestination())
+                      .getId() == R.id.user_login ||
+                Objects.requireNonNull(_navController.getCurrentDestination())
+                       .getId() == R.id.navigation_dashboard ||
+                Objects.requireNonNull(_navController.getCurrentDestination())
+                       .getId() == R.id.navigation_home ||
+                Objects.requireNonNull(_navController.getCurrentDestination())
+                       .getId() == R.id.navigation_notifications;
     }
 
     /**
