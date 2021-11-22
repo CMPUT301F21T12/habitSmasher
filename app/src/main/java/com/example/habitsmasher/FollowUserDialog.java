@@ -2,8 +2,9 @@ package com.example.habitsmasher;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,13 +34,13 @@ import com.google.firebase.firestore.QuerySnapshot;
  */
 public class FollowUserDialog extends DialogFragment implements DisplaysErrorMessages {
     private static final String TAG = "FollowUserDialog";
-    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
-    private static final String USER_ID_SHARED_PREF_TAG = "userId";
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String EMPTY_USERNAME_ERROR_MESSAGE = "Please enter a username!";
     private static final String USER_FOLLOWED_SUCCESS_MESSAGE = "User followed!";
+    private static final String CANNOT_FOLLOW_YOURSELF_MESSAGE = "You cannot follow yourself!";
     private static final int INVALID_USERNAME_ERROR = 1;
     private static final int EMPTY_USERNAME_ERROR = 2;
+    private static final int CANNOT_FOLLOW_YOURSELF_ERROR = 3;
     private static final String USERS_COLLECTION_PATH = "Users";
     private static final String USERNAME_FIELD = "username";
     private static final String FOLLOWING_FIELD = "following";
@@ -47,6 +48,13 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
 
     private FirebaseFirestore _db;
     private EditText _userToFollow;
+    private Handler _handler;
+    private Context _context;
+
+    public FollowUserDialog(Handler handler, Context context) {
+        _handler = handler;
+        _context = context;
+    }
 
     @Nullable
     @Override
@@ -91,9 +99,17 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                                         Log.d(TAG, "Username exists");
 
                                         // if username exists, update follower/following counts
-                                        String currentUserId = getCurrentUserId();
+                                        String currentUserId = UserDatabaseHelper.getCurrentUser(_context).getId();
+                                        String currentUserUsername = UserDatabaseHelper.getCurrentUser(_context).getUsername();
 
                                         User userToFollow = document.toObject(User.class);
+
+                                        // if the user follows themselves, display error and return
+                                        if (userToFollow.getUsername().equals(currentUserUsername)) {
+                                            displayErrorMessage(CANNOT_FOLLOW_YOURSELF_ERROR);
+                                            return;
+                                        }
+
                                         userToFollow.addNewFollower(currentUserId);
 
                                         // add new follower to the user to follow
@@ -157,15 +173,6 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     }
 
     /**
-     * This helper method gets the userID of the current user that is logged in
-     * @return the current user's ID
-     */
-    public String getCurrentUserId() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
-        return sharedPref.getString(USER_ID_SHARED_PREF_TAG, "id");
-    }
-
-    /**
      * This helper method displays error messages in the dialog box
      * @param messageType code indicating the type of error message to
      */
@@ -180,6 +187,20 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                 _userToFollow.setError(INVALID_USERNAME_ERROR_MESSAGE);
                 _userToFollow.requestFocus();
                 break;
+            case CANNOT_FOLLOW_YOURSELF_ERROR:
+                _userToFollow.setError(CANNOT_FOLLOW_YOURSELF_MESSAGE);
+                _userToFollow.requestFocus();
+                break;
         }
+    }
+
+    /**
+     * This helper method allows us to trigger an action on the dismissal of the dialog box
+     * @param dialog the dialog box to dismiss
+     */
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        _handler.sendEmptyMessage(0);
     }
 }
