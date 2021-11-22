@@ -35,9 +35,10 @@ public class HabitEventList extends ArrayList{
      * @param comment (String): The comment of the habit event to add
      * @param pictureUri (String): The URL of the picture of the habit event to add
      */
-    public void addHabitEventLocally(Date startDate, String comment, Uri pictureUri, String id) {
+    public void addHabitEventLocally(Date startDate, String comment, Uri pictureUri, String id,
+                                    double latitude, double longitude) {
         // Create habit event and add it to the list
-        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id);
+        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, latitude, longitude);
         _habitEvents.add(eventToAdd);
     }
 
@@ -64,7 +65,8 @@ public class HabitEventList extends ArrayList{
         eventData.put("date", addedHabitEvent.getDate());
         eventData.put("comment", addedHabitEvent.getComment());
         eventData.put("id", eventId);
-
+        eventData.put("latitude", addedHabitEvent.getLatitude());
+        eventData.put("longitude", addedHabitEvent.getLongitude());
         // Set data in database
         setHabitEventDataInDatabase(userId, parentHabit, eventId, eventData);
         addHabitEventLocally(addedHabitEvent);
@@ -125,19 +127,18 @@ public class HabitEventList extends ArrayList{
      * @param newDate (Date) The edited date
      * @param pos (int) The position of the habit in the list
      */
-    public void editHabitEventLocally(String newComment, Date newDate, int pos) {
+    public void editHabitEventLocally(String newComment, Date newDate, int pos, double latitude,
+                                      double longitude) {
         HabitEvent toEdit = _habitEvents.get(pos);
         toEdit.setComment(newComment);
         toEdit.setDate(newDate);
+        toEdit.setLatitude(latitude);
+        toEdit.setLongitude(longitude);
     }
 
     /**
      * This method is responsible for editing a habit in the database
      * @param editedHabitEvent
-     * @param username (String) The username of the current user
-     * @param newComment (String) The edited comment
-     * @param newDate (Date) The edited date
-     * @param toEditId (String) The ID of the habit event to edit
      * @param userId (String) The id of the current user
      * @param parentHabit (Habit) The current habit
      */
@@ -149,7 +150,8 @@ public class HabitEventList extends ArrayList{
         habitEventData.put("comment", editedHabitEvent.getComment());
         habitEventData.put("date", editedHabitEvent.getDate());
         habitEventData.put("id", toEditId);
-
+        habitEventData.put("latitude",editedHabitEvent.getLatitude());
+        habitEventData.put("longitude", editedHabitEvent.getLongitude());
         // Set edited data in the database
         setHabitEventDataInDatabase(userId,parentHabit, toEditId, habitEventData);
     }

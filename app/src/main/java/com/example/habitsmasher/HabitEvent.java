@@ -16,6 +16,8 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     private Uri _pictureUri;
 
     // TODO: Eventually add location
+    private double _latitude;
+    private double _longitude;
     // TODO: Fully integrate pictures
 
     /**
@@ -30,10 +32,12 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
      * @param startDate (Date): The start date of the habit event
      * @param comment (String): The comment of the habit event
      */
-    public HabitEvent(Date startDate, String comment, String id) {
+    public HabitEvent(Date startDate, String comment, String id, double latitude, double longitude) {
         super(id);
         _date = startDate;
         _comment = comment;
+        _latitude = latitude;
+        _longitude = longitude;
         // _pictureUri = pictureUri;
     }
 
@@ -87,4 +91,24 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     public void setPictureURL(Uri pictureUri) {
         this._pictureUri = pictureUri;
     }
+
+    @PropertyName("latitude")
+    public double getLatitude() {
+        return _latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        _latitude = latitude;
+    }
+
+    @PropertyName("longitude")
+    public double getLongitude() {
+        return  _longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        _longitude = longitude;
+    }
+
+
 }

@@ -29,6 +29,8 @@ import com.example.habitsmasher.ui.history.HabitEventListFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -70,6 +72,8 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     protected FloatingActionButton _addLocationButton;
 
     protected FusedLocationProviderClient _fusedLocationClient;
+
+    protected Location _selectedLocation;
 
     private ActivityResultLauncher<String[]> _requestPermissionsLauncher;
 
@@ -135,15 +139,9 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
                 if (coarsePermission == PackageManager.PERMISSION_GRANTED &&
                         precisePermission == PackageManager.PERMISSION_GRANTED) {
                     // do location stuff
-                    _fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,
-                            null).addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                //current location provided
-                            }
-                        }
-                    });
+                    handleLocationTracking();
+                    MapDialog mapDialog = new MapDialog(_selectedLocation);
+                    mapDialog.show(getFragmentManager(), "MapDialog");
                 }
                 else {
                     String[] permissionsArray = {Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -152,6 +150,12 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
                 }
             }
         });
+    }
+
+    protected abstract void handleLocationTracking();
+
+    public void selectLocation(Location location) {
+        _selectedLocation = location;
     }
 
     /**
@@ -175,7 +179,6 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         });
         datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
-
 
     @Override
     public void displayErrorMessage(int messageType) {

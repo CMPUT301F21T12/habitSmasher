@@ -1,77 +1,56 @@
-package com.example.habitsmasher.ui.history;
+package com.example.habitsmasher;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
-import com.example.habitsmasher.HabitEvent;
-import com.example.habitsmasher.R;
+import com.example.habitsmasher.listeners.ClickListenerForCancel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-
-import java.text.SimpleDateFormat;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Spawning map found here:
  * https://github.com/googlemaps/android-samples/blob/main/ApiDemos/java/app/src/gms/java/com/example/mapdemo/RawMapViewDemoActivity.java
  */
-public class HabitEventViewFragment extends Fragment implements OnMapReadyCallback {
-    // Habit event being displayed
-    private HabitEvent _habitEvent;
+public class MapDialog extends DialogFragment implements OnMapReadyCallback {
 
+    private Location _selectedLocation;
     private MapView _mapView;
-
-    // Date format
-    private static final String PATTERN = "dd-MM-yyyy";
+    private Button _confirmButton;
+    private Button _cancelButton;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
-    public HabitEventViewFragment() {
-        // Required empty public constructor
+
+    public MapDialog(Location location) {
+        _selectedLocation = location;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.map_dialog, container, false);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
-
-        // Get passed in habit event
-        if(getArguments() != null) {
-            _habitEvent = (HabitEvent) getArguments().getSerializable("habitEvent");
-        }
-
-        // Date formatter
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
-
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_habit_event_view, container, false);
-
-
-        _mapView = (MapView) view.findViewById(R.id.view_map);
-
+        _mapView = (MapView) view.findViewById(R.id.edit_map);
+        _cancelButton = view.findViewById(R.id.cancel_map);
+        _cancelButton.setOnClickListener(new ClickListenerForCancel());
+        // send location back
+        _confirmButton.setOnClickListener(new );
+        _confirmButton = view.findViewById(R.id.confirm_map);
         _mapView.onCreate(mapViewBundle);
         _mapView.getMapAsync(this);
-
-        // Set header
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit Event");
-
-        // Grab text boxes
-        TextView eventCommentTextBox = view.findViewById(R.id.view_event_comment);
-        TextView eventDateTextBox = view.findViewById(R.id.view_event_date);
-
-        // Setting text boxes
-        eventCommentTextBox.setText(_habitEvent.getComment());
-        eventDateTextBox.setText(simpleDateFormat.format(_habitEvent.getDate()));
-
         return view;
     }
 
@@ -103,9 +82,9 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onStop() {
         super.onStop();
-        _mapView.onStop();
+      _mapView.onStop();
     }
-
+    
     @Override
     public void onPause() {
         super.onPause();
@@ -126,6 +105,12 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-
+        // TO DO: navigate map to current/selection location
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                // select location
+            }
+        });
     }
 }

@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventDialog;
 import com.example.habitsmasher.R;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 /**
  * The AddHabitEventDialog
@@ -92,12 +95,26 @@ public class AddHabitEventDialog extends HabitEventDialog {
                     // If everything is valid, add event to database, events list, and close dialog
                     HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
                             habitEventComment,
-                            DatabaseEntity.generateId());
+                            DatabaseEntity.generateId(),
+                            _selectedLocation.getLatitude(),
+                            _selectedLocation.getLongitude());
                     _errorText.setText("");
                     _habitEventListFragment.updateListAfterAdd(newEvent);
                     getDialog().dismiss();
                 }
 
+            }
+        });
+    }
+
+    protected void handleLocationTracking() {
+        _fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,
+                null).addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    _selectedLocation = location;
+                }
             }
         });
     }

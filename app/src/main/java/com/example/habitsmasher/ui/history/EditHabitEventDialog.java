@@ -1,7 +1,9 @@
 package com.example.habitsmasher.ui.history;
 
 import android.app.DatePickerDialog;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +73,15 @@ public class EditHabitEventDialog extends HabitEventDialog {
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
 
+        _selectedLocation = new Location("");
+        _selectedLocation.setLongitude(_editHabitEvent.getLongitude());
+        _selectedLocation.setLatitude(_editHabitEvent.getLatitude());
+
         return view;
+    }
+
+    protected void handleLocationTracking() {
+        Log.d(TAG, String.valueOf(_selectedLocation.getLatitude()));
     }
 
     @Override
@@ -93,7 +103,9 @@ public class EditHabitEventDialog extends HabitEventDialog {
                 Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
                 HabitEvent editedHabitEvent = new HabitEvent(newDate,
                         eventComment,
-                        _editHabitEvent.getId());
+                        _editHabitEvent.getId(),
+                        _selectedLocation.getLatitude(),
+                        _selectedLocation.getLongitude());
                 _errorText.setText("");
                 _habitEventListFragment.updateListAfterEdit(editedHabitEvent,_index);
 
