@@ -96,7 +96,7 @@ public class EditHabitDialog extends HabitDialog {
                 // habit validator to ensure data is formatted appropriately
                 HabitValidator habitValidator = new HabitValidator(_editFragment);
 
-                if (!habitValidator.isHabitValid(habitTitle, reasonText, dateText, _tracker)) {
+                if (!habitValidator.isHabitValid(habitTitle, reasonText, dateText, _tracker, _publicPrivateButtons)) {
                     return;
                 }
                 Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);

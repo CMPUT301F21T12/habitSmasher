@@ -29,6 +29,7 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
     public static final int INCORRECT_REASON = 2;
     public static final int INCORRECT_DATE = 3;
     public static final int INCORRECT_DAYS = 4;
+    public static final int INCORRECT_PRIVACY = 5;
 
     // tag of dialog for logging
     protected String TAG;
@@ -159,6 +160,8 @@ public abstract class HabitDialog extends DialogFragment implements DisplaysErro
             case INCORRECT_DAYS:
                 _errorText.setText("Please select a weekly schedule");
                 break;
+            case INCORRECT_PRIVACY:
+                _errorText.setText("Invalid privacy choice");
         }
     }
 }

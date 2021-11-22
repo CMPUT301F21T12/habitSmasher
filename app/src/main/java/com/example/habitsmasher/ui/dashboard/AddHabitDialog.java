@@ -94,7 +94,7 @@ public class AddHabitDialog extends HabitDialog {
                 // if the habit is valid, add it to the local list and external db
                 if (habitValidator.isHabitValid(habitTitle,
                                                 habitReason,
-                                                habitDate, _tracker)){
+                                                habitDate, _tracker, _publicPrivateButtons)){
                     Habit newHabit = new Habit(habitTitle,
                                                habitReason,
                                                habitValidator.checkHabitDateValid(habitDate),

@@ -3,6 +3,7 @@ package com.example.habitsmasher.ui.dashboard;
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DisplaysErrorMessages;
 import com.example.habitsmasher.HabitDialog;
+import com.example.habitsmasher.PublicPrivateButtons;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -38,12 +39,13 @@ public class HabitValidator {
      * @param habitReason the habit reason
      * @param habitDate the habit date
      * @param tracker the tracker for days of the week
+     * @param privacyButtons
      * @return true, if habit is valid, false otherwise
      */
     public boolean isHabitValid(String habitTitle,
                                 String habitReason,
                                 String habitDate,
-                                DaysTracker tracker) {
+                                DaysTracker tracker, PublicPrivateButtons privacyButtons) {
         Date parsedDate = checkHabitDateValid(habitDate);
 
         // checking title length
@@ -69,6 +71,15 @@ public class HabitValidator {
         // check that at least one day of the week was selected
         if (tracker.getDays().isEmpty()){
             _fragment.displayErrorMessage(HabitDialog.INCORRECT_DAYS);
+            return false;
+        }
+
+        if (!(privacyButtons.isHabitPrivate() || privacyButtons.isHabitPublic())){
+            _fragment.displayErrorMessage(HabitDialog.INCORRECT_PRIVACY);
+            return false;
+        }
+        else if (privacyButtons.isHabitPrivate() && privacyButtons.isHabitPublic()){
+            _fragment.displayErrorMessage(HabitDialog.INCORRECT_PRIVACY);
             return false;
         }
 

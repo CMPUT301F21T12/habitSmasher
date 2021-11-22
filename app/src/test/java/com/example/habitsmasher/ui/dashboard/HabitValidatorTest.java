@@ -3,7 +3,6 @@ package com.example.habitsmasher.ui.dashboard;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.habitsmasher.DaysTracker;
 import com.example.habitsmasher.DisplaysErrorMessages;
@@ -38,45 +37,45 @@ public class HabitValidatorTest {
 
     @Test
     public void isHabitValid_allFieldsValid_expectHabitIsValid() {
-        assertTrue(_validator.isHabitValid(GOOD_TITLE, GOOD_REASON, TODAY, GOOD_TRACKER));
+        assertTrue(_validator.isHabitValid(GOOD_TITLE, GOOD_REASON, TODAY, GOOD_TRACKER, ));
     }
 
     @Test
     public void isHabitValid_emptyTitle_expectHabitIsInvalid() {
-        assertFalse(_validator.isHabitValid("", GOOD_REASON, TODAY, GOOD_TRACKER));
+        assertFalse(_validator.isHabitValid("", GOOD_REASON, TODAY, GOOD_TRACKER, ));
     }
 
     @Test
     public void isHabitValid_emptyReason_expectHabitIsInvalid() {
-        assertFalse(_validator.isHabitValid(GOOD_TITLE, "", TODAY, GOOD_TRACKER));
+        assertFalse(_validator.isHabitValid(GOOD_TITLE, "", TODAY, GOOD_TRACKER, ));
     }
 
     @Test
     public void isHabitValid_emptyDate_expectHabitIsInvalid() {
-        assertFalse(_validator.isHabitValid(GOOD_TITLE, GOOD_REASON, "", GOOD_TRACKER));
+        assertFalse(_validator.isHabitValid(GOOD_TITLE, GOOD_REASON, "", GOOD_TRACKER, ));
     }
     @Test
     public void isHabitValid_emptyDays_expectHabitIsInvalid() {
-        assertFalse(_validator.isHabitValid(GOOD_TITLE, GOOD_REASON, TODAY, BAD_TRACKER));
+        assertFalse(_validator.isHabitValid(GOOD_TITLE, GOOD_REASON, TODAY, BAD_TRACKER, ));
     }
 
     @Test
     public void isHabitValid_titleTooLong_expectHabitIsInvalid() {
-        assertFalse(_validator.isHabitValid(LONG_TITLE, GOOD_REASON, TODAY, GOOD_TRACKER));
+        assertFalse(_validator.isHabitValid(LONG_TITLE, GOOD_REASON, TODAY, GOOD_TRACKER, ));
     }
 
     @Test
     public void isHabitValid_reasonTooLong_expectHabitIsInvalid() {
-        assertFalse(_validator.isHabitValid(GOOD_TITLE, LONG_REASON, TODAY, GOOD_TRACKER));
+        assertFalse(_validator.isHabitValid(GOOD_TITLE, LONG_REASON, TODAY, GOOD_TRACKER, ));
     }
 
     @Test
     public void isHabitValid_titleExactly20Characters_expectHabitIsValid() {
-        assertTrue(_validator.isHabitValid(TITLE_20_CHARACTERS, GOOD_REASON, TODAY, GOOD_TRACKER));
+        assertTrue(_validator.isHabitValid(TITLE_20_CHARACTERS, GOOD_REASON, TODAY, GOOD_TRACKER, ));
     }
 
     @Test
     public void isHabitValid_reasonExactly30Characters_expectHabitIsValid() {
-        assertTrue(_validator.isHabitValid(GOOD_TITLE, REASON_30_CHARACTERS, TODAY, GOOD_TRACKER));
+        assertTrue(_validator.isHabitValid(GOOD_TITLE, REASON_30_CHARACTERS, TODAY, GOOD_TRACKER, ));
     }
 }

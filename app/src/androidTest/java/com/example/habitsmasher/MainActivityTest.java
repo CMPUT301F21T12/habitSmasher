@@ -47,6 +47,7 @@ public class MainActivityTest {
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
     private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule";
+    private static final String NO_PRIVACY_BUTTONS_SELECTED_MESSAGE = "Invalid privacy choice";
     private static final String HABIT_EVENT_COMMENT_ERROR_MESSAGE = "Incorrect habit event comment entered";
     private static final String CANNOT_FOLLOW_YOURSELF_MESSAGE = "You cannot follow yourself!";
     private static final String THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE = "This username is already taken!";
@@ -824,6 +825,132 @@ public class MainActivityTest {
         // assert that the correct buttons are selected, not just the underlying habit
         assertTrue(privateBox.isChecked());
         assertFalse(publicBox.isChecked());
+
+        _solo.goBack();
+
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitAdditionFails_NoPrivacyButtonsSelected(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create public test habit
+        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
+
+        // Click confirm (no privacy buttons clicked)
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // check for the error message
+        assertTextOnScreen(NO_PRIVACY_BUTTONS_SELECTED_MESSAGE);
+
+        // Select Public
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        //get the habit we just made
+        _solo.clickOnText(testHabit.getTitle());
+
+        // assert that the correct buttons are selected, not just the underlying habit
+        CheckBox publicBox = (CheckBox) _solo.getView(R.id.public_button);
+        CheckBox privateBox = (CheckBox) _solo.getView(R.id.private_button);
+        assertTrue(publicBox.isChecked());
+        assertFalse(privateBox.isChecked());
+
+        _solo.goBack();
+
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitAdditionFails_BothPrivacyButtonsSelected(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create public test habit
+        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select days
+        setDaysInAddHabitDialogBox();
+
+        // Select both public and private
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+        setPrivacyInAddHabitDialogBox(PRIVATE_HABIT);
+
+        // Click confirm (Both buttons clicked)
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // check for the error message
+        assertTextOnScreen(NO_PRIVACY_BUTTONS_SELECTED_MESSAGE);
+
+        // deselect private box
+        setPrivacyInAddHabitDialogBox(PRIVATE_HABIT);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        //get the habit we just made
+        _solo.clickOnText(testHabit.getTitle());
+
+        // assert that the correct buttons are selected, not just the underlying habit
+        CheckBox publicBox = (CheckBox) _solo.getView(R.id.public_button);
+        CheckBox privateBox = (CheckBox) _solo.getView(R.id.private_button);
+        assertTrue(publicBox.isChecked());
+        assertFalse(privateBox.isChecked());
 
         _solo.goBack();
 
