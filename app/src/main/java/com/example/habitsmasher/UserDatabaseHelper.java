@@ -2,6 +2,7 @@ package com.example.habitsmasher;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,12 @@ import java.util.List;
  */
 public class UserDatabaseHelper {
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
+    private static final String TAG = "UserDatabaseHelper";
+    private static final String USERNAME_SHARED_PREF_TAG = "username";
+    private static final String USER_ID_SHARED_PREF_TAG = "userId";
+    private static final String USER_PASSWORD_SHARED_PREF_TAG = "password";
+    private static final String USER_EMAIL_SHARED_PREF_TAG = "email";
+
     private final String _userID;
     private final TextView _numberOfFollowers;
     private final TextView _numberOfFollowing;
@@ -81,14 +88,18 @@ public class UserDatabaseHelper {
      * @param following the following collection of the user
      */
     private void setNumberOfFollowing(List<Object> following) {
-        if (following != null && !following.isEmpty()) {
-            if (following.get(0) == "" && !following.isEmpty()) {
-                _numberOfFollowing.setText("0");
+        try {
+            if (following != null && !following.isEmpty()) {
+                if (following.get(0) == "") {
+                    _numberOfFollowing.setText("0");
+                } else {
+                    _numberOfFollowing.setText(String.valueOf(following.size()));
+                }
             } else {
-                _numberOfFollowing.setText(String.valueOf(following.size()));
+                _numberOfFollowing.setText("0");
             }
-        } else {
-            _numberOfFollowing.setText("0");
+        } catch (NullPointerException e) {
+            Log.d(TAG, "TextView for number following not found");
         }
     }
 
@@ -97,14 +108,18 @@ public class UserDatabaseHelper {
      * @param followers the followers collection of the user
      */
     private void setNumberOfFollowers(List<Object> followers) {
-        if (followers != null && !followers.isEmpty()) {
-            if (followers.get(0) == "") {
-                _numberOfFollowers.setText("0");
+        try {
+            if (followers != null && !followers.isEmpty()) {
+                if (followers.get(0) == "") {
+                    _numberOfFollowers.setText("0");
+                } else {
+                    _numberOfFollowers.setText(String.valueOf(followers.size()));
+                }
             } else {
-                _numberOfFollowers.setText(String.valueOf(followers.size()));
+                _numberOfFollowers.setText("0");
             }
-        } else {
-            _numberOfFollowers.setText("0");
+        } catch (NullPointerException e) {
+            Log.d(TAG, "TextView for number followers not found");
         }
     }
 
@@ -117,10 +132,10 @@ public class UserDatabaseHelper {
     public static User getCurrentUser(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
 
-        String username = sharedPref.getString("username", "user");
-        String userId = sharedPref.getString("userId", "id");
-        String email = sharedPref.getString("email", "email");
-        String password = sharedPref.getString("password", "password");
+        String username = sharedPref.getString(USERNAME_SHARED_PREF_TAG, "user");
+        String userId = sharedPref.getString(USER_ID_SHARED_PREF_TAG, "id");
+        String email = sharedPref.getString(USER_EMAIL_SHARED_PREF_TAG, "email");
+        String password = sharedPref.getString(USER_PASSWORD_SHARED_PREF_TAG, "password");
 
         return new User(userId, username, email, password);
     }

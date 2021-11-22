@@ -1,8 +1,11 @@
 package com.example.habitsmasher;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -91,9 +94,32 @@ public class MainActivity extends AppCompatActivity {
      * This helper method is responsible for opening the FollowUserDialog box
      */
     private void openFollowUserDialog() {
-        FollowUserDialog followUserDialog = new FollowUserDialog();
+        FollowUserDialog followUserDialog = new FollowUserDialog(new FollowUserDialogFragmentDismissHandler(),
+                                                                 getApplicationContext());
         followUserDialog.setCancelable(true);
         followUserDialog.setTargetFragment(getSupportFragmentManager().getFragments().get(0), 1);
         followUserDialog.show(getSupportFragmentManager(), "FollowUserDialog");
+    }
+
+    /**
+     * This class handles the dismissal of the follow user dialog box and updates the follower and
+     * following text views on the profile page
+     */
+    private class FollowUserDialogFragmentDismissHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            TextView numFollowers = findViewById(R.id.number_followers);
+            TextView numFollowing = findViewById(R.id.number_following);
+
+            UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(UserDatabaseHelper
+                                                                                   .getCurrentUser(getApplicationContext())
+                                                                                   .getId(),
+                                                                           numFollowers,
+                                                                           numFollowing);
+            userDatabaseHelper.setFollowingCountOfUser();
+            userDatabaseHelper.setFollowerCountOfUser();
+        }
     }
 }
