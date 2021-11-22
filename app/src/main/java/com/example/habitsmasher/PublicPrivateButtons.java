@@ -29,10 +29,14 @@ public class PublicPrivateButtons {
      * @param view The view that has the buttons.
      */
     public PublicPrivateButtons(View view){
-        // get the buttons
-        _publicButton = view.findViewById(R.id.public_button);
-        _privateButton = view.findViewById(R.id.private_button);
-
+        // get the buttons if they exist
+        try {
+            _publicButton = view.findViewById(R.id.public_button);
+            _privateButton = view.findViewById(R.id.private_button);
+        }
+        catch (Exception e){
+            Log.e(TAG, "PublicPrivateButtons: Buttons Not Found!", e);
+        }
     }
 
     /**
@@ -41,20 +45,34 @@ public class PublicPrivateButtons {
      * @param isPublic Whether the habit is public or not.
      */
     public PublicPrivateButtons(View view, boolean isPublic){
-        // get the buttons
-        _publicButton = view.findViewById(R.id.public_button);
-        _privateButton = view.findViewById(R.id.private_button);
-
-        Log.d(TAG, String.valueOf(isPublic));
+        // get the buttons if they exist
+        try {
+            _publicButton = view.findViewById(R.id.public_button);
+            _privateButton = view.findViewById(R.id.private_button);
+        }
+        catch (Exception e){
+            Log.e(TAG, "PublicPrivateButtons: Buttons Not Found!", e);
+        }
 
         // if its public, click the public button. if not, click the private button
         if (isPublic){
-            _publicButton.performClick();
+            // Catch error when buttons are not loaded
+            try {
+                _publicButton.performClick();
+            }
+            catch (Exception e){}
+
             _publicSelected = true;
             _privateSelected = false;
         }
+
         else{
-            _privateButton.performClick();
+            // Catch error when buttons are not loaded
+            try {
+                _privateButton.performClick();
+            }
+            catch (Exception e){}
+
             _publicSelected = false;
             _privateSelected = true;
         }
@@ -110,6 +128,17 @@ public class PublicPrivateButtons {
     public boolean isHabitPrivate(){
         if (_privateSelected) return true;
         else return false;
+    }
+
+    /**
+     * Sets both buttons to whatever state given.
+     * @param publicButton the new public button state
+     * @param privateButton the new private button state
+     */
+    public void setButtons(boolean publicButton, boolean privateButton){
+        // This is actually a method I'm using for unit testing the validator
+        _publicSelected = publicButton;
+        _privateSelected = privateButton;
     }
 
 
