@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventDialog;
+import com.example.habitsmasher.MapDialog;
 import com.example.habitsmasher.R;
 
 import java.util.Date;
@@ -23,6 +24,9 @@ import java.util.Date;
 /**
  * The EditHabitEventFragment class
  * Based on EditEventFragment, dialog which pops up and allows a user to edit habit events
+ *
+ *  Requesting location permissions and location code were sourced from
+ *  https://developer.android.com/training/location
  */
 public class EditHabitEventDialog extends HabitEventDialog {
     // Initialize global variables
@@ -73,15 +77,15 @@ public class EditHabitEventDialog extends HabitEventDialog {
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
 
-        _selectedLocation = new Location("");
-        _selectedLocation.setLongitude(_editHabitEvent.getLongitude());
-        _selectedLocation.setLatitude(_editHabitEvent.getLatitude());
+        _selectedLocation = _editHabitEvent.getLocation();
 
         return view;
     }
 
-    protected void handleLocationTracking() {
-        Log.d(TAG, String.valueOf(_selectedLocation.getLatitude()));
+    protected void handleLocationSelection() {
+        MapDialog mapDialog = new MapDialog(_selectedLocation);
+        mapDialog.setTargetFragment(this, 1);
+        mapDialog.show(getFragmentManager(), "MapDialog");
     }
 
     @Override
@@ -101,11 +105,19 @@ public class EditHabitEventDialog extends HabitEventDialog {
 
                 // Update the habit event in the database and locally
                 Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
-                HabitEvent editedHabitEvent = new HabitEvent(newDate,
-                        eventComment,
-                        _editHabitEvent.getId(),
-                        _selectedLocation.getLatitude(),
-                        _selectedLocation.getLongitude());
+                HabitEvent editedHabitEvent;
+                if (_selectedLocation == null) {
+                     editedHabitEvent = new HabitEvent(newDate,
+                            eventComment,
+                            _editHabitEvent.getId());
+
+                }
+                else {
+                    editedHabitEvent = new HabitEvent(newDate,
+                            eventComment,
+                            _editHabitEvent.getId(),
+                            _selectedLocation);
+                }
                 _errorText.setText("");
                 _habitEventListFragment.updateListAfterEdit(editedHabitEvent,_index);
 

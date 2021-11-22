@@ -1,6 +1,7 @@
 package com.example.habitsmasher;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 
 import static android.content.ContentValues.TAG;
@@ -36,9 +37,9 @@ public class HabitEventList extends ArrayList{
      * @param pictureUri (String): The URL of the picture of the habit event to add
      */
     public void addHabitEventLocally(Date startDate, String comment, Uri pictureUri, String id,
-                                    double latitude, double longitude) {
+                                    Location location) {
         // Create habit event and add it to the list
-        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, latitude, longitude);
+        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, location);
         _habitEvents.add(eventToAdd);
     }
 
@@ -65,8 +66,7 @@ public class HabitEventList extends ArrayList{
         eventData.put("date", addedHabitEvent.getDate());
         eventData.put("comment", addedHabitEvent.getComment());
         eventData.put("id", eventId);
-        eventData.put("latitude", addedHabitEvent.getLatitude());
-        eventData.put("longitude", addedHabitEvent.getLongitude());
+        eventData.put("location", addedHabitEvent.getLocation());
         // Set data in database
         setHabitEventDataInDatabase(userId, parentHabit, eventId, eventData);
         addHabitEventLocally(addedHabitEvent);
@@ -127,13 +127,11 @@ public class HabitEventList extends ArrayList{
      * @param newDate (Date) The edited date
      * @param pos (int) The position of the habit in the list
      */
-    public void editHabitEventLocally(String newComment, Date newDate, int pos, double latitude,
-                                      double longitude) {
+    public void editHabitEventLocally(String newComment, Date newDate, int pos, Location location) {
         HabitEvent toEdit = _habitEvents.get(pos);
         toEdit.setComment(newComment);
         toEdit.setDate(newDate);
-        toEdit.setLatitude(latitude);
-        toEdit.setLongitude(longitude);
+        toEdit.setLocation(location);
     }
 
     /**
@@ -150,8 +148,7 @@ public class HabitEventList extends ArrayList{
         habitEventData.put("comment", editedHabitEvent.getComment());
         habitEventData.put("date", editedHabitEvent.getDate());
         habitEventData.put("id", toEditId);
-        habitEventData.put("latitude",editedHabitEvent.getLatitude());
-        habitEventData.put("longitude", editedHabitEvent.getLongitude());
+        habitEventData.put("location", editedHabitEvent.getLocation());
         // Set edited data in the database
         setHabitEventDataInDatabase(userId,parentHabit, toEditId, habitEventData);
     }

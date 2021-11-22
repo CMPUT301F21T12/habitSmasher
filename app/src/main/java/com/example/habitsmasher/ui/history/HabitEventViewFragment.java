@@ -12,15 +12,19 @@ import androidx.fragment.app.Fragment;
 
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 
 /**
- * Spawning map found here:
- * https://github.com/googlemaps/android-samples/blob/main/ApiDemos/java/app/src/gms/java/com/example/mapdemo/RawMapViewDemoActivity.java
+ * Embedding a map into a fragment using a mapview found here:
+ * https://github.com/googlemaps/android-samples/blob/main/ApiDemos/java/app/src/gms/java/com/example/
+ * mapdemo/RawMapViewDemoActivity.java
  */
 public class HabitEventViewFragment extends Fragment implements OnMapReadyCallback {
     // Habit event being displayed
@@ -55,11 +59,11 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_habit_event_view, container, false);
 
-
-        _mapView = (MapView) view.findViewById(R.id.view_map);
-
-        _mapView.onCreate(mapViewBundle);
-        _mapView.getMapAsync(this);
+        if (_habitEvent.getLocation() != null) {
+            _mapView = (MapView) view.findViewById(R.id.view_map);
+            _mapView.onCreate(mapViewBundle);
+            _mapView.getMapAsync(this);
+        }
 
         // Set header
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit Event");
@@ -91,41 +95,56 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onResume() {
         super.onResume();
-        _mapView.onResume();
+        if (_habitEvent.getLocation() != null) {
+            _mapView.onResume();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        _mapView.onStart();
+        if (_habitEvent.getLocation() != null) {
+            _mapView.onStart();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        _mapView.onStop();
+        if (_habitEvent.getLocation() != null) {
+            _mapView.onStop();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        _mapView.onPause();
+        if (_habitEvent.getLocation() != null) {
+            _mapView.onPause();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        _mapView.onDestroy();
+        if (_habitEvent.getLocation() != null) {
+            _mapView.onDestroy();
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        _mapView.onLowMemory();
+        if (_habitEvent.getLocation() != null) {
+            _mapView.onLowMemory();
+        }
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-
+        LatLng coord = new LatLng(_habitEvent.getLocation().getLatitude(),
+                                  _habitEvent.getLocation().getLongitude());
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 20));
+        googleMap.addMarker(new MarkerOptions().position(coord).title("Habit Event Position"));
     }
 }

@@ -38,6 +38,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 /**
  * Abstract UI class that describes any dialog
  * involving adding and editing Habit Events
+ *
+ * Requesting location permissions and location code were sourced from
+ * https://developer.android.com/training/location
+ * https://developer.android.com/training/permissions/requesting
+ *
  * @author Jason Kim
  */
 public abstract class HabitEventDialog extends DialogFragment implements DisplaysErrorMessages {
@@ -71,8 +76,6 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     //add location button
     protected FloatingActionButton _addLocationButton;
 
-    protected FusedLocationProviderClient _fusedLocationClient;
-
     protected Location _selectedLocation;
 
     private ActivityResultLauncher<String[]> _requestPermissionsLauncher;
@@ -83,17 +86,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
      * @param view view representing the habit event dialog
      */
     protected void initializeUIElements(View view) {
-        _requestPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
-                isGranted -> {
-            if (isGranted.get(Manifest.permission.ACCESS_COARSE_LOCATION) &&
-            isGranted.get(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // do location stuff
-            }
-            else {
-                // denied location permissions
-                Log.d(TAG, "Location permission denied");
-            }
-                });
+        setUpLocationPermissions();
         _eventCommentText = view.findViewById(R.id.add_habit_event_comment);
         _eventDateText = view.findViewById(R.id.habit_event_date_selection);
         _errorText = view.findViewById(R.id.error_text_event);
@@ -139,9 +132,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
                 if (coarsePermission == PackageManager.PERMISSION_GRANTED &&
                         precisePermission == PackageManager.PERMISSION_GRANTED) {
                     // do location stuff
-                    handleLocationTracking();
-                    MapDialog mapDialog = new MapDialog(_selectedLocation);
-                    mapDialog.show(getFragmentManager(), "MapDialog");
+                    handleLocationSelection();
                 }
                 else {
                     String[] permissionsArray = {Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -152,7 +143,11 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         });
     }
 
-    protected abstract void handleLocationTracking();
+    protected void handleLocationSelection() {
+        MapDialog mapDialog = new MapDialog(_selectedLocation);
+        mapDialog.setTargetFragment(this, 1);
+        mapDialog.show(getFragmentManager(), "MapDialog");
+    }
 
     public void selectLocation(Location location) {
         _selectedLocation = location;
@@ -204,6 +199,20 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         catch (ClassCastException e) {
             Log.e(TAG, "Exception" + e.getMessage());
         }
-        _fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+    }
+
+    private void setUpLocationPermissions(){
+        _requestPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+                isGranted -> {
+                    if (isGranted.get(Manifest.permission.ACCESS_COARSE_LOCATION) &&
+                            isGranted.get(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        // do location stuff
+                        handleLocationSelection();
+                    }
+                    else {
+                        // denied location permissions
+                        Log.d(TAG, "Location permission denied");
+                    }
+                });
     }
 }

@@ -1,4 +1,5 @@
 package com.example.habitsmasher;
+import android.location.Location;
 import android.net.Uri;
 import com.google.firebase.firestore.PropertyName;
 
@@ -14,10 +15,8 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     private Date _date;
     private String _comment;
     private Uri _pictureUri;
+    private Location _location;
 
-    // TODO: Eventually add location
-    private double _latitude;
-    private double _longitude;
     // TODO: Fully integrate pictures
 
     /**
@@ -26,18 +25,23 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     public HabitEvent() {
         // Needed for firestore
     }
-
-    /**
-     * Default constructor, creates new HabitEvent
-     * @param startDate (Date): The start date of the habit event
-     * @param comment (String): The comment of the habit event
-     */
-    public HabitEvent(Date startDate, String comment, String id, double latitude, double longitude) {
+    public HabitEvent(Date startDate, String comment, String id) {
         super(id);
         _date = startDate;
         _comment = comment;
-        _latitude = latitude;
-        _longitude = longitude;
+        _location = null;
+    }
+
+    /**
+     * Constructor, creates new HabitEvent with location
+     * @param startDate (Date): The start date of the habit event
+     * @param comment (String): The comment of the habit event
+     */
+    public HabitEvent(Date startDate, String comment, String id, Location location) {
+        super(id);
+        _date = startDate;
+        _comment = comment;
+        _location = location;
         // _pictureUri = pictureUri;
     }
 
@@ -92,22 +96,13 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
         this._pictureUri = pictureUri;
     }
 
-    @PropertyName("latitude")
-    public double getLatitude() {
-        return _latitude;
+    @PropertyName("location")
+    public Location getLocation() {
+        return _location;
     }
 
-    public void setLatitude(double latitude) {
-        _latitude = latitude;
-    }
-
-    @PropertyName("longitude")
-    public double getLongitude() {
-        return  _longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        _longitude = longitude;
+    public void setLocation(Location location) {
+        _location = location;
     }
 
 

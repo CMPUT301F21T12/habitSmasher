@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -210,13 +211,12 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
                 String comment = (String) extractMap.get("comment");
                 Timestamp date = (Timestamp) extractMap.get("date");
-                double latitude = (Double) extractMap.get("latitude");
-                double longitude = (Double) extractMap.get("longitude");
+                Location location = (Location) extractMap.get("location");
                 String id = extractMap.get("id").toString();
 
                 // create the new habit event from the snapshot data and add to local list
                 HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id,
-                                                          latitude, longitude);
+                                                          location);
                 Log.d(TAG, addHabitEvent.getId());
                 _habitEventList.addHabitEventLocally(addHabitEvent);
             }

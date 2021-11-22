@@ -29,6 +29,7 @@ import com.example.habitsmasher.DatabaseEntity;
 import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventDialog;
+import com.example.habitsmasher.MapDialog;
 import com.example.habitsmasher.R;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,10 +37,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 /**
  * The AddHabitEventDialog
  * Deals with UI and information handling of the add habit event popup
+ *
+ * Requesting location permissions and location code were sourced from
+ * https://developer.android.com/training/location
  */
 public class AddHabitEventDialog extends HabitEventDialog {
 
     private AddHabitEventDialog _addFragment = this;
+
 
     @Nullable
     @Override
@@ -93,31 +98,27 @@ public class AddHabitEventDialog extends HabitEventDialog {
                 // Check if event data is valid
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
-                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
-                            habitEventComment,
-                            DatabaseEntity.generateId(),
-                            _selectedLocation.getLatitude(),
-                            _selectedLocation.getLongitude());
+                    HabitEvent newEvent;
+                    if (_selectedLocation == null) {
+                        newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
+                                habitEventComment,
+                                DatabaseEntity.generateId());
+                    }
+                    else {
+                        newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
+                                habitEventComment,
+                                DatabaseEntity.generateId(),
+                                _selectedLocation);
+                    }
                     _errorText.setText("");
                     _habitEventListFragment.updateListAfterAdd(newEvent);
                     getDialog().dismiss();
                 }
-
             }
         });
     }
 
-    protected void handleLocationTracking() {
-        _fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,
-                null).addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    _selectedLocation = location;
-                }
-            }
-        });
-    }
+
 
     /**
      * Not touching this when refactoring until images are fully implemented for habit events
