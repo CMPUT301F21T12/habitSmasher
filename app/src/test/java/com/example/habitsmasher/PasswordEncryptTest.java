@@ -1,8 +1,6 @@
-package com.example.habitsmasher.ui;
+package com.example.habitsmasher;
 
-import static org.junit.Assert.*;
-
-import com.example.habitsmasher.PasswordEncrypt;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -8,7 +8,6 @@ import com.example.habitsmasher.listeners.SuccessListenerTest;
 import com.example.habitsmasher.listeners.SwipeListenerTest;
 import com.example.habitsmasher.test.UserTest;
 import com.example.habitsmasher.test.DatePickerDialogFragmentTest;
-import com.example.habitsmasher.ui.PasswordEncryptTest;
 import com.example.habitsmasher.ui.dashboard.HabitListTest;
 import com.example.habitsmasher.ui.dashboard.HabitValidatorTest;
 import com.example.habitsmasher.ui.history.HabitEventListTest;
