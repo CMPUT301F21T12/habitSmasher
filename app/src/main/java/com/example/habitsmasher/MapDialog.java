@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 /**
  * Class that spawns a map dialog that can be scrolled through
@@ -48,7 +49,6 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         _selectedLocation = location;
     }
 
-    @SuppressLint("MissingPermission")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,15 +58,17 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
         if (_selectedLocation == null) {
-            _fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,
-                    null).addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        _selectedLocation = location;
-                    }
-                }
-            });
+            @SuppressLint("MissingPermission") Task<Location> locationTask = _fusedLocationClient
+                    .getCurrentLocation(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY, null);
+            while (!locationTask.isComplete()) {
+                Log.d(TAG, "LOOPY");
+            };
+            Location location = locationTask.getResult();
+            if (location == null) {
+               // _habitEventDialog.displayErrorMessage();
+                getDialog().dismiss();
+            }
+            _selectedLocation = location;
         }
         _mapView = (MapView) view.findViewById(R.id.edit_map);
         _cancelButton = view.findViewById(R.id.cancel_map);
