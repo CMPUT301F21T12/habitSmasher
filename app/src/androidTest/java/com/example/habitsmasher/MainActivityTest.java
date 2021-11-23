@@ -76,7 +76,7 @@ public class MainActivityTest {
     private static final String FORGOT_PASSWORD_TEXTVIEW = "Forgot Password?";
     private static final String CONFIRM_BUTTON = "Confirm";
     private static final String EMAIL_SENT_MESSAGE = "Email sent, please check your email";
-    private static final String UNREGISTERED_EMAIL = "unregisteredEmail@gamil.com";
+    private static final String UNREGISTERED_EMAIL = "unregisteredEmail@gmail.com";
     private static final String EMAIL_DOES_NOT_EXIST = "Entered email is not registered";
     private static final String EMPTY_USERNAME_ERROR_MESSAGE = "Please enter a username!";
     private static final String FOLLOW = "Follow";
@@ -141,6 +141,26 @@ public class MainActivityTest {
 
         // ensure that the app has transitioned to the Notifications screen
         assertTextOnScreen(PROFILE_TEXT);
+    }
+
+    @Test
+    public void navigateToUserProfile_logOut(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click on log out button
+        _solo.clickOnView(_solo.getView(R.id.logout_button));
+
+        // ensure login button is displayed
+        assertTextOnScreen("Login");
     }
 
     @Test

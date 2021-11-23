@@ -70,30 +70,13 @@ public class ProfileFragment extends Fragment {
         userDatabaseHelper.setFollowingCountOfUser();
         userDatabaseHelper.setFollowerCountOfUser();
 
-        setClickListenerForLogoutButton(logoutButton);
-
         // Fetch profile picture from database
         ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
-        imageDatabaseHelper.fetchImagesFromDB(_userImageView, imageDatabaseHelper.getUserStorageReference(currentUserId));
+        imageDatabaseHelper.fetchImagesFromDB(_userImageView, imageDatabaseHelper.getUserStorageReference(currentUserId));        
 
         return view;
     }
 
-    private void setClickListenerForLogoutButton(FloatingActionButton logoutButton) {
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-
-                navigateToFragmentWithAction(R.id.action_logout);
-            }
-        });
-    }
-
-    private void navigateToFragmentWithAction(int actionId) {
-        NavController controller = NavHostFragment.findNavController(_fragment);
-        controller.navigate(actionId);
-    }
 
     @Override
     public void onDestroyView() {

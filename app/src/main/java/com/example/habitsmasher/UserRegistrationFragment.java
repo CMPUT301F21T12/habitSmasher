@@ -57,6 +57,7 @@ public class UserRegistrationFragment extends Fragment {
     private ProgressBar _progressBar;
     protected ImageView _profilePictureView;
     protected Uri _selectedImage;
+    private UserAccountHelper _userAccountHelper;
 
     @Nullable
     @Override
@@ -76,6 +77,8 @@ public class UserRegistrationFragment extends Fragment {
         Button backToLoginButton = view.findViewById(R.id.registration_go_back_to_login_button);
         _progressBar = view.findViewById(R.id.registration_progress_bar);
         _profilePictureView = view.findViewById(R.id.registration_image);
+
+        _userAccountHelper = new UserAccountHelper(getContext(), this);
 
         setClickListenerForBackToLoginButton(backToLoginButton);
 
@@ -198,7 +201,7 @@ public class UserRegistrationFragment extends Fragment {
         FirebaseFirestore.getInstance()
                          .collection("Users")
                          .document(user.getId())
-                         .set(buildUserDataMap(user))
+                         .set(_userAccountHelper.buildUserDataMap(user))
                          .addOnCompleteListener(new OnCompleteListener<Void>() {
                              @Override
                              public void onComplete(@NonNull Task<Void> task) {
@@ -252,23 +255,6 @@ public class UserRegistrationFragment extends Fragment {
     private void showMessage(String message) {
         Toast.makeText(getContext(),
                        message, Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * This helper method builds up the user data to insert into the database
-     * @param user the user data to build up
-     * @return a hashmap of key/value pairs of the user data
-     */
-    @NonNull
-    private HashMap<String, Object> buildUserDataMap(User user) {
-        HashMap<String, Object> userData = new HashMap<>();
-
-        userData.put("username", user.getUsername());
-        userData.put("email", user.getEmail());
-        userData.put("password", user.getPassword());
-        userData.put("id", user.getId());
-
-        return userData;
     }
 
     /**
