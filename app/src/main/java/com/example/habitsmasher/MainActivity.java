@@ -5,10 +5,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -53,6 +57,26 @@ public class MainActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController(_binding.navView, _navController);
             _navController.navigate(R.id.user_login);
         }
+
+        setOnDestinationChangedListenerForNavController();
+    }
+
+    private void setOnDestinationChangedListenerForNavController() {
+        _navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller,
+                                             @NonNull NavDestination destination,
+                                             @Nullable Bundle arguments) {
+                View bottomNav = findViewById(R.id.nav_view);
+                if(destination.getId() == R.id.user_login ||
+                    destination.getId() == R.id.user_registration) {
+                    bottomNav.setVisibility(View.GONE);
+                } else {
+                    bottomNav.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
     }
 
     /**
