@@ -51,6 +51,10 @@
     <string name="view_event_location_label">LOCATION</string>
     <string name="public_habit">Public</string>
     <string name="private_habit">Private</string>
+    <string name="home_day">null</string>
+    <string name="home_welcome_message">Today will be a good day.</string>
+    <string name="home_habit_header">Today\'s Habits</string>
+    <string name="home_new_event">Add Event</string>
     <string name="forgot_password_message_dialog">Please enter your email</string>
     <string name="follow_user">Follow User</string>
     <string name="follow">Follow</string>

@@ -25,6 +25,7 @@ import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
+import com.example.habitsmasher.UserDatabaseHelper;
 import com.example.habitsmasher.listeners.SwipeListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,7 +49,6 @@ import java.util.Map;
 public class HabitListFragment extends ListFragment<Habit> {
 
     private static final String TAG = "HabitListFragment";
-    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
 
     // user who owns this list of habits displayed
     private User _user;
@@ -67,7 +67,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                              ViewGroup container, Bundle savedInstanceState) {
         _context = getContext();
 
-        _user = getCurrentUser();
+        _user = UserDatabaseHelper.getCurrentUser(_context);
         _habitList = _user.getHabits();
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Habit List");
@@ -172,7 +172,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                 String reason = (String) extractMap.get("reason");
                 Timestamp date = (Timestamp) extractMap.get("date");
                 String id = (String) extractMap.get("id");
-                String days = (String) extractMap.get("days");
+                String days = extractMap.get("days").toString();
                 boolean isPublic = (boolean) extractMap.get("public");
 
                 // create a new habit with the snapshot data
@@ -303,18 +303,4 @@ public class HabitListFragment extends ListFragment<Habit> {
             }
         });
     }
-
-    @NonNull
-    private User getCurrentUser() {
-        SharedPreferences sharedPref = _context.getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
-
-        String username = sharedPref.getString("username", "user");
-        String userId = sharedPref.getString("userId", "id");
-        String email = sharedPref.getString("email", "email");
-        String password = sharedPref.getString("password", "password");
-
-        return new User(userId, username, email, password);
-    }
-
-
 }

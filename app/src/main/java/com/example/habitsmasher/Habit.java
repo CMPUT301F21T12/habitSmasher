@@ -3,6 +3,7 @@ package com.example.habitsmasher;
 import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ public class Habit extends DatabaseEntity implements Serializable {
     private String _reason;
     private Date _date;
     private HabitEventList _habitEvents;
-    private String _days;
+    private ArrayList<String> _days;
     private boolean _isPublic;
 
     /**
@@ -38,9 +39,9 @@ public class Habit extends DatabaseEntity implements Serializable {
         _title = title;
         _reason = reason;
         _date = date;
-        _days = days;
         _habitEvents = habitEvents;
         _isPublic = isPublic;
+        _days = new DaysTracker(days).getListWithStrings();
     }
 
     /**
@@ -94,21 +95,18 @@ public class Habit extends DatabaseEntity implements Serializable {
         _date = date;
     }
 
-
     /**
      * Gets the days of the week the habit takes place
      * @return _days : The days the habit takes place
      */
     @PropertyName("days")
-    public String getDays() {return _days;}
-
+    public ArrayList<String> getDays(){return _days;}
     /**
      * Sets the days of the week the habit takes place
      * @param days : The new days of the week
      */
-    public void setDays(String days){
-        _days = days;
-    }
+
+    public void setDays(ArrayList<String> days){_days = days;}
 
     /**
      * Gets habit event list of a habit

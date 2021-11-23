@@ -31,6 +31,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -45,7 +47,11 @@ import java.util.HashMap;
 public class UserRegistrationFragment extends Fragment {
     private static final String USER_REGISTERED_MESSAGE = "User registered!";
     private static final String FAILED_TO_ADD_USER_MESSAGE = "Failed to add user, try again!";
-    private static final String FAILED_TO_REGISTER_MESSAGE = "Failed to register";
+    private static final String FAILED_TO_REGISTER_MESSAGE = "Failed to register with this username/email";
+    private static final String TAG = "UserRegistrationFragment";
+    private static final String USERS_COLLECTION_PATH = "Users";
+    private static final String USERNAME_FIELD = "username";
+    private static final String THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE = "This username is already taken!";
 
     private FirebaseAuth _auth;
     private ProgressBar _progressBar;
@@ -95,6 +101,8 @@ public class UserRegistrationFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                _progressBar.setVisibility(View.VISIBLE);
+
                 UserValidator validator = new UserValidator(usernameInput,
                                                             emailInput,
                                                             passwordInput);
@@ -107,12 +115,50 @@ public class UserRegistrationFragment extends Fragment {
                     return;
                 }
 
-                _progressBar.setVisibility(View.VISIBLE);
+                checkForUniqueUsername(isUsernameTaken -> {
+                    if (isUsernameTaken) {
+                        Log.d(TAG, "This username already exists");
 
-                createNewUserWithEmailAndPassword(validator.getValidEmailForSignUp(),
-                                                  validator.getValidPasswordForSignUp(),
-                                                  validator.getValidUsernameForSignUp());
+                        usernameInput.setError(THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE);
+                        usernameInput.requestFocus();
+
+                        _progressBar.setVisibility(View.INVISIBLE);
+                    } else {
+                        Log.d(TAG, "Username is unique!");
+
+                        createNewUserWithEmailAndPassword(validator.getValidEmailForSignUp(),
+                                                          validator.getValidPasswordForSignUp(),
+                                                          validator.getValidUsernameForSignUp());
+                    }
+                }, usernameInput.getText().toString().trim());
             }
+        });
+    }
+
+    /**
+     * This method checks if the username specified is already taken
+     * @param firestoreCallback an instance of the firestore callback to ensure the operation completes
+     * @param username the username to check
+     */
+    private void checkForUniqueUsername(FirestoreCallback firestoreCallback, String username) {
+        Log.d(TAG, "Fetching users");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference usersCollectionRef = db.collection(USERS_COLLECTION_PATH);
+
+        usersCollectionRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot document: queryDocumentSnapshots.getDocuments()) {
+                if (document.get(USERNAME_FIELD).toString().equals(username)) {
+                    Log.d(TAG, "Username taken: " + document.get(USERNAME_FIELD).toString());
+
+                    firestoreCallback.onCallback(true);  // if username is taken, set the flag
+                    return;
+                } else {
+                    Log.d(TAG, "Username does not equal: " + document.get(USERNAME_FIELD).toString());
+                }
+            }
+            Log.d(TAG, "Finished fetching users, username does not exist");
+            firestoreCallback.onCallback(false);  // if username is not taken, set the flag to false
         });
     }
 

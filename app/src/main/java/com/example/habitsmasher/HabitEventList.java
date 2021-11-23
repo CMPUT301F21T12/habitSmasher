@@ -62,7 +62,7 @@ public class HabitEventList extends ArrayList{
     /**
      * Add a new habit event to the database
      * @param addedHabitEvent
-     * @param userId Username of the user adding the habit event
+     * @param userId Id of the user adding the habit event
      */
     public void addHabitEventToDatabase(HabitEvent addedHabitEvent, String userId, Habit parentHabit) {
         // get collection of specified user
