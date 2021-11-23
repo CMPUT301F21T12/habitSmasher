@@ -29,6 +29,8 @@ import java.util.HashMap;
  */
 public class HabitEventList extends ArrayList{
     private ArrayList<HabitEvent> _habitEvents = new ArrayList<>();
+    private static final String PATH_TO_DEFAULT_IMG = "android.resource://com.example.habitsmasher/drawable/habit_temp_img";
+    private ImageDatabaseHelper _imageDatabaseHelper;
 
     /**
      * Gets the list of habit events
@@ -42,9 +44,8 @@ public class HabitEventList extends ArrayList{
      * Creates a new habit event and add its to the habit event list
      * @param startDate (Date): The start date of the habit event to add
      * @param comment (String): The comment of the habit event to add
-     * @param pictureUri (String): The URL of the picture of the habit event to add
      */
-    public void addHabitEventLocally(Date startDate, String comment, Uri pictureUri, String id) {
+    public void addHabitEventLocally(Date startDate, String comment, String id) {
         // Create habit event and add it to the list
         HabitEvent eventToAdd = new HabitEvent(startDate, comment, id);
         _habitEvents.add(eventToAdd);
@@ -147,6 +148,7 @@ public class HabitEventList extends ArrayList{
      * @param userId (String) The username of the current user
      * @param userId (String) The id of the current user
      * @param parentHabit (Habit) The current habit
+     * @param newImage (Uri) The new image
      */
     public void editHabitInDatabase(HabitEvent editedHabitEvent, String userId,
                                     Habit parentHabit, Uri newImage) {
@@ -194,22 +196,26 @@ public class HabitEventList extends ArrayList{
     }
 
     /**
-     * @param image The image to add to the database
-     * @param id The ID of the habit event corresponding to the image
+     * Adds an image to the database for a habit event
+     * @param userId (String) The id of the current user
+     * @param parentHabit (String) The parent habit
+     * @param image (Uri) The image to add to the db
+     * @param id (String) The id of the habit event
      */
     public void addImageToDatabase(String userId, Habit parentHabit, Uri image, String id) {
+        _imageDatabaseHelper = new ImageDatabaseHelper();
         Uri toAdd = image;
 
+        // If the user didn't select an image, choose the default one
         if (toAdd == null) {
-            image = Uri.parse("android.resource://com.example.habitsmasher/drawable/habit_temp_img");
+            image = Uri.parse(PATH_TO_DEFAULT_IMG);
 
         }
-        // Get firebase storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
 
-        StorageReference ref = storageReference.child("images/" + userId + "/" + parentHabit.getId() + "/" + id + "/" + "eventImage");
+        // Get storage reference
+        StorageReference ref = _imageDatabaseHelper.getHabitEventStorageReference(userId, parentHabit.getId(), id);
 
+        // Add image to database
         ref.putFile(image)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -225,6 +231,12 @@ public class HabitEventList extends ArrayList{
                 });
     }
 
+    /**
+     * Deletes an image from the db
+     * @param userId (String) The id of the current user
+     * @param parentHabit (Habit) The parent habit to the event
+     * @param toDelete (HabitEvent) The habit event to delete a picture for
+     */
     private void deleteHabitEventImageFromDb(String userId, Habit parentHabit, HabitEvent toDelete) {
         // Get firebase storage
         FirebaseStorage storage = FirebaseStorage.getInstance();

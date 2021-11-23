@@ -52,6 +52,7 @@ public class UserRegistrationFragment extends Fragment {
     private static final String USERS_COLLECTION_PATH = "Users";
     private static final String USERNAME_FIELD = "username";
     private static final String THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE = "This username is already taken!";
+    private static final String PATH_TO_DEFAULT_USER_IMG = "android.resource://com.example.habitsmasher/drawable/placeholder_profile_picture";
 
     private FirebaseAuth _auth;
     private ProgressBar _progressBar;
@@ -223,7 +224,7 @@ public class UserRegistrationFragment extends Fragment {
         Uri toUpload = _selectedImage;
 
         if (toUpload == null) {
-            toUpload = Uri.parse("android.resource://com.example.habitsmasher/drawable/placeholder_profile_picture");
+            toUpload = Uri.parse(PATH_TO_DEFAULT_USER_IMG);
         }
 
         // Get firebase storage
@@ -305,15 +306,10 @@ public class UserRegistrationFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch(requestCode) {
-            case 0:
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    // Set selected picture
-                    _selectedImage = imageReturnedIntent.getData();
-                    _profilePictureView.setImageURI(_selectedImage);
-                }
-                break;
+        if (resultCode == RESULT_OK) {
+            // Set selected picture
+            _selectedImage = imageReturnedIntent.getData();
+            _profilePictureView.setImageURI(_selectedImage);
         }
     }
 
