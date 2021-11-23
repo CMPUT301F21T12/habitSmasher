@@ -144,6 +144,26 @@ public class MainActivityTest {
     }
 
     @Test
+    public void navigateToUserProfile_logOut(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click on log out button
+        _solo.clickOnView(_solo.getView(R.id.logout_button));
+
+        // ensure login button is displayed
+        assertTextOnScreen("Login");
+    }
+
+    @Test
     public void followUserWithEmptyUsername(){
         logInTestUser();
 

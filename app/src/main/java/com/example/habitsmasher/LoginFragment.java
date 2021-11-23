@@ -137,7 +137,7 @@ public class LoginFragment extends Fragment {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     // if log in successful, redirect to home page
-                    showMessage(LOGIN_SUCCESSFUL_MESSAGE);
+                    showMessage(LOGIN_SUCCESSFUL_MESSAGE, Toast.LENGTH_SHORT);
 
                     DocumentReference userRef = getCurrentUserDocumentReference();
                     userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -147,11 +147,11 @@ public class LoginFragment extends Fragment {
 
                             saveUserInformation(user);
 
-                            navigateToFragmentWithAction(R.id.action_navigation_login_to_ProfileFragment);
+                            navigateToFragmentWithAction(R.id.action_navigation_login_to_HomeFragment);
                         }
                     });
                 } else {
-                    showMessage(INCORRECT_EMAIL_PASSWORD_MESSAGE);
+                    showMessage(INCORRECT_EMAIL_PASSWORD_MESSAGE, Toast.LENGTH_LONG);
                 }
                 _progressBar.setVisibility(View.GONE);
                 _bottomNav.setVisibility(View.VISIBLE);
@@ -224,11 +224,12 @@ public class LoginFragment extends Fragment {
     /**
      * This helper method shows a toast message to the screen
      * @param message message to display
+     * @param length the length of the message
      */
-    private void showMessage(String message) {
+    private void showMessage(String message, int length) {
         Toast.makeText(getContext(),
                        message,
-                       Toast.LENGTH_LONG).show();
+                       length).show();
     }
 
     @Override
