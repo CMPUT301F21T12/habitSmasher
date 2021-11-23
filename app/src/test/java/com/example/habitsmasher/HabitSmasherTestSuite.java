@@ -27,6 +27,7 @@ import org.junit.runners.Suite;
                      ClickListenerForCancelTest.class,
                      ClickListenerForDatePickerTest.class,
                      ClickListenerForDaysOfTheWeekTest.class,
+                     UserAccountHelperTest.class,
                      FailureListenerTest.class,
                      SuccessListenerTest.class,
                      SwipeListenerTest.class,
