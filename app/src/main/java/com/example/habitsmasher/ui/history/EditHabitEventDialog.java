@@ -24,9 +24,6 @@ import java.util.Date;
 /**
  * The EditHabitEventFragment class
  * Based on EditEventFragment, dialog which pops up and allows a user to edit habit events
- *
- *  Requesting location permissions and location code were sourced from
- *  https://developer.android.com/training/location
  */
 public class EditHabitEventDialog extends HabitEventDialog {
     // Initialize global variables

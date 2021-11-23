@@ -32,9 +32,15 @@ import com.google.android.gms.tasks.Task;
 
 /**
  * Class that spawns a map dialog that can be scrolled through
+ * and used to select a location
+ *
  * Embedding a map into a fragment using a mapview found here:
- * https://github.com/googlemaps/android-samples/blob/main/ApiDemos/java/app/src/gms/java/com/example/
- * mapdemo/RawMapViewDemoActivity.java
+ * https://github.com/googlemaps/android-samples/blob/main/ApiDemos/java/app/src/gms/java/com/
+ * example/mapdemo/RawMapViewDemoActivity.java
+ *
+ * Requesting a location came from following the tutorial here:
+ * https://developer.android.com/training/location/retrieve-current
+ *
  */
 public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
