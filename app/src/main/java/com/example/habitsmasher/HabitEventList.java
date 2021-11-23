@@ -203,7 +203,7 @@ public class HabitEventList extends ArrayList{
      * @param id (String) The id of the habit event
      */
     public void addImageToDatabase(String userId, Habit parentHabit, Uri image, String id) {
-        _imageDatabaseHelper = new ImageDatabaseHelper();
+        // _imageDatabaseHelper = new ImageDatabaseHelper();
         Uri toAdd = image;
 
         // If the user didn't select an image, choose the default one
@@ -213,7 +213,12 @@ public class HabitEventList extends ArrayList{
         }
 
         // Get storage reference
-        StorageReference ref = _imageDatabaseHelper.getHabitEventStorageReference(userId, parentHabit.getId(), id);
+        //StorageReference ref = _imageDatabaseHelper.getHabitEventStorageReference(userId, parentHabit.getId(), id);
+// Get firebase storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        StorageReference ref = storageReference.child("images/" + userId + "/" + parentHabit.getId() + "/" + id + "/" + "eventImage");
 
         // Add image to database
         ref.putFile(image)
