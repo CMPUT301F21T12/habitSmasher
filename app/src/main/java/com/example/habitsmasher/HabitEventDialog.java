@@ -50,6 +50,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     // codes for the different error messages that are displayed by the habit event dialog
     public static final int INCORRECT_COMMENT = 1;
     public static final int INCORRECT_DATE = 2;
+    public static final int LOCATION_NOT_RECORDED = 3;
 
     // fragment that spawned this habit event dialog
     protected HabitEventListFragment _habitEventListFragment;
@@ -186,6 +187,8 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
             case INCORRECT_DATE:
                 _errorText.setText("Please enter a start date");
                 break;
+            case LOCATION_NOT_RECORDED:
+                _errorText.setText("Location not recorded");
         }
     }
 

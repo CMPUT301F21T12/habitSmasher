@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -24,10 +25,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.CancellationToken;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 
 /**
@@ -61,21 +58,14 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.map_dialog, container, false);
+
+
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
         if (_selectedLocation == null) {
-            @SuppressLint("MissingPermission") Task<Location> locationTask = _fusedLocationClient
-                    .getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null);
-            // problem: location task never completes for some reason
-            while (!locationTask.isComplete());
-            Location location = locationTask.getResult();
-            if (location == null) {
-               // _habitEventDialog.displayErrorMessage();
-                getDialog().dismiss();
-            }
-            _selectedLocation = location;
+            getCurrentLocation();
         }
         _mapView = (MapView) view.findViewById(R.id.edit_map);
         _cancelButton = view.findViewById(R.id.cancel_map);
@@ -94,6 +84,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         _mapView.getMapAsync(this);
         return view;
     }
+    
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -159,19 +150,18 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        // TO DO: navigate map to current/selection location
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(googleMap.getMaxZoomLevel()));
-        LatLng coord = new LatLng(_selectedLocation.getLatitude(), _selectedLocation.getLongitude());
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(coord));
-        googleMap.addMarker(new MarkerOptions().position(coord).title("Habit Event Location"));
+        //LatLng coord = new LatLng(_selectedLocation.getLatitude(), _selectedLocation.getLongitude());
+        //googleMap.animateCamera(CameraUpdateFactory.newLatLng(coord));
+        //googleMap.addMarker(new MarkerOptions().position(coord).title("Habit Event Location"));
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
                 // select location
                 googleMap.clear();
                 googleMap.addMarker(new MarkerOptions().position(latLng).title("Habit Event Location"));
-                _selectedLocation.setLatitude(latLng.latitude);
-                _selectedLocation.setLongitude(latLng.longitude);
+                //_selectedLocation.setLatitude(latLng.latitude);
+                //_selectedLocation.setLongitude(latLng.longitude);
             }
         });
     }

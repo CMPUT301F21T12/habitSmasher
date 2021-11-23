@@ -59,6 +59,7 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_habit_event_view, container, false);
 
+        // only configure the map if the said habit event had a location saved
         if (_habitEvent.getLocation() != null) {
             _mapView = (MapView) view.findViewById(R.id.view_map);
             _mapView.onCreate(mapViewBundle);
@@ -142,6 +143,7 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        // get lat and long of habit event and center map at that location
         LatLng coord = new LatLng(_habitEvent.getLocation().getLatitude(),
                                   _habitEvent.getLocation().getLongitude());
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 20));

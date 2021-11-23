@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -108,8 +110,22 @@ public class HomeFragment extends ListFragment {
 
     @Override
     public void onStart() {
+        ActionBar supportActionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.show();
+        }
         super.onStart();
         _habitItemAdapter.startListening();
+
+    }
+
+    @Override
+    public void onResume() {
+        ActionBar supportActionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.show();
+        }
+        super.onResume();
     }
 
     @Override
