@@ -160,15 +160,10 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch(requestCode) {
-            case 0:
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    // Set selected picture
-                    _selectedImage = imageReturnedIntent.getData();
-                    _eventPictureView.setImageURI(_selectedImage);
-                }
-                break;
+        if (resultCode == RESULT_OK) {
+            // Set selected picture
+            _selectedImage = imageReturnedIntent.getData();
+            _eventPictureView.setImageURI(_selectedImage);
         }
     }
 }
