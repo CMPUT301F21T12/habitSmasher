@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
             _navController.navigate(R.id.user_login);
         }
 
+        setOnDestinationChangedListenerForNavController();
+    }
+
+    private void setOnDestinationChangedListenerForNavController() {
         _navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller,
@@ -73,8 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        }
+    }
 
     /**
      * This function allows for the user to navigate using the back button

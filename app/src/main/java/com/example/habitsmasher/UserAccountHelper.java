@@ -1,7 +1,5 @@
 package com.example.habitsmasher;
 
-import static androidx.test.InstrumentationRegistry.getContext;
-
 import android.content.Context;
 import android.widget.Toast;
 
@@ -16,6 +14,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+/**
+ * This helper class is responsible for storing any user account operations used during the login flow
+ * @author Rudy Patel
+ */
 public class UserAccountHelper {
     private static final String LOGIN_FAILED_MESSAGE = "Login failed!";
 

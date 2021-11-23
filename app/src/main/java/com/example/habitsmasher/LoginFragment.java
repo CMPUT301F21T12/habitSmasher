@@ -102,6 +102,10 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This method sets the click listener for the google sign up butotn
+     * @param view the current view
+     */
     private void setClickListenerForGoogleSignInButton(View view) {
         Button googleSignInButton = view.findViewById(R.id.google_login_button);
         googleSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +116,9 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    /**
+     * This method builds the google sign in request using the app's SHA1 token
+     */
     private void createGoogleSignInRequest() {
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -122,11 +129,22 @@ public class LoginFragment extends Fragment {
         _googleSignInClient = GoogleSignIn.getClient(getContext(), gso);
     }
 
+    /**
+     * This method uses the google sign in client and launches the sign in activity to select the
+     * user's google account
+     */
     private void signInWithGoogle() {
         Intent signInIntent = _googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /**
+     * This method is triggered when the google sign in activity is finished and a result is returned.
+     * This method is also responsible for signing in the user using the specified intent
+     * @param requestCode the code of the given request
+     * @param resultCode the code of the resulting result
+     * @param data the intent data passed down from the google sign in acivity
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -147,6 +165,11 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * This helper method uses the GoogleAuthProvider with the given id credential to sign in
+     * using Firebase
+     * @param idToken the id token of the associated credential
+     */
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         _auth.signInWithCredential(credential)
@@ -170,8 +193,13 @@ public class LoginFragment extends Fragment {
                                                             user.getEmail(),
                                                             GOOGLE_USER_PWD);
 
+                                 // once the user is successfully retrieved, add them to the db
                                  addUserToDatabaseIfUserDoesNotExist(googleUser);
+
+                                 // save their information to be used globally throughout the app
                                  saveUserInformation(googleUser);
+
+                                 // transition to the home screen
                                  navigateToFragmentWithAction(R.id.action_navigation_login_to_HomeFragment);
                              }
                          });
@@ -184,6 +212,10 @@ public class LoginFragment extends Fragment {
              });
     }
 
+    /**
+     * This helper method adds the google user to the database if they don't already exist
+     * @param googleUser the user to add
+     */
     private void addUserToDatabaseIfUserDoesNotExist(User googleUser) {
         FirebaseFirestore.getInstance()
                          .collection("Users")
