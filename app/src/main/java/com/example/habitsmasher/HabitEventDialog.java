@@ -77,7 +77,11 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     //add location button
     protected FloatingActionButton _addLocationButton;
 
-    protected Location _selectedLocation;
+    // location header
+    protected TextView _locationHeader;
+
+    // location of habit event in the form of a string
+    protected String _selectedLocation = "";
 
     private ActivityResultLauncher<String[]> _requestPermissionsLauncher;
 
@@ -96,6 +100,7 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         _confirmButton = view.findViewById(R.id.confirm_habit_event);
         _cancelButton = view.findViewById(R.id.cancel_habit_event);
         _addLocationButton = view.findViewById(R.id.add_location_button);
+        _locationHeader = view.findViewById(R.id.add_location_label);
     }
 
     /**
@@ -150,8 +155,11 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         mapDialog.show(getFragmentManager(), "MapDialog");
     }
 
-    public void selectLocation(Location location) {
+    public void selectLocation(String location) {
         _selectedLocation = location;
+        if (!_selectedLocation.equals("")) {
+            _locationHeader.setText("EDIT LOCATION");
+        }
     }
 
     /**

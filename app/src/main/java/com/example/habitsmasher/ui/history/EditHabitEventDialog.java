@@ -75,14 +75,11 @@ public class EditHabitEventDialog extends HabitEventDialog {
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
 
         _selectedLocation = _editHabitEvent.getLocation();
+        if (!_selectedLocation.equals("")) {
+            _locationHeader.setText("EDIT LOCATION");
+        }
 
         return view;
-    }
-
-    protected void handleLocationSelection() {
-        MapDialog mapDialog = new MapDialog(_selectedLocation);
-        mapDialog.setTargetFragment(this, 1);
-        mapDialog.show(getFragmentManager(), "MapDialog");
     }
 
     @Override
@@ -103,18 +100,10 @@ public class EditHabitEventDialog extends HabitEventDialog {
                 // Update the habit event in the database and locally
                 Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
                 HabitEvent editedHabitEvent;
-                if (_selectedLocation == null) {
-                     editedHabitEvent = new HabitEvent(newDate,
-                            eventComment,
-                            _editHabitEvent.getId());
-
-                }
-                else {
-                    editedHabitEvent = new HabitEvent(newDate,
+                editedHabitEvent = new HabitEvent(newDate,
                             eventComment,
                             _editHabitEvent.getId(),
                             _selectedLocation);
-                }
                 _errorText.setText("");
                 _habitEventListFragment.updateListAfterEdit(editedHabitEvent,_index);
 

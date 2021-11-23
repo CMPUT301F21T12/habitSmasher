@@ -12,10 +12,14 @@ import java.util.Date;
  * Pictures for habit events are not yet implemented
  */
 public class HabitEvent extends DatabaseEntity implements Serializable {
+
     private Date _date;
     private String _comment;
     private Uri _pictureUri;
-    private Location _location;
+
+    // string containing latitude and longitude of habit, unless not specified, in which it is
+    // an empty string
+    private String _location;
 
     // TODO: Fully integrate pictures
 
@@ -25,24 +29,32 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     public HabitEvent() {
         // Needed for firestore
     }
+
+    /**
+     * Constructor, creates new HabitEvent without location
+     * @param startDate (Date): The start date of the habit event
+     * @param comment (String): The comment of the habit event
+     * @param id (String): The unique ID of the habit event
+     */
     public HabitEvent(Date startDate, String comment, String id) {
         super(id);
         _date = startDate;
         _comment = comment;
-        _location = null;
+        _location = "";
     }
 
     /**
-     * Constructor, creates new HabitEvent with location
-     * @param startDate (Date): The start date of the habit event
-     * @param comment (String): The comment of the habit event
+     * Habit event constructor in form of string representation
+     * @param startDate
+     * @param comment
+     * @param id
+     * @param location
      */
-    public HabitEvent(Date startDate, String comment, String id, Location location) {
+    public HabitEvent(Date startDate, String comment, String id, String location) {
         super(id);
         _date = startDate;
         _comment = comment;
         _location = location;
-        // _pictureUri = pictureUri;
     }
 
     /**
@@ -96,14 +108,21 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
         this._pictureUri = pictureUri;
     }
 
+    /**
+     * Getter of string representation of location for Firebase storage
+     * @return
+     */
     @PropertyName("location")
-    public Location getLocation() {
+    public String getLocation() {
         return _location;
     }
 
-    public void setLocation(Location location) {
+    /**
+     * Setter of string representation of location for Firebase storage
+     * @return
+     */
+    public void setLocation(String location) {
         _location = location;
     }
-
 
 }

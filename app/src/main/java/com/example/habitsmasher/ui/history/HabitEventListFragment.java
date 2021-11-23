@@ -211,7 +211,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
                 String comment = (String) extractMap.get("comment");
                 Timestamp date = (Timestamp) extractMap.get("date");
-                Location location = (Location) extractMap.get("location");
+                String location = (String) extractMap.get("location");
                 String id = extractMap.get("id").toString();
 
                 // create the new habit event from the snapshot data and add to local list

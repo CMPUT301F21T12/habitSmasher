@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="28dp"
-            android:text="Button"
+            android:text="@string/cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:text="Button"
+            android:text="@string/confirm"
             app:layout_constraintBaseline_toBaselineOf="@+id/cancel_map"
             app:layout_constraintEnd_toStartOf="@+id/cancel_map"
             app:layout_constraintHorizontal_bias="1.0"

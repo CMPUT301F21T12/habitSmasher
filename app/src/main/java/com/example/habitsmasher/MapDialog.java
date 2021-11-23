@@ -25,6 +25,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 /**
@@ -43,14 +44,16 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     private static final String TAG = "MAP DIALOG";
 
-    private Location _selectedLocation;
+    private String _selectedLocation;
     private MapView _mapView;
     private Button _confirmButton;
     private Button _cancelButton;
     private HabitEventDialog _habitEventDialog;
     private FusedLocationProviderClient _fusedLocationClient;
+    private Bundle _mapViewBundle;
+    private boolean _mapCreated = false;
 
-    public MapDialog(Location location) {
+    public MapDialog(String location) {
         _selectedLocation = location;
     }
 
@@ -60,12 +63,9 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.map_dialog, container, false);
 
 
-        Bundle mapViewBundle = null;
+        _mapViewBundle = null;
         if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
-        }
-        if (_selectedLocation == null) {
-            getCurrentLocation();
+            _mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
         _mapView = (MapView) view.findViewById(R.id.edit_map);
         _cancelButton = view.findViewById(R.id.cancel_map);
@@ -79,12 +79,31 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
                 getDialog().dismiss();
             }
         });
-
-        _mapView.onCreate(mapViewBundle);
+        _mapView.onCreate(_mapViewBundle);
         _mapView.getMapAsync(this);
         return view;
     }
-    
+
+    /**
+     * If needed, retrieves the user's current location. Makes use of
+     * Firestore callback interface to prevent issues from asynchronous execution
+     * @param callback
+     */
+    private void getCurrentLocation(FirestoreCallback callback) {
+        _fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,
+                                  null)
+                             .addOnSuccessListener(location -> {
+                                 if (location != null) {
+                                     _selectedLocation = location.getLatitude() +
+                                                         " " + location.getLongitude();
+                                     callback.onCallback(false);
+                                 }
+                                 else {
+                                     callback.onCallback(true);
+                                 }
+                             });
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -127,7 +146,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     @Override
     public void onStop() {
         super.onStop();
-      _mapView.onStop();
+        _mapView.onStop();
     }
     
     @Override
@@ -150,18 +169,41 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(googleMap.getMaxZoomLevel()));
-        //LatLng coord = new LatLng(_selectedLocation.getLatitude(), _selectedLocation.getLongitude());
-        //googleMap.animateCamera(CameraUpdateFactory.newLatLng(coord));
-        //googleMap.addMarker(new MarkerOptions().position(coord).title("Habit Event Location"));
+        if (_selectedLocation.equals("")) {
+            getCurrentLocation(isLocationNull -> {
+                if (isLocationNull) {
+                    // location is recorded as null for some reason
+                    _habitEventDialog.displayErrorMessage(HabitEventDialog.LOCATION_NOT_RECORDED);
+                    getDialog().dismiss();
+                }
+                else {
+                   setUpMap(googleMap);
+                }
+            });
+        }
+        else {
+            setUpMap(googleMap);
+        }
+    }
+
+    /**
+     * Method that setups the Google Map snippet
+     * @param googleMap google map snippet
+     */
+    private void setUpMap(GoogleMap googleMap) {
+        String[] latLngPair = _selectedLocation.split(" ");
+        LatLng coordinate = new LatLng(Double.valueOf(latLngPair[0]),
+                Double.valueOf(latLngPair[1]));
+        googleMap.addMarker(new MarkerOptions().position(coordinate).title("Habit Event Location"));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate,
+                googleMap.getMaxZoomLevel()));
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
                 // select location
                 googleMap.clear();
                 googleMap.addMarker(new MarkerOptions().position(latLng).title("Habit Event Location"));
-                //_selectedLocation.setLatitude(latLng.latitude);
-                //_selectedLocation.setLongitude(latLng.longitude);
+                _selectedLocation = latLng.latitude + " " + latLng.longitude;
             }
         });
     }

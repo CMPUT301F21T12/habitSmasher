@@ -99,17 +99,10 @@ public class AddHabitEventDialog extends HabitEventDialog {
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
                     HabitEvent newEvent;
-                    if (_selectedLocation == null) {
-                        newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
-                                habitEventComment,
-                                DatabaseEntity.generateId());
-                    }
-                    else {
-                        newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
+                    newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
                                 habitEventComment,
                                 DatabaseEntity.generateId(),
                                 _selectedLocation);
-                    }
                     _errorText.setText("");
                     _habitEventListFragment.updateListAfterAdd(newEvent);
                     getDialog().dismiss();
