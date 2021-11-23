@@ -198,6 +198,12 @@ public class HabitEventList extends ArrayList{
      * @param id The ID of the habit event corresponding to the image
      */
     public void addImageToDatabase(String userId, Habit parentHabit, Uri image, String id) {
+        Uri toAdd = image;
+
+        if (toAdd == null) {
+            image = Uri.parse("android.resource://com.example.habitsmasher/drawable/habit_temp_img");
+
+        }
         // Get firebase storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
