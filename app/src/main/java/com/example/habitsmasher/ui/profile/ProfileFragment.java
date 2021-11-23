@@ -67,16 +67,23 @@ public class ProfileFragment extends Fragment {
         numberOfFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("FollowType", "Following");
                 // navigate to following fragment
+                navigateToFragmentWithAction(R.id.action_navigation_notifications_to_followListFragment, bundle);
             }
         });
     }
 
     private void setClickListenerForFollowersButton(TextView numberOfFollowers) {
+        // TODO: extract click listener
         numberOfFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("FollowType", "Followers");
                 // navigate to followers fragment
+                navigateToFragmentWithAction(R.id.action_navigation_notifications_to_followListFragment, bundle);
             }
         });
     }
@@ -95,6 +102,11 @@ public class ProfileFragment extends Fragment {
     private void navigateToFragmentWithAction(int actionId) {
         NavController controller = NavHostFragment.findNavController(_fragment);
         controller.navigate(actionId);
+    }
+
+    private void navigateToFragmentWithAction(int actionId, Bundle bundle) {
+        NavController controller = NavHostFragment.findNavController(_fragment);
+        controller.navigate(actionId, bundle);
     }
 
     @Override
