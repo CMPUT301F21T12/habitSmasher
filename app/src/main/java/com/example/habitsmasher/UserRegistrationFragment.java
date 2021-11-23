@@ -1,11 +1,19 @@
 package com.example.habitsmasher;
 
+import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
+
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -18,10 +26,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 
@@ -36,6 +49,8 @@ public class UserRegistrationFragment extends Fragment {
 
     private FirebaseAuth _auth;
     private ProgressBar _progressBar;
+    protected ImageView _profilePictureView;
+    protected Uri _selectedImage;
 
     @Nullable
     @Override
@@ -54,10 +69,13 @@ public class UserRegistrationFragment extends Fragment {
         Button registerButton = view.findViewById(R.id.registration_signup_button);
         Button backToLoginButton = view.findViewById(R.id.registration_go_back_to_login_button);
         _progressBar = view.findViewById(R.id.registration_progress_bar);
+        _profilePictureView = view.findViewById(R.id.registration_image);
 
         setClickListenerForBackToLoginButton(backToLoginButton);
 
         setClickListenerForRegisterButton(emailInput, passwordInput, usernameInput, registerButton);
+
+        setImageViewListener();
 
         return view;
     }
@@ -146,6 +164,39 @@ public class UserRegistrationFragment extends Fragment {
                                    }
                              }
                          });
+        addUserImageToDatabase(user.getId());
+    }
+
+    /**
+     * @param userId The ID of the user for which the picture is uploaded
+     */
+    public void addUserImageToDatabase(String userId) {
+        Uri toUpload = _selectedImage;
+
+        if (toUpload == null) {
+            toUpload = Uri.parse("android.resource://com.example.habitsmasher/drawable/placeholder_profile_picture");
+        }
+
+        // Get firebase storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        StorageReference ref = storageReference.child("images/" + userId + "/" + "userImage");
+
+        ref.putFile(toUpload)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d(TAG, "Image uploaded.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Image failed to upload");
+                        addUserImageToDatabase(userId);
+                    }
+                });
     }
 
     /**
@@ -209,5 +260,39 @@ public class UserRegistrationFragment extends Fragment {
         androidx.appcompat.app.ActionBar supportActionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (supportActionBar != null)
             supportActionBar.show();
+    }
+
+    /**
+     * Not touching this when refactoring until images are fully implemented for habit events
+     * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
+     * Override onActivityResult to handle when user has selected image
+     * @param requestCode
+     * @param resultCode
+     * @param imageReturnedIntent
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch(requestCode) {
+            case 0:
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    // Set selected picture
+                    _selectedImage = imageReturnedIntent.getData();
+                    _profilePictureView.setImageURI(_selectedImage);
+                }
+                break;
+        }
+    }
+
+    protected void setImageViewListener() {
+        _profilePictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open gallery to let user pick photo
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, 1);
+            }
+        });
     }
 }
