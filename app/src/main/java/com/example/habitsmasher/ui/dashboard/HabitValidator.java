@@ -75,11 +75,8 @@ public class HabitValidator {
         }
 
         // check that only one button is pressed, not both or neither
-        if (!(privacyButtons.isHabitPrivate() || privacyButtons.isHabitPublic())){
-            _fragment.displayErrorMessage(HabitDialog.INCORRECT_PRIVACY);
-            return false;
-        }
-        else if (privacyButtons.isHabitPrivate() && privacyButtons.isHabitPublic()){
+        if (!(privacyButtons.isHabitPrivate() || privacyButtons.isHabitPublic()) ||
+                (privacyButtons.isHabitPrivate() && privacyButtons.isHabitPublic())){
             _fragment.displayErrorMessage(HabitDialog.INCORRECT_PRIVACY);
             return false;
         }

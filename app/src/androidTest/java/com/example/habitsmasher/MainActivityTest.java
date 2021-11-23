@@ -247,6 +247,9 @@ public class MainActivityTest {
         // Select days
         setDaysInAddHabitDialogBox();
 
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
 
@@ -305,6 +308,9 @@ public class MainActivityTest {
         // Select days
         setDaysInAddHabitDialogBox();
 
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
 
@@ -344,6 +350,9 @@ public class MainActivityTest {
 
         // Select today
         setCurrentDayInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -404,6 +413,9 @@ public class MainActivityTest {
         // Select days
         setNonCurrentDayInAddHabitDialogBox();
 
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
 
@@ -451,6 +463,9 @@ public class MainActivityTest {
 
         // Select days
         setDaysInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -500,6 +515,9 @@ public class MainActivityTest {
 
         // Select days
         setDaysInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -552,6 +570,9 @@ public class MainActivityTest {
         // Select days
         setDaysInAddHabitDialogBox();
 
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
 
@@ -603,6 +624,9 @@ public class MainActivityTest {
         // Select days
         setDaysInAddHabitDialogBox();
 
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
 
@@ -650,6 +674,9 @@ public class MainActivityTest {
         // Select days
         setDaysInAddHabitDialogBox();
 
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
 
@@ -695,6 +722,9 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -749,7 +779,7 @@ public class MainActivityTest {
         setDaysInAddHabitDialogBox();
 
         // Select Public (public by default, leaving single fragment for consistancy
-        // setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -992,6 +1022,9 @@ public class MainActivityTest {
         // Select days
         setDaysInAddHabitDialogBox();
 
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
 
@@ -1051,6 +1084,9 @@ public class MainActivityTest {
 
         // Select days
         setDaysInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -1153,6 +1189,9 @@ public class MainActivityTest {
 
         // Select today
         setCurrentDayInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();
@@ -1813,6 +1852,9 @@ public class MainActivityTest {
 
         // Select days
         setDaysInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
 
         // Click confirm
         clickConfirmButtonInAddHabitDialogBox();

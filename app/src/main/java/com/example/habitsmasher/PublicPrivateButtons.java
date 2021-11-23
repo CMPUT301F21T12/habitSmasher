@@ -60,7 +60,9 @@ public class PublicPrivateButtons {
             try {
                 _publicButton.performClick();
             }
-            catch (Exception e){}
+            catch (Exception e){
+                Log.e(TAG, "PublicPrivateButtons: Buttons Not Found!", e);
+            }
 
             _publicSelected = true;
             _privateSelected = false;
@@ -71,7 +73,9 @@ public class PublicPrivateButtons {
             try {
                 _privateButton.performClick();
             }
-            catch (Exception e){}
+            catch (Exception e){
+                Log.e(TAG, "PublicPrivateButtons: Buttons Not Found!", e);
+            }
 
             _publicSelected = false;
             _privateSelected = true;
