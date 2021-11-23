@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,21 +43,42 @@ public class ProfileFragment extends Fragment {
 
         // get the UI elements
         TextView usernameTextView = view.findViewById(R.id.username);
-        TextView numberOfFollowers = view.findViewById(R.id.number_followers);
-        TextView numberOfFollowing = view.findViewById(R.id.number_following);
+        Button numberOfFollowersButton = view.findViewById(R.id.number_followers);
+        Button numberOfFollowingButton = view.findViewById(R.id.number_following);
         FloatingActionButton logoutButton = view.findViewById(R.id.logout_button);
 
         // set the UI elements
         UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(currentUserId,
-                                                                       numberOfFollowers,
-                                                                       numberOfFollowing);
+                                                                       numberOfFollowersButton,
+                                                                       numberOfFollowingButton);
         usernameTextView.setText("@" + user.getUsername());
         userDatabaseHelper.setFollowingCountOfUser();
         userDatabaseHelper.setFollowerCountOfUser();
 
         setClickListenerForLogoutButton(logoutButton);
+        setClickListenerForFollowersButton(numberOfFollowersButton);
+        setClickListenerForFollowingButton(numberOfFollowingButton);
 
         return view;
+    }
+
+    private void setClickListenerForFollowingButton(TextView numberOfFollowing) {
+        // TODO: extract click listener
+        numberOfFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // navigate to following fragment
+            }
+        });
+    }
+
+    private void setClickListenerForFollowersButton(TextView numberOfFollowers) {
+        numberOfFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // navigate to followers fragment
+            }
+        });
     }
 
     private void setClickListenerForLogoutButton(FloatingActionButton logoutButton) {
