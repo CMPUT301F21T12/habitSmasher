@@ -63,6 +63,7 @@ dependencies {
     implementation "io.grpc:grpc-okhttp:1.32.2"
     implementation 'androidx.test:monitor:1.4.0'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+
     // dependency for location support
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.0'

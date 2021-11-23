@@ -24,8 +24,10 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 
 /**
@@ -43,7 +45,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private Button _confirmButton;
     private Button _cancelButton;
     private HabitEventDialog _habitEventDialog;
-    protected FusedLocationProviderClient _fusedLocationClient;
+    private FusedLocationProviderClient _fusedLocationClient;
 
     public MapDialog(Location location) {
         _selectedLocation = location;
@@ -59,10 +61,9 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         }
         if (_selectedLocation == null) {
             @SuppressLint("MissingPermission") Task<Location> locationTask = _fusedLocationClient
-                    .getCurrentLocation(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY, null);
-            while (!locationTask.isComplete()) {
-                Log.d(TAG, "LOOPY");
-            };
+                    .getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null);
+            // problem: location task never completes for some reason
+            while (!locationTask.isComplete());
             Location location = locationTask.getResult();
             if (location == null) {
                // _habitEventDialog.displayErrorMessage();
