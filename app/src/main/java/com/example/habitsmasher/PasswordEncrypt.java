@@ -7,7 +7,7 @@ package com.example.habitsmasher;
 public class PasswordEncrypt {
 
     public static String encrypt(String password) {
-        int key = 117;
+        int key = 7;
         String newPassword = "";
         for (int i = 0; i < password.length(); i++) {
             if (password.charAt(i) > Math.abs(127-key)) {
