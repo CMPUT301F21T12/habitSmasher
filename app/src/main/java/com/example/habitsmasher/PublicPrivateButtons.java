@@ -121,8 +121,7 @@ public class PublicPrivateButtons {
      * @return Status of the public button
      */
     public boolean isHabitPublic(){
-        if (_publicSelected) return true;
-        else return false;
+        return _publicSelected;
     }
 
     /**
@@ -130,8 +129,7 @@ public class PublicPrivateButtons {
      * @return Status of the private button
      */
     public boolean isHabitPrivate(){
-        if (_privateSelected) return true;
-        else return false;
+        return _privateSelected;
     }
 
     /**

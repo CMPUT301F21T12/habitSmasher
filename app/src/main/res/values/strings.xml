@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">HabitSmasher</string>
     <string name="title_today">Today</string>
+    <string name="server_client_id">YOUR_SERVER_CLIENT_ID</string>
+    <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_label">Title:</string>
@@ -57,4 +59,5 @@
     <string name="forgot_password_message_dialog">Please enter your email</string>
     <string name="follow_user">Follow User</string>
     <string name="follow">Follow</string>
+    <string name="google">Google</string>
 </resources>

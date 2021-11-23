@@ -54,26 +54,9 @@ public class ProfileFragment extends Fragment {
         userDatabaseHelper.setFollowingCountOfUser();
         userDatabaseHelper.setFollowerCountOfUser();
 
-        setClickListenerForLogoutButton(logoutButton);
-
         return view;
     }
 
-    private void setClickListenerForLogoutButton(FloatingActionButton logoutButton) {
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-
-                navigateToFragmentWithAction(R.id.action_logout);
-            }
-        });
-    }
-
-    private void navigateToFragmentWithAction(int actionId) {
-        NavController controller = NavHostFragment.findNavController(_fragment);
-        controller.navigate(actionId);
-    }
 
     @Override
     public void onDestroyView() {

@@ -45,7 +45,8 @@ public class HabitValidator {
     public boolean isHabitValid(String habitTitle,
                                 String habitReason,
                                 String habitDate,
-                                DaysTracker tracker, PublicPrivateButtons privacyButtons) {
+                                DaysTracker tracker,
+                                PublicPrivateButtons privacyButtons) {
         Date parsedDate = checkHabitDateValid(habitDate);
 
         // checking title length
