@@ -10,8 +10,8 @@ public class PasswordEncrypt {
 
     /**
      * Caesar Cipher the password to store in the database.
-     * @param password
-     * @return
+     * @param password the user enters
+     * @return return the password in encrypted form
      */
     public static String encrypt(String password) {
         int key = 7;
