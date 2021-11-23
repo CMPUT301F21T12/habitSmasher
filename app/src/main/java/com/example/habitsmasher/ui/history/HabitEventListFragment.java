@@ -50,7 +50,6 @@ import java.util.UUID;
 /**
  * HabitEventListFragment class
  * Responsible for data and UI handling of the habit event list
- * Images for habit events are not implemented yet
  */
 public class HabitEventListFragment extends ListFragment<HabitEvent> {
     // Initialize variables

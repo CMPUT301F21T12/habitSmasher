@@ -20,6 +20,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.habitsmasher.HabitEvent;
+import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.example.habitsmasher.UserDatabaseHelper;
@@ -70,7 +71,10 @@ public class ProfileFragment extends Fragment {
         userDatabaseHelper.setFollowerCountOfUser();
 
         setClickListenerForLogoutButton(logoutButton);
-        fetchUserImageFromDB(currentUserId);
+
+        // Fetch profile picture from database
+        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
+        imageDatabaseHelper.fetchImagesFromDB(_userImageView, imageDatabaseHelper.getUserStorageReference(currentUserId));
 
         return view;
     }
@@ -94,31 +98,5 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-    private void fetchUserImageFromDB(String userId) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
-
-        StorageReference ref = storageReference.child("images/" + userId + "/" + "userImage");
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-
-        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                _userImage = bm;
-                _userImageView.setImageBitmap(_userImage);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Failed to get image");
-                // If the image hasn't finished uploading to the db yet, try again
-                fetchUserImageFromDB(userId);
-
-            }
-        });
     }
 }
