@@ -112,7 +112,7 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
         catch (ClassCastException e) {
             Log.e(TAG, "Exception" + e.getMessage());
         }
-        _fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        _fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
     }
 
     @Override
