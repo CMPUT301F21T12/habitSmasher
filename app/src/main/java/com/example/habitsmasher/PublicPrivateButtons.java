@@ -29,42 +29,54 @@ public class PublicPrivateButtons {
      * @param view The view that has the buttons.
      */
     public PublicPrivateButtons(View view){
-        // get the buttons
-        _publicButton = view.findViewById(R.id.public_button);
-        _privateButton = view.findViewById(R.id.private_button);
-
-        // set the public button as the default button.
-        _publicButton.performClick();
-        _publicButton.setClickable(false);
-        _publicSelected = true;
-        _privateSelected = false;
-        Log.d("BUTTONS", "Standard const., public="+_publicSelected+", private="+_privateSelected);
-        Log.d("BUTTONS", "Is button clickable? " + _publicButton.isClickable());
-
+        // get the buttons if they exist
+        try {
+            _publicButton = view.findViewById(R.id.public_button);
+            _privateButton = view.findViewById(R.id.private_button);
+        }
+        catch (Exception e){
+            Log.e(TAG, "PublicPrivateButtons: Buttons Not Found!", e);
+        }
     }
 
     /**
-     * This constructor is used whenever a habit is being viewed after creation, such as in {@link com.example.habitsmasher.ui.dashboard.EditHabitFragment}.
+     * This constructor is used whenever a habit is being viewed after creation, such as in {@link com.example.habitsmasher.ui.dashboard.EditHabitDialog}.
      * @param view The view that has the buttons.
      * @param isPublic Whether the habit is public or not.
      */
     public PublicPrivateButtons(View view, boolean isPublic){
-        // get the buttons
-        _publicButton = view.findViewById(R.id.public_button);
-        _privateButton = view.findViewById(R.id.private_button);
-
-        Log.d(TAG, String.valueOf(isPublic));
+        // get the buttons if they exist
+        try {
+            _publicButton = view.findViewById(R.id.public_button);
+            _privateButton = view.findViewById(R.id.private_button);
+        }
+        catch (Exception e){
+            Log.e(TAG, "PublicPrivateButtons: Buttons Not Found!", e);
+        }
 
         // if its public, click the public button. if not, click the private button
         if (isPublic){
-            _publicButton.performClick();
-            _publicButton.setClickable(false);
+            // Catch error when buttons are not loaded
+            try {
+                _publicButton.performClick();
+            }
+            catch (Exception e){
+                Log.e(TAG, "PublicPrivateButtons: Buttons Not Found!", e);
+            }
+
             _publicSelected = true;
             _privateSelected = false;
         }
+
         else{
-            _privateButton.performClick();
-            _privateButton.setClickable(false);
+            // Catch error when buttons are not loaded
+            try {
+                _privateButton.performClick();
+            }
+            catch (Exception e){
+                Log.e(TAG, "PublicPrivateButtons: Buttons Not Found!", e);
+            }
+
             _publicSelected = false;
             _privateSelected = true;
         }
@@ -76,51 +88,59 @@ public class PublicPrivateButtons {
      * only one button may be clicked at a time.
      */
     public void setClickListeners(){
-        // on click listeners and logic behind the buttons switching
-        // TODO: Check interactions when the selected button is selected again
-        // preferably make it unselectable
-
+        // track whether the button is selected or not
         _publicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // if we check the public box, uncheck the private box
-                if (_privateSelected){
-                    _privateButton.performClick();
-                    _privateSelected = false;
-                    _publicSelected = true;
-
+                if (_publicSelected){
+                    _publicSelected = false;
                 }
-                // make only the private button clickable
-                _publicButton.setClickable(false);
-                _privateButton.setClickable(true);
+                else {
+                    _publicSelected = true;
+                }
             }
         });
 
+        // track whether the button is selected or not
         _privateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // if we check the private box, uncheck the public box
-                if (_publicSelected){
-                    _publicButton.performClick();
-                    _publicSelected = false;
-                    _privateSelected = true;
-
+                if (_privateSelected){
+                    _privateSelected = false;
                 }
-                // make only the public button clickable
-                _publicButton.setClickable(true);
-                _privateButton.setClickable(false);
+                else{
+                    _privateSelected = true;
+                }
             }
         });
     }
 
     /**
-     * Returns whether the public button is selected or not. Logically, if the public button is
-     * selected the private button is unselected, and vice versa.
-     * @return
+     * Returns whether the public button is selected or not.
+     * @return Status of the public button
      */
     public boolean isHabitPublic(){
-        if (_publicSelected) return true;
-        else return false;
+        return _publicSelected;
+    }
+
+    /**
+     * Returns whether the private button is selected or not
+     * @return Status of the private button
+     */
+    public boolean isHabitPrivate(){
+        return _privateSelected;
+    }
+
+    /**
+     * Sets both buttons to whatever state given.
+     * @param publicButton the new public button state
+     * @param privateButton the new private button state
+     */
+    public void setButtons(boolean publicButton, boolean privateButton){
+        // This is actually a method I'm using for unit testing the validator
+        _publicSelected = publicButton;
+        _privateSelected = privateButton;
     }
 
 
