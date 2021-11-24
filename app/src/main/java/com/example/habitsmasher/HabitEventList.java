@@ -203,22 +203,17 @@ public class HabitEventList extends ArrayList{
      * @param id (String) The id of the habit event
      */
     public void addImageToDatabase(String userId, Habit parentHabit, Uri image, String id) {
-        // _imageDatabaseHelper = new ImageDatabaseHelper();
         Uri toAdd = image;
+
+        // Get firebase storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+        StorageReference ref = getHabitEventStorageReference(userId, parentHabit.getId(), id, storageReference);
 
         // If the user didn't select an image, choose the default one
         if (toAdd == null) {
             image = Uri.parse(PATH_TO_DEFAULT_IMG);
-
         }
-
-        // Get storage reference
-        //StorageReference ref = _imageDatabaseHelper.getHabitEventStorageReference(userId, parentHabit.getId(), id);
-// Get firebase storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
-
-        StorageReference ref = storageReference.child("images/" + userId + "/" + parentHabit.getId() + "/" + id + "/" + "eventImage");
 
         // Add image to database
         ref.putFile(image)
@@ -247,7 +242,7 @@ public class HabitEventList extends ArrayList{
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
 
-        StorageReference ref = storageReference.child("images/" + userId + "/" + parentHabit.getId() + "/" + toDelete.getId() + "/" + "eventImage");
+        StorageReference ref = getHabitEventStorageReference(userId, parentHabit.getId(), toDelete.getId(), storageReference);
         ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -259,5 +254,17 @@ public class HabitEventList extends ArrayList{
                 Log.d(TAG, "Failed to delete image");
             }
         });
+    }
+
+    /**
+     * Gets the storage reference of a habit event image
+     * @param userId (String): The Id of the current user
+     * @param habitId (String): The Id of the parent habit event
+     * @param eventId (String): The id of the specific habit event
+     * @param ref (StorageReference): The parent storage reference
+     * @return Reference to the new image location
+     */
+    private StorageReference getHabitEventStorageReference(String userId, String habitId, String eventId, StorageReference ref) {
+        return ref.child("images/" + userId + "/" + habitId + "/" + eventId + "/eventImage");
     }
 }
