@@ -1,17 +1,9 @@
 package com.example.habitsmasher.ui.history;
 
-import static android.content.ContentValues.TAG;
-
-import android.app.DatePickerDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +12,8 @@ import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventDialog;
+import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
 
@@ -39,7 +28,6 @@ public class EditHabitEventDialog extends HabitEventDialog {
     private final EditHabitEventDialog _editFragment = this;
     private final String _userId;
     private final Habit _parentHabit;
-    private Bitmap _habitImage;
 
     /**
      * Default constructor
@@ -86,7 +74,9 @@ public class EditHabitEventDialog extends HabitEventDialog {
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
 
-        fetchEventImageFromDB();
+        // Fetch image from database
+        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
+        imageDatabaseHelper.fetchImagesFromDB(_eventPictureView, imageDatabaseHelper.getHabitEventStorageReference(_userId, _parentHabit.getId(), _editHabitEvent.getId()));
 
         return view;
     }
@@ -116,30 +106,6 @@ public class EditHabitEventDialog extends HabitEventDialog {
 
                 // Close dialog
                 getDialog().dismiss();
-            }
-        });
-    }
-
-    private void fetchEventImageFromDB() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
-
-        StorageReference ref = storageReference.child("images/" + _userId + "/" + _parentHabit.getId() + "/" + _editHabitEvent.getId() + "/eventImage");
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-
-        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                _habitImage = bm;
-                _eventPictureView.setImageBitmap(_habitImage);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                fetchEventImageFromDB();
-                Log.d(TAG, "Failed to get image");
             }
         });
     }

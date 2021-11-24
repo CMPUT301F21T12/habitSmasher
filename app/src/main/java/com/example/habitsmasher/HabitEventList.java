@@ -44,6 +44,7 @@ public class HabitEventList extends ArrayList{
      * Creates a new habit event and add its to the habit event list
      * @param startDate (Date): The start date of the habit event to add
      * @param comment (String): The comment of the habit event to add
+     * @param id (String): The id of the habit event to add
      */
     public void addHabitEventLocally(Date startDate, String comment, String id) {
         // Create habit event and add it to the list
