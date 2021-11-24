@@ -20,6 +20,8 @@ import com.example.habitsmasher.UserDatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
+
 /**
  * UI class that represents and specifies the behaviour of the user's profile screen
  * Currently, only displays information of a test user
@@ -35,7 +37,7 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         // create the sample user
-        User user = new User("1", "TestUser", "123@gmail.com", "123");
+        User user = new User("1", "TestUser", "123@gmail.com", "123", new ArrayList<String>(), new ArrayList<String>());
 
         SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
         user.setUsername(sharedPref.getString(USERNAME_SHARED_PREF_TAG, "user"));
@@ -62,7 +64,7 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void setClickListenerForFollowingButton(TextView numberOfFollowing) {
+    private void setClickListenerForFollowingButton(Button numberOfFollowing) {
         // TODO: extract click listener
         numberOfFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +77,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void setClickListenerForFollowersButton(TextView numberOfFollowers) {
+    private void setClickListenerForFollowersButton(Button numberOfFollowers) {
         // TODO: extract click listener
         numberOfFollowers.setOnClickListener(new View.OnClickListener() {
             @Override

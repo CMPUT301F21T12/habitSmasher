@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -85,7 +84,7 @@ public class MainActivityTest {
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
-                                      TEST_USER_PASSWORD);
+                                      TEST_USER_PASSWORD, , );
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -1450,7 +1449,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyUsername_signUpFails() {
-        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD);
+        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD, , );
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1465,7 +1464,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyEmail_signUpFails() {
-        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD);
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD, , );
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1480,7 +1479,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyPassword_signUpFails() {
-        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "");
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "", , );
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1495,7 +1494,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_usernameExists_emailExists_signUpFails() {
-        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD);
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD, , );
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1510,7 +1509,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_usernameExists_newEmail_signUpFails() {
-        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD);
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD, , );
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 

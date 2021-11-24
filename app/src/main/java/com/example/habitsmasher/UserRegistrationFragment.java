@@ -26,6 +26,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -161,7 +162,9 @@ public class UserRegistrationFragment extends Fragment {
                          User user = new User(_auth.getUid(),
                                               username,
                                               email,
-                                              password);
+                                              password,
+                                              new ArrayList<String>(),
+                                              new ArrayList<String>());
 
                          addNewUserToDatabase(user);
 

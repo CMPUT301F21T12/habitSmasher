@@ -12,7 +12,7 @@ public class UserTest {
 
     @Before
     public void setUp() {
-        _user = new User("1", "testUser", "123@gmail.com", "123");
+        _user = new User("1", "testUser", "123@gmail.com", "123", , );
     }
 
     @Test
