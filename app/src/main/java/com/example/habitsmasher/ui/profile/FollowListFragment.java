@@ -76,6 +76,16 @@ public class FollowListFragment extends ListFragment<User> {
         return view;
     }
 
+    public void onStart(){
+        super.onStart();
+        _followItemAdapter.startListening();
+    }
+
+    public void onStop(){
+        super.onStop();
+        _followItemAdapter.stopListening();
+    }
+
     @Override
     protected Query getListFromFirebase() {
         DocumentReference sampleDocument = _db.collection("Users").document(_user.getId());
