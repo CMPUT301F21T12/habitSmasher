@@ -33,6 +33,8 @@ public class EditHabitEventDialog extends HabitEventDialog {
      * Default constructor
      * @param index (int) The index of the habit to edit within the list
      * @param editHabitEvent (HabitEvent) The habit event to edit
+     * @param userId (string) The id of the user editing the event
+     * @param parentHabit (Habit) The habit for the event being edited
      */
     public EditHabitEventDialog(int index, HabitEvent editHabitEvent, String userId, Habit parentHabit) {
         _index = index;

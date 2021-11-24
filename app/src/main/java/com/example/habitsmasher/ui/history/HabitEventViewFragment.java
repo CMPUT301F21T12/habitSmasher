@@ -1,36 +1,23 @@
 package com.example.habitsmasher.ui.history;
-
-import static android.content.ContentValues.TAG;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
+import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.text.SimpleDateFormat;
 
 public class HabitEventViewFragment extends Fragment {
     // Habit event being displayed
     private HabitEvent _habitEvent;
     private Habit _parentHabit;
-    private Bitmap _habitImage;
     private String _userId;
     ImageView _eventImageView;
 
@@ -69,31 +56,9 @@ public class HabitEventViewFragment extends Fragment {
         eventDateTextBox.setText(simpleDateFormat.format(_habitEvent.getDate()));
 
         // Set image
-        fetchEventImageFromDB();
+        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
+        imageDatabaseHelper.fetchImagesFromDB(_eventImageView, imageDatabaseHelper.getHabitEventStorageReference(_userId, _parentHabit.getId(), _habitEvent.getId()));
 
         return view;
-    }
-
-    private void fetchEventImageFromDB() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
-
-        StorageReference ref = storageReference.child("images/" + _userId + "/" + _parentHabit.getId() + "/" + _habitEvent.getId() + "/eventImage");
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-
-        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                _habitImage = bm;
-                _eventImageView.setImageBitmap(_habitImage);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Failed to get image");
-            }
-        });
     }
 }
