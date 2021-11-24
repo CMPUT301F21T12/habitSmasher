@@ -4,19 +4,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
+import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
-
 import java.text.SimpleDateFormat;
 
 /**
@@ -63,10 +63,17 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
 
     @Override
     public void onBindViewHolder(@NonNull HabitEventViewHolder holder, int position, @NonNull HabitEvent habitEvent) {
+        // Create image database helper and fetch image
+        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
+        imageDatabaseHelper.fetchImagesFromDB(holder._habitEventImage,
+                imageDatabaseHelper.getHabitEventStorageReference(
+                        _userId,
+                        _parentHabit.getId(),
+                        habitEvent.getId()));
+
         // Set UI elements of habit event
         holder._habitEventDate.setText(new SimpleDateFormat(DATE_FORMAT).format(habitEvent.getDate()));
         holder._habitEventComment.setText(habitEvent.getComment());
-        // TODO: Implement image setting too
     }
 
     /**
@@ -76,7 +83,7 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         // List of UI elements
         private final TextView _habitEventDate;
         private final TextView _habitEventComment;
-        // private final ImageView _habitEventImage;
+        private final ImageView _habitEventImage;
 
         /**
          * Default constructor
@@ -92,7 +99,7 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
             // Connect UI elements
             _habitEventDate = itemView.findViewById(R.id.habit_event_date);
             _habitEventComment = itemView.findViewById(R.id.habit_event_comment);
-            // _habitEventImage = itemView.findViewById(R.id.habit_event_image);
+            _habitEventImage = itemView.findViewById(R.id.habit_event_image);
         }
     }
 
