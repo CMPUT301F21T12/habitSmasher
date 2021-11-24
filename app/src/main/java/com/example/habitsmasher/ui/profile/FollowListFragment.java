@@ -2,7 +2,6 @@ package com.example.habitsmasher.ui.profile;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +16,14 @@ import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.example.habitsmasher.UserDatabaseHelper;
-import com.example.habitsmasher.ui.FollowList;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,7 +34,7 @@ public class FollowListFragment extends ListFragment<User> {
     private User _user;
     private String _followType;
     private Context _context;
-    private FollowList _followList;
+    private ArrayList<String> _followList;
     private FollowItemAdapter _followItemAdapter;
 
     @Nullable
@@ -48,7 +44,6 @@ public class FollowListFragment extends ListFragment<User> {
         _context = getContext();
 
         _user = UserDatabaseHelper.getCurrentUser(_context);
-        //_followList = _user.getFollowers();
 
         if(getArguments() != null){
             Bundle arguments = getArguments();
@@ -69,9 +64,13 @@ public class FollowListFragment extends ListFragment<User> {
             Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(_followType + " List");
             return view;
         }
-
+        if (_followType.equals("Followers")) {
+            _followList = _user.getFollowers();
+        } else {
+            _followList = _user.getUsersFollowing();
+        }
         //populateList(query);
-        _followItemAdapter = new FollowItemAdapter(options, _user.getFollowers(), _user.getUsername());
+        _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getUsername());
         // Inflate habit event list view
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
         View view = inflater.inflate(R.layout.fragment_follow_list, container, false);
@@ -107,11 +106,9 @@ public class FollowListFragment extends ListFragment<User> {
 
         Map<String, Object> objectMap = querySnapshotTask.getResult().getData();
 
-        ArrayList<String> followList = (ArrayList<String>) objectMap.get("followers");
+        ArrayList<String> followList = (ArrayList<String>) objectMap.get(_followType.toLowerCase());
 
-        //return _db.collection("Users").whereIn("id", followList);
-
-        if(followList != null) {
+        if(followList != null && !followList.isEmpty()) {
             return _db.collection("Users").whereIn("id", followList);
         }
         return null;
@@ -120,47 +117,10 @@ public class FollowListFragment extends ListFragment<User> {
 
     @Override
     protected void populateList(Query query) {
-        //get all of the habits
-        Task<QuerySnapshot> querySnapshotTask = query.get();
-
-        /*
-        populate HabitList with current Habits and habit IDs to initialize state to match
-        database, fills when habitList is empty and snapshot is not, which is only
-        when app is initially launched
-        */
-        if (_followList.getFollowList().isEmpty()) {
-            // wait for all the snapshots to come in
-            while (!querySnapshotTask.isComplete()) ;
-
-            // make a list of all of the habit snapshots
-            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
-
-            // convert all of the snapshots into proper habits
-            for (int i = 0; i < snapshotList.size(); i++) {
-                // get the data and convert to hashmap, also print to log
-                Map<String, Object> extractMap = snapshotList.get(i).getData();
-                Log.d(TAG, extractMap.toString());
-
-                // get all of the data from the snapshot
-                ArrayList<String> followers = (ArrayList<String>) extractMap.get("followers");
-                ArrayList<String> following = (ArrayList<String>) extractMap.get("following");
-                String id = (String) extractMap.get("id");
-                String email = (String) extractMap.get("email");
-                String username = (String) extractMap.get("username");
-                String password = (String) extractMap.get("password");
-
-                // create a new habit with the snapshot data
-                User addUser = new User(id, username, email, password, followers, following);
-
-                // add the habit to the local list
-                //_followList.addUserLocal(addUser);
-            }
-        }
     }
 
     @Override
     protected void openAddDialogBox() {
-
     }
 
     /**
@@ -197,11 +157,9 @@ public class FollowListFragment extends ListFragment<User> {
 
     @Override
     public void updateListAfterAdd(User addedObject) {
-
     }
 
     @Override
     public void updateListAfterEdit(User editedObject, int pos) {
-
     }
 }

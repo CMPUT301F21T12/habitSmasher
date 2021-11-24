@@ -1,7 +1,5 @@
 package com.example.habitsmasher.ui.profile;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,23 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
-import com.example.habitsmasher.listeners.FailureListener;
-import com.example.habitsmasher.listeners.SuccessListener;
-import com.example.habitsmasher.ui.FollowList;
-import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.FollowViewHolder> {
     private static ArrayList<String> _followList;

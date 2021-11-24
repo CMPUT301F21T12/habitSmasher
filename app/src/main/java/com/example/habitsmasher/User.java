@@ -17,8 +17,8 @@ public class User {
     private String _password;
     private String _email;
     private String _id;
-    private ArrayList<String> _followers;
-    private ArrayList<String> _following;
+    private ArrayList<String> _followers = new ArrayList<String>();
+    private ArrayList<String> _following = new ArrayList<String>();
     private Image _profilePicture;
     private static final HabitList _habits = new HabitList();
 
