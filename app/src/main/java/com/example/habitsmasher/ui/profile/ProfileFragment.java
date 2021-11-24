@@ -29,8 +29,6 @@ public class ProfileFragment extends Fragment {
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
 
     private ProfileFragment _fragment = this;
-    private TextView _numberOfFollowers;
-    private TextView _numberOfFollowing;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,38 +42,21 @@ public class ProfileFragment extends Fragment {
 
         // get the UI elements
         TextView usernameTextView = view.findViewById(R.id.username);
-        _numberOfFollowers = view.findViewById(R.id.number_followers);
-        _numberOfFollowing = view.findViewById(R.id.number_following);
+        TextView numberOfFollowers = view.findViewById(R.id.number_followers);
+        TextView numberOfFollowing = view.findViewById(R.id.number_following);
         FloatingActionButton logoutButton = view.findViewById(R.id.logout_button);
 
         // set the UI elements
         UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(currentUserId,
-                                                                       _numberOfFollowers,
-                                                                       _numberOfFollowing);
+                                                                       numberOfFollowers,
+                                                                       numberOfFollowing);
         usernameTextView.setText("@" + user.getUsername());
         userDatabaseHelper.setFollowingCountOfUser();
         userDatabaseHelper.setFollowerCountOfUser();
 
-        setClickListenerForLogoutButton(logoutButton);
-
         return view;
     }
 
-    private void setClickListenerForLogoutButton(FloatingActionButton logoutButton) {
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-
-                navigateToFragmentWithAction(R.id.action_logout);
-            }
-        });
-    }
-
-    private void navigateToFragmentWithAction(int actionId) {
-        NavController controller = NavHostFragment.findNavController(_fragment);
-        controller.navigate(actionId);
-    }
 
     @Override
     public void onDestroyView() {

@@ -48,6 +48,8 @@ public class MainActivityTest {
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
     private static final String NO_DAYS_SELECTED_ERROR_MESSAGE = "Please select a weekly schedule";
     private static final String HABIT_EVENT_COMMENT_ERROR_MESSAGE = "Incorrect habit event comment entered";
+    private static final String CANNOT_FOLLOW_YOURSELF_MESSAGE = "You cannot follow yourself!";
+    private static final String THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE = "This username is already taken!";
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
     private static final String DELETE_BUTTON = "DELETE";
@@ -74,7 +76,7 @@ public class MainActivityTest {
     private static final String FORGOT_PASSWORD_TEXTVIEW = "Forgot Password?";
     private static final String CONFIRM_BUTTON = "Confirm";
     private static final String EMAIL_SENT_MESSAGE = "Email sent, please check your email";
-    private static final String UNREGISTERED_EMAIL = "unregisteredEmail@gamil.com";
+    private static final String UNREGISTERED_EMAIL = "unregisteredEmail@gmail.com";
     private static final String EMAIL_DOES_NOT_EXIST = "Entered email is not registered";
     private static final String EMPTY_USERNAME_ERROR_MESSAGE = "Please enter a username!";
     private static final String FOLLOW = "Follow";
@@ -142,6 +144,26 @@ public class MainActivityTest {
     }
 
     @Test
+    public void navigateToUserProfile_logOut(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click on log out button
+        _solo.clickOnView(_solo.getView(R.id.logout_button));
+
+        // ensure login button is displayed
+        assertTextOnScreen("Login");
+    }
+
+    @Test
     public void followUserWithEmptyUsername(){
         logInTestUser();
 
@@ -162,6 +184,32 @@ public class MainActivityTest {
 
         // ensure proper error message displayed
         assertTextOnScreen(EMPTY_USERNAME_ERROR_MESSAGE);
+    }
+
+    @Test
+    public void followYourself_followFails(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click follow user search button
+        _solo.clickOnView(_solo.getView(R.id.follow_user_search_button));
+
+        // enter an invalid username
+        _solo.enterText(_solo.getEditText("Username"), TEST_USER_USERNAME);
+
+        // click follow button
+        _solo.clickOnButton(FOLLOW);
+
+        // ensure proper error message displayed
+        assertTextOnScreen(CANNOT_FOLLOW_YOURSELF_MESSAGE);
     }
 
     @Test
@@ -1463,6 +1511,36 @@ public class MainActivityTest {
         _solo.clickOnButton(SIGN_UP_TEXT);
 
         assertTextOnScreen(PASSWORD_IS_REQUIRED);
+    }
+
+    @Test
+    public void signUpNewUser_usernameExists_emailExists_signUpFails() {
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD);
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        _solo.enterText(_solo.getEditText("Username"), newUser.getUsername());
+        _solo.enterText(_solo.getEditText("Email"), newUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), newUser.getPassword());
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        assertTextOnScreen(THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE);
+    }
+
+    @Test
+    public void signUpNewUser_usernameExists_newEmail_signUpFails() {
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD);
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        _solo.enterText(_solo.getEditText("Username"), newUser.getUsername());
+        _solo.enterText(_solo.getEditText("Email"), newUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), newUser.getPassword());
+
+        _solo.clickOnButton(SIGN_UP_TEXT);
+
+        assertTextOnScreen(THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE);
     }
 
     @Test
