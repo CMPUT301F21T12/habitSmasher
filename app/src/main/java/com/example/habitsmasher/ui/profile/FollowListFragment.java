@@ -57,11 +57,18 @@ public class FollowListFragment extends ListFragment<User> {
 
         // query firebase for all habits that correspond to the current user
         Query query = getListFromFirebase();
-
-        // populate the list with existing items in the database
-        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
-                .setQuery(query, User.class)
-                .build();
+        FirestoreRecyclerOptions<User> options;
+        if(query != null){
+            // populate the list with existing items in the database
+            options = new FirestoreRecyclerOptions.Builder<User>()
+                    .setQuery(query, User.class)
+                    .build();
+        }
+        else{
+            View view = inflater.inflate(R.layout.fragment_follow_list, container, false);
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(_followType + " List");
+            return view;
+        }
 
         //populateList(query);
         _followItemAdapter = new FollowItemAdapter(options, _user.getFollowers(), _user.getUsername());
@@ -78,12 +85,16 @@ public class FollowListFragment extends ListFragment<User> {
 
     public void onStart(){
         super.onStart();
-        _followItemAdapter.startListening();
+        if (_followItemAdapter != null) {
+            _followItemAdapter.startListening();
+        }
     }
 
     public void onStop(){
         super.onStop();
-        _followItemAdapter.stopListening();
+        if (_followItemAdapter != null) {
+            _followItemAdapter.stopListening();
+        }
     }
 
     @Override
@@ -98,7 +109,13 @@ public class FollowListFragment extends ListFragment<User> {
 
         ArrayList<String> followList = (ArrayList<String>) objectMap.get("followers");
 
-        return _db.collection("Users").whereIn("id", followList);
+        //return _db.collection("Users").whereIn("id", followList);
+
+        if(followList != null) {
+            return _db.collection("Users").whereIn("id", followList);
+        }
+        return null;
+
     }
 
     @Override
