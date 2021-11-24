@@ -36,6 +36,7 @@ import com.example.habitsmasher.R;
  */
 public class AddHabitEventDialog extends HabitEventDialog {
 
+    private HabitEvent _newEvent;
     private AddHabitEventDialog _addFragment = this;
 
     @Nullable
@@ -61,14 +62,7 @@ public class AddHabitEventDialog extends HabitEventDialog {
         setConfirmButtonListener();
 
         // Add listener to image view (not touching this during refactoring until images are done)
-        _eventPictureView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Open gallery to let user pick photo
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto, 1);
-            }
-        });
+        setImageViewListener();
 
         return view;
     }
@@ -87,38 +81,16 @@ public class AddHabitEventDialog extends HabitEventDialog {
                 // Check if event data is valid
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
-                    HabitEvent newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
+                    _newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
                             habitEventComment,
                             DatabaseEntity.generateId());
                     _errorText.setText("");
-                    _habitEventListFragment.updateListAfterAdd(newEvent);
+                    _habitEventListFragment.addHabitEvent(_newEvent, _selectedImage);
+
                     getDialog().dismiss();
                 }
 
             }
         });
-    }
-
-    /**
-     * Not touching this when refactoring until images are fully implemented for habit events
-     * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
-     * Override onActivityResult to handle when user has selected image
-     * @param requestCode
-     * @param resultCode
-     * @param imageReturnedIntent
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch(requestCode) {
-            case 0:
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    // Set selected picture
-                    _selectedImage = imageReturnedIntent.getData();
-                    _eventPictureView.setImageURI(_selectedImage);
-                }
-                break;
-        }
     }
 }

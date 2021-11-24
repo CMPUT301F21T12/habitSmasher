@@ -7,7 +7,7 @@
     android:background="@color/background_color">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/view_event_image"
         android:layout_width="180dp"
         android:layout_height="200dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,7 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toEndOf="@+id/view_event_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -39,7 +39,7 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/view_event_image" />
 
     <TextView
         android:id="@+id/view_event_location_label"
@@ -99,6 +99,6 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toEndOf="@+id/view_event_image"
         app:layout_constraintTop_toBottomOf="@+id/view_event_date_label" />
 </androidx.constraintlayout.widget.ConstraintLayout>

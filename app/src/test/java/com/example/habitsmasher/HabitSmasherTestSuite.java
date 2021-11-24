@@ -31,6 +31,7 @@ import org.junit.runners.Suite;
                      FailureListenerTest.class,
                      SuccessListenerTest.class,
                      SwipeListenerTest.class,
-                     EmailValidatorTest.class})
+                     EmailValidatorTest.class,
+                     PasswordEncryptTest.class})
 public class HabitSmasherTestSuite {
 }
