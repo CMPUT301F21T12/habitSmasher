@@ -162,11 +162,14 @@ public class HabitEventList extends ArrayList{
         // Set edited data in the database
         setHabitEventDataInDatabase(userId,parentHabit, toEditId, habitEventData);
 
-        // Delete old image
-        deleteHabitEventImageFromDb(userId, parentHabit, editedHabitEvent);
-
         // Add new image
-        addImageToDatabase(userId, parentHabit, newImage, editedHabitEvent.getId());
+        if (newImage != null) {
+            // Delete old image
+            deleteHabitEventImageFromDb(userId, parentHabit, editedHabitEvent);
+
+            // Add new image
+            addImageToDatabase(userId, parentHabit, newImage, editedHabitEvent.getId());
+        }
     }
 
     /**
