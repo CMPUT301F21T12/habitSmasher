@@ -35,9 +35,8 @@ public class HabitEventListTest {
     public void addHabitEvent_validHabitEventParametersAddition_ExpectHabitEventAdded() {
         Date sampleDate = new Date();
         String sampleComment = "Valid comment";
-        Uri sampleUri = Uri.EMPTY;
 
-        _habitEventList.addHabitEventLocally(sampleDate, sampleComment, sampleUri, UUID.randomUUID().toString(), "");
+        _habitEventList.addHabitEventLocally(sampleDate, sampleComment, UUID.randomUUID().toString(), "");
 
         assertEquals(1, _habitEventList.getHabitEvents().size());
         assertEquals(sampleComment, _habitEventList.getHabitEvents().get(0).getComment());

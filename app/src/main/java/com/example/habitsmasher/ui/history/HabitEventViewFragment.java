@@ -1,16 +1,18 @@
 package com.example.habitsmasher.ui.history;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
+import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,6 +33,9 @@ import java.text.SimpleDateFormat;
 public class HabitEventViewFragment extends Fragment implements OnMapReadyCallback {
     // Habit event being displayed
     private HabitEvent _habitEvent;
+    private Habit _parentHabit;
+    private String _userId;
+    ImageView _eventImageView;
 
     private MapView _mapView;
 
@@ -53,6 +58,8 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
         // Get passed in habit event
         if(getArguments() != null) {
             _habitEvent = (HabitEvent) getArguments().getSerializable("habitEvent");
+            _parentHabit = (Habit) getArguments().getSerializable("parentHabit");
+            _userId = (String) getArguments().getSerializable("userId");
         }
 
         // Date formatter
@@ -74,10 +81,15 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
         // Grab text boxes
         TextView eventCommentTextBox = view.findViewById(R.id.view_event_comment);
         TextView eventDateTextBox = view.findViewById(R.id.view_event_date);
+        _eventImageView = view.findViewById(R.id.view_event_image);
 
         // Setting text boxes
         eventCommentTextBox.setText(_habitEvent.getComment());
         eventDateTextBox.setText(simpleDateFormat.format(_habitEvent.getDate()));
+
+        // Set image
+        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
+        imageDatabaseHelper.fetchImagesFromDB(_eventImageView, imageDatabaseHelper.getHabitEventStorageReference(_userId, _parentHabit.getId(), _habitEvent.getId()));
 
         return view;
     }
