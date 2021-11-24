@@ -217,13 +217,16 @@ public class LoginFragment extends Fragment {
      * @param googleUser the user to add
      */
     private void addUserToDatabaseIfUserDoesNotExist(User googleUser) {
+        Log.d(TAG, "addUserToDatabaseIfUserDoesNotExist: entry");
         FirebaseFirestore.getInstance()
                          .collection("Users")
                          .document(googleUser.getId()).get().addOnCompleteListener(
                 new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (!task.isSuccessful()) {
+                        Log.d(TAG, "addUserToDatabaseIfUserDoesNotExist: checking if user exists");
+                        if (!task.getResult().exists()) {
+                            Log.d(TAG, "addUserToDatabaseIfUserDoesNotExist: user does not exist, adding to db");
                             // if the user does not exist already, add them to the db collection
                             _userAccountHelper.addNewUserToDatabase(googleUser);
                         }
@@ -279,6 +282,8 @@ public class LoginFragment extends Fragment {
      * @param password the user password
      */
     private void signInUserWithEmailAndPassword(String email, String password) {
+        PasswordEncrypt passwordEncrypt = new PasswordEncrypt();
+        password = passwordEncrypt.encrypt(password);
         _auth.signInWithEmailAndPassword(email, password)
              .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
