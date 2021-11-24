@@ -38,8 +38,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
  * The AddHabitEventDialog
  * Deals with UI and information handling of the add habit event popup
  *
- * Requesting location permissions and location code were sourced from
- * https://developer.android.com/training/location
  */
 public class AddHabitEventDialog extends HabitEventDialog {
 

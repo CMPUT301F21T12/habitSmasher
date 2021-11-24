@@ -35,6 +35,7 @@ public class HabitEventList extends ArrayList{
      * @param startDate (Date): The start date of the habit event to add
      * @param comment (String): The comment of the habit event to add
      * @param pictureUri (String): The URL of the picture of the habit event to add
+     * @param location (String): The location of the habit event
      */
     public void addHabitEventLocally(Date startDate, String comment, Uri pictureUri, String id,
                                     String location) {
@@ -126,6 +127,7 @@ public class HabitEventList extends ArrayList{
      * @param newComment (String) The edited comment
      * @param newDate (Date) The edited date
      * @param pos (int) The position of the habit in the list
+     * @param location (String) The location of the habit event
      */
     public void editHabitEventLocally(String newComment, Date newDate, int pos, String location) {
         HabitEvent toEdit = _habitEvents.get(pos);

@@ -63,10 +63,10 @@ public abstract class ListFragment<T> extends Fragment {
     protected abstract void openAddDialogBox();
 
     // add after swipe is fixed for habit events
-    //public abstract void openEditDialogBox();
+    public abstract void openEditDialogBox(int position);
 
     // add after view is implemented for habit events
-    //protected abstract void openViewWindowForItem();
+    protected abstract void openViewWindowForItem(int position);
 
     /**
      * Initializes the Recycler View the fragment is using to display
@@ -78,14 +78,20 @@ public abstract class ListFragment<T> extends Fragment {
 
     /**
      * Update list fragment after an object is added to the list
+     * @param addedObject object to be added
      */
     public abstract void updateListAfterAdd(T addedObject);
 
     /**
      * Update list fragment after an object is edited in the list
+     * @param editedObject object to be edited
+     * @param pos position of object in the list
      */
     public abstract void updateListAfterEdit(T editedObject, int pos);
 
-    // add after swipe is fixed in habit events
-    //public abstract void updateListAfterDelete(int pos);
+    /**
+     * Update list fragment after an object is deleted in the list
+     * @param pos position of object in list
+     */
+    public abstract void updateListAfterDelete(int pos);
 }

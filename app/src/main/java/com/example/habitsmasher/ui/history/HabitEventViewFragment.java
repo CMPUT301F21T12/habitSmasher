@@ -22,6 +22,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.text.SimpleDateFormat;
 
 /**
+ * Fragment used to view the details of a habit event
+ *
  * Embedding a map into a fragment using a mapview found here:
  * https://github.com/googlemaps/android-samples/blob/main/ApiDemos/java/app/src/gms/java/com/example/
  * mapdemo/RawMapViewDemoActivity.java
@@ -147,7 +149,7 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
         String[] latLngPair = _habitEvent.getLocation().split(" ");
         LatLng coord = new LatLng(Double.valueOf(latLngPair[0]),
                                   Double.valueOf(latLngPair[1]));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 20));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, googleMap.getMaxZoomLevel()));
         googleMap.addMarker(new MarkerOptions().position(coord).title("Habit Event Position"));
     }
 }

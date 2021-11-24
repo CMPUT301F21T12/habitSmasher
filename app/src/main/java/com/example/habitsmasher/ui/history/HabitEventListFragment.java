@@ -247,8 +247,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
 
-    // TODO: add this to list fragment class once swipe is complete in habit event list
-    protected void openEditDialogBox(int position) {
+    public void openEditDialogBox(int position) {
         EditHabitEventDialog editHabitEventDialog = new EditHabitEventDialog(position, _habitEventItemAdapter._snapshots.get(position));
         editHabitEventDialog.setCancelable(true);
         editHabitEventDialog.setTargetFragment(this, 1);
@@ -275,9 +274,8 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         _habitEventItemAdapter.notifyItemChanged(pos);
     }
 
-    // TODO: add to list fragment class once swipe is fixed in habit events
-    public void updateListAfterDelete(int position) {
-        HabitEvent habitEventToDelete = _habitEventItemAdapter._snapshots.get(position);
+    public void updateListAfterDelete(int pos) {
+        HabitEvent habitEventToDelete = _habitEventItemAdapter._snapshots.get(pos);
         _habitEventList.deleteHabitEvent(getActivity(),
                 _userId,
                 _parentHabit,
@@ -309,7 +307,6 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         uploadTask.addOnFailureListener(new FailureListener(TAG, "Data failed to be added."));
     }
 
-    // TODO: add this to list fragment class once view is implemented for habitevents
     protected void openViewWindowForItem(int position) {
         // Get the selected habit
         HabitEvent currentHabitEvent = _habitEventItemAdapter._snapshots.get(position);

@@ -39,9 +39,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * Abstract UI class that describes any dialog
  * involving adding and editing Habit Events
  *
- * Requesting location permissions and location code were sourced from
- * https://developer.android.com/training/location
+ * Requesting location permissions was implemented by following the tutorial here:
  * https://developer.android.com/training/permissions/requesting
+ * https://developer.android.com/training/location/permissions
  *
  * @author Jason Kim
  */
@@ -80,9 +80,10 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     // location header
     protected TextView _locationHeader;
 
-    // location of habit event in the form of a string
+    // selected location of habit event, empty string intially
     protected String _selectedLocation = "";
 
+    // used to request location permissions to user
     private ActivityResultLauncher<String[]> _requestPermissionsLauncher;
 
     /**
@@ -124,23 +125,25 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
     protected abstract void setConfirmButtonListener();
 
     /**
-     *
+     * Sets up the listener for the location button
      */
     protected void setLocationButtonListener() {
         _addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "clicked");
+                // checks location permissions
                 int coarsePermission = ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION);
                 int precisePermission = ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION);
+                // if granted already
                 if (coarsePermission == PackageManager.PERMISSION_GRANTED &&
                         precisePermission == PackageManager.PERMISSION_GRANTED) {
                     // do location stuff
                     handleLocationSelection();
                 }
                 else {
+                    // request permissions
                     String[] permissionsArray = {Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION};
                     _requestPermissionsLauncher.launch(permissionsArray);
@@ -149,39 +152,27 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         });
     }
 
+    /**
+     * Spawns the map dialog used to select a location
+     */
     protected void handleLocationSelection() {
         MapDialog mapDialog = new MapDialog(_selectedLocation);
         mapDialog.setTargetFragment(this, 1);
         mapDialog.show(getFragmentManager(), "MapDialog");
     }
 
+    /**
+     * Selects a location for the habit event in question
+     * @param location location of the habit event
+     */
     public void selectLocation(String location) {
         _selectedLocation = location;
+
+        // changing header above location button to "EDIT LOCATION" after
+        // location has been specified
         if (!_selectedLocation.equals("")) {
             _locationHeader.setText("EDIT LOCATION");
         }
-    }
-
-    /**
-     * Opens the calendar dialog used for date selection
-     */
-    protected void openDatePickerDialog() {
-        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment(new DatePickerDialog.OnDateSetListener() {
-            /**
-             * Sets the text of the date select view to reflect selected date
-             * @param view
-             * @param year year of selected date
-             * @param month month of selected date (integer from 0 to 11)
-             * @param day day of month of selected date
-             */
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                int correctedMonth = month + 1;
-                String date = day + "/" + correctedMonth + "/" + year;
-                _eventDateText.setText(date);
-            }
-        });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
     }
 
     @Override
@@ -212,6 +203,9 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         }
     }
 
+    /**
+     * Function that sets up the launcher which handles location permissions
+     */
     private void setUpLocationPermissions(){
         _requestPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
                 isGranted -> {

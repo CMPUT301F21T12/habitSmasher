@@ -75,6 +75,8 @@ public class EditHabitEventDialog extends HabitEventDialog {
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
 
         _selectedLocation = _editHabitEvent.getLocation();
+
+        // if location is selected, change location header
         if (!_selectedLocation.equals("")) {
             _locationHeader.setText("EDIT LOCATION");
         }

@@ -17,8 +17,10 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     private String _comment;
     private Uri _pictureUri;
 
-    // string containing latitude and longitude of habit, unless not specified, in which it is
-    // an empty string
+    /*
+    String in the format of "latitude longitude" that stores the location
+    of the habit event, is an empty string if no location specified
+     */
     private String _location;
 
     // TODO: Fully integrate pictures
@@ -44,11 +46,11 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     }
 
     /**
-     * Habit event constructor in form of string representation
-     * @param startDate
-     * @param comment
-     * @param id
-     * @param location
+     * Habit event constructor for habit event with location
+     * @param startDate start date of habit event
+     * @param comment comment of habit event
+     * @param id id of habit event
+     * @param location location of habit event in form of string
      */
     public HabitEvent(Date startDate, String comment, String id, String location) {
         super(id);
@@ -109,8 +111,9 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     }
 
     /**
-     * Getter of string representation of location for Firebase storage
-     * @return
+     * Gets the location of the habit event in a string format, empty
+     * string if no location recorded
+     * @return String representation of location
      */
     @PropertyName("location")
     public String getLocation() {
@@ -118,8 +121,9 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     }
 
     /**
-     * Setter of string representation of location for Firebase storage
-     * @return
+     * Sets the location of the habit event in a string format, empty
+     * string if no location recorded
+     * @param location String representation of location
      */
     public void setLocation(String location) {
         _location = location;
