@@ -94,11 +94,8 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         _eventPictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Open gallery to let user pick photo
-                // Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                // startActivityForResult(pickPhoto, 1);
                 AddPictureDialog addPictureDialog = new AddPictureDialog();
-                // addPictureDialog.setTargetFragment(HabitEventListFragment.this, 1);
+                addPictureDialog.setTargetFragment(HabitEventDialog.this, 1);
                 addPictureDialog.show(getFragmentManager(), "AddPictureDialog");
             }
         });
@@ -152,21 +149,25 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         }
     }
 
-    /**
-     * Not touching this when refactoring until images are fully implemented for habit events
-     * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
-     * Override onActivityResult to handle when user has selected image
-     * @param requestCode
-     * @param resultCode
-     * @param imageReturnedIntent
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        if (resultCode == RESULT_OK) {
-            // Set selected picture
-            _selectedImage = imageReturnedIntent.getData();
-            _eventPictureView.setImageURI(_selectedImage);
-        }
+//    *
+//     * Not touching this when refactoring until images are fully implemented for habit events
+//     * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
+//     * Override onActivityResult to handle when user has selected image
+//     * @param requestCode
+//     * @param resultCode
+//     * @param imageReturnedIntent
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+//        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+//        if (resultCode == RESULT_OK) {
+//            // Set selected picture
+//            _selectedImage = imageReturnedIntent.getData();
+//            _eventPictureView.setImageURI(_selectedImage);
+//        }
+//    }
+
+    public void setEventImage(Uri image) {
+        _selectedImage = image;
+        _eventPictureView.setImageURI(_selectedImage);
     }
 }

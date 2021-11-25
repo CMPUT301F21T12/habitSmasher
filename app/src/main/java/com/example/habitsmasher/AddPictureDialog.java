@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,18 +20,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
+import com.example.habitsmasher.ui.history.HabitEventListFragment;
 
 public class AddPictureDialog extends DialogFragment {
     private Uri _selectedImage;
-    protected TextView _header;
-    protected String TAG;
-    protected Button _cancelButton;
+    private TextView _header;
+    private String TAG;
+    private Button _cancelButton;
+    private HabitEventDialog _parentDialog;
+    private ImageButton _galleryButton;
+    private ImageButton _cameraButton;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate view and attach elements
         View view = inflater.inflate(R.layout.add_picture_dialog, container,false);
+        initializeUIElements(view);
 
         // set header
         _header.setText("Select Picture");
@@ -38,17 +46,31 @@ public class AddPictureDialog extends DialogFragment {
         // Cancel button
         setCancelButtonListener();
 
+        // Set gallery click button
+        setGalleryButtonListener();
+
+        setCameraButtonListener();
+
         return view;
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        try {
+            // Get habit event fragment for later use
+            _parentDialog = (HabitEventDialog) getTargetFragment();
+        }
+        catch (ClassCastException e) {
+            Log.e(TAG, "Exception" + e.getMessage());
+        }
     }
 
     private void initializeUIElements(View view) {
         _header = view.findViewById(R.id.add_picture_header_text);
         _cancelButton = view.findViewById(R.id.select_image_cancel_button);
+        _galleryButton = view.findViewById(R.id.gallery_button);
+        _cameraButton = view.findViewById(R.id.camera_button);
     }
 
     /**
@@ -65,8 +87,10 @@ public class AddPictureDialog extends DialogFragment {
         if (resultCode == RESULT_OK) {
             // Set selected picture
             _selectedImage = imageReturnedIntent.getData();
+            _parentDialog.setEventImage(_selectedImage);
 
-            // TODO: Send selected picture
+            // Close dialog
+            this.dismiss();
         }
     }
 
@@ -75,5 +99,25 @@ public class AddPictureDialog extends DialogFragment {
      */
     protected void setCancelButtonListener() {
         _cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
+    }
+
+    protected void setGalleryButtonListener() {
+        _galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, 1);
+            }
+        });
+    }
+
+    protected void setCameraButtonListener() {
+        _cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent takePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePhoto, 1);
+            }
+        });
     }
 }
