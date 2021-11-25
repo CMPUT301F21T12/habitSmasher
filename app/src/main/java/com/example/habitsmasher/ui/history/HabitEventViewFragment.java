@@ -19,7 +19,7 @@ public class HabitEventViewFragment extends Fragment {
     private HabitEvent _habitEvent;
     private Habit _parentHabit;
     private String _userId;
-    ImageView _eventImageView;
+    private ImageView _eventImageView;
 
     // Date format
     private static final String PATTERN = "dd-MM-yyyy";
