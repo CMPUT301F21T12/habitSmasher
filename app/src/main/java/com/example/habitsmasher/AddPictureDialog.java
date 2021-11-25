@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +18,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
 import com.example.habitsmasher.ui.history.HabitEventListFragment;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AddPictureDialog extends DialogFragment {
     private Uri _selectedImage;
@@ -84,13 +91,27 @@ public class AddPictureDialog extends DialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        if (resultCode == RESULT_OK) {
-            // Set selected picture
-            _selectedImage = imageReturnedIntent.getData();
-            _parentDialog.setEventImage(_selectedImage);
+        switch (requestCode){
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    // Set selected picture
+                    _selectedImage = imageReturnedIntent.getData();
+                    _parentDialog.setEventImage(_selectedImage);
 
-            // Close dialog
-            this.dismiss();
+                    // Close dialog
+                    this.dismiss();
+                }
+                break;
+            case 2:
+                Log.d(TAG, "DONEZO");
+                if (resultCode == RESULT_OK) {
+                    // Set selected picture
+                    _parentDialog.setEventImage(_selectedImage);
+
+                    // Close dialog
+                    this.dismiss();
+                }
+                break;
         }
     }
 
@@ -115,9 +136,44 @@ public class AddPictureDialog extends DialogFragment {
         _cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent takePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePhoto, 1);
+                dispatchTakePictureIntent();
             }
         });
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Log.d(TAG, "Failed to process image");
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                _selectedImage = FileProvider.getUriForFile(getContext(),
+                        "com.example.habitsmasher.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, _selectedImage);
+                startActivityForResult(takePictureIntent, 2);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        return image;
     }
 }
