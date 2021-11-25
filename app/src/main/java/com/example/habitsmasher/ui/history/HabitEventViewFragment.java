@@ -35,7 +35,7 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
     private HabitEvent _habitEvent;
     private Habit _parentHabit;
     private String _userId;
-    ImageView _eventImageView;
+    private ImageView _eventImageView;
 
     private MapView _mapView;
 
