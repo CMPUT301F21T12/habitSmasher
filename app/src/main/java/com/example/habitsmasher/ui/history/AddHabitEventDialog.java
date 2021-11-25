@@ -2,9 +2,11 @@ package com.example.habitsmasher.ui.history;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatabaseEntity;
@@ -47,6 +50,8 @@ public class AddHabitEventDialog extends HabitEventDialog {
         // Inflate view and attach view elements
         View view = inflater.inflate(R.layout.add_habit_event_dialog, container, false);
         initializeUIElements(view);
+        wrapBundle(savedInstanceState);
+        spawnMapSnippet();
 
         // set header
         _header.setText("Add Habit Event");
@@ -71,6 +76,8 @@ public class AddHabitEventDialog extends HabitEventDialog {
 
         return view;
     }
+
+
 
     @Override
     protected void setConfirmButtonListener() {

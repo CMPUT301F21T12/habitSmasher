@@ -42,7 +42,7 @@ import com.google.android.gms.tasks.Task;
  */
 public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    private static final String TAG = "MAP DIALOG";
+    private static final String TAG = "MAPDIALOG";
 
     private String _selectedLocation;
     private MapView _mapView;
@@ -51,7 +51,6 @@ public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private HabitEventDialog _habitEventDialog;
     private FusedLocationProviderClient _fusedLocationClient;
     private Bundle _mapViewBundle;
-    private boolean _mapCreated = false;
 
     public MapDialog(String location) {
         _selectedLocation = location;
