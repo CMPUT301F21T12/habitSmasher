@@ -17,6 +17,7 @@
     <string name="dd_mm_yyyy">dd-mm-yyyy</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="cancel_button">CANCEL</string>
     <string name="name">Name:</string>
     <string name="reason">Reason:</string>
     <string name="date_start">Date start:</string>
@@ -61,6 +62,8 @@
     <string name="follow_user">Follow User</string>
     <string name="follow">Follow</string>
     <string name="google">Google</string>
+    <string name="camera_picture_button">TAKE PICTURE</string>
+    <string name="gallery_picture_button">FROM GALLERY</string>
     <string name="user_search">User Search</string>
     <string name="logout">Logout</string>
 </resources>

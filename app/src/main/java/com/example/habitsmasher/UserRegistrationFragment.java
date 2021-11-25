@@ -44,7 +44,7 @@ import java.util.HashMap;
  * This class holds the front-end elements related to the user sign up page
  * Author: Rudy Patel
  */
-public class UserRegistrationFragment extends Fragment {
+public class UserRegistrationFragment extends Fragment implements PictureSelectionUser {
     private static final String USER_REGISTERED_MESSAGE = "User registered!";
     private static final String FAILED_TO_ADD_USER_MESSAGE = "Failed to add user, try again!";
     private static final String FAILED_TO_REGISTER_MESSAGE = "Failed to register with this username/email";
@@ -316,14 +316,27 @@ public class UserRegistrationFragment extends Fragment {
         }
     }
 
+    /**
+     * Adds listener to image view to allow user to select image
+     */
     protected void setImageViewListener() {
         _profilePictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Open gallery to let user pick photo
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto, 1);
+                // Create dialog that handles images
+                AddPictureDialog addPictureDialog = new AddPictureDialog();
+                addPictureDialog.setTargetFragment(UserRegistrationFragment.this, 1);
+                addPictureDialog.show(getFragmentManager(), "AddPictureDialog");
             }
         });
+    }
+
+    /**
+     * Handles when the user selects an image
+     * @param image (Uri) The selected image
+     */
+    public void setImage(Uri image) {
+        _selectedImage = image;
+        _profilePictureView.setImageURI(_selectedImage);
     }
 }
