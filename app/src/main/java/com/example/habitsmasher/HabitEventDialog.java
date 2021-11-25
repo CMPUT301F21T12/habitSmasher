@@ -27,7 +27,7 @@ import com.example.habitsmasher.ui.history.HabitEventListFragment;
  * involving adding and editing Habit Events
  * @author Jason Kim
  */
-public abstract class HabitEventDialog extends DialogFragment implements DisplaysErrorMessages {
+public abstract class HabitEventDialog extends DialogFragment implements DisplaysErrorMessages, PictureSelectionUser {
 
     // codes for the different error messages that are displayed by the habit event dialog
     public static final int INCORRECT_COMMENT = 1;
@@ -90,10 +90,14 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
      */
     protected abstract void setConfirmButtonListener();
 
+    /**
+     * Adds listener to image view to allow user to select image
+     */
     protected void setImageViewListener() {
         _eventPictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Create add picture dialog
                 AddPictureDialog addPictureDialog = new AddPictureDialog();
                 addPictureDialog.setTargetFragment(HabitEventDialog.this, 1);
                 addPictureDialog.show(getFragmentManager(), "AddPictureDialog");
@@ -149,24 +153,11 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
         }
     }
 
-//    *
-//     * Not touching this when refactoring until images are fully implemented for habit events
-//     * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
-//     * Override onActivityResult to handle when user has selected image
-//     * @param requestCode
-//     * @param resultCode
-//     * @param imageReturnedIntent
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-//        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-//        if (resultCode == RESULT_OK) {
-//            // Set selected picture
-//            _selectedImage = imageReturnedIntent.getData();
-//            _eventPictureView.setImageURI(_selectedImage);
-//        }
-//    }
-
-    public void setEventImage(Uri image) {
+    /**
+     * Handles the selected image
+     * @param image (Uri) The image that the user has chosen
+     */
+    public void setImage(Uri image) {
         _selectedImage = image;
         _eventPictureView.setImageURI(_selectedImage);
     }

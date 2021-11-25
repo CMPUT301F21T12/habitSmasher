@@ -22,19 +22,24 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.listeners.ClickListenerForCancel;
-import com.example.habitsmasher.ui.history.HabitEventListFragment;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * This dialog allows user to either select an image from their gallery or take it with their camera
+ */
 public class AddPictureDialog extends DialogFragment {
-    private Uri _selectedImage;
-    private TextView _header;
     private String TAG;
+
+    // The chosen image
+    private Uri _selectedImage;
+
+    // UI elements
+    private TextView _header;
     private Button _cancelButton;
-    private HabitEventDialog _parentDialog;
+    private PictureSelectionUser _parentDialog;
     private ImageButton _galleryButton;
     private ImageButton _cameraButton;
 
@@ -45,17 +50,17 @@ public class AddPictureDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.add_picture_dialog, container,false);
         initializeUIElements(view);
 
-        // set header
+        // Set header
         _header.setText("Select Picture");
 
+        // Set tag
         TAG = "AddPictureDialogue";
 
-        // Cancel button
+        // Set Cancel button
         setCancelButtonListener();
 
-        // Set gallery click button
+        // Set gallery and camera buttons
         setGalleryButtonListener();
-
         setCameraButtonListener();
 
         return view;
@@ -65,14 +70,18 @@ public class AddPictureDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            // Get habit event fragment for later use
-            _parentDialog = (HabitEventDialog) getTargetFragment();
+            // Get parent fragment to send image back to
+            _parentDialog = (PictureSelectionUser) getTargetFragment();
         }
         catch (ClassCastException e) {
             Log.e(TAG, "Exception" + e.getMessage());
         }
     }
 
+    /**
+     * Initialize the UI elements of this dialog
+     * @param view
+     */
     private void initializeUIElements(View view) {
         _header = view.findViewById(R.id.add_picture_header_text);
         _cancelButton = view.findViewById(R.id.select_image_cancel_button);
@@ -81,7 +90,6 @@ public class AddPictureDialog extends DialogFragment {
     }
 
     /**
-     * Not touching this when refactoring until images are fully implemented for habit events
      * Reference: https://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
      * Override onActivityResult to handle when user has selected image
      * @param requestCode
@@ -93,20 +101,21 @@ public class AddPictureDialog extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch (requestCode){
             case 1:
+                // If the user selects the image from the gallery
                 if (resultCode == RESULT_OK) {
                     // Set selected picture
                     _selectedImage = imageReturnedIntent.getData();
-                    _parentDialog.setEventImage(_selectedImage);
+                    _parentDialog.setImage(_selectedImage);
 
                     // Close dialog
                     this.dismiss();
                 }
                 break;
             case 2:
-                Log.d(TAG, "DONEZO");
+                // If the user takes the image it will already be stored in _selectedImage
                 if (resultCode == RESULT_OK) {
                     // Set selected picture
-                    _parentDialog.setEventImage(_selectedImage);
+                    _parentDialog.setImage(_selectedImage);
 
                     // Close dialog
                     this.dismiss();
@@ -122,6 +131,9 @@ public class AddPictureDialog extends DialogFragment {
         _cancelButton.setOnClickListener(new ClickListenerForCancel(getDialog(), TAG));
     }
 
+    /**
+     * Defines the logic when the gallery button is clicked
+     */
     protected void setGalleryButtonListener() {
         _galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +144,9 @@ public class AddPictureDialog extends DialogFragment {
         });
     }
 
+    /**
+     * Defines the logic when the camera button is clicked
+     */
     protected void setCameraButtonListener() {
         _cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +156,10 @@ public class AddPictureDialog extends DialogFragment {
         });
     }
 
+    /**
+     * Method that handles the event related to handling the camera
+     * Reference: https://developer.android.com/training/camera/photobasics#java
+     */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -163,6 +182,12 @@ public class AddPictureDialog extends DialogFragment {
         }
     }
 
+    /**
+     * Creates a temporary image file when the camera is used
+     * Reference: https://developer.android.com/training/camera/photobasics#java
+     * @return The created image
+     * @throws IOException
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
