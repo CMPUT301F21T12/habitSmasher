@@ -43,6 +43,10 @@ public class AddPictureDialog extends DialogFragment {
     private ImageButton _galleryButton;
     private ImageButton _cameraButton;
 
+    // Constants
+    private static final String IMAGE_DATE_FORMAT = "yyyyMMdd_HHmmss";
+    private static final String FILE_EXTENSION = ".jpg";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -190,12 +194,12 @@ public class AddPictureDialog extends DialogFragment {
      */
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat(IMAGE_DATE_FORMAT).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                FILE_EXTENSION,         /* suffix */
                 storageDir      /* directory */
         );
 
