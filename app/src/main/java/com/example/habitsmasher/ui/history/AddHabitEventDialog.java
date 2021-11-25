@@ -2,9 +2,11 @@ package com.example.habitsmasher.ui.history;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatabaseEntity;
@@ -33,11 +36,13 @@ import com.example.habitsmasher.R;
 /**
  * The AddHabitEventDialog
  * Deals with UI and information handling of the add habit event popup
+ *
  */
 public class AddHabitEventDialog extends HabitEventDialog {
 
     private HabitEvent _newEvent;
     private AddHabitEventDialog _addFragment = this;
+
 
     @Nullable
     @Override
@@ -45,6 +50,8 @@ public class AddHabitEventDialog extends HabitEventDialog {
         // Inflate view and attach view elements
         View view = inflater.inflate(R.layout.add_habit_event_dialog, container, false);
         initializeUIElements(view);
+        wrapBundle(savedInstanceState);
+        spawnMapSnippet();
 
         // set header
         _header.setText("Add Habit Event");
@@ -61,11 +68,16 @@ public class AddHabitEventDialog extends HabitEventDialog {
         // Add listener to confirm button that adds events to database and closed dialog
         setConfirmButtonListener();
 
+        // Add listener for location button
+        setLocationButtonListener();
+
         // Add listener to image view (not touching this during refactoring until images are done)
         setImageViewListener();
 
         return view;
     }
+
+
 
     @Override
     protected void setConfirmButtonListener() {
@@ -82,14 +94,14 @@ public class AddHabitEventDialog extends HabitEventDialog {
                 if (habitEventValidator.isHabitEventValid(habitEventComment, habitEventDate)) {
                     // If everything is valid, add event to database, events list, and close dialog
                     _newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
-                            habitEventComment,
-                            DatabaseEntity.generateId());
+                                habitEventComment,
+                                DatabaseEntity.generateId(),
+                                _selectedLocation);
                     _errorText.setText("");
                     _habitEventListFragment.addHabitEvent(_newEvent, _selectedImage);
 
                     getDialog().dismiss();
                 }
-
             }
         });
     }

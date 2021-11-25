@@ -45,10 +45,11 @@ public class HabitEventList extends ArrayList{
      * @param startDate (Date): The start date of the habit event to add
      * @param comment (String): The comment of the habit event to add
      * @param id (String): The id of the habit event to add
+     * @param location (String): The location of the habit event
      */
-    public void addHabitEventLocally(Date startDate, String comment, String id) {
+    public void addHabitEventLocally(Date startDate, String comment, String id, String location) {
         // Create habit event and add it to the list
-        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id);
+        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, location);
         _habitEvents.add(eventToAdd);
     }
 
@@ -75,7 +76,7 @@ public class HabitEventList extends ArrayList{
         eventData.put("date", addedHabitEvent.getDate());
         eventData.put("comment", addedHabitEvent.getComment());
         eventData.put("id", eventId);
-
+        eventData.put("location", addedHabitEvent.getLocation());
         // Set data in database
         setHabitEventDataInDatabase(userId, parentHabit, eventId, eventData);
         addHabitEventLocally(addedHabitEvent);
@@ -136,11 +137,13 @@ public class HabitEventList extends ArrayList{
      * @param newComment (String) The edited comment
      * @param newDate (Date) The edited date
      * @param pos (int) The position of the habit in the list
+     * @param location (String) The location of the habit event
      */
-    public void editHabitEventLocally(String newComment, Date newDate, int pos) {
+    public void editHabitEventLocally(String newComment, Date newDate, int pos, String location) {
         HabitEvent toEdit = _habitEvents.get(pos);
         toEdit.setComment(newComment);
         toEdit.setDate(newDate);
+        toEdit.setLocation(location);
     }
 
     /**
@@ -159,7 +162,7 @@ public class HabitEventList extends ArrayList{
         habitEventData.put("comment", editedHabitEvent.getComment());
         habitEventData.put("date", editedHabitEvent.getDate());
         habitEventData.put("id", toEditId);
-
+        habitEventData.put("location", editedHabitEvent.getLocation());
         // Set edited data in the database
         setHabitEventDataInDatabase(userId,parentHabit, toEditId, habitEventData);
 

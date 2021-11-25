@@ -66,4 +66,5 @@
     <string name="gallery_picture_button">FROM GALLERY</string>
     <string name="user_search">User Search</string>
     <string name="logout">Logout</string>
+    <string name="editLocation">EDIT LOCATION</string>
 </resources>

@@ -209,7 +209,6 @@ public class HabitListFragment extends ListFragment<Habit> {
     }
 
 
-    // note: add this to list fragment class once swipe is complete in habit event list
     public void openEditDialogBox(int position) {
         EditHabitDialog editHabitFragment = new EditHabitDialog(position,
                 _habitItemAdapter._snapshots.get(position));
@@ -253,15 +252,15 @@ public class HabitListFragment extends ListFragment<Habit> {
     }
 
     // add to list fragment class once swipe is fixed in habit events
-    public void updateListAfterDelete(int position) {
-        Habit habitToDelete = _habitItemAdapter._snapshots.get(position);
+    public void updateListAfterDelete(int pos) {
+        Habit habitToDelete = _habitItemAdapter._snapshots.get(pos);
 
         deleteHabitEvents(_user.getId(), habitToDelete);
 
         _habitList.deleteHabit(getActivity(),
                 _user.getId(),
                 habitToDelete,
-                position);
+                pos);
     }
 
     /**

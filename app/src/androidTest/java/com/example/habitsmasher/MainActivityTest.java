@@ -83,6 +83,7 @@ public class MainActivityTest {
     private static final String FOLLOW = "Follow";
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String INVALID_USERNAME = "abcdefg";
+    private static final String EDIT_HEADER = "EDIT LOCATION";
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
@@ -1141,7 +1142,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void ensureHabitEventAddedSuccessfully() {
+    public void ensureHabitEventAddedSuccessfullyWithoutLocation() {
         logInTestUser();
 
         // Navigate to view habit
@@ -1183,7 +1184,61 @@ public class MainActivityTest {
     }
 
     @Test
-    public void ensureHabitEventAddedSuccessfullyFromHomeScreen(){
+    public void ensureHabitEventAddedSuccessfullyWithLocation() {
+        logInTestUser();
+
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("AddEventTest");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click on enter location button
+        clickOnAddLocation();
+
+        // need timeout since google map snippet doesnt load immedatiely
+        _solo.sleep(5000);
+
+        // click confirm for map dialog box
+        clickOnConfirmMapDialog();
+
+        // Assert that location header has changed
+        assertTextOnScreen(EDIT_HEADER);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventAddedSuccessfullyFromHomeScreenWithoutLocation(){
         logInTestUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
@@ -1247,6 +1302,104 @@ public class MainActivityTest {
 
         // Enter date
         enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Go back and delete habit
+        _solo.goBack();
+
+        // Go back to list tab
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // Delete the habit
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventAddedSuccessfullyFromHomeScreenWithLocation(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create test habit
+        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select today
+        setCurrentDayInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Go to home screen
+        _solo.clickOnView(_solo.getView(R.id.navigation_home));
+
+        // Assert that the habit is there
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Click on the add event button
+        swipeLeftOnHabit(testHabit);
+        _solo.clickOnView(_solo.getView(R.id.home_add_event_button));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // click on add location button
+        clickOnAddLocation();
+
+        // Needed so map snippet can load
+        _solo.sleep(5000);
+
+        // confirm map dialog button
+        clickOnConfirmMapDialog();
+
+        // assert header changed
+        assertTextOnScreen(EDIT_HEADER);
 
         // Click confirm
         clickConfirmButtonInAddHabitEventDialogBox();
@@ -1567,6 +1720,136 @@ public class MainActivityTest {
 
         // Check that new comment is displayed
         assertTextOnScreen("New comment!");
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventEditedSuccessfully_changeLocation() {
+        logInTestUser();
+
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("EditCommentEvent");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Click on edit button
+        swipeLeftOnHabitEvent(testEvent);
+        _solo.waitForView(R.id.edit_habit_event_button);
+        _solo.clickOnButton(EDIT_BUTTON);
+
+        // Check that dialog opens
+        assertTextOnScreen("Edit Habit Event");
+
+        // Click on location button
+        clickOnAddLocation();
+
+        // Wait for map snippets to load
+        _solo.sleep(5000);
+
+        clickOnConfirmMapDialog();
+
+        assertTextOnScreen(EDIT_HEADER);
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventEditedSuccessfully_changeLocationWhenLocationAlreadySelected() {
+        logInTestUser();
+
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("EditCommentEvent");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click on location button
+        clickOnAddLocation();
+
+        // Wait for map snippets to load
+        _solo.sleep(5000);
+
+        clickOnConfirmMapDialog();
+
+        assertTextOnScreen(EDIT_HEADER);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Click on edit button
+        swipeLeftOnHabitEvent(testEvent);
+        _solo.waitForView(R.id.edit_habit_event_button);
+        _solo.clickOnButton(EDIT_BUTTON);
+
+        // Check that dialog opens
+        assertTextOnScreen("Edit Habit Event");
+
+        // click on edit location button
+        clickOnEditLocation();
+
+        // Wait for map snippets to load
+        _solo.sleep(5000);
+
+        clickOnConfirmMapDialog();
+
+        assertTextOnScreen(EDIT_HEADER);
 
         // Go back and delete habit
         _solo.goBack();
@@ -2000,5 +2283,17 @@ public class MainActivityTest {
         _solo.clickOnButton(LOGIN_TEXT);
         // Wait for Profile fragment to load
         _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
+    }
+
+    private void clickOnAddLocation() {
+        _solo.clickOnView(_solo.getView(R.id.add_location_button));
+    }
+
+    private void clickOnConfirmMapDialog() {
+        _solo.clickOnView(_solo.getView(R.id.confirm_map));
+    }
+
+    private void clickOnEditLocation() {
+        _solo.clickOnView(_solo.getView(R.id.edit_location_button));
     }
 }

@@ -242,6 +242,16 @@ public class TodayFragment extends ListFragment {
         //not needed
     }
 
+    @Override
+    public void updateListAfterDelete(int pos) {
+        //not needed
+    }
+
+    @Override
+    public void openEditDialogBox(int position) {
+        //not needed
+    }
+
     /**
      * Helper method for making habits
      * @param extractMap the information to make a habit
@@ -286,7 +296,7 @@ public class TodayFragment extends ListFragment {
      * Open the habit view when the habit is clicked on in the list
      * @param position the specific habit selected
      */
-    private void openViewWindowForItem(int position) {
+    protected void openViewWindowForItem(int position) {
         // Get the selected habit
         Habit currentHabit = _habitItemAdapter._snapshots.get(position);
 
