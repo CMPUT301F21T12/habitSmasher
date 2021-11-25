@@ -95,8 +95,11 @@ public abstract class HabitEventDialog extends DialogFragment implements Display
             @Override
             public void onClick(View view) {
                 // Open gallery to let user pick photo
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto, 1);
+                // Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                // startActivityForResult(pickPhoto, 1);
+                AddPictureDialog addPictureDialog = new AddPictureDialog();
+                // addPictureDialog.setTargetFragment(HabitEventListFragment.this, 1);
+                addPictureDialog.show(getFragmentManager(), "AddPictureDialog");
             }
         });
     }
