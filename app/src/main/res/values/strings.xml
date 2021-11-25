@@ -61,4 +61,6 @@
     <string name="follow_user">Follow User</string>
     <string name="follow">Follow</string>
     <string name="google">Google</string>
+    <string name="user_search">User Search</string>
+    <string name="logout">Logout</string>
 </resources>
