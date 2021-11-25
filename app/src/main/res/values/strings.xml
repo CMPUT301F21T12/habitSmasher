@@ -64,4 +64,6 @@
     <string name="google">Google</string>
     <string name="camera_picture_button">TAKE PICTURE</string>
     <string name="gallery_picture_button">FROM GALLERY</string>
+    <string name="user_search">User Search</string>
+    <string name="logout">Logout</string>
 </resources>
