@@ -19,7 +19,7 @@ public class ImageDatabaseHelper {
     private StorageReference _storageReference = _storage.getReference();
 
     // Max download megabyte size
-    private final long ONE_MEGABYTE = 1024 * 1024;
+    private final long ONE_MEGABYTE = 1024 * 1024 * 5;
 
     // Has to be global in order to be accessed in onSuccess method
     private Bitmap _returnImage;
