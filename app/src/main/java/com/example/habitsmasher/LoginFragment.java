@@ -57,6 +57,8 @@ public class LoginFragment extends Fragment {
     private static final String USER_EMAIL_SHARED_PREF_TAG = "email";
     private static final int RC_SIGN_IN = 123;
     private static final String GOOGLE_USER_PWD = "GoogleUserNoPwd";
+    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
 
     private final LoginFragment _fragment = this;
     private FirebaseAuth _auth;
@@ -105,7 +107,7 @@ public class LoginFragment extends Fragment {
     }
 
     /**
-     * This method sets the click listener for the google sign up butotn
+     * This method sets the click listener for the google sign up button
      * @param view the current view
      */
     private void setClickListenerForGoogleSignInButton(View view) {
@@ -145,7 +147,7 @@ public class LoginFragment extends Fragment {
      * This method is also responsible for signing in the user using the specified intent
      * @param requestCode the code of the given request
      * @param resultCode the code of the resulting result
-     * @param data the intent data passed down from the google sign in acivity
+     * @param data the intent data passed down from the google sign in activity
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -194,8 +196,8 @@ public class LoginFragment extends Fragment {
                                                                 .replaceAll("\\s+",""),
                                                             user.getEmail(),
                                                             GOOGLE_USER_PWD,
-                                                            new ArrayList<String>(),
-                                                            new ArrayList<String>());
+                                                            EMPTY_FOLLOWER_LIST,
+                                                            EMPTY_FOLLOWING_LIST);
 
                                  // once the user is successfully retrieved, add them to the db
                                  addUserToDatabaseIfUserDoesNotExist(googleUser);

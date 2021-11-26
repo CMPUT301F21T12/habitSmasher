@@ -10,8 +10,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 public class UserTest {
-    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
-    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
     private User _user;
 
     @Before
