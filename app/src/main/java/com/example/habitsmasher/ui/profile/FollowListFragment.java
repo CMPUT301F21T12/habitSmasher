@@ -56,46 +56,46 @@ public class FollowListFragment extends ListFragment<User> {
         // get the current user
         _user = UserDatabaseHelper.getCurrentUser(_context);
 
-        // get the bundle arguments
-        if(getArguments() != null){
-            Bundle arguments = getArguments();
-            _followType = arguments.getString("FollowType");
-        }
+        View view = inflater.inflate(R.layout.fragment_follow_list, container, false);
+
+        getBundleArguments();
+        // Set header title
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(_followType + " List");
 
         // query firebase for all habits that correspond to the current user
         Query query = getListFromFirebase();
-        FirestoreRecyclerOptions<User> options;
+
         if(query != null){
             // populate the list with existing items in the database
-            options = new FirestoreRecyclerOptions.Builder<User>()
+            FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                     .setQuery(query, User.class)
                     .build();
-        }
-        else{
-            // create the follow list
-            View view = inflater.inflate(R.layout.fragment_follow_list, container, false);
-            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(_followType + " List");
-            return view;
-        }
 
+            setFollowList();
+            // set the item adapter
+            _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getUsername());
+            // Inflate follow list fragment
+            LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
+            initializeRecyclerView(layoutManager, view);
+        }
+        return view;
+    }
+
+    private void setFollowList() {
         // check the follow type and get the corresponding data
         if (_followType.equals("Followers")) {
             _followList = _user.getFollowers();
         } else {
             _followList = _user.getUsersFollowing();
         }
+    }
 
-        // set the item adapter
-        _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getUsername());
-        // Inflate follow list fragment
-        LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
-        View view = inflater.inflate(R.layout.fragment_follow_list, container, false);
-
-        // Set header title
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(_followType + " List");
-
-        initializeRecyclerView(layoutManager, view);
-        return view;
+    private void getBundleArguments() {
+        // get the bundle arguments
+        if(getArguments() != null){
+            Bundle arguments = getArguments();
+            _followType = arguments.getString("FollowType");
+        }
     }
 
     /**
