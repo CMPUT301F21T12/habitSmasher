@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -141,18 +142,47 @@ public class FollowListFragment extends ListFragment<User> {
          */
         // create a touch listener which handles the click and swipe function of the RecyclerView
         RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
-        touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
-            @Override
-            // if row at the specified position is clicked
-            public void onRowClicked(int position) {
-                openViewWindowForItem(position);
-            }
-        });
+        // This is to differentiate between following and followers, it will enable or disable swiping
+        if (_followType.equals("Following")) {
+            touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                @Override
+                // if row at the specified position is clicked
+                public void onRowClicked(int position) {
+                    openViewWindowForItem(position);
+                }
+            })
+                    // This is for the swipe options to unfollow a user.
+                    .setSwipeOptionViews(R.id.unfollow_button)
+                    .setSwipeable(R.id.follow_view, R.id.unfollow_follow_swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                        @Override
+                        public void onSwipeOptionClicked(int viewID, int position) {
+                            // unfollow user
+                            switch (viewID) {
+                                case R.id.unfollow_button:
+                                    unfollowUser(position);
+                                    break;
+                            }
+                        }
+                    });
+        } else {
+            touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                @Override
+                // if row at the specified position is clicked
+                public void onRowClicked(int position) {
+                    openViewWindowForItem(position);
+                }
+            });
+        }
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
     }
 
+    private void unfollowUser(int position) {
+        Toast.makeText(_context, "Clicked unfollow", Toast.LENGTH_SHORT).show();
+    }
+
     private void openViewWindowForItem(int position) {
+        Toast.makeText(_context, "Clicked on a row", Toast.LENGTH_SHORT).show();
     }
 
     @Override
