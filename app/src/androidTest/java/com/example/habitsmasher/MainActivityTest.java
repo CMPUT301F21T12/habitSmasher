@@ -1781,6 +1781,8 @@ public class MainActivityTest {
 
         assertTextOnScreen(EDIT_HEADER);
 
+        clickConfirmButtonInAddHabitEventDialogBox();
+
         // Go back and delete habit
         _solo.goBack();
         _solo.goBack();
@@ -1850,6 +1852,8 @@ public class MainActivityTest {
         clickOnConfirmMapDialog();
 
         assertTextOnScreen(EDIT_HEADER);
+
+        clickConfirmButtonInAddHabitEventDialogBox();
 
         // Go back and delete habit
         _solo.goBack();
