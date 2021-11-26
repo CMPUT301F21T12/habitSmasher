@@ -124,12 +124,15 @@
         android:layout_marginEnd="75dp"
         android:baselineAlignBottom="false"
         android:clickable="true"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:tint="@color/white"
         app:backgroundTint="@color/menu_bar_variant"
         app:fabCustomSize="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/habit_event_date_selection"
@@ -171,5 +174,26 @@
         android:textColor="@color/red"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_habit_date_label" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/edit_dialog_map"
+        android:layout_width="130dp"
+        android:layout_height="82dp"
+        android:layout_marginTop="168dp"
+        android:layout_marginEnd="48dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/edit_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="36dp"
+        android:text="@string/editLocation"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

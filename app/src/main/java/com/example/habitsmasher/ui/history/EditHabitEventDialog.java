@@ -53,6 +53,8 @@ public class EditHabitEventDialog extends HabitEventDialog {
         View view = inflater.inflate(R.layout.add_habit_event_dialog, container, false);
         // Connect UI elements
         initializeUIElements(view);
+        wrapBundle(savedInstanceState);
+        spawnMapSnippet();
 
         // set header
         _header.setText("Edit Habit Event");
@@ -72,6 +74,9 @@ public class EditHabitEventDialog extends HabitEventDialog {
         // Add listener to image view (not touching this during refactoring until images are done)
         setImageViewListener();
 
+        // Add listener for location button
+        setLocationButtonListener();
+
         // Prefill values
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
@@ -79,6 +84,17 @@ public class EditHabitEventDialog extends HabitEventDialog {
         // Fetch image from database
         ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
         imageDatabaseHelper.fetchImagesFromDB(_eventPictureView, imageDatabaseHelper.getHabitEventStorageReference(_userId, _parentHabit.getId(), _editHabitEvent.getId()));
+
+        _selectedLocation = _editHabitEvent.getLocation();
+
+        // if location is selected, change location header
+        if (!_selectedLocation.equals("")) {
+            _locationHeader.setVisibility(View.INVISIBLE);
+            _editLocationButton.setVisibility(View.VISIBLE);
+            setEditLocationButtonListener();
+            _mapView.setVisibility(View.VISIBLE);
+            _addLocationButton.setVisibility(View.INVISIBLE);
+        }
 
         return view;
     }
@@ -100,9 +116,11 @@ public class EditHabitEventDialog extends HabitEventDialog {
 
                 // Update the habit event in the database and locally
                 Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
-                HabitEvent editedHabitEvent = new HabitEvent(newDate,
-                        eventComment,
-                        _editHabitEvent.getId());
+                HabitEvent editedHabitEvent;
+                editedHabitEvent = new HabitEvent(newDate,
+                            eventComment,
+                            _editHabitEvent.getId(),
+                            _selectedLocation);
                 _errorText.setText("");
                 _habitEventListFragment.editHabitEvent(editedHabitEvent,_index, _selectedImage);
 
