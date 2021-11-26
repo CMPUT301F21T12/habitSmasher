@@ -40,6 +40,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 /**
  * This class holds the front-end elements relating to the Login screen
  * Author: Rudy Patel
@@ -191,7 +193,9 @@ public class LoginFragment extends Fragment {
                                                             user.getDisplayName()
                                                                 .replaceAll("\\s+",""),
                                                             user.getEmail(),
-                                                            GOOGLE_USER_PWD);
+                                                            GOOGLE_USER_PWD,
+                                                            new ArrayList<String>(),
+                                                            new ArrayList<String>());
 
                                  // once the user is successfully retrieved, add them to the db
                                  addUserToDatabaseIfUserDoesNotExist(googleUser);

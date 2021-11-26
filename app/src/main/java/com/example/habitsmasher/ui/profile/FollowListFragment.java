@@ -124,6 +124,11 @@ public class FollowListFragment extends ListFragment<User> {
     protected void openAddDialogBox() {
     }
 
+    @Override
+    public void openEditDialogBox(int position) {
+
+    }
+
     /**
      * This helper method initializes the RecyclerView
      * @param layoutManager the associated LinearLayoutManager
@@ -181,7 +186,7 @@ public class FollowListFragment extends ListFragment<User> {
         Toast.makeText(_context, "Clicked unfollow", Toast.LENGTH_SHORT).show();
     }
 
-    private void openViewWindowForItem(int position) {
+    protected void openViewWindowForItem(int position) {
         Toast.makeText(_context, "Clicked on a row", Toast.LENGTH_SHORT).show();
     }
 
@@ -191,5 +196,10 @@ public class FollowListFragment extends ListFragment<User> {
 
     @Override
     public void updateListAfterEdit(User editedObject, int pos) {
+    }
+
+    @Override
+    public void updateListAfterDelete(int pos) {
+
     }
 }

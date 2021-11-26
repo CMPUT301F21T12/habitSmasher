@@ -188,7 +188,7 @@ public class UserRegistrationFragment extends Fragment implements PictureSelecti
                                               email,
                                     encryptedPassword,
                                  new ArrayList<String>(),
-                                 new ArrayList<String>()));
+                                 new ArrayList<String>());
 
                          addNewUserToDatabase(user);
 
