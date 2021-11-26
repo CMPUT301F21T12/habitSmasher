@@ -86,7 +86,6 @@ public class User {
      * Gets the email of the user
      * @return email of the user
      */
-    @PropertyName("email")
     public String getEmail() {
         return _email;
     }
@@ -103,7 +102,6 @@ public class User {
      * Gets the password of the user
      * @return password of the user
      */
-    @PropertyName("password")
     public String getPassword() {
         return _password;
     }
