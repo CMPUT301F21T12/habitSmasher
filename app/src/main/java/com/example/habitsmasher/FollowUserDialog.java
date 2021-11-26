@@ -40,17 +40,20 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     private static final String TAG = "FollowUserDialog";
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String EMPTY_USERNAME_ERROR_MESSAGE = "Please enter a username!";
-    private static final String USER_FOLLOWED_SUCCESS_MESSAGE = "User followed!";
+    private static final String REQUEST_SENT_SUCCESS = "Request sent!";
     private static final String CANNOT_FOLLOW_YOURSELF_MESSAGE = "You cannot follow yourself!";
     private static final String ALREADY_REQUESTED_TO_FOLLOW_USER_MESSAGE = "Already requested to follow that user";
+    private static final String ALREADY_FOLLOWING_MESSAGE = "Already following that user!";
     private static final int INVALID_USERNAME_ERROR = 1;
     private static final int EMPTY_USERNAME_ERROR = 2;
     private static final int CANNOT_FOLLOW_YOURSELF_ERROR = 3;
     private static final int ALREADY_REQUESTED_TO_FOLLOW_USER = 4;
+    private static final int ALREADY_FOLLOWING = 5;
     private static final String USERS_COLLECTION_PATH = "Users";
     private static final String USERNAME_FIELD = "username";
     private static final String FOLLOWING_FIELD = "following";
     private static final String FOLLOWERS_FIELD = "followers";
+    private static final String FOLLOW_REQUEST_FIELD = "followRequests";
 
     private FirebaseFirestore _db;
     private EditText _userToFollow;
@@ -115,16 +118,23 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                                             displayErrorMessage(CANNOT_FOLLOW_YOURSELF_ERROR);
                                             return;
                                         }
-                                        // if the user requests to follow someone they have already followed
+                                        // if the user requests to follow someone they have already
+                                        // requested to follow
                                         if (searchInRequestsList(userToFollow.getId(),currentUserId)) {
                                             displayErrorMessage(ALREADY_REQUESTED_TO_FOLLOW_USER);
+                                            return;
+                                        }
+
+                                        // if the user is already following the requested user
+                                        if (searchInFollowerList(userToFollow.getId(), currentUserId)) {
+                                            displayErrorMessage(ALREADY_FOLLOWING);
                                             return;
                                         }
                                         userToFollow.addFollowRequest(currentUserId);
                                         
                                         addUsertoRequestsListInDatabase(currentUserId, userToFollow.getId());
 
-                                        showFollowSuccessMessage();
+                                        showFollowRequestSuccessMessage();
 
                                         followUserDialog.dismiss();
 
@@ -149,18 +159,18 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     /**
      * A helper method that shows a toast message after the user follow operation is successful
      */
-    private void showFollowSuccessMessage() {
+    private void showFollowRequestSuccessMessage() {
         Toast.makeText(getContext(),
-                       USER_FOLLOWED_SUCCESS_MESSAGE,
+                      REQUEST_SENT_SUCCESS,
                        Toast.LENGTH_LONG)
              .show();
     }
 
     /**
      * Detrimines if a user has already requested to follow this user already
-     * @param followedId
-     * @param followerId
-     * @return
+     * @param followedId user who is being sent the request
+     * @param followerId user who sent the request
+     * @return true if user already sent the request
      */
     private boolean searchInRequestsList(String followedId, String followerId) {
         // retrieving document of followed user
@@ -169,7 +179,26 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
 
         while (!querySnapshotTask.isComplete());
         Map<String, Object> objectMap = querySnapshotTask.getResult().getData();
-        ArrayList<String> requestList = (ArrayList<String>) objectMap.get("followRequest");
+        ArrayList<String> requestList = (ArrayList<String>) objectMap.get(FOLLOW_REQUEST_FIELD);
+        if (requestList != null && !requestList.isEmpty()) {
+            return requestList.contains(followerId);
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether a user has followed another user already
+     * @param followedId user being sent follow request
+     * @param followerId user sending follow request
+     * @return true if user has already sent follow request
+     */
+    private boolean searchInFollowerList(String followedId, String followerId) {
+        DocumentReference userDocument = _db.collection("Users").document(followedId);
+        Task<DocumentSnapshot> querySnapshotTask = userDocument.get();
+
+        while (!querySnapshotTask.isComplete());
+        Map<String, Object> objectMap = querySnapshotTask.getResult().getData();
+        ArrayList<String> requestList = (ArrayList<String>) objectMap.get(FOLLOWERS_FIELD);
         if (requestList != null && !requestList.isEmpty()) {
             return requestList.contains(followerId);
         }
@@ -183,7 +212,7 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
      */
     private void addUsertoRequestsListInDatabase(String followerUserId, String followedUserId) {
         DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(followedUserId);
-        userRef.update("followRequests", FieldValue.arrayUnion(followerUserId));
+        userRef.update(FOLLOW_REQUEST_FIELD, FieldValue.arrayUnion(followerUserId));
     }
 
     //TODO: migrate these methods to NotificationFragment
@@ -230,6 +259,9 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                 _userToFollow.setError(ALREADY_REQUESTED_TO_FOLLOW_USER_MESSAGE);
                 _userToFollow.requestFocus();
                 break;
+            case ALREADY_FOLLOWING:
+                _userToFollow.setError(ALREADY_FOLLOWING_MESSAGE);
+                _userToFollow.requestFocus();
         }
     }
 

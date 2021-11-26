@@ -50,6 +50,7 @@ public class User {
      * Gets the username of the user
      * @return username of the user
      */
+    @PropertyName("username")
     public String getUsername() {
         return _username;
     }
@@ -66,6 +67,7 @@ public class User {
      * Gets the id of the user
      * @return id of the user
      */
+    @PropertyName("id")
     public String getId() {
         return _id;
     }
@@ -82,6 +84,7 @@ public class User {
      * Gets the email of the user
      * @return email of the user
      */
+    @PropertyName("email")
     public String getEmail() {
         return _email;
     }
@@ -98,6 +101,7 @@ public class User {
      * Gets the password of the user
      * @return password of the user
      */
+    @PropertyName("password")
     public String getPassword() {
         return _password;
     }
@@ -115,6 +119,7 @@ public class User {
      * that this user is followed by
      * @return list of usernames following this user
      */
+    @PropertyName("followers")
     public ArrayList<String> getFollowers() {
         return _followers;
     }
@@ -132,6 +137,7 @@ public class User {
      * this user is following
      * @return list of usernames this user is following
      */
+    @PropertyName("following")
     public ArrayList<String> getUsersFollowing() {
         return _following;
     }

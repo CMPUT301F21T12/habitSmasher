@@ -92,5 +92,12 @@
         android:name="com.example.habitsmasher.ui.history.HabitEventViewFragment"
         android:label="HabitEventViewFragment"
         />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.example.habitsmasher.NotificationFragment"
+        android:label="NotificationFragment" />
+    <action
+        android:id="@+id/open_notifications"
+        app:destination="@id/notificationFragment" />
 
 </navigation>
