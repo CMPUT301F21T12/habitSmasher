@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/follow_user_search_button"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="User Search"
+        android:icon="@drawable/baseline_group_add_24"
+        android:title="@string/user_search"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/logout_button"
+        android:icon="@drawable/ic_baseline_logout_24"
+        android:title="@string/logout"
         app:showAsAction="always" />
 </menu>

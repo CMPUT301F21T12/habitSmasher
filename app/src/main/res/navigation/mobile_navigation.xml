@@ -3,16 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/user_login">
+
+    <action android:id="@+id/action_logout"
+        app:destination="@+id/user_login" />
+
+    <action
+        android:id="@+id/action_login"
+        app:launchSingleTop="true"
+        app:destination="@id/navigation_home"/>
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.habitsmasher.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:name="com.example.habitsmasher.ui.today.TodayFragment"
+        android:label="@string/title_today"
         tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_navigation_home_to_LoginFragment"
-            app:destination="@id/user_login"/>
         <action
             android:id="@+id/action_navigation_home_to_habitViewFragment"
             app:destination="@id/habitViewFragment" />
@@ -42,8 +47,9 @@
             app:destination="@id/user_registration"/>
 
         <action
-            android:id="@+id/action_navigation_login_to_ProfileFragment"
-            app:destination="@id/navigation_notifications"/>
+            android:id="@+id/action_navigation_login_to_HomeFragment"
+            app:launchSingleTop="true"
+            app:destination="@id/navigation_home"/>
     </fragment>
 
     <fragment
@@ -61,9 +67,6 @@
         android:name="com.example.habitsmasher.ui.profile.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile">
-        <action
-            android:id="@+id/action_logout"
-            app:destination="@id/user_login"/>
     </fragment>
 
     <fragment

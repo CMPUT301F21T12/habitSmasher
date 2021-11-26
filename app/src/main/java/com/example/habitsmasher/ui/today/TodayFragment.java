@@ -1,7 +1,6 @@
-package com.example.habitsmasher.ui.home;
+package com.example.habitsmasher.ui.today;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -45,7 +46,7 @@ import java.util.Map;
  *
  * @author Cameron Matthew
  */
-public class HomeFragment extends ListFragment {
+public class TodayFragment extends ListFragment {
 
     // user who owns this list of habits displayed
     private User _user;
@@ -108,8 +109,22 @@ public class HomeFragment extends ListFragment {
 
     @Override
     public void onStart() {
+        ActionBar supportActionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.show();
+        }
         super.onStart();
         _habitItemAdapter.startListening();
+
+    }
+
+    @Override
+    public void onResume() {
+        ActionBar supportActionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.show();
+        }
+        super.onResume();
     }
 
     @Override
@@ -227,7 +242,21 @@ public class HomeFragment extends ListFragment {
         //not needed
     }
 
-    // helper method to make a habit
+    @Override
+    public void updateListAfterDelete(int pos) {
+        //not needed
+    }
+
+    @Override
+    public void openEditDialogBox(int position) {
+        //not needed
+    }
+
+    /**
+     * Helper method for making habits
+     * @param extractMap the information to make a habit
+     * @return new habit
+     */
     private Habit makeHabit(Map<String, Object> extractMap) {
         // get all of the data from the snapshot
         String title = (String) extractMap.get("title");
@@ -237,18 +266,25 @@ public class HomeFragment extends ListFragment {
         String days = extractMap.get("days").toString();
         boolean isPublic = (boolean) extractMap.get("public");
 
+        //return the new habit
         return new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
     }
 
-    // get the current day of the week formatted as the first two letters of the day capitalized
-    // ex) "MO" or "TU"
+    /**
+     * get the current day of the week formatted as the first two letters of the day capitalized
+     * ex) "MO" or "TU"
+     * @return the current day
+     */
     private String getCurrentDay() {
         LocalDate currentDate = LocalDate.now();
         return currentDate.getDayOfWeek().toString().toUpperCase().substring(0, 2);
     }
 
-    // get the current day, in the format of "Month day".
-    // ex) "Nov 16"
+    /**
+     * get the current day, in the format of "Month day".
+     * ex) "Nov 16"
+     * @return the current date
+     */
     private String getDateString() {
         LocalDate currentDate = LocalDate.now();
         String abbreviatedMonth = currentDate.getMonth().toString().substring(0, 3).toLowerCase();
@@ -256,8 +292,11 @@ public class HomeFragment extends ListFragment {
         return abbreviatedMonth + " " + currentDate.getDayOfMonth();
     }
 
-    // Open the habit view when the habit is clicked on in the list
-    private void openViewWindowForItem(int position) {
+    /**
+     * Open the habit view when the habit is clicked on in the list
+     * @param position the specific habit selected
+     */
+    protected void openViewWindowForItem(int position) {
         // Get the selected habit
         Habit currentHabit = _habitItemAdapter._snapshots.get(position);
 
@@ -271,7 +310,10 @@ public class HomeFragment extends ListFragment {
         controller.navigate(R.id.action_navigation_home_to_habitViewFragment, bundle);
     }
 
-    // Open the habit event list view when the add event button is pressed.
+    /**
+     * Open the habit event list view when the add event button is pressed.
+     * @param position the specific habit selected
+     */
     private void openHabitEventsView(int position) {
         // Create a bundle to be passed into the HabitEventListFragment
         Habit currentHabit = _habitItemAdapter._snapshots.get(position);

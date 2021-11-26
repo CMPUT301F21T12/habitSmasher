@@ -3,8 +3,10 @@ package com.example.habitsmasher;
 import static android.view.View.GONE;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +24,18 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,11 +53,15 @@ public class LoginFragment extends Fragment {
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
     private static final String USER_PASSWORD_SHARED_PREF_TAG = "password";
     private static final String USER_EMAIL_SHARED_PREF_TAG = "email";
+    private static final int RC_SIGN_IN = 123;
+    private static final String GOOGLE_USER_PWD = "GoogleUserNoPwd";
 
     private final LoginFragment _fragment = this;
     private FirebaseAuth _auth;
     private ProgressBar _progressBar;
     private View _bottomNav;
+    private GoogleSignInClient _googleSignInClient;
+    private UserAccountHelper _userAccountHelper;
 
     @Nullable
     @Override
@@ -74,13 +87,151 @@ public class LoginFragment extends Fragment {
         Button registerButton = view.findViewById(R.id.login_signup_button);
         _progressBar = view.findViewById(R.id.login_progress_bar);
 
+        _userAccountHelper = new UserAccountHelper(getContext(), this);
+
         setClickListenerForLoginButton(loginButton, emailInput, passwordInput);
 
         setClickListenerForRegisterButton(registerButton);
 
         setClickListenerForForgotPasswordButton(forgotPassword);
 
+        createGoogleSignInRequest();
+
+        setClickListenerForGoogleSignInButton(view);
+
         return view;
+    }
+
+    /**
+     * This method sets the click listener for the google sign up butotn
+     * @param view the current view
+     */
+    private void setClickListenerForGoogleSignInButton(View view) {
+        Button googleSignInButton = view.findViewById(R.id.google_login_button);
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signInWithGoogle();
+            }
+        });
+    }
+
+    /**
+     * This method builds the google sign in request using the app's SHA1 token
+     */
+    private void createGoogleSignInRequest() {
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        _googleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+    }
+
+    /**
+     * This method uses the google sign in client and launches the sign in activity to select the
+     * user's google account
+     */
+    private void signInWithGoogle() {
+        Intent signInIntent = _googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    /**
+     * This method is triggered when the google sign in activity is finished and a result is returned.
+     * This method is also responsible for signing in the user using the specified intent
+     * @param requestCode the code of the given request
+     * @param resultCode the code of the resulting result
+     * @param data the intent data passed down from the google sign in acivity
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+                firebaseAuthWithGoogle(account.getIdToken());
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e);
+                showMessage("Sign in failed", Toast.LENGTH_SHORT);
+            }
+        }
+    }
+
+    /**
+     * This helper method uses the GoogleAuthProvider with the given id credential to sign in
+     * using Firebase
+     * @param idToken the id token of the associated credential
+     */
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        _auth.signInWithCredential(credential)
+             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                 @Override
+                 public void onComplete(@NonNull Task<AuthResult> task) {
+                     if (task.isSuccessful()) {
+                         // if log in successful, redirect to home page
+                         showMessage(LOGIN_SUCCESSFUL_MESSAGE, Toast.LENGTH_SHORT);
+
+                         DocumentReference userRef = getCurrentUserDocumentReference();
+                         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                             @Override
+                             public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                 GoogleSignInAccount user = GoogleSignIn.getLastSignedInAccount(
+                                         getContext());
+
+                                 User googleUser = new User(user.getId(),
+                                                            user.getDisplayName()
+                                                                .replaceAll("\\s+",""),
+                                                            user.getEmail(),
+                                                            GOOGLE_USER_PWD);
+
+                                 // once the user is successfully retrieved, add them to the db
+                                 addUserToDatabaseIfUserDoesNotExist(googleUser);
+
+                                 // save their information to be used globally throughout the app
+                                 saveUserInformation(googleUser);
+
+                                 // transition to the home screen
+                                 navigateToFragmentWithAction(R.id.action_navigation_login_to_HomeFragment);
+                             }
+                         });
+                     } else {
+                         showMessage(INCORRECT_EMAIL_PASSWORD_MESSAGE, Toast.LENGTH_LONG);
+                     }
+                     _progressBar.setVisibility(View.GONE);
+                     _bottomNav.setVisibility(View.VISIBLE);
+                 }
+             });
+    }
+
+    /**
+     * This helper method adds the google user to the database if they don't already exist
+     * @param googleUser the user to add
+     */
+    private void addUserToDatabaseIfUserDoesNotExist(User googleUser) {
+        Log.d(TAG, "addUserToDatabaseIfUserDoesNotExist: entry");
+        FirebaseFirestore.getInstance()
+                         .collection("Users")
+                         .document(googleUser.getId()).get().addOnCompleteListener(
+                new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Log.d(TAG, "addUserToDatabaseIfUserDoesNotExist: checking if user exists");
+                        if (!task.getResult().exists()) {
+                            Log.d(TAG, "addUserToDatabaseIfUserDoesNotExist: user does not exist, adding to db");
+                            // if the user does not exist already, add them to the db collection
+                            _userAccountHelper.addNewUserToDatabase(googleUser);
+                        }
+                    }
+                });
     }
 
     /**
@@ -131,13 +282,15 @@ public class LoginFragment extends Fragment {
      * @param password the user password
      */
     private void signInUserWithEmailAndPassword(String email, String password) {
+        PasswordEncrypt passwordEncrypt = new PasswordEncrypt();
+        password = passwordEncrypt.encrypt(password);
         _auth.signInWithEmailAndPassword(email, password)
              .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     // if log in successful, redirect to home page
-                    showMessage(LOGIN_SUCCESSFUL_MESSAGE);
+                    showMessage(LOGIN_SUCCESSFUL_MESSAGE, Toast.LENGTH_SHORT);
 
                     DocumentReference userRef = getCurrentUserDocumentReference();
                     userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -147,11 +300,11 @@ public class LoginFragment extends Fragment {
 
                             saveUserInformation(user);
 
-                            navigateToFragmentWithAction(R.id.action_navigation_login_to_ProfileFragment);
+                            navigateToFragmentWithAction(R.id.action_navigation_login_to_HomeFragment);
                         }
                     });
                 } else {
-                    showMessage(INCORRECT_EMAIL_PASSWORD_MESSAGE);
+                    showMessage(INCORRECT_EMAIL_PASSWORD_MESSAGE, Toast.LENGTH_LONG);
                 }
                 _progressBar.setVisibility(View.GONE);
                 _bottomNav.setVisibility(View.VISIBLE);
@@ -224,11 +377,26 @@ public class LoginFragment extends Fragment {
     /**
      * This helper method shows a toast message to the screen
      * @param message message to display
+     * @param length the length of the message
      */
-    private void showMessage(String message) {
+    private void showMessage(String message, int length) {
         Toast.makeText(getContext(),
                        message,
-                       Toast.LENGTH_LONG).show();
+                       length).show();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+
+        // note:  not working currently, but this is what we need to do if we want to persist
+        // the login session
+
+//        FirebaseUser currentUser = _auth.getCurrentUser();
+//        if (currentUser != null) {
+//            navigateToFragmentWithAction(R.id.action_navigation_login_to_HomeFragment);
+//        }
     }
 
     @Override

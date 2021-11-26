@@ -35,9 +35,8 @@ public class HabitEventListTest {
     public void addHabitEvent_validHabitEventParametersAddition_ExpectHabitEventAdded() {
         Date sampleDate = new Date();
         String sampleComment = "Valid comment";
-        Uri sampleUri = Uri.EMPTY;
 
-        _habitEventList.addHabitEventLocally(sampleDate, sampleComment, sampleUri, UUID.randomUUID().toString());
+        _habitEventList.addHabitEventLocally(sampleDate, sampleComment, UUID.randomUUID().toString(), "");
 
         assertEquals(1, _habitEventList.getHabitEvents().size());
         assertEquals(sampleComment, _habitEventList.getHabitEvents().get(0).getComment());
@@ -86,18 +85,20 @@ public class HabitEventListTest {
 
     @Test
     public void editHabitEvent_validEdit_expectEventToBeEdited() {
-        HabitEvent toEdit = new HabitEvent(new Date(), "Habit 1", UUID.randomUUID().toString());
+        HabitEvent toEdit = new HabitEvent(new Date(), "Habit 1", UUID.randomUUID().toString(), "23.1 45.6");
         _habitEventList.addHabitEventLocally(toEdit);
         String editID = toEdit.getId();
         String newComment = "New comment!";
         Date newDate = new Date();
+        String newLocation = "43.1 23.4";
         int editPosition = 0;
 
-        _habitEventList.editHabitEventLocally(newComment, newDate, editPosition);
+        _habitEventList.editHabitEventLocally(newComment, newDate, editPosition, newLocation);
 
         HabitEvent edited = _habitEventList.getHabitEvents().get(editPosition);
         assertEquals(newComment, edited.getComment());
         assertEquals(newDate, edited.getDate());
         assertEquals(editID, edited.getId());
+        assertEquals(newLocation, edited.getLocation());
     }
 }
