@@ -35,7 +35,7 @@ public class NotificationItemAdapter extends
 
     @Override
     protected void onBindViewHolder(@NonNull RequestViewHolder holder, int position, @NonNull User user) {
-
+        holder._requestUserName.setText(user.getUsername());
     }
 
     public RequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

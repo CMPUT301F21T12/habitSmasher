@@ -23,7 +23,7 @@
                 android:id="@+id/accept_request_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/edit_button_label"
+                android:text="@string/Accept"
                 app:cornerRadius="8dp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/deny_request_button"
                 app:layout_constraintEnd_toStartOf="@+id/deny_request_button"
@@ -33,7 +33,7 @@
                 android:id="@+id/deny_request_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/delete_button_label"
+                android:text="@string/Deny"
                 app:cornerRadius="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:layout_editor_absoluteY="0dp" />

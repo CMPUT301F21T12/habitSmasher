@@ -45,36 +45,47 @@ public class NotificationFragment extends ListFragment<User> {
     // user who this notification list belongs to
     private User _user;
 
+    private Context _context;
+
     // list of users currently requesting to follow this user at the moment
     private static ArrayList<String> _requestingUsers;
+
     public NotificationItemAdapter _notificationItemAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        _user = UserDatabaseHelper.getCurrentUser(getContext());
-        Query query = getListFromFirebase();
-        FirestoreRecyclerOptions<User> options;
-        if (query != null){
-            // populate the list with existing items in the database
-            options = new FirestoreRecyclerOptions.Builder<User>()
-                    .setQuery(query, User.class)
-                    .build();
-        }
-        else {
-            View view = inflater.inflate(R.layout.fragment_notifications, container, false);
-            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(NOTIFICATIONS_HEADER);
-            return view;
+        _context = getContext();
+        _user = UserDatabaseHelper.getCurrentUser(_context);
 
-        }
-        _requestingUsers = _user.getFollowRequests();
-        _notificationItemAdapter = new NotificationItemAdapter(options, _requestingUsers, _user.getId());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        // Set up view
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         // Set header title
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(NOTIFICATIONS_HEADER);
-        initializeRecyclerView(layoutManager, view);
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar())
+                .setTitle(NOTIFICATIONS_HEADER);
+
+        // querying for user requesting to follow this user
+        Query query = getListFromFirebase();
+
+        if (query != null){
+            // populate the list with existing items in the database
+            FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+                                                                                 .setQuery(query,
+                                                                                           User.class)
+                                                                                 .build();
+            _requestingUsers = _user.getFollowRequests();
+
+            _notificationItemAdapter = new NotificationItemAdapter(options,
+                                                                   _requestingUsers,
+                                                                   _user.getId());
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                                                                        LinearLayoutManager.VERTICAL,
+                                                             false);
+            initializeRecyclerView(layoutManager, view);
+        }
+
         return view;
     }
 
@@ -83,6 +94,7 @@ public class NotificationFragment extends ListFragment<User> {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(_notificationItemAdapter);
 
         /* Implementation of swipe menu functionality came from this source:
         Name: Velmurugan
@@ -95,13 +107,20 @@ public class NotificationFragment extends ListFragment<User> {
                 .setSwipeable(R.id.requester_view, R.id.request_swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                             @Override
                             public void onSwipeOptionClicked(int viewID, int position) {
+                                String followerID = _notificationItemAdapter._snapshots.get(position).getId();
                                 switch (viewID) {
                                     case R.id.accept_request_button:
                                         // accept the request
-                                        //removeFollowRequestForUserInDatabase(_user.getId(), );
+                                        removeFollowRequestForUserInDatabase(_user.getId(),
+                                                followerID);
+                                        _notificationItemAdapter.notifyItemChanged(position);
+                                        addNewFollowerForUserInDatabase(_user.getId(), followerID);
+                                        addUserToFollowingForUserInDatabase(followerID, _user.getId());
                                     case R.id.deny_request_button:
                                         // deny the request
-                                        //removeFollowRequestForUserInDatabase(_user.getId(), );
+                                        removeFollowRequestForUserInDatabase(_user.getId(),
+                                                _notificationItemAdapter._snapshots.get(position).getId());
+                                        _notificationItemAdapter.notifyItemChanged(position);
                                 }
                             }
                 });
@@ -119,7 +138,7 @@ public class NotificationFragment extends ListFragment<User> {
 
         ArrayList<String> requestList = (ArrayList<String>) objectMap.get(FOLLOW_REQUEST_FIELD);
         if(requestList != null && !requestList.isEmpty()) {
-            return _db.collection("Users").whereIn("id",requestList);
+            return _db.collection("Users").whereIn("id", requestList);
         }
         return null;
     }
@@ -159,6 +178,28 @@ public class NotificationFragment extends ListFragment<User> {
     };
 
     /**
+     * This starts the item adapter listener
+     */
+    @Override
+    public void onStart(){
+        super.onStart();
+        if (_notificationItemAdapter != null) {
+            _notificationItemAdapter.startListening();
+        }
+    }
+
+    /**
+     * This stops the item adapter listener
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (_notificationItemAdapter != null) {
+            _notificationItemAdapter.stopListening();
+        }
+    }
+
+    /**
      * This method is responsible for adding a new user to the following array of the given user
      * @param userId the user performing the operation
      * @param followedUserId the followed user to add to the collection
@@ -183,9 +224,10 @@ public class NotificationFragment extends ListFragment<User> {
      * @param followerId user being sent request
      * @param followedId user sending request
      */
-    private void removeFollowRequestForUserInDatabase(String followerId, String followedId) {
-        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(followerId);
+    private void removeFollowRequestForUserInDatabase(String followedId, String followerId) {
+        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(followedId);
         userRef.update(FOLLOW_REQUEST_FIELD, FieldValue.arrayRemove(followerId));
     }
+
 
 }

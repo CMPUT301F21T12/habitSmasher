@@ -68,4 +68,6 @@
     <string name="logout">Logout</string>
     <string name="editLocation">EDIT LOCATION</string>
     <string name="Notifications">Notifications</string>
+    <string name="Accept">Accept</string>
+    <string name="Deny">Deny</string>
 </resources>
