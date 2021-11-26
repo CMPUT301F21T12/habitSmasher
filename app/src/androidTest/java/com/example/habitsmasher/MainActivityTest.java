@@ -1055,7 +1055,7 @@ public class MainActivityTest {
         assertTextOnScreen(testHabit.getTitle());
 
         swipeLeftOnHabit(testHabit);
-        _solo.waitForView(R.id.accept_request_button);
+        _solo.waitForView(R.id.edit_habit_event_button);
         _solo.clickOnButton(EDIT_BUTTON);
 
         // wait for edit habit dialog to spawn after edit is clicked
@@ -1652,7 +1652,7 @@ public class MainActivityTest {
 
         // Click on edit button
         swipeLeftOnHabitEvent(testEvent);
-        _solo.waitForView(R.id.accept_request_button);
+        _solo.waitForView(R.id.edit_habit_event_button);
         _solo.clickOnButton(EDIT_BUTTON);
 
         // Check that dialog opens
@@ -1706,7 +1706,7 @@ public class MainActivityTest {
 
         // Click on edit button
         swipeLeftOnHabitEvent(testEvent);
-        _solo.waitForView(R.id.accept_request_button);
+        _solo.waitForView(R.id.edit_habit_event_button);
         _solo.clickOnButton(EDIT_BUTTON);
 
         // Check that dialog opens
@@ -1764,7 +1764,7 @@ public class MainActivityTest {
 
         // Click on edit button
         swipeLeftOnHabitEvent(testEvent);
-        _solo.waitForView(R.id.accept_request_button);
+        _solo.waitForView(R.id.edit_habit_event_button);
         _solo.clickOnButton(EDIT_BUTTON);
 
         // Check that dialog opens
@@ -1834,7 +1834,7 @@ public class MainActivityTest {
 
         // Click on edit button
         swipeLeftOnHabitEvent(testEvent);
-        _solo.waitForView(R.id.accept_request_button);
+        _solo.waitForView(R.id.edit_habit_event_button);
         _solo.clickOnButton(EDIT_BUTTON);
 
         // Check that dialog opens
@@ -2079,7 +2079,7 @@ public class MainActivityTest {
 
     private void deleteTestHabit(Habit habitToDelete) {
         swipeLeftOnHabit(habitToDelete);
-        _solo.waitForView(R.id.deny_request_button);
+        _solo.waitForView(R.id.delete_habit_event_button);
         _solo.clickOnButton(DELETE_BUTTON);
 
         assertFalse(isTextOnScreen(habitToDelete.getTitle()));
@@ -2089,7 +2089,7 @@ public class MainActivityTest {
         swipeLeftOnHabitEvent(eventToDelete);
 
 
-        _solo.waitForView(R.id.deny_request_button);
+        _solo.waitForView(R.id.delete_habit_event_button);
 
 
         _solo.clickOnButton(DELETE_BUTTON);
