@@ -1,12 +1,10 @@
 package com.example.habitsmasher;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +37,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This class holds the front-end elements related to the user sign up page
@@ -177,9 +174,6 @@ public class UserRegistrationFragment extends Fragment implements PictureSelecti
      * @param username the user's username
      */
     private void createNewUserWithEmailAndPassword(String email, String password, String username) {
-        PasswordEncrypt passwordEncrypt = new PasswordEncrypt();
-        password = passwordEncrypt.encrypt(password);
-        String encryptedPassword = password;
         _auth.createUserWithEmailAndPassword(email, password)
              .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                  @Override
@@ -188,7 +182,7 @@ public class UserRegistrationFragment extends Fragment implements PictureSelecti
                          User user = new User(_auth.getUid(),
                                               username,
                                               email,
-                                    encryptedPassword,
+                                            password,
                                  EMPTY_FOLLOWER_LIST,
                                  EMPTY_FOLLOWING_LIST);
 

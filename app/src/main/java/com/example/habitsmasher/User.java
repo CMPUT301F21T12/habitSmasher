@@ -30,8 +30,10 @@ public class User {
      * This lightweight constructor initializes a new user with empty lists
      * @param email the email
      * @param password the password
-     * @param followers
-     * @param following
+     * @param id the id
+     * @param username the username
+     * @param followers the followers
+     * @param following the following
      */
     public User(String id,
                 String username,
