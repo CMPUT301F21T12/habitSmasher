@@ -125,9 +125,8 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         initializeRecyclerView(layoutManager, view);
 
         Log.d(TAG, _habitEventList.getHabitEvents().toString());
-        ProgressTracker progressTracker = new ProgressTracker();
-        HabitEventList noDuplicates = progressTracker.removeDuplicateDays(_habitEventList);
-        Log.d(TAG, noDuplicates.getHabitEvents().toString());
+        ProgressTracker progressTracker = new ProgressTracker(_parentHabit);
+        Log.d(TAG, "Amount of viable Days: " + progressTracker.calculateViableDaysMet(_habitEventList));
 
         return view;
     }
