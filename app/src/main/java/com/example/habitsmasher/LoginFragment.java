@@ -57,8 +57,8 @@ public class LoginFragment extends Fragment {
     private static final String USER_EMAIL_SHARED_PREF_TAG = "email";
     private static final int RC_SIGN_IN = 123;
     private static final String GOOGLE_USER_PWD = "GoogleUserNoPwd";
-    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
-    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
 
     private final LoginFragment _fragment = this;
     private FirebaseAuth _auth;

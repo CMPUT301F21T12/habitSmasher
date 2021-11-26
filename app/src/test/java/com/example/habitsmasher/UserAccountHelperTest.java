@@ -14,8 +14,8 @@ import java.util.HashMap;
 
 public class UserAccountHelperTest {
 
-    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
-    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
 
     @Test
     public void buildUserDataMap_expectCorrectMapConstructed() {

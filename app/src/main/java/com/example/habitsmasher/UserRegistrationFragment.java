@@ -54,8 +54,8 @@ public class UserRegistrationFragment extends Fragment implements PictureSelecti
     private static final String USERNAME_FIELD = "username";
     private static final String THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE = "This username is already taken!";
     private static final String PATH_TO_DEFAULT_USER_IMG = "android.resource://com.example.habitsmasher/drawable/placeholder_profile_picture";
-    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
-    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
 
     private FirebaseAuth _auth;
     private ProgressBar _progressBar;
