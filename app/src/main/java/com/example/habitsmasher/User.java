@@ -2,6 +2,8 @@ package com.example.habitsmasher;
 
 import android.media.Image;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.ArrayList;
 
 /**
@@ -15,8 +17,16 @@ public class User {
     private String _password;
     private String _email;
     private String _id;
+
     private final ArrayList<String> _followers = new ArrayList<>();
     private final ArrayList<String> _following = new ArrayList<>();
+
+    // users who have sent follow requests to the user
+    private final ArrayList<String> _followRequests = new ArrayList<>();
+
+    // users which this user has requested to follow
+    private final ArrayList<String> _sentRequests = new ArrayList<>();
+
     private Image _profilePicture;
     private static final HabitList _habits = new HabitList();
 
@@ -176,4 +186,14 @@ public class User {
     public HabitList getHabits() {
         return _habits;
     }
+
+    @PropertyName("followRequests")
+    public ArrayList<String> getFollowRequests() {
+        return _followRequests;
+    }
+
+    public void addFollowRequest(String followingUser) {
+        _followRequests.add(followingUser);
+    }
+
 }

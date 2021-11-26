@@ -22,10 +22,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This FollowUserDialog class implements the user search pop-up, where a user can follow another
@@ -38,9 +42,11 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     private static final String EMPTY_USERNAME_ERROR_MESSAGE = "Please enter a username!";
     private static final String USER_FOLLOWED_SUCCESS_MESSAGE = "User followed!";
     private static final String CANNOT_FOLLOW_YOURSELF_MESSAGE = "You cannot follow yourself!";
+    private static final String ALREADY_REQUESTED_TO_FOLLOW_USER_MESSAGE = "Already requested to follow that user";
     private static final int INVALID_USERNAME_ERROR = 1;
     private static final int EMPTY_USERNAME_ERROR = 2;
     private static final int CANNOT_FOLLOW_YOURSELF_ERROR = 3;
+    private static final int ALREADY_REQUESTED_TO_FOLLOW_USER = 4;
     private static final String USERS_COLLECTION_PATH = "Users";
     private static final String USERNAME_FIELD = "username";
     private static final String FOLLOWING_FIELD = "following";
@@ -109,16 +115,12 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                                             displayErrorMessage(CANNOT_FOLLOW_YOURSELF_ERROR);
                                             return;
                                         }
-
-                                        userToFollow.addNewFollower(currentUserId);
-
-                                        // add new follower to the user to follow
-                                        addNewFollowerForUserInDatabase(userToFollow.getId(),
-                                                                        currentUserId);
-
-                                        // add to new followed user to following of current user
-                                        addUserToFollowingForUserInDatabase(currentUserId,
-                                                                            userToFollow.getId());
+                                        // if the user requests to follow someone they have already followed
+                                        if (searchInRequestsList(userToFollow.getId(),currentUserId)) {
+                                            displayErrorMessage(ALREADY_REQUESTED_TO_FOLLOW_USER);
+                                            return;
+                                        }
+                                        addUsertoRequestsListInDatabase(currentUserId, userToFollow.getId());
 
                                         showFollowSuccessMessage();
 
@@ -152,6 +154,37 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
              .show();
     }
 
+    /**
+     * Detrimines if a user has already requested to follow this user already
+     * @param followedId
+     * @param followerId
+     * @return
+     */
+    private boolean searchInRequestsList(String followedId, String followerId) {
+        // retrieving document of followed user
+        DocumentReference userDocument = _db.collection("Users").document(followedId);
+        Task<DocumentSnapshot> querySnapshotTask = userDocument.get();
+
+        while (!querySnapshotTask.isComplete());
+        Map<String, Object> objectMap = querySnapshotTask.getResult().getData();
+        ArrayList<String> requestList = (ArrayList<String>) objectMap.get("followRequest");
+        if (requestList != null && !requestList.isEmpty()) {
+            return requestList.contains(followerId);
+        }
+        return false;
+    }
+
+    /**
+     * Adds a user to the list of users requesting to follow another user
+     * @param followerUserId user requesting to follow
+     * @param followedUserId user following
+     */
+    private void addUsertoRequestsListInDatabase(String followerUserId, String followedUserId) {
+        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(followedUserId);
+        userRef.update("followRequests", FieldValue.arrayUnion(followerUserId));
+    }
+
+    //TODO: migrate these methods to NotificationFragment
     /**
      * This method is responsible for adding a new user to the following array of the given user
      * @param userId the user performing the operation
@@ -189,6 +222,10 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                 break;
             case CANNOT_FOLLOW_YOURSELF_ERROR:
                 _userToFollow.setError(CANNOT_FOLLOW_YOURSELF_MESSAGE);
+                _userToFollow.requestFocus();
+                break;
+            case ALREADY_REQUESTED_TO_FOLLOW_USER:
+                _userToFollow.setError(ALREADY_REQUESTED_TO_FOLLOW_USER_MESSAGE);
                 _userToFollow.requestFocus();
                 break;
         }
