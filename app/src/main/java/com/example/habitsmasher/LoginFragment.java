@@ -352,6 +352,7 @@ public class LoginFragment extends Fragment {
 
         editor.putString(USERNAME_SHARED_PREF_TAG, user.getUsername());
         editor.putString(USER_ID_SHARED_PREF_TAG, user.getId());
+        editor.putString(USER_PASSWORD_SHARED_PREF_TAG, user.getPassword());
         editor.putString(USER_EMAIL_SHARED_PREF_TAG, user.getEmail());
 
         editor.apply();
