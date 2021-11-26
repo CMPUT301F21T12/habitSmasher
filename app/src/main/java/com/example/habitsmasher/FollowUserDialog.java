@@ -120,6 +120,8 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                                             displayErrorMessage(ALREADY_REQUESTED_TO_FOLLOW_USER);
                                             return;
                                         }
+                                        userToFollow.addFollowRequest(currentUserId);
+                                        
                                         addUsertoRequestsListInDatabase(currentUserId, userToFollow.getId());
 
                                         showFollowSuccessMessage();

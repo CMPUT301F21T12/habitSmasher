@@ -24,9 +24,6 @@ public class User {
     // users who have sent follow requests to the user
     private final ArrayList<String> _followRequests = new ArrayList<>();
 
-    // users which this user has requested to follow
-    private final ArrayList<String> _sentRequests = new ArrayList<>();
-
     private Image _profilePicture;
     private static final HabitList _habits = new HabitList();
 
