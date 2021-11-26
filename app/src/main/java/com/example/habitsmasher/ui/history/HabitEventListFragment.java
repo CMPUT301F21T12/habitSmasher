@@ -25,6 +25,7 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ListFragment;
+import com.example.habitsmasher.ProgressTracker;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.listeners.FailureListener;
 import com.example.habitsmasher.listeners.SuccessListener;
@@ -122,6 +123,12 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
 
         // Initialize recycler view and return view
         initializeRecyclerView(layoutManager, view);
+
+        Log.d(TAG, _habitEventList.getHabitEvents().toString());
+        ProgressTracker progressTracker = new ProgressTracker();
+        HabitEventList noDuplicates = progressTracker.removeDuplicateDays(_habitEventList);
+        Log.d(TAG, noDuplicates.getHabitEvents().toString());
+
         return view;
     }
 
