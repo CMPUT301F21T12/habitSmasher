@@ -2,6 +2,7 @@ package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,7 +45,6 @@ import java.util.UUID;
 /**
  * HabitEventListFragment class
  * Responsible for data and UI handling of the habit event list
- * Images for habit events are not implemented yet
  */
 public class HabitEventListFragment extends ListFragment<HabitEvent> {
     // Initialize variables
@@ -205,10 +205,12 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
                 String comment = (String) extractMap.get("comment");
                 Timestamp date = (Timestamp) extractMap.get("date");
+                String location = (String) extractMap.get("location");
                 String id = extractMap.get("id").toString();
 
                 // create the new habit event from the snapshot data and add to local list
-                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id);
+                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id,
+                                                          location);
                 Log.d(TAG, addHabitEvent.getId());
                 _habitEventList.addHabitEventLocally(addHabitEvent);
             }
@@ -239,9 +241,8 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
 
-    // TODO: add this to list fragment class once swipe is complete in habit event list
-    protected void openEditDialogBox(int position) {
-        EditHabitEventDialog editHabitEventDialog = new EditHabitEventDialog(position, _habitEventItemAdapter._snapshots.get(position));
+    public void openEditDialogBox(int position) {
+        EditHabitEventDialog editHabitEventDialog = new EditHabitEventDialog(position, _habitEventItemAdapter._snapshots.get(position), _userId, _parentHabit);
         editHabitEventDialog.setCancelable(true);
         editHabitEventDialog.setTargetFragment(this, 1);
         editHabitEventDialog.show(getFragmentManager(), "Edit Habit Event");
@@ -257,14 +258,24 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                                                 _parentHabit);
     }
 
+    public void addHabitEvent(HabitEvent addedHabitEvent, Uri imageToAdd) {
+        updateListAfterAdd(addedHabitEvent);
+        _habitEventList.addImageToDatabase(_userId, _parentHabit, imageToAdd, addedHabitEvent.getId());
+    }
+
     /**
      * Update a habit event after it has been edited
      * @param editedHabitEvent
      * @param pos (int) The position of the habit event in the list
      */
+    @Override
     public void updateListAfterEdit(HabitEvent editedHabitEvent, int pos) {
-        _habitEventList.editHabitInDatabase(editedHabitEvent, _userId, _parentHabit);
         _habitEventItemAdapter.notifyItemChanged(pos);
+    }
+
+    public void editHabitEvent(HabitEvent editedHabitEvent,int pos, Uri habitImage) {
+        _habitEventList.editHabitInDatabase(editedHabitEvent, _userId, _parentHabit, habitImage);
+        updateListAfterEdit(editedHabitEvent, pos);
     }
 
     // TODO: add to list fragment class once swipe is fixed in habit events
@@ -277,30 +288,6 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         );
     }
 
-    /**
-     * TODO: Complete this function, responsible for adding image to the database
-     * @param image The image to add to the database
-     * @param id The ID of the habit event corresponding to the image
-     */
-    private void addImageToDatabase(Uri image, UUID id) {
-        // Get firebase storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
-
-        // Create path for image
-        String storageUrl = "img/" + _userId + "/" + _parentHabit.getId() + "/" + id;
-
-        // Create reference with new path and attempt upload
-        StorageReference imageStorageRef = storageReference.child(storageUrl);
-        UploadTask uploadTask = imageStorageRef.putFile(image);
-
-        // Handle upload success
-        uploadTask.addOnSuccessListener(new SuccessListener(TAG, "Data successfully added."));
-
-        // Handle upload failure
-        uploadTask.addOnFailureListener(new FailureListener(TAG, "Data failed to be added."));
-    }
-
     // TODO: add this to list fragment class once view is implemented for habitevents
     protected void openViewWindowForItem(int position) {
         // Get the selected habit
@@ -309,6 +296,8 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         // Create a bundle to be passed into the habitViewFragment
         Bundle bundle = new Bundle();
         bundle.putSerializable("habitEvent", currentHabitEvent);
+        bundle.putSerializable("parentHabit", _parentHabit);
+        bundle.putSerializable("userId", _userId);
         NavController controller = NavHostFragment.findNavController(this);
 
         // Navigate to the habitViewFragment

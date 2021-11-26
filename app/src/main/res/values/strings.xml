@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">HabitSmasher</string>
+    <string name="title_today">Today</string>
+    <string name="server_client_id">YOUR_SERVER_CLIENT_ID</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -15,6 +17,7 @@
     <string name="dd_mm_yyyy">dd-mm-yyyy</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="cancel_button">CANCEL</string>
     <string name="name">Name:</string>
     <string name="reason">Reason:</string>
     <string name="date_start">Date start:</string>
@@ -40,6 +43,7 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="sign_up">Sign Up</string>
     <string name="password">Password</string>
+    <string name="profile_picture">Profile Picture</string>
     <string name="email">Email</string>
     <string name="habit_smasher_header">HabitSmasher</string>
     <string name="login">Login</string>
@@ -57,5 +61,11 @@
     <string name="forgot_password_message_dialog">Please enter your email</string>
     <string name="follow_user">Follow User</string>
     <string name="follow">Follow</string>
+    <string name="google">Google</string>
+    <string name="camera_picture_button">TAKE PICTURE</string>
+    <string name="gallery_picture_button">FROM GALLERY</string>
+    <string name="user_search">User Search</string>
+    <string name="logout">Logout</string>
+    <string name="editLocation">EDIT LOCATION</string>
     <string name="unfollow_label">UNFOLLOW</string>
 </resources>

@@ -1,19 +1,18 @@
 package com.example.habitsmasher.ui.history;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.habitsmasher.DatePickerDialogFragment;
+import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventDialog;
+import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.R;
 
 import java.util.Date;
@@ -27,15 +26,21 @@ public class EditHabitEventDialog extends HabitEventDialog {
     private final int _index;
     private final HabitEvent _editHabitEvent;
     private final EditHabitEventDialog _editFragment = this;
+    private final String _userId;
+    private final Habit _parentHabit;
 
     /**
      * Default constructor
      * @param index (int) The index of the habit to edit within the list
      * @param editHabitEvent (HabitEvent) The habit event to edit
+     * @param userId (string) The id of the user editing the event
+     * @param parentHabit (Habit) The habit for the event being edited
      */
-    public EditHabitEventDialog(int index, HabitEvent editHabitEvent) {
+    public EditHabitEventDialog(int index, HabitEvent editHabitEvent, String userId, Habit parentHabit) {
         _index = index;
         _editHabitEvent = editHabitEvent;
+        _userId = userId;
+        _parentHabit = parentHabit;
 
         // tag for logging
         TAG = "EditHabitEventDialog";
@@ -48,6 +53,8 @@ public class EditHabitEventDialog extends HabitEventDialog {
         View view = inflater.inflate(R.layout.add_habit_event_dialog, container, false);
         // Connect UI elements
         initializeUIElements(view);
+        wrapBundle(savedInstanceState);
+        spawnMapSnippet();
 
         // set header
         _header.setText("Edit Habit Event");
@@ -64,9 +71,30 @@ public class EditHabitEventDialog extends HabitEventDialog {
         // Add listener to cancel button that closes the dialog
         setCancelButtonListener();
 
+        // Add listener to image view (not touching this during refactoring until images are done)
+        setImageViewListener();
+
+        // Add listener for location button
+        setLocationButtonListener();
+
         // Prefill values
         _eventCommentText.setText(_editHabitEvent.getComment());
         _eventDateText.setText(DatePickerDialogFragment.parseDateToString(_editHabitEvent.getDate()));
+
+        // Fetch image from database
+        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
+        imageDatabaseHelper.fetchImagesFromDB(_eventPictureView, imageDatabaseHelper.getHabitEventStorageReference(_userId, _parentHabit.getId(), _editHabitEvent.getId()));
+
+        _selectedLocation = _editHabitEvent.getLocation();
+
+        // if location is selected, change location header
+        if (!_selectedLocation.equals("")) {
+            _locationHeader.setVisibility(View.INVISIBLE);
+            _editLocationButton.setVisibility(View.VISIBLE);
+            setEditLocationButtonListener();
+            _mapView.setVisibility(View.VISIBLE);
+            _addLocationButton.setVisibility(View.INVISIBLE);
+        }
 
         return view;
     }
@@ -88,11 +116,13 @@ public class EditHabitEventDialog extends HabitEventDialog {
 
                 // Update the habit event in the database and locally
                 Date newDate = DatePickerDialogFragment.parseStringToDate(dateText);
-                HabitEvent editedHabitEvent = new HabitEvent(newDate,
-                        eventComment,
-                        _editHabitEvent.getId());
+                HabitEvent editedHabitEvent;
+                editedHabitEvent = new HabitEvent(newDate,
+                            eventComment,
+                            _editHabitEvent.getId(),
+                            _selectedLocation);
                 _errorText.setText("");
-                _habitEventListFragment.updateListAfterEdit(editedHabitEvent,_index);
+                _habitEventListFragment.editHabitEvent(editedHabitEvent,_index, _selectedImage);
 
                 // Close dialog
                 getDialog().dismiss();

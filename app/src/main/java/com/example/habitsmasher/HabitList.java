@@ -3,6 +3,7 @@ package com.example.habitsmasher;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.habitsmasher.listeners.FailureListener;
 import com.example.habitsmasher.listeners.SuccessListener;
@@ -144,7 +145,12 @@ public class HabitList extends ArrayList<Habit>{
                             Habit habitToDelete,
                             int habitPosition) {
         // delete locally
-        deleteHabitLocal(habitPosition);
+        try {
+            deleteHabitLocal(habitPosition);
+        } catch (IndexOutOfBoundsException e) {
+            Log.d("HabitList", "Delete failed, index out of bounds.", e);
+        }
+
 
         // delete from firebase
         deleteHabitFromDatabase(context, userId, habitToDelete);
