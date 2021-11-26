@@ -7,12 +7,14 @@ import com.example.habitsmasher.User;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 public class UserTest {
     private User _user;
 
     @Before
     public void setUp() {
-        _user = new User("1", "testUser", "123@gmail.com", "123", , );
+        _user = new User("1", "testUser", "123@gmail.com", "123", new ArrayList<>(), new ArrayList<>());
     }
 
     @Test

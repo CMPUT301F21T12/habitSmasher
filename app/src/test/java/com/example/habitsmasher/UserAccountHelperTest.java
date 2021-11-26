@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserAccountHelperTest {
@@ -18,7 +19,7 @@ public class UserAccountHelperTest {
         UserAccountHelper userAccountHelper = new UserAccountHelper(mock(Context.class),
                                                                     mock(Fragment.class));
 
-        User testUser = new User("test", "testUser", "test@gmail.com", "123456");
+        User testUser = new User("test", "testUser", "test@gmail.com", "123456", new ArrayList<>(), new ArrayList<>());
 
         HashMap<String, Object> actualUserDataMap = userAccountHelper.buildUserDataMap(testUser);
 

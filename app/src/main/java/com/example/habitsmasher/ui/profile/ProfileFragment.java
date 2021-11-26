@@ -76,16 +76,21 @@ public class ProfileFragment extends Fragment {
         // Fetch profile picture from database
         ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
         imageDatabaseHelper.fetchImagesFromDB(_userImageView, imageDatabaseHelper.getUserStorageReference(currentUserId));
+        // Set click listeners for followers and following buttons
         setClickListenerForFollowersButton(numberOfFollowersButton);
         setClickListenerForFollowingButton(numberOfFollowingButton);
         return view;
     }
 
+    /**
+     * This is the click listener for the following button
+     * @param numberOfFollowing
+     */
     private void setClickListenerForFollowingButton(Button numberOfFollowing) {
-        // TODO: extract click listener
         numberOfFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // this is a bundle to tell the fragment whether its following or followers
                 Bundle bundle = new Bundle();
                 bundle.putString("FollowType", "Following");
                 // navigate to following fragment
@@ -94,11 +99,15 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * This is the click listener for the followers button
+     * @param numberOfFollowers
+     */
     private void setClickListenerForFollowersButton(Button numberOfFollowers) {
-        // TODO: extract click listener
         numberOfFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // this is a bundle to tell the fragment whether its following or followers
                 Bundle bundle = new Bundle();
                 bundle.putString("FollowType", "Followers");
                 // navigate to followers fragment
@@ -107,22 +116,11 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void setClickListenerForLogoutButton(FloatingActionButton logoutButton) {
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-
-                navigateToFragmentWithAction(R.id.action_logout);
-            }
-        });
-    }
-
-    private void navigateToFragmentWithAction(int actionId) {
-        NavController controller = NavHostFragment.findNavController(_fragment);
-        controller.navigate(actionId);
-    }
-
+    /**
+     * This function navigates to another fragment with a given bundle
+     * @param actionId The navigation action
+     * @param bundle The bundle being passed in
+     */
     private void navigateToFragmentWithAction(int actionId, Bundle bundle) {
         NavController controller = NavHostFragment.findNavController(_fragment);
         controller.navigate(actionId, bundle);

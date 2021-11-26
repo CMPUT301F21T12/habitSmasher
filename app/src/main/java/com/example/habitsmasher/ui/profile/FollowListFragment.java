@@ -28,11 +28,18 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This class deals with the creation of the FollowListFragment
+ * This class handles both the following and followers lists
+ *
+ * @author Kaden Dreger
+ */
 public class FollowListFragment extends ListFragment<User> {
     // Initialize variables
-    private static final String TAG = "HabitEventListFragment";
+    private static final String TAG = "FollowListFragment";
     // user who owns this list of habits displayed
     private User _user;
+    // var to tell whether it is the following or followers list
     private String _followType;
     private Context _context;
     private ArrayList<String> _followList;
@@ -44,8 +51,10 @@ public class FollowListFragment extends ListFragment<User> {
         // Get context
         _context = getContext();
 
+        // get the current user
         _user = UserDatabaseHelper.getCurrentUser(_context);
 
+        // get the bundle arguments
         if(getArguments() != null){
             Bundle arguments = getArguments();
             _followType = arguments.getString("FollowType");
@@ -61,18 +70,22 @@ public class FollowListFragment extends ListFragment<User> {
                     .build();
         }
         else{
+            // create the follow list
             View view = inflater.inflate(R.layout.fragment_follow_list, container, false);
             Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(_followType + " List");
             return view;
         }
+
+        // check the follow type and get the corresponding data
         if (_followType.equals("Followers")) {
             _followList = _user.getFollowers();
         } else {
             _followList = _user.getUsersFollowing();
         }
-        //populateList(query);
+
+        // set the item adapter
         _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getUsername());
-        // Inflate habit event list view
+        // Inflate follow list fragment
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
         View view = inflater.inflate(R.layout.fragment_follow_list, container, false);
 
@@ -83,6 +96,9 @@ public class FollowListFragment extends ListFragment<User> {
         return view;
     }
 
+    /**
+     * This starts the item adapter listener
+     */
     public void onStart(){
         super.onStart();
         if (_followItemAdapter != null) {
@@ -90,6 +106,9 @@ public class FollowListFragment extends ListFragment<User> {
         }
     }
 
+    /**
+     * This stops the item adapter listener
+     */
     public void onStop(){
         super.onStop();
         if (_followItemAdapter != null) {
@@ -97,8 +116,13 @@ public class FollowListFragment extends ListFragment<User> {
         }
     }
 
+    /**
+     * This function performs the action of getting the query from firebase
+     * @return The query obtained
+     */
     @Override
     protected Query getListFromFirebase() {
+        // Sample the current user
         DocumentReference sampleDocument = _db.collection("Users").document(_user.getId());
         Task<DocumentSnapshot> querySnapshotTask = sampleDocument.get();
 
@@ -107,26 +131,29 @@ public class FollowListFragment extends ListFragment<User> {
 
         Map<String, Object> objectMap = querySnapshotTask.getResult().getData();
 
+        // get the list of followers/following
         ArrayList<String> followList = (ArrayList<String>) objectMap.get(_followType.toLowerCase());
 
+        // ensure not empty and return
         if(followList != null && !followList.isEmpty()) {
             return _db.collection("Users").whereIn("id", followList);
         }
         return null;
-
     }
 
     @Override
     protected void populateList(Query query) {
+        // not used
     }
 
     @Override
     protected void openAddDialogBox() {
+        // not used
     }
 
     @Override
     public void openEditDialogBox(int position) {
-
+        // not used
     }
 
     /**
@@ -182,24 +209,34 @@ public class FollowListFragment extends ListFragment<User> {
         recyclerView.addOnItemTouchListener(touchListener);
     }
 
+    /**
+     * This function handles unfollowing the user swiped on
+     * @param position The position in the list
+     */
     private void unfollowUser(int position) {
         Toast.makeText(_context, "Clicked unfollow", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * This funciton handles opening the view for the selected user
+     * @param position Position of the user in the list
+     */
     protected void openViewWindowForItem(int position) {
         Toast.makeText(_context, "Clicked on a row", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void updateListAfterAdd(User addedObject) {
+        // not used
     }
 
     @Override
     public void updateListAfterEdit(User editedObject, int pos) {
+        // not used
     }
 
     @Override
     public void updateListAfterDelete(int pos) {
-
+        // not used
     }
 }

@@ -18,6 +18,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.ArrayList;
 
+/**
+ * This class handles the item adapter for the follow items
+ * @author Kaden Dreger
+ */
 public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.FollowViewHolder> {
     private static ArrayList<String> _followList;
     private final String _userId;
@@ -26,8 +30,9 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
-     *
-     * @param options
+     * @param options The options for the firestore recycler
+     * @param followList The follow list
+     * @param userId The current user id
      */
     public FollowItemAdapter(@NonNull FirestoreRecyclerOptions<User> options,
                              ArrayList<String> followList,
@@ -38,6 +43,12 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
     }
 
 
+    /**
+     * Sets the necessary components of the view holder
+     * @param holder The view holder
+     * @param position The position of the view in the list
+     * @param user The selected user
+     */
     @Override
     protected void onBindViewHolder(@NonNull FollowViewHolder holder, int position, @NonNull User user) {
         // set necessary elements of the habit
@@ -46,6 +57,12 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
         //holder._profilePicture.setImageURI(user.getProfilePicture());
     }
 
+    /**
+     * This creates the view holder
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public FollowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,7 +72,7 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
     }
 
     /**
-     * Class that holds the necessary elements of an individual row in the HabitList
+     * Class that holds the necessary elements of an individual row in the FollowList
      */
     public static class FollowViewHolder extends RecyclerView.ViewHolder {
         private final TextView _userName;
