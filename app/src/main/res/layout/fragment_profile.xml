@@ -47,10 +47,11 @@
         app:layout_constraintBottom_toBottomOf="@+id/profile_picture"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/number_followers"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/text_button_background_white"
         android:text="@string/zero"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/followers_label"
@@ -58,12 +59,13 @@
         app:layout_constraintStart_toStartOf="@+id/followers_label"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/number_following"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:text="@string/zero"
+        android:background="@drawable/text_button_background_white"
         app:layout_constraintBottom_toTopOf="@+id/following_label"
         app:layout_constraintEnd_toEndOf="@+id/following_label"
         app:layout_constraintStart_toStartOf="@+id/following_label"

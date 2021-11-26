@@ -28,6 +28,8 @@ public class UserDatabaseHelper {
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
     private static final String USER_PASSWORD_SHARED_PREF_TAG = "password";
     private static final String USER_EMAIL_SHARED_PREF_TAG = "email";
+    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
 
     private final String _userID;
     private final TextView _numberOfFollowers;
@@ -139,6 +141,6 @@ public class UserDatabaseHelper {
         String password = sharedPref.getString(USER_PASSWORD_SHARED_PREF_TAG, "password");
 
 
-        return new User(userId, username, email, password, new ArrayList<String>(), new ArrayList<String>());
+        return new User(userId, username, email, password, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
     }
 }

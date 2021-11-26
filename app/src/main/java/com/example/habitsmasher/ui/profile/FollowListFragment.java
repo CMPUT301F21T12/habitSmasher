@@ -222,7 +222,7 @@ public class FollowListFragment extends ListFragment<User> {
     }
 
     /**
-     * This funciton handles opening the view for the selected user
+     * This function handles opening the view for the selected user
      * @param position Position of the user in the list
      */
     protected void openViewWindowForItem(int position) {

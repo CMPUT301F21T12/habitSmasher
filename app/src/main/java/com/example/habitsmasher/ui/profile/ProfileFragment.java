@@ -43,6 +43,8 @@ public class ProfileFragment extends Fragment {
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
     private static final String USERNAME_SHARED_PREF_TAG = "username";
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
+    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
+    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
 
     private ProfileFragment _fragment = this;
     private ImageView _userImageView;
@@ -52,7 +54,7 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         // create the sample user
-        User user = new User("1", "TestUser", "123@gmail.com", "123", new ArrayList<String>(), new ArrayList<String>());
+        User user = new User("1", "TestUser", "123@gmail.com", "123", EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
         user.setUsername(sharedPref.getString(USERNAME_SHARED_PREF_TAG, "user"));
