@@ -1,4 +1,5 @@
 package com.example.habitsmasher;
+import android.location.Location;
 import android.net.Uri;
 import com.google.firebase.firestore.PropertyName;
 
@@ -11,11 +12,17 @@ import java.util.Date;
  * Pictures for habit events are not yet implemented
  */
 public class HabitEvent extends DatabaseEntity implements Serializable {
+
     private Date _date;
     private String _comment;
     private Uri _pictureUri;
 
-    // TODO: Eventually add location
+    /*
+    String in the format of "latitude longitude" that stores the location
+    of the habit event, is an empty string if no location specified
+     */
+    private String _location;
+
     // TODO: Fully integrate pictures
 
     /**
@@ -26,15 +33,30 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     }
 
     /**
-     * Default constructor, creates new HabitEvent
+     * Constructor, creates new HabitEvent without location
      * @param startDate (Date): The start date of the habit event
      * @param comment (String): The comment of the habit event
+     * @param id (String): The unique ID of the habit event
      */
     public HabitEvent(Date startDate, String comment, String id) {
         super(id);
         _date = startDate;
         _comment = comment;
-        // _pictureUri = pictureUri;
+        _location = "";
+    }
+
+    /**
+     * Habit event constructor for habit event with location
+     * @param startDate start date of habit event
+     * @param comment comment of habit event
+     * @param id id of habit event
+     * @param location location of habit event in form of string
+     */
+    public HabitEvent(Date startDate, String comment, String id, String location) {
+        super(id);
+        _date = startDate;
+        _comment = comment;
+        _location = location;
     }
 
     /**
@@ -87,4 +109,24 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     public void setPictureURL(Uri pictureUri) {
         this._pictureUri = pictureUri;
     }
+
+    /**
+     * Gets the location of the habit event in a string format, empty
+     * string if no location recorded
+     * @return String representation of location
+     */
+    @PropertyName("location")
+    public String getLocation() {
+        return _location;
+    }
+
+    /**
+     * Sets the location of the habit event in a string format, empty
+     * string if no location recorded
+     * @param location String representation of location
+     */
+    public void setLocation(String location) {
+        _location = location;
+    }
+
 }

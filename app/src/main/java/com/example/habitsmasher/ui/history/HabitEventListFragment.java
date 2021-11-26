@@ -210,10 +210,12 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
                 String comment = (String) extractMap.get("comment");
                 Timestamp date = (Timestamp) extractMap.get("date");
+                String location = (String) extractMap.get("location");
                 String id = extractMap.get("id").toString();
 
                 // create the new habit event from the snapshot data and add to local list
-                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id);
+                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id,
+                                                          location);
                 Log.d(TAG, addHabitEvent.getId());
                 _habitEventList.addHabitEventLocally(addHabitEvent);
             }
@@ -244,8 +246,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
 
-    // TODO: add this to list fragment class once swipe is complete in habit event list
-    protected void openEditDialogBox(int position) {
+    public void openEditDialogBox(int position) {
         EditHabitEventDialog editHabitEventDialog = new EditHabitEventDialog(position, _habitEventItemAdapter._snapshots.get(position), _userId, _parentHabit);
         editHabitEventDialog.setCancelable(true);
         editHabitEventDialog.setTargetFragment(this, 1);

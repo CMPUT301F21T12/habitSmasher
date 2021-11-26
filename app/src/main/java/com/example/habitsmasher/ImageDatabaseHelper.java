@@ -19,7 +19,7 @@ public class ImageDatabaseHelper {
     private StorageReference _storageReference = _storage.getReference();
 
     // Max download megabyte size
-    private final long ONE_MEGABYTE = 1024 * 1024;
+    private final long FIVE_MEGABYTES = 1024 * 1024 * 5;
 
     // Has to be global in order to be accessed in onSuccess method
     private Bitmap _returnImage;
@@ -39,7 +39,7 @@ public class ImageDatabaseHelper {
      */
     public Bitmap fetchImagesFromDB(@NonNull ImageView viewHolder, StorageReference reference) {
         // Get Image from database
-        reference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        reference.getBytes(FIVE_MEGABYTES).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 // If successful, store bitmap of new image and set in view holder
