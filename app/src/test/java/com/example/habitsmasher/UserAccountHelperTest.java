@@ -24,7 +24,6 @@ public class UserAccountHelperTest {
 
         assertEquals(testUser.getUsername(), actualUserDataMap.get("username"));
         assertEquals(testUser.getEmail(), actualUserDataMap.get("email"));
-        assertEquals(testUser.getPassword(), actualUserDataMap.get("password"));
         assertEquals(testUser.getId(), actualUserDataMap.get("id"));
     }
 }
