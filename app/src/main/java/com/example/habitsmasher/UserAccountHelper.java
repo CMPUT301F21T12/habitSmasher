@@ -70,7 +70,6 @@ public class UserAccountHelper {
 
         userData.put("username", user.getUsername());
         userData.put("email", user.getEmail());
-        userData.put("password", user.getPassword());
         userData.put("id", user.getId());
 
         return userData;
