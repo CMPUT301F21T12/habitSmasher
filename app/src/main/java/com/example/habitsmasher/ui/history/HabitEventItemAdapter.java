@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
  */
 public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
     // Initialize variables
-    private static String DATE_FORMAT = "dd/MM/yyyy";
+    private static String DATE_FORMAT = "EEE, d MMM yyyy";
     private Context _context;
     private static Habit _parentHabit;
     private static String _userId;
