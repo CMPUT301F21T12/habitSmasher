@@ -113,14 +113,12 @@ public class NotificationFragment extends ListFragment<User> {
                                         // accept the request
                                         removeFollowRequestForUserInDatabase(_user.getId(),
                                                 followerID);
-                                        _notificationItemAdapter.notifyItemChanged(position);
                                         addNewFollowerForUserInDatabase(_user.getId(), followerID);
                                         addUserToFollowingForUserInDatabase(followerID, _user.getId());
                                     case R.id.deny_request_button:
                                         // deny the request
                                         removeFollowRequestForUserInDatabase(_user.getId(),
                                                 _notificationItemAdapter._snapshots.get(position).getId());
-                                        _notificationItemAdapter.notifyItemChanged(position);
                                 }
                             }
                 });

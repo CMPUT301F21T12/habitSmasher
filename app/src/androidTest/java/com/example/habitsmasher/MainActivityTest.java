@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class MainActivityTest {
     private static final String PROFILE_TEXT = "Profile";
     private static final boolean PUBLIC_HABIT = true;
     private static final boolean PRIVATE_HABIT = false;
-    private static final String DATE_PATTERN = "dd-MM-yyyy";
+    private static final String DATE_PATTERN = "EEE, d MMM yyyy";
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
@@ -83,10 +84,12 @@ public class MainActivityTest {
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String INVALID_USERNAME = "abcdefg";
     private static final String EDIT_HEADER = "EDIT LOCATION";
+    private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
-                                      TEST_USER_PASSWORD);
+                                      TEST_USER_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -357,7 +360,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("habitHomeScreenTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -419,7 +422,7 @@ public class MainActivityTest {
         }
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), notToday, PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("noHomeScreenTest", "Test Reason", new Date(), notToday, PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -896,7 +899,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create public test habit
-        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("noPrivacyHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -957,7 +960,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create public test habit
-        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("bothPrivacyCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1145,7 +1148,7 @@ public class MainActivityTest {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("AddEventTest");
+        Habit testHabit = goToViewHabit("AddEventNoLocTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1187,7 +1190,7 @@ public class MainActivityTest {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("AddEventTest");
+        Habit testHabit = goToViewHabit("AddEventWithLocation");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1250,7 +1253,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("habitEventNoLoc", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1336,7 +1339,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("homeScreenEventLoc", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1425,7 +1428,7 @@ public class MainActivityTest {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("EmptyComEventTest");
+        Habit testHabit = goToViewHabit("emptyComEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1731,7 +1734,7 @@ public class MainActivityTest {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("EditCommentEvent");
+        Habit testHabit = goToViewHabit("EditLocationEvent");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1780,6 +1783,8 @@ public class MainActivityTest {
 
         assertTextOnScreen(EDIT_HEADER);
 
+        clickConfirmButtonInAddHabitEventDialogBox();
+
         // Go back and delete habit
         _solo.goBack();
         _solo.goBack();
@@ -1791,7 +1796,7 @@ public class MainActivityTest {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("EditCommentEvent");
+        Habit testHabit = goToViewHabit("EditLocationNewEvent");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1850,6 +1855,8 @@ public class MainActivityTest {
 
         assertTextOnScreen(EDIT_HEADER);
 
+        clickConfirmButtonInAddHabitEventDialogBox();
+
         // Go back and delete habit
         _solo.goBack();
         _solo.goBack();
@@ -1861,7 +1868,7 @@ public class MainActivityTest {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("AddEventTest");
+        Habit testHabit = goToViewHabit("viewEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1918,7 +1925,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyUsername_signUpFails() {
-        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD);
+        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1933,7 +1940,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyEmail_signUpFails() {
-        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD);
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1948,7 +1955,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyPassword_signUpFails() {
-        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "");
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "", EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1963,7 +1970,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_usernameExists_emailExists_signUpFails() {
-        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD);
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1978,7 +1985,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_usernameExists_newEmail_signUpFails() {
-        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD);
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 

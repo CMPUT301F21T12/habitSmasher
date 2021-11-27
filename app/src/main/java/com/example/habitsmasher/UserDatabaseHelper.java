@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,8 @@ public class UserDatabaseHelper {
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
     private static final String USER_PASSWORD_SHARED_PREF_TAG = "password";
     private static final String USER_EMAIL_SHARED_PREF_TAG = "email";
+    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
 
     private final String _userID;
     private final TextView _numberOfFollowers;
@@ -137,6 +140,7 @@ public class UserDatabaseHelper {
         String email = sharedPref.getString(USER_EMAIL_SHARED_PREF_TAG, "email");
         String password = sharedPref.getString(USER_PASSWORD_SHARED_PREF_TAG, "password");
 
-        return new User(userId, username, email, password);
+
+        return new User(userId, username, email, password, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
     }
 }
