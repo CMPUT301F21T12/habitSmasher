@@ -22,9 +22,9 @@ public class ProgressTracker {
 
 
     // Default constructor
-    public ProgressTracker(Habit parentHabit, HabitEventList events) {
+    public ProgressTracker(Habit parentHabit) {
         _parentHabit = parentHabit;
-        _events = events;
+        _events = parentHabit.getHabitEvents();
         _formatter = new SimpleDateFormat(DAY_PATTERN);
     }
 

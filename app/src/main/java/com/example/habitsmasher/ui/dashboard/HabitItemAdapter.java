@@ -81,7 +81,7 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
         populateEventList(getListFromFirebase(habit), habit);
 
         // Create a new progress tracker
-        ProgressTracker progressTracker = new ProgressTracker(habit, habit.getHabitEvents());
+        ProgressTracker progressTracker = new ProgressTracker(habit);
 
         // Get integer representation of progress
         int progress = (int) progressTracker.calculateProgressPercentage();
