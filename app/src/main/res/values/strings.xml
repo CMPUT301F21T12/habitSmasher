@@ -67,4 +67,5 @@
     <string name="user_search">User Search</string>
     <string name="logout">Logout</string>
     <string name="editLocation">EDIT LOCATION</string>
+    <string name="no_progress">00%</string>
 </resources>
