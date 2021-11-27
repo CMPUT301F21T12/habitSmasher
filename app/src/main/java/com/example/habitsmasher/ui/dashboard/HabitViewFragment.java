@@ -32,12 +32,11 @@ public class HabitViewFragment extends Fragment {
     // user which owns this habit
     private String _userId;
 
-
     private PublicPrivateButtons _publicPrivateButtons;
 
     private DaysTracker _tracker;
 
-    private static final String PATTERN = "dd-MM-yyyy";
+    private static final String PATTERN = "EEE, d MMM yyyy";
 
     public HabitViewFragment() {
         // Required empty public constructor
@@ -73,7 +72,7 @@ public class HabitViewFragment extends Fragment {
 
         // Setting text boxes
         descriptionHabitTextBox.setText(_habit.getReason());
-        dateHabitTextBox.setText(String.format(dateHabitTextBox.getText().toString(), simpleDateFormat.format(_habit.getDate())));
+        dateHabitTextBox.setText(simpleDateFormat.format(_habit.getDate()));
 
         // Get history button and add listener
         AppCompatButton historyButton = view.findViewById(R.id.eventHistoryButton);
