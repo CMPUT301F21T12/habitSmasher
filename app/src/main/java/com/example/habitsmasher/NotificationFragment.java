@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -68,27 +69,26 @@ public class NotificationFragment extends ListFragment<User> {
         // querying for user requesting to follow this user
         Query query = getListFromFirebase();
 
-        if (query != null){
-            // populate the list with existing items in the database
-            FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+        // populate the list with existing items in the database
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                                                                                  .setQuery(query,
                                                                                            User.class)
                                                                                  .build();
-            _requestingUsers = _user.getFollowRequests();
+        _requestingUsers = _user.getFollowRequests();
 
-            _notificationItemAdapter = new NotificationItemAdapter(options,
+        _notificationItemAdapter = new NotificationItemAdapter(options,
                                                                    _requestingUsers,
                                                                    _user.getId());
 
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                                                                         LinearLayoutManager.VERTICAL,
                                                              false);
-            initializeRecyclerView(layoutManager, view);
-        }
+        initializeRecyclerView(layoutManager, view);
 
         return view;
     }
 
+    @Override
     protected void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
         RecyclerView recyclerView = view.findViewById(R.id.notifications_recycler_view);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -115,10 +115,14 @@ public class NotificationFragment extends ListFragment<User> {
                                                 followerID);
                                         addNewFollowerForUserInDatabase(_user.getId(), followerID);
                                         addUserToFollowingForUserInDatabase(followerID, _user.getId());
+                                        resetOptionsOfAdapter();
+                                        break;
                                     case R.id.deny_request_button:
                                         // deny the request
                                         removeFollowRequestForUserInDatabase(_user.getId(),
                                                 _notificationItemAdapter._snapshots.get(position).getId());
+                                        resetOptionsOfAdapter();
+                                        break;
                                 }
                             }
                 });
@@ -126,6 +130,27 @@ public class NotificationFragment extends ListFragment<User> {
         recyclerView.addOnItemTouchListener(touchListener);
     }
 
+    /**
+     * This readjusts the adapter of the RecyclerView so accepted/denied requests
+     * are deleted (as a consequence, when this occurs, any new requests
+     * sent after the user loads this fragment will also be loaded)
+     *
+     * Source:
+     * https://stackoverflow.com/questions/48014211/can-we-update-query-of-
+     * firestore-recycler-adapter-without-setting-the-whole-adap
+     */
+    protected void resetOptionsOfAdapter() {
+        _notificationItemAdapter.stopListening();
+        Query query = getListFromFirebase();
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+                                                                             .setQuery(query,
+                                                                                       User.class)
+                                                                             .build();
+        _notificationItemAdapter.updateOptions(options);
+        _notificationItemAdapter.startListening();
+    }
+
+    @Override
     protected Query getListFromFirebase() {
         DocumentReference sampleDocument = _db.collection("Users").document(_user.getId());
         Task<DocumentSnapshot> querySnapshotTask = sampleDocument.get();
@@ -138,11 +163,14 @@ public class NotificationFragment extends ListFragment<User> {
         if(requestList != null && !requestList.isEmpty()) {
             return _db.collection("Users").whereIn("id", requestList);
         }
-        return null;
+
+        // return empty query when there are no follow requests
+        return _db.collection("Users").whereIn("id", Arrays.asList(""));
     }
 
+    @Override
     protected void populateList(Query query) {
-
+        // not needed
     }
 
     @Override
@@ -181,9 +209,7 @@ public class NotificationFragment extends ListFragment<User> {
     @Override
     public void onStart(){
         super.onStart();
-        if (_notificationItemAdapter != null) {
-            _notificationItemAdapter.startListening();
-        }
+        _notificationItemAdapter.startListening();
     }
 
     /**
@@ -192,9 +218,7 @@ public class NotificationFragment extends ListFragment<User> {
     @Override
     public void onStop(){
         super.onStop();
-        if (_notificationItemAdapter != null) {
-            _notificationItemAdapter.stopListening();
-        }
+        _notificationItemAdapter.stopListening();
     }
 
     /**

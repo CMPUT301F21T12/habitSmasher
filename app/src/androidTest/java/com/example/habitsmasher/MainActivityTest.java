@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -86,10 +87,12 @@ public class MainActivityTest {
     private static final String EDIT_HEADER = "EDIT LOCATION";
     private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
-                                      TEST_USER_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
+                                      TEST_USER_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST,
+                                      EMPTY_REQUEST_LIST);
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -168,7 +171,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void followUserWithEmptyUsername(){
+    public void requestToFollowUserWithEmptyUsername(){
         logInTestUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
@@ -191,7 +194,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void followYourself_followFails(){
+    public void requestTofollowYourself_followFails(){
         logInTestUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
@@ -217,7 +220,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void followUserWithInvalidUsername(){
+    public void requestTofollowUserWithInvalidUsername(){
         logInTestUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
@@ -1925,7 +1928,8 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyUsername_signUpFails() {
-        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
+        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD, EMPTY_FOLLOWER_LIST,
+                                EMPTY_FOLLOWING_LIST, EMPTY_REQUEST_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1940,7 +1944,9 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyEmail_signUpFails() {
-        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD,
+                                EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST,
+                                EMPTY_REQUEST_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1955,7 +1961,9 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyPassword_signUpFails() {
-        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "", EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "",
+                                EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST,
+                                EMPTY_REQUEST_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1970,7 +1978,9 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_usernameExists_emailExists_signUpFails() {
-        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD,
+                                EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST,
+                                EMPTY_REQUEST_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1985,7 +1995,9 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_usernameExists_newEmail_signUpFails() {
-        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD,
+                                EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST,
+                                EMPTY_REQUEST_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
