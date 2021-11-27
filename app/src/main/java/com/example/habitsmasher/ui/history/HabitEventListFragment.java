@@ -1,7 +1,5 @@
 package com.example.habitsmasher.ui.history;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -30,8 +28,6 @@ import com.example.habitsmasher.listeners.FailureListener;
 import com.example.habitsmasher.listeners.SuccessListener;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
@@ -42,7 +38,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -210,10 +205,12 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                 Map<String, Object> extractMap = snapshotList.get(i).getData();
                 String comment = (String) extractMap.get("comment");
                 Timestamp date = (Timestamp) extractMap.get("date");
+                String location = (String) extractMap.get("location");
                 String id = extractMap.get("id").toString();
 
                 // create the new habit event from the snapshot data and add to local list
-                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id);
+                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id,
+                                                          location);
                 Log.d(TAG, addHabitEvent.getId());
                 _habitEventList.addHabitEventLocally(addHabitEvent);
             }
@@ -244,8 +241,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
 
-    // TODO: add this to list fragment class once swipe is complete in habit event list
-    protected void openEditDialogBox(int position) {
+    public void openEditDialogBox(int position) {
         EditHabitEventDialog editHabitEventDialog = new EditHabitEventDialog(position, _habitEventItemAdapter._snapshots.get(position), _userId, _parentHabit);
         editHabitEventDialog.setCancelable(true);
         editHabitEventDialog.setTargetFragment(this, 1);

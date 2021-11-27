@@ -67,6 +67,9 @@
         android:name="com.example.habitsmasher.ui.profile.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_navigation_notifications_to_followListFragment"
+            app:destination="@id/followListFragment" />
     </fragment>
 
     <fragment
@@ -92,5 +95,9 @@
         android:name="com.example.habitsmasher.ui.history.HabitEventViewFragment"
         android:label="HabitEventViewFragment"
         />
+    <fragment
+        android:id="@+id/followListFragment"
+        android:name="com.example.habitsmasher.ui.profile.FollowListFragment"
+        android:label="FollowListFragment" />
 
 </navigation>

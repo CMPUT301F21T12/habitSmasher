@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -24,6 +23,7 @@ import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -42,7 +42,7 @@ public class MainActivityTest {
     private static final String PROFILE_TEXT = "Profile";
     private static final boolean PUBLIC_HABIT = true;
     private static final boolean PRIVATE_HABIT = false;
-    private static final String DATE_PATTERN = "dd-MM-yyyy";
+    private static final String DATE_PATTERN = "EEE, d MMM yyyy";
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
@@ -83,10 +83,13 @@ public class MainActivityTest {
     private static final String FOLLOW = "Follow";
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String INVALID_USERNAME = "abcdefg";
+    private static final String EDIT_HEADER = "EDIT LOCATION";
+    private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
-                                      TEST_USER_PASSWORD);
+                                      TEST_USER_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -357,7 +360,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("habitHomeScreenTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -419,7 +422,7 @@ public class MainActivityTest {
         }
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), notToday, PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("noHomeScreenTest", "Test Reason", new Date(), notToday, PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -896,7 +899,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create public test habit
-        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("noPrivacyHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -957,7 +960,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create public test habit
-        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("bothPrivacyCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1141,11 +1144,11 @@ public class MainActivityTest {
     }
 
     @Test
-    public void ensureHabitEventAddedSuccessfully() {
+    public void ensureHabitEventAddedSuccessfullyWithoutLocation() {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("AddEventTest");
+        Habit testHabit = goToViewHabit("AddEventNoLocTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1183,7 +1186,61 @@ public class MainActivityTest {
     }
 
     @Test
-    public void ensureHabitEventAddedSuccessfullyFromHomeScreen(){
+    public void ensureHabitEventAddedSuccessfullyWithLocation() {
+        logInTestUser();
+
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("AddEventWithLocation");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click on enter location button
+        clickOnAddLocation();
+
+        // need timeout since google map snippet doesnt load immedatiely
+        _solo.sleep(5000);
+
+        // click confirm for map dialog box
+        clickOnConfirmMapDialog();
+
+        // Assert that location header has changed
+        assertTextOnScreen(EDIT_HEADER);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventAddedSuccessfullyFromHomeScreenWithoutLocation(){
         logInTestUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
@@ -1196,7 +1253,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("habitEventNoLoc", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1269,11 +1326,109 @@ public class MainActivityTest {
     }
 
     @Test
+    public void ensureHabitEventAddedSuccessfullyFromHomeScreenWithLocation(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Habit List tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // click on add habit floating action button to add habit
+        _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
+
+        // Create test habit
+        Habit testHabit = new Habit("homeScreenEventLoc", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+
+        // Enter title
+        setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
+
+        // Enter reason
+        setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
+
+        // Enter date
+        enterCurrentDateInAddHabitDialogBox();
+
+        // Select today
+        setCurrentDayInAddHabitDialogBox();
+
+        // Set the privacy
+        setPrivacyInAddHabitDialogBox(PUBLIC_HABIT);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitDialogBox();
+
+        // Check that the current fragment is the habit list
+        assertTextOnScreen(HABIT_LIST_TEXT);
+
+        // Ensure added Habit is present in the list
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Go to home screen
+        _solo.clickOnView(_solo.getView(R.id.navigation_home));
+
+        // Assert that the habit is there
+        assertTextOnScreen(testHabit.getTitle());
+
+        // Click on the add event button
+        swipeLeftOnHabit(testHabit);
+        _solo.clickOnView(_solo.getView(R.id.home_add_event_button));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // click on add location button
+        clickOnAddLocation();
+
+        // Needed so map snippet can load
+        _solo.sleep(5000);
+
+        // confirm map dialog button
+        clickOnConfirmMapDialog();
+
+        // assert header changed
+        assertTextOnScreen(EDIT_HEADER);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Go back and delete habit
+        _solo.goBack();
+
+        // Go back to list tab
+        _solo.clickOnView(_solo.getView(R.id.navigation_dashboard));
+
+        // Delete the habit
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
     public void ensureHabitEventFails_emptyComment() {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("EmptyComEventTest");
+        Habit testHabit = goToViewHabit("emptyComEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1575,11 +1730,145 @@ public class MainActivityTest {
     }
 
     @Test
+    public void ensureHabitEventEditedSuccessfully_changeLocation() {
+        logInTestUser();
+
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("EditLocationEvent");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Click on edit button
+        swipeLeftOnHabitEvent(testEvent);
+        _solo.waitForView(R.id.edit_habit_event_button);
+        _solo.clickOnButton(EDIT_BUTTON);
+
+        // Check that dialog opens
+        assertTextOnScreen("Edit Habit Event");
+
+        // Click on location button
+        clickOnAddLocation();
+
+        // Wait for map snippets to load
+        _solo.sleep(5000);
+
+        clickOnConfirmMapDialog();
+
+        assertTextOnScreen(EDIT_HEADER);
+
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
+    public void ensureHabitEventEditedSuccessfully_changeLocationWhenLocationAlreadySelected() {
+        logInTestUser();
+
+        // Navigate to view habit
+        Habit testHabit = goToViewHabit("EditLocationNewEvent");
+
+        // Click on history button
+        _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
+
+        // Check that habit event list fragment is displaying
+        View fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Click on add habit event floating action button to add habit event
+        _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
+
+        // Create test habit event
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+
+        // Enter comment
+        setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
+
+        // Enter date
+        enterCurrentDateInAddHabitEventDialogBox();
+
+        // Click on location button
+        clickOnAddLocation();
+
+        // Wait for map snippets to load
+        _solo.sleep(5000);
+
+        clickOnConfirmMapDialog();
+
+        assertTextOnScreen(EDIT_HEADER);
+
+        // Click confirm
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Check that habit event list fragment is displaying
+        fragment = _solo.getView(R.id.habit_event_list_container);
+        assertNotNull(fragment);
+
+        // Ensure added habit event is present in the list
+        assertTextOnScreen(testEvent.getComment());
+
+        // Click on edit button
+        swipeLeftOnHabitEvent(testEvent);
+        _solo.waitForView(R.id.edit_habit_event_button);
+        _solo.clickOnButton(EDIT_BUTTON);
+
+        // Check that dialog opens
+        assertTextOnScreen("Edit Habit Event");
+
+        // click on edit location button
+        clickOnEditLocation();
+
+        // Wait for map snippets to load
+        _solo.sleep(5000);
+
+        clickOnConfirmMapDialog();
+
+        assertTextOnScreen(EDIT_HEADER);
+
+        clickConfirmButtonInAddHabitEventDialogBox();
+
+        // Go back and delete habit
+        _solo.goBack();
+        _solo.goBack();
+        deleteTestHabit(testHabit);
+    }
+
+    @Test
     public void navigateToHabitEventViewFragment() {
         logInTestUser();
 
         // Navigate to view habit
-        Habit testHabit = goToViewHabit("AddEventTest");
+        Habit testHabit = goToViewHabit("viewEventTest");
 
         // Click on history button
         _solo.clickOnView(_solo.getView(R.id.eventHistoryButton));
@@ -1636,7 +1925,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyUsername_signUpFails() {
-        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD);
+        User newUser = new User(NEW_USER_ID, "", VALID_EMAIL, VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1651,7 +1940,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyEmail_signUpFails() {
-        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD);
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, "", VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1666,7 +1955,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_emptyPassword_signUpFails() {
-        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "");
+        User newUser = new User(NEW_USER_ID, VALID_USERNAME, VALID_EMAIL, "", EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1681,7 +1970,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_usernameExists_emailExists_signUpFails() {
-        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD);
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL, VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -1696,7 +1985,7 @@ public class MainActivityTest {
 
     @Test
     public void signUpNewUser_usernameExists_newEmail_signUpFails() {
-        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD);
+        User newUser = new User(TEST_USER_ID, TEST_USER_USERNAME, "newemail@gmail.com", VALID_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
 
         _solo.clickOnButton(SIGN_UP_TEXT);
 
@@ -2000,5 +2289,17 @@ public class MainActivityTest {
         _solo.clickOnButton(LOGIN_TEXT);
         // Wait for Profile fragment to load
         _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
+    }
+
+    private void clickOnAddLocation() {
+        _solo.clickOnView(_solo.getView(R.id.add_location_button));
+    }
+
+    private void clickOnConfirmMapDialog() {
+        _solo.clickOnView(_solo.getView(R.id.confirm_map));
+    }
+
+    private void clickOnEditLocation() {
+        _solo.clickOnView(_solo.getView(R.id.edit_location_button));
     }
 }
