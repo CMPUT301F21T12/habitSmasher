@@ -1,22 +1,31 @@
 package com.example.habitsmasher;
 
-import android.util.Log;
-import static android.content.ContentValues.TAG;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+/**
+ * This class handles all of the logic related to calculating how much progress has been made on
+ * a specified habit
+ */
 public class ProgressTracker {
+    // Constants
     private static final String DAY_PATTERN = "EEEE";
-    private Habit _parentHabit;
     private String[] _daysIndexHelper = {"MO", "TU", "WE", "TH", "FR", "SA", "SU"};
-    private HabitEventList _events;
 
+    // Variables
+    private Habit _parentHabit;
+    private HabitEventList _events;
+    SimpleDateFormat _formatter;
+
+
+    // Default constructor
     public ProgressTracker(Habit parentHabit, HabitEventList events) {
         _parentHabit = parentHabit;
         _events = events;
+        _formatter = new SimpleDateFormat(DAY_PATTERN);
     }
 
     private HabitEventList removeDuplicateDays() {
@@ -56,13 +65,10 @@ public class ProgressTracker {
         HabitEventList noDuplicates = removeDuplicateDays();
         int amountOfDays = 0;
 
-        // Create formatter to extract day from date
-        SimpleDateFormat formatter = new SimpleDateFormat(DAY_PATTERN);
-
         // Iterate through list of events
         for (int i = 0; i < noDuplicates.getHabitEvents().size(); i++) {
             // Get first two letters of current day
-            String currentDay = formatter.format(noDuplicates.getHabitEvents().get(i).getDate()).toUpperCase().substring(0, 2);
+            String currentDay = _formatter.format(noDuplicates.getHabitEvents().get(i).getDate()).toUpperCase().substring(0, 2);
 
             // Check if this day is a viable one and after the start date, if so iterate amount of viable days met
             if (_parentHabit.getDays().contains(currentDay) && !(noDuplicates.getHabitEvents().get(i).getDate().before(_parentHabit.getDate()))) {
@@ -74,25 +80,21 @@ public class ProgressTracker {
     }
 
     private int calculateViableDaysPossible() {
+        // Get today's date
         Date endDate = new Date();
+
+        // Create start and end calenders
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(_parentHabit.getDate());
-        SimpleDateFormat formatter = new SimpleDateFormat(DAY_PATTERN);
-
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(endDate);
 
         int viableDays = 0;
 
         // If start date is a viable day increment
-        String startDateString = formatter.format(_parentHabit.getDate()).toUpperCase().substring(0, 2);
+        String startDateString = _formatter.format(_parentHabit.getDate()).toUpperCase().substring(0, 2);
         if (_parentHabit.getDays().contains(startDateString)){
             viableDays++;
-        }
-
-        if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
-            startCal.setTime(endDate);
-            endCal.setTime(_parentHabit.getDate());
         }
 
         // Iterate through start calender

@@ -3,7 +3,6 @@ package com.example.habitsmasher.ui.dashboard;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +22,7 @@ import com.example.habitsmasher.ProgressTracker;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.listeners.FailureListener;
 import com.example.habitsmasher.listeners.SuccessListener;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -80,21 +76,31 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
         // set necessary elements of the habit
         holder._habitTitle.setText(habit.getTitle());
 
+        // Fetch habit events for a habit from the database
         habit.setHabitEvents(new HabitEventList());
         populateEventList(getListFromFirebase(habit), habit);
 
+        // Create a new progress tracker
         ProgressTracker progressTracker = new ProgressTracker(habit, habit.getHabitEvents());
 
+        // Get integer representation of progress
+        int progress = (int) progressTracker.calculateProgressPercentage();
 
-        holder._progressBar.setProgress((int) progressTracker.calculateProgressPercentage());
-
-        String progressText = Integer.toString((int) progressTracker.calculateProgressPercentage()) + "%";
+        // Set progress in circular progress and text
+        holder._progressBar.setProgress(progress);
+        String progressText = Integer.toString(progress) + "%";
         holder._progressText.setText(progressText);
     }
 
+    /**
+     * Creates a query to get the list of habit events from the database
+     * @param parentHabit (Habit) The habit for which events are being queried
+     * @return The query
+     */
     @NonNull
     protected Query getListFromFirebase(Habit parentHabit) {
         FirebaseFirestore db =  FirebaseFirestore.getInstance();
+
         // Query is made of username, habit name, and events
         Query query = db.collection("Users")
                 .document(_userId)
@@ -104,8 +110,14 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
         return query;
     }
 
+    /**
+     * Populate the list of habit events for a specific habit
+     * @param query (Query) The query parameters
+     * @param parentHabit (Habit) The habit for which events are being queried
+     */
     protected void populateEventList(Query query, Habit parentHabit) {
         Task<QuerySnapshot> querySnapshotTask = query.get();
+
             /*
             populate HabitList with current Habits and habit IDs to initialize state to match
             database, fills when habitList is empty and snapshot is not, which is only
@@ -133,7 +145,6 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
             }
         }
     }
-
 
     /**
      * Class that holds the necessary elements of an individual row in the HabitList
