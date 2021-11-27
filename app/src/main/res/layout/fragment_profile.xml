@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="409dp"
+        android:layout_height="142dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/habit_day_selected"
+        app:layout_constraintBottom_toBottomOf="@+id/followers_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <ImageView
         android:id="@+id/profile_picture"
         android:layout_width="93dp"
@@ -73,11 +86,21 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/you_have_no_recent_activity"
+        android:layout_marginTop="32dp"
+        android:text="@string/no_recent_activity"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profile_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
