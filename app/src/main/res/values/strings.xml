@@ -78,4 +78,5 @@
     <string name="fr">Fr</string>
     <string name="sa">Sa</string>
     <string name="su">Su</string>
+    <string name="unfollow_label">UNFOLLOW</string>
 </resources>
