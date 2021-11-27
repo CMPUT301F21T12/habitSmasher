@@ -18,8 +18,6 @@ import java.util.ArrayList;
 public class NotificationItemAdapter extends
             ItemAdapter<User, NotificationItemAdapter.RequestViewHolder>{
 
-    public ObservableSnapshotArray<User> _snapshots;
-
     private static ArrayList<String> _requestList;
     private final String _userId;
     private Context _context;
@@ -28,7 +26,6 @@ public class NotificationItemAdapter extends
                              ArrayList<String> requestList,
                              String userId) {
         super(options);
-        _snapshots = options.getSnapshots();
         _requestList = requestList;
         _userId = userId;
     }
