@@ -132,7 +132,7 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                                         }
                                         userToFollow.addFollowRequest(currentUserId);
                                         
-                                        addUsertoRequestsListInDatabase(currentUserId, userToFollow.getId());
+                                        addUserToRequestsListInDatabase(currentUserId, userToFollow.getId());
 
                                         showFollowRequestSuccessMessage();
 
@@ -210,30 +210,9 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
      * @param followerUserId user requesting to follow
      * @param followedUserId user following
      */
-    private void addUsertoRequestsListInDatabase(String followerUserId, String followedUserId) {
+    private void addUserToRequestsListInDatabase(String followerUserId, String followedUserId) {
         DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(followedUserId);
         userRef.update(FOLLOW_REQUEST_FIELD, FieldValue.arrayUnion(followerUserId));
-    }
-
-    //TODO: migrate these methods to NotificationFragment
-    /**
-     * This method is responsible for adding a new user to the following array of the given user
-     * @param userId the user performing the operation
-     * @param followedUserId the followed user to add to the collection
-     */
-    private void addUserToFollowingForUserInDatabase(String userId, String followedUserId) {
-        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
-        userRef.update(FOLLOWING_FIELD, FieldValue.arrayUnion(followedUserId));
-    }
-
-    /**
-     * This method is responsible for adding a new user to the follower array of the given user
-     * @param userId the user performing the operation
-     * @param newFollowerId the user that is now a new follower of the given user
-     */
-    private void addNewFollowerForUserInDatabase(String userId, String newFollowerId) {
-        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
-        userRef.update(FOLLOWERS_FIELD, FieldValue.arrayUnion(newFollowerId));
     }
 
     /**
