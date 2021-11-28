@@ -177,8 +177,8 @@ public class ViewProfileFragment extends ListFragment<Habit> {
         // TODO: ONLY PUBLIC HABITS
         return _db.collection("Users")
                   .document(_user.getId())
-                  .collection("Habits");
-                  //.whereEqualTo("public", true);
+                  .collection("Habits")
+                  .whereEqualTo("public", true);
     }
 
     protected void populateList(Query query) {
@@ -246,7 +246,6 @@ public class ViewProfileFragment extends ListFragment<Habit> {
         // not needed
     }
 
-    // note: add this to list fragment class once view is implemented for habitevents
     protected void openViewWindowForItem(int position) {
         // Get the selected habit
         Habit currentHabit = _habitItemAdapter._snapshots.get(position);

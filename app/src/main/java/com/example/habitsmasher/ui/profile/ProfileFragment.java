@@ -104,44 +104,10 @@ public class ProfileFragment extends ListFragment<User> {
         return view;
     }
 
-    /**
-     * This is the click listener for the following button
-     * @param numberOfFollowing
-     */
-    private void setClickListenerForFollowingButton(Button numberOfFollowing) {
-        numberOfFollowing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // this is a bundle to tell the fragment whether its following or followers
-                Bundle bundle = new Bundle();
-                bundle.putString("FollowType", "Following");
-                // navigate to following fragment
-                navigateToFragmentWithAction(R.id.action_navigation_notifications_to_followListFragment, bundle);
-            }
-        });
-    }
-
-    /**
-     * This is the click listener for the followers button
-     * @param numberOfFollowers
-     */
-    private void setClickListenerForFollowersButton(Button numberOfFollowers) {
-        numberOfFollowers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // this is a bundle to tell the fragment whether its following or followers
-                Bundle bundle = new Bundle();
-                bundle.putString("FollowType", "Followers");
-                // navigate to followers fragment
-                navigateToFragmentWithAction(R.id.action_navigation_notifications_to_followListFragment, bundle);
-            }
-        });
-    }
-
     private Habit getParentHabit(String userID, String habitID){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Query query = db.collection("users").document(userID).collection("habits").whereEqualTo("id", habitID);
+        Query query = db.collection("Users").document(userID).collection("Habits").whereEqualTo("id", habitID);
 
         Task<QuerySnapshot> querySnapshotTask = query.get();
 
@@ -188,9 +154,9 @@ public class ProfileFragment extends ListFragment<User> {
         // ensure not empty and return
         if(followingList != null && !followingList.isEmpty()) {
             return _db.collection("Users")
-                    .document().collection("Habits")
-                    .document().collection("Events")
-                    .whereIn("id", followingList);
+                    .document("GLgjha0n26Oy36h85CmUB3G1o6V2").collection("Habits")
+                    .document("f7641230-25d2-468b-98a7-601d89a49d2b").collection("Events");
+                    //.whereIn("id", followingList);
         }
         return null;
 
@@ -241,20 +207,6 @@ public class ProfileFragment extends ListFragment<User> {
         // Navigate to the habitViewFragment
         controller.navigate(R.id.action_navigation_notifications_to_habitEventViewFragment, bundle);
 
-
- /*
- // Get the selected habit
-            Habit currentHabit = _habitItemAdapter._snapshots.get(position);
-
-            // Create a bundle to be passed into the habitViewFragment
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("habit", currentHabit);
-            bundle.putSerializable("userId", _user.getId());
-            NavController controller = NavHostFragment.findNavController(this);
-
-            // Navigate to the habitViewFragment
-            controller.navigate(R.id.action_navigation_notifications_to_habitViewFragment, bundle);
-  */
     }
 
     @Override
