@@ -2175,6 +2175,8 @@ public class MainActivityTest {
         _solo.enterText(_solo.getEditText("Username"), TEST_USER_SUBSTRING);
 
         // click on the user name that we wish to follow
+        // Click on text does not work for item in autoCompleteTextView
+        // so I decided to go with click on screen at a specific location
         _solo.clickOnScreen(540, 1170);
 
         _solo.clickOnButton(FOLLOW);
