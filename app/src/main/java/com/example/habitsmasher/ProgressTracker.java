@@ -18,7 +18,7 @@ public class ProgressTracker {
     // Variables
     private Habit _parentHabit;
     private HabitEventList _events;
-    SimpleDateFormat _formatter;
+    private SimpleDateFormat _formatter;
 
 
     // Default constructor
@@ -28,6 +28,10 @@ public class ProgressTracker {
         _formatter = new SimpleDateFormat(DAY_PATTERN);
     }
 
+    /**
+     * This function will remove all duplicate day events from the list
+     * @return A new event list with no duplicate days
+     */
     private HabitEventList removeDuplicateDays() {
         HabitEventList noDuplicates = new HabitEventList();
 
@@ -61,6 +65,10 @@ public class ProgressTracker {
         return noDuplicates;
     }
 
+    /**
+     * This function calculates the amount of viable days that have a habit event
+     * @return The amount of viable days met
+     */
     private int calculateViableDaysMet() {
         HabitEventList noDuplicates = removeDuplicateDays();
         int amountOfDays = 0;
@@ -79,6 +87,11 @@ public class ProgressTracker {
         return amountOfDays;
     }
 
+    /**
+     * This function calculates the amount of days that a habit event would be expected
+     * between the habit start date and the time of access
+     * @return The amount of possible viable days
+     */
     private int calculateViableDaysPossible() {
         // Get today's date
         Date endDate = new Date();
@@ -111,6 +124,10 @@ public class ProgressTracker {
         return viableDays;
     }
 
+    /**
+     * This function calculates the amount of progress that's been made on a habit
+     * @return The progress of a habit as a percentage
+     */
     public float calculateProgressPercentage() {
         // Get possible days and days met
         float possibleDays = calculateViableDaysPossible();

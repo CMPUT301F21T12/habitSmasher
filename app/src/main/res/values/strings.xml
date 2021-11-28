@@ -67,7 +67,7 @@
     <string name="user_search">User Search</string>
     <string name="logout">Logout</string>
     <string name="editLocation">EDIT LOCATION</string>
-    <string name="no_progress">00%</string>
+    <string name="no_progress">0%</string>
     <string name="date_started">Date started</string>
     <string name="days_due">Days due</string>
     <string name="privacy">Privacy</string>

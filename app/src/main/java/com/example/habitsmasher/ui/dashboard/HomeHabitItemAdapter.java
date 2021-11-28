@@ -73,7 +73,7 @@ public class HomeHabitItemAdapter extends ItemAdapter<Habit, HomeHabitItemAdapte
 
         // Fetch habit events for a habit from the database
         habit.setHabitEvents(new HabitEventList());
-        populateEventList(getListFromFirebase(habit), habit);
+        populateEventList(getEventListFromFirebase(habit), habit);
 
         // Create a new progress tracker
         ProgressTracker progressTracker = new ProgressTracker(habit);
@@ -93,7 +93,7 @@ public class HomeHabitItemAdapter extends ItemAdapter<Habit, HomeHabitItemAdapte
      * @return The query
      */
     @NonNull
-    protected Query getListFromFirebase(Habit parentHabit) {
+    protected Query getEventListFromFirebase(Habit parentHabit) {
         FirebaseFirestore db =  FirebaseFirestore.getInstance();
 
         // Query is made of username, habit name, and events
