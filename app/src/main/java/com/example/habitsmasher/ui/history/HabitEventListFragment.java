@@ -2,7 +2,6 @@ package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,8 +23,6 @@ import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.listeners.FailureListener;
-import com.example.habitsmasher.listeners.SuccessListener;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
@@ -34,13 +31,9 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * HabitEventListFragment class
