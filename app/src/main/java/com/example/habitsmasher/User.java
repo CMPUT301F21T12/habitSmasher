@@ -135,6 +135,10 @@ public class User {
         _followers.add(followerUsername);
     }
 
+    public void unFollowUser(String followingUsername) {
+        _following.remove(followingUsername);
+    }
+
     /**
      * Gets the list of users in the form of usernames that
      * this user is following
