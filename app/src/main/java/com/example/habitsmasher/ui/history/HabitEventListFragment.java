@@ -22,6 +22,7 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ListFragment;
+import com.example.habitsmasher.ProgressTracker;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -110,6 +111,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
 
         // Initialize recycler view and return view
         initializeRecyclerView(layoutManager, view);
+
         return view;
     }
 

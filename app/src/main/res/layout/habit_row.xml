@@ -73,6 +73,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ProgressBar
+                android:id="@+id/habit_progress_bar"
+                android:layout_width="64dp"
+                android:layout_height="61dp"
+                android:layout_marginStart="32dp"
+                android:indeterminateOnly="false"
+                android:progressDrawable="@drawable/circular_progress_determinate"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.555" />
+
+            <TextView
+                android:id="@+id/habit_progress_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_progress"
+                android:textColor="@color/habit_list_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/habit_progress_bar"
+                app:layout_constraintStart_toStartOf="@+id/habit_progress_bar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.509" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
