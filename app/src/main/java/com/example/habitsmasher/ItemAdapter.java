@@ -7,6 +7,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Abstract class for adapters to use.
  * @author Jacob Nguyen, Jason Kim
@@ -23,6 +26,15 @@ public abstract class ItemAdapter<A, B extends RecyclerView.ViewHolder> extends 
     public ItemAdapter(@NonNull FirestoreRecyclerOptions<A> options) {
         super(options);
         _snapshots = options.getSnapshots();
+    }
+
+    public ItemAdapter(@NonNull ArrayList<FirestoreRecyclerOptions<A>> options) {
+        super(options.get(0));
+        _snapshots = options.get(0).getSnapshots();
+        for (int i = 1; i < options.size(); i++) {
+            _snapshots.addAll(options.get(i).getSnapshots());
+
+        }
     }
 
     public int getItemCount() {

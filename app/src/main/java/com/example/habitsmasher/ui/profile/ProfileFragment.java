@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
-import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
@@ -37,7 +36,6 @@ import com.example.habitsmasher.ui.history.HabitEventItemAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -143,6 +141,8 @@ public class ProfileFragment extends ListFragment<User> {
         DocumentReference sampleDocument = _db.collection("Users").document(_user.getId());
         Task<DocumentSnapshot> querySnapshotTask = sampleDocument.get();
 
+        getHabitEventQueries();
+
         // wait for all the snapshots to come in
         while (!querySnapshotTask.isComplete()) ;
 
@@ -154,12 +154,62 @@ public class ProfileFragment extends ListFragment<User> {
         // ensure not empty and return
         if(followingList != null && !followingList.isEmpty()) {
             return _db.collection("Users")
-                    .document("GLgjha0n26Oy36h85CmUB3G1o6V2").collection("Habits")
+                      .document("GLgjha0n26Oy36h85CmUB3G1o6V2")
+                    .collection("Habits")
+
                     .document("f7641230-25d2-468b-98a7-601d89a49d2b").collection("Events");
                     //.whereIn("id", followingList);
         }
         return null;
 
+    }
+
+    public ArrayList<Query> getHabitEventQueries(){
+        ArrayList<Query> queryList = new ArrayList<>();
+
+        DocumentReference sampleDocument = _db.collection("Users").document(_user.getId());
+        Task<DocumentSnapshot> querySnapshotTask = sampleDocument.get();
+
+        // wait for all the snapshots to come in
+        while (!querySnapshotTask.isComplete()) ;
+
+        Map<String, Object> objectMap = querySnapshotTask.getResult().getData();
+
+        // get the list of followers/following
+        ArrayList<String> followingList = (ArrayList<String>) objectMap.get("following");
+
+        for (int i = 0; i < followingList.size(); i++) {
+            // get all of the public habits
+            String habitOwner = followingList.get(i);
+            Query habitQuery = _db.collection("Users")
+                              .document(habitOwner)
+                              .collection("Habits")
+                              .whereEqualTo("public", true);
+
+            Task<QuerySnapshot> habitSnapshotTask = habitQuery.get();
+
+            while (!habitSnapshotTask.isComplete());
+
+            //all of the public habits
+            List<DocumentSnapshot> habits = habitSnapshotTask.getResult().getDocuments();
+
+            for (int j = 0; j < habits.size(); j++) {
+                // get all of the habit events
+                String habitID = (String) habits.get(j).get("id");
+
+                queryList.add(_db.collection("Users")
+                                  .document(habitOwner)
+                                  .collection("Habits")
+                                  .document(habitID)
+                                  .collection("Events"));
+            }
+
+
+
+
+        }
+
+        return queryList;
     }
 
     @Override
@@ -254,15 +304,20 @@ public class ProfileFragment extends ListFragment<User> {
     private void setUpEventRecycler(View view){
         try {
             // Get query
-            Query query = getListFromFirebase();
+            ArrayList<Query> queryList = getHabitEventQueries();
 
-            // Populate the list with existing items in the database
-            FirestoreRecyclerOptions<HabitEvent> options = new FirestoreRecyclerOptions.Builder<HabitEvent>()
-                    .setQuery(query, HabitEvent.class)
-                    .build();
-            populateList(query);
+            ArrayList<FirestoreRecyclerOptions<HabitEvent>> optionList = new ArrayList<>();
 
-            _habitEventItemAdaptor = new HabitEventItemAdapter(options,
+            for (int i = 0; i < queryList.size(); i++) {
+                // Populate the list with existing items in the database
+                FirestoreRecyclerOptions<HabitEvent> options = new FirestoreRecyclerOptions.Builder<HabitEvent>()
+                        .setQuery(queryList.get(i), HabitEvent.class)
+                        .build();
+                optionList.add(options);
+            }
+
+
+            _habitEventItemAdaptor = new HabitEventItemAdapter(optionList,
                     _user.getId(),
                     _habitEventList
             );

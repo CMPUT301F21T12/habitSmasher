@@ -1,5 +1,6 @@
 package com.example.habitsmasher.ui.history;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,12 @@ import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+import com.google.firebase.firestore.core.Query;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * The HabitEventItemAdapter class
@@ -47,6 +53,21 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         _userId = userId;
         _habitEvents = habitEvents;
     }
+
+    /**
+     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
+     * FirestoreRecyclerOptions} for configuration options.
+     *
+     * @param options the firestore entities
+     */
+    public HabitEventItemAdapter(@NonNull ArrayList<FirestoreRecyclerOptions<HabitEvent>> options,
+                                 String userId,
+                                 HabitEventList habitEvents) {
+        super(options);
+        _userId = userId;
+        _habitEvents = habitEvents;
+    }
+
 
     @NonNull
     @Override
