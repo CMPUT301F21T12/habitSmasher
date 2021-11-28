@@ -18,16 +18,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/user_search_text"
-        android:layout_width="188dp"
-        android:layout_height="28dp"
-        android:layout_marginTop="32dp"
-        android:autofillHints="habit"
-        android:background="@color/white"
-        android:ems="10"
-        android:hint="@string/username_capitalU"
-        android:inputType="textPersonName"
+    <AutoCompleteTextView
+        android:id="@+id/auto_complete_text_view"
+        android:layout_width="341dp"
+        android:layout_height="68dp"
+        android:completionHint="username"
+        android:completionThreshold="1"
+        android:hint="username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/follow_user_header"
@@ -37,28 +34,21 @@
         android:id="@+id/follow_user_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="46dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="40dp"
         android:background="@color/habit_list_text"
         android:text="@string/follow"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_search_text" />
+        app:layout_constraintStart_toStartOf="@+id/follow_user_header"
+        app:layout_constraintTop_toBottomOf="@+id/auto_complete_text_view" />
 
     <Button
         android:id="@+id/cancel_user_follow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="46dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="20dp"
         android:background="@color/habit_list_text"
         android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/follow_user_header"
         app:layout_constraintStart_toEndOf="@+id/follow_user_button"
-        app:layout_constraintTop_toBottomOf="@+id/user_search_text" />
+        app:layout_constraintTop_toTopOf="@+id/follow_user_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
