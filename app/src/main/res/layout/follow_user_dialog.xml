@@ -22,7 +22,6 @@
         android:id="@+id/auto_complete_text_view"
         android:layout_width="341dp"
         android:layout_height="68dp"
-        android:completionHint="username"
         android:completionThreshold="1"
         android:hint="username"
         app:layout_constraintEnd_toEndOf="parent"
