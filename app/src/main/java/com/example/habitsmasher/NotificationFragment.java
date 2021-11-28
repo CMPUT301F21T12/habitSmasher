@@ -34,6 +34,8 @@ import java.util.Objects;
 /**
  * Fragment representing the list of follow requests
  * currently queued for a user.
+ *
+ * @author Jason Kim
  */
 public class NotificationFragment extends ListFragment<User> {
 
@@ -107,14 +109,12 @@ public class NotificationFragment extends ListFragment<User> {
                 .setSwipeable(R.id.requester_view, R.id.request_swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                             @Override
                             public void onSwipeOptionClicked(int viewID, int position) {
-                                String followerID = _notificationItemAdapter._snapshots.get(position).getId();
                                 switch (viewID) {
                                     case R.id.accept_request_button:
                                         // accept the request
-                                        removeFollowRequestForUserInDatabase(_user.getId(),
-                                                followerID);
-                                        addNewFollowerForUserInDatabase(_user.getId(), followerID);
-                                        addUserToFollowingForUserInDatabase(followerID, _user.getId());
+                                        acceptRequestFromUser(_notificationItemAdapter._snapshots
+                                                                                        .get(position)
+                                                                                        .getId());
                                         resetOptionsOfAdapter();
                                         break;
                                     case R.id.deny_request_button:
@@ -168,6 +168,65 @@ public class NotificationFragment extends ListFragment<User> {
         return _db.collection("Users").whereIn("id", Arrays.asList(""));
     }
 
+    /**
+     * This starts the item adapter listener
+     */
+    @Override
+    public void onStart(){
+        super.onStart();
+        _notificationItemAdapter.startListening();
+    }
+
+    /**
+     * This stops the item adapter listener
+     */
+    @Override
+    public void onStop(){
+        super.onStop();
+        _notificationItemAdapter.stopListening();
+    }
+
+    /**
+     * Method that causes parent user to accept a request from a user
+     * @param followerID user requesting to follow parent user
+     */
+    private void acceptRequestFromUser(String followerID) {
+        removeFollowRequestForUserInDatabase(_user.getId(),
+                followerID);
+        addNewFollowerForUserInDatabase(_user.getId(), followerID);
+        addUserToFollowingForUserInDatabase(followerID, _user.getId());
+    }
+
+    /**
+     * This method is responsible for adding a new user to the following array of the given user
+     * @param userId the user performing the operation
+     * @param followedUserId the followed user to add to the collection
+     */
+    private void addUserToFollowingForUserInDatabase(String userId, String followedUserId) {
+        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
+        userRef.update(FOLLOWING_FIELD, FieldValue.arrayUnion(followedUserId));
+    }
+
+    /**
+     * This method is responsible for adding a new user to the follower array of the given user
+     * @param userId the user performing the operation
+     * @param newFollowerId the user that is now a new follower of the given user
+     */
+    private void addNewFollowerForUserInDatabase(String userId, String newFollowerId) {
+        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
+        userRef.update(FOLLOWERS_FIELD, FieldValue.arrayUnion(newFollowerId));
+    }
+
+    /**
+     * Method that removes a request to follow a user from the database
+     * @param followerId user being sent request
+     * @param followedId user sending request
+     */
+    private void removeFollowRequestForUserInDatabase(String followedId, String followerId) {
+        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(followedId);
+        userRef.update(FOLLOW_REQUEST_FIELD, FieldValue.arrayRemove(followerId));
+    }
+
     @Override
     protected void populateList(Query query) {
         // not needed
@@ -202,54 +261,5 @@ public class NotificationFragment extends ListFragment<User> {
     public void updateListAfterDelete(int pos) {
         // list does not support deletion
     };
-
-    /**
-     * This starts the item adapter listener
-     */
-    @Override
-    public void onStart(){
-        super.onStart();
-        _notificationItemAdapter.startListening();
-    }
-
-    /**
-     * This stops the item adapter listener
-     */
-    @Override
-    public void onStop(){
-        super.onStop();
-        _notificationItemAdapter.stopListening();
-    }
-
-    /**
-     * This method is responsible for adding a new user to the following array of the given user
-     * @param userId the user performing the operation
-     * @param followedUserId the followed user to add to the collection
-     */
-    private void addUserToFollowingForUserInDatabase(String userId, String followedUserId) {
-        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
-        userRef.update(FOLLOWING_FIELD, FieldValue.arrayUnion(followedUserId));
-    }
-
-    /**
-     * This method is responsible for adding a new user to the follower array of the given user
-     * @param userId the user performing the operation
-     * @param newFollowerId the user that is now a new follower of the given user
-     */
-    private void addNewFollowerForUserInDatabase(String userId, String newFollowerId) {
-        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(userId);
-        userRef.update(FOLLOWERS_FIELD, FieldValue.arrayUnion(newFollowerId));
-    }
-
-    /**
-     * Method that removes a request to follow a user from the database
-     * @param followerId user being sent request
-     * @param followedId user sending request
-     */
-    private void removeFollowRequestForUserInDatabase(String followedId, String followerId) {
-        DocumentReference userRef = _db.collection(USERS_COLLECTION_PATH).document(followedId);
-        userRef.update(FOLLOW_REQUEST_FIELD, FieldValue.arrayRemove(followerId));
-    }
-
 
 }

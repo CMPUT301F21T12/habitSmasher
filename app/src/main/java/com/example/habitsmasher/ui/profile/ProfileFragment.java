@@ -50,18 +50,11 @@ public class ProfileFragment extends Fragment {
     private ProfileFragment _fragment = this;
     private ImageView _userImageView;
     private Bitmap _userImage;
+    private User user = new User();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        // create the sample user
-        User user = new User("1",
-                             "TestUser",
-                             "123@gmail.com",
-                             "123",
-                             EMPTY_FOLLOWER_LIST,
-                             EMPTY_FOLLOWING_LIST,
-                             EMPTY_REQUEST_LIST);
 
         SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
         user.setUsername(sharedPref.getString(USERNAME_SHARED_PREF_TAG, "user"));

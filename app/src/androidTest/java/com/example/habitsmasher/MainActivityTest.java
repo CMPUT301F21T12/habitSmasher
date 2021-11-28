@@ -44,7 +44,6 @@ public class MainActivityTest {
     private static final boolean PUBLIC_HABIT = true;
     private static final boolean PRIVATE_HABIT = false;
     private static final String DATE_PATTERN = "EEE, d MMM yyyy";
-    private static final String DATE_PATTERN_EVENT = "dd-MM-yyyy";
     private static final String HABIT_TITLE_ERROR_MESSAGE = "Incorrect habit title entered";
     private static final String HABIT_REASON_ERROR_MESSAGE = "Incorrect habit reason entered";
     private static final String EMPTY_DATE_ERROR_MESSAGE = "Please enter a start date";
@@ -1910,7 +1909,7 @@ public class MainActivityTest {
         assertTextOnScreen(testEvent.getComment());
 
         // Check that the date is correct
-        assertTextOnScreen(new SimpleDateFormat(DATE_PATTERN_EVENT).format(testEvent.getDate()));
+        assertTextOnScreen(new SimpleDateFormat(DATE_PATTERN).format(testEvent.getDate()));
 
         // Click up/back button
         _solo.goBack();

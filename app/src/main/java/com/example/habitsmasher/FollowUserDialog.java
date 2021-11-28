@@ -120,13 +120,13 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                                         }
                                         // if the user requests to follow someone they have already
                                         // requested to follow
-                                        if (searchInRequestsList(userToFollow.getId(),currentUserId)) {
+                                        if (hasUserAlreadySentRequest(userToFollow.getId(),currentUserId)) {
                                             displayErrorMessage(ALREADY_REQUESTED_TO_FOLLOW_USER);
                                             return;
                                         }
 
                                         // if the user is already following the requested user
-                                        if (searchInFollowerList(userToFollow.getId(), currentUserId)) {
+                                        if (hasUserAlreadyFollowed(userToFollow.getId(), currentUserId)) {
                                             displayErrorMessage(ALREADY_FOLLOWING);
                                             return;
                                         }
@@ -172,7 +172,7 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
      * @param followerId user who sent the request
      * @return true if user already sent the request
      */
-    private boolean searchInRequestsList(String followedId, String followerId) {
+    private boolean hasUserAlreadySentRequest(String followedId, String followerId) {
         // retrieving document of followed user
         DocumentReference userDocument = _db.collection("Users").document(followedId);
         Task<DocumentSnapshot> querySnapshotTask = userDocument.get();
@@ -192,7 +192,7 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
      * @param followerId user sending follow request
      * @return true if user has already sent follow request
      */
-    private boolean searchInFollowerList(String followedId, String followerId) {
+    private boolean hasUserAlreadyFollowed(String followedId, String followerId) {
         DocumentReference userDocument = _db.collection("Users").document(followedId);
         Task<DocumentSnapshot> querySnapshotTask = userDocument.get();
 
