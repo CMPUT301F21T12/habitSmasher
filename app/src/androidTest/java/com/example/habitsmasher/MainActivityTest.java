@@ -52,6 +52,8 @@ public class MainActivityTest {
     private static final String HABIT_EVENT_COMMENT_ERROR_MESSAGE = "Incorrect habit event comment entered";
     private static final String CANNOT_FOLLOW_YOURSELF_MESSAGE = "You cannot follow yourself!";
     private static final String THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE = "This username is already taken!";
+    private static final String ALREADY_REQUESTED_TO_FOLLOW_USER_MESSAGE = "Already requested to follow that user";
+    private static final String ALREADY_FOLLOWING_MESSAGE = "Already following that user!";
     private static final String EDIT_BUTTON = "EDIT";
     private static final HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
     private static final String DELETE_BUTTON = "DELETE";
@@ -71,6 +73,8 @@ public class MainActivityTest {
     private static final String LOGIN_TEXT = "Login";
     private static final String TEST_USER_ID = "TEST";
     private static final String TEST_USER_USERNAME = "TestUser";
+    private static final String TEST_USER_REQUEST = "Requested";
+    private static final String TEST_USER_FOLLOWED = "Followed";
     private static final String TEST_USER_EMAIL = "test@gmail.com";
     private static final String TEST_USER_PASSWORD = "123456";
     private static final String HABIT_EVENT_TEXT = "Habit Event";
@@ -243,6 +247,58 @@ public class MainActivityTest {
 
         // ensure proper error message displayed
         assertTextOnScreen(INVALID_USERNAME_ERROR_MESSAGE);
+    }
+
+    @Test
+    public void requestToFollowUserAlreadyRequested(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click follow user search button
+        _solo.clickOnView(_solo.getView(R.id.follow_user_search_button));
+
+        // enter username of user already followed
+        _solo.enterText(_solo.getEditText("Username"), TEST_USER_REQUEST);
+
+        // click follow button
+        _solo.clickOnButton(FOLLOW);
+
+        // ensure proper error message displayed
+        assertTextOnScreen(ALREADY_REQUESTED_TO_FOLLOW_USER_MESSAGE);
+    }
+
+    @Test
+    public void requestToFollowUserAlreadyFollowed(){
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click follow user search button
+        _solo.clickOnView(_solo.getView(R.id.follow_user_search_button));
+
+        // enter username of user already followed
+        _solo.enterText(_solo.getEditText("Username"), TEST_USER_FOLLOWED);
+
+        // click follow button
+        _solo.clickOnButton(FOLLOW);
+
+        // ensure proper error message displayed
+        assertTextOnScreen(ALREADY_FOLLOWING_MESSAGE);
     }
 
     @Test
