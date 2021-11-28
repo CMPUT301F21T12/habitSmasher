@@ -51,8 +51,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * UI class that represents and specifies the behaviour of the user interface
- * displayed when a user is accessing their own habit list
+ * This class handles the logic for viewing some else's profile. This includes
+ * Displaying their follower count, and their public habits.
+ * Author: Cameron Matthew
  */
 public class ViewProfileFragment extends ListFragment<Habit> {
 
@@ -174,7 +175,6 @@ public class ViewProfileFragment extends ListFragment<Habit> {
      */
     @NonNull
     public Query getListFromFirebase() {
-        // TODO: ONLY PUBLIC HABITS
         return _db.collection("Users")
                   .document(_user.getId())
                   .collection("Habits")
@@ -220,7 +220,6 @@ public class ViewProfileFragment extends ListFragment<Habit> {
         }
     }
 
-    // we can extract these two methods to list fragment once item adapter interface is done!
     @Override
     public void onStart() {
         super.onStart();
@@ -235,17 +234,23 @@ public class ViewProfileFragment extends ListFragment<Habit> {
     }
 
     /**
-     * This helper method is responsible for opening the add habit dialog box
+     * not needed.
      */
     protected void openAddDialogBox() {
         // not needed
     }
 
-
+    /**
+     * not needed.
+     */
     public void openEditDialogBox(int position) {
         // not needed
     }
 
+    /**
+     * Navigates to the habit view of the specified habit
+     * @param position The position of the specified habit
+     */
     protected void openViewWindowForItem(int position) {
         // Get the selected habit
         Habit currentHabit = _habitItemAdapter._snapshots.get(position);
@@ -254,21 +259,30 @@ public class ViewProfileFragment extends ListFragment<Habit> {
         Bundle bundle = new Bundle();
         bundle.putSerializable("habit", currentHabit);
         bundle.putSerializable("userId", _user.getId());
+        bundle.putSerializable("isOwner", false);
         NavController controller = NavHostFragment.findNavController(this);
 
         // Navigate to the habitViewFragment
         controller.navigate(R.id.action_viewProfileFragment_to_habitViewFragment, bundle);
     }
 
+    /**
+     * not needed.
+     */
     public void updateListAfterAdd(Habit addedHabit){
         // not needed
     }
 
-
+    /**
+     * not needed.
+     */
     public void updateListAfterEdit(Habit editedHabit, int pos) {
         // not needed
     }
 
+    /**
+     * not needed.
+     */
     public void updateListAfterDelete(int pos) {
         // not needed
     }

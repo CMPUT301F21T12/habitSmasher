@@ -54,21 +54,6 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         _habitEvents = habitEvents;
     }
 
-    /**
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
-     *
-     * @param options the firestore entities
-     */
-    public HabitEventItemAdapter(@NonNull ArrayList<FirestoreRecyclerOptions<HabitEvent>> options,
-                                 String userId,
-                                 HabitEventList habitEvents) {
-        super(options);
-        _userId = userId;
-        _habitEvents = habitEvents;
-    }
-
-
     @NonNull
     @Override
     public HabitEventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

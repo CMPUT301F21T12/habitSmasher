@@ -1,6 +1,5 @@
 package com.example.habitsmasher.listeners;
 
-import android.app.Dialog;
 import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +10,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.habitsmasher.R;
 
 public class ClickListenerForFollowers implements View.OnClickListener{
-
+    /**
+     * This listener is used for the followers button, and leads to the list of people that
+     * follow the userMM.
+     */
     Fragment _fragment;
     int _navAction;
 

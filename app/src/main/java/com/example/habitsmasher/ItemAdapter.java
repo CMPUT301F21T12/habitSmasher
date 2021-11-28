@@ -28,15 +28,6 @@ public abstract class ItemAdapter<A, B extends RecyclerView.ViewHolder> extends 
         _snapshots = options.getSnapshots();
     }
 
-    public ItemAdapter(@NonNull ArrayList<FirestoreRecyclerOptions<A>> options) {
-        super(options.get(0));
-        _snapshots = options.get(0).getSnapshots();
-        for (int i = 1; i < options.size(); i++) {
-            _snapshots.addAll(options.get(i).getSnapshots());
-
-        }
-    }
-
     public int getItemCount() {
         return _snapshots.size();
     }
