@@ -1,0 +1,277 @@
+package com.example.habitsmasher.ui.profile;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.HabitEventList;
+import com.example.habitsmasher.HabitList;
+import com.example.habitsmasher.ImageDatabaseHelper;
+import com.example.habitsmasher.ListFragment;
+import com.example.habitsmasher.R;
+import com.example.habitsmasher.User;
+import com.example.habitsmasher.UserDatabaseHelper;
+import com.example.habitsmasher.listeners.ClickListenerForFollowers;
+import com.example.habitsmasher.listeners.ClickListenerForFollowing;
+import com.example.habitsmasher.listeners.SwipeListener;
+import com.example.habitsmasher.ui.dashboard.AddHabitDialog;
+import com.example.habitsmasher.ui.dashboard.EditHabitDialog;
+import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
+import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * UI class that represents and specifies the behaviour of the user interface
+ * displayed when a user is accessing their own habit list
+ */
+public class ViewProfileFragment extends ListFragment<Habit> {
+
+    private static final String TAG = "HabitListFragment";
+
+    // user who owns this list of habits displayed
+    private User _user;
+    private Context _context;
+
+    private ImageView _userImageView;
+    private Bitmap _userImage;
+
+    // list of habits being displayed
+    private HabitList _habitList;
+
+    private HabitItemAdapter _habitItemAdapter;
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        _context = getContext();
+
+        _user = UserDatabaseHelper.getUser((String) getArguments().get("user"));
+        _habitList = _user.getHabits();
+
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle(_user.getUsername());
+
+
+        // query firebase for all habits that correspond to the current user
+        Query query = getListFromFirebase();
+
+        // populate the list with existing items in the database
+        FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
+                .setQuery(query, Habit.class)
+                .build();
+
+        populateList(query);
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
+                                                                    LinearLayoutManager.VERTICAL,
+                                                                    false);
+
+        View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
+
+        // get the UI elements
+        TextView usernameTextView = view.findViewById(R.id.username);
+        Button numberOfFollowersButton = view.findViewById(R.id.number_followers);
+        Button numberOfFollowingButton = view.findViewById(R.id.number_following);
+        FloatingActionButton logoutButton = view.findViewById(R.id.logout_button);
+        _userImageView = view.findViewById(R.id.profile_picture);
+
+        // set the UI elements
+        UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(_user.getId(),
+                numberOfFollowersButton,
+                numberOfFollowingButton);
+        usernameTextView.setText("@" + _user.getUsername());
+        userDatabaseHelper.setFollowingCountOfUser();
+        userDatabaseHelper.setFollowerCountOfUser();
+
+        // Fetch profile picture from database
+        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
+        imageDatabaseHelper.fetchImagesFromDB(_userImageView, imageDatabaseHelper.getUserStorageReference(_user.getId()));
+
+        initializeRecyclerView(layoutManager, view);
+
+        return view;
+    }
+
+    /**
+     * This helper method initializes the RecyclerView
+     * @param layoutManager the associated LinearLayoutManager
+     * @param view the associated View
+     */
+    public void initializeRecyclerView(LinearLayoutManager layoutManager, View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.view_profile_recycler_view);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(_habitItemAdapter);
+
+        /* Implementation of swipe menu functionality came from this source:
+        Name: Velmurugan
+        Date: March 4, 2021
+        URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
+         */
+        // create a touch listener which handles the click and swipe function of the RecyclerView
+        RecyclerTouchListener touchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+        touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
+            @Override
+            // if row at the specified position is clicked
+            public void onRowClicked(int position) {
+                openViewWindowForItem(position);
+            }
+        });
+        // connect listener to recycler view
+        recyclerView.addOnItemTouchListener(touchListener);
+    }
+
+    private void setUpHabitRecycler(View view){
+        // query firebase for all habits that correspond to the current user
+        Query query = getListFromFirebase();
+
+        // populate the list with existing items in the database
+        FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
+                .setQuery(query, Habit.class)
+                .build();
+
+        populateList(query);
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL,
+                false);
+        initializeRecyclerView(layoutManager, view);
+    }
+
+    /**
+     * This method queries the database for all habits that correspond to the specified user
+     * @return resulting firebase query
+     */
+    @NonNull
+    public Query getListFromFirebase() {
+        // TODO: ONLY PUBLIC HABITS
+        return _db.collection("Users")
+                  .document(_user.getId())
+                  .collection("Habits");
+                  //.whereEqualTo("public", true);
+    }
+
+    protected void populateList(Query query) {
+        //get all of the habits
+        Task<QuerySnapshot> querySnapshotTask = query.get();
+
+        /*
+        populate HabitList with current Habits and habit IDs to initialize state to match
+        database, fills when habitList is empty and snapshot is not, which is only
+        when app is initially launched
+        */
+        if (_habitList.getHabitList().isEmpty()) {
+            // wait for all the snapshots to come in
+            while (!querySnapshotTask.isComplete()) ;
+
+            // make a list of all of the habit snapshots
+            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
+
+            // convert all of the snapshots into proper habits
+            for (int i = 0; i < snapshotList.size(); i++) {
+                // get the data and convert to hashmap, also print to log
+                Map<String, Object> extractMap = snapshotList.get(i).getData();
+                Log.d(TAG, extractMap.toString());
+
+                // get all of the data from the snapshot
+                String title = (String) extractMap.get("title");
+                String reason = (String) extractMap.get("reason");
+                Timestamp date = (Timestamp) extractMap.get("date");
+                String id = (String) extractMap.get("id");
+                String days = extractMap.get("days").toString();
+                boolean isPublic = (boolean) extractMap.get("public");
+
+                // create a new habit with the snapshot data
+                Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
+
+                // add the habit to the local list
+                _habitList.addHabitLocal(addHabit);
+            }
+        }
+    }
+
+    // we can extract these two methods to list fragment once item adapter interface is done!
+    @Override
+    public void onStart() {
+        super.onStart();
+        _habitItemAdapter.startListening();
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        _habitItemAdapter.stopListening();
+    }
+
+    /**
+     * This helper method is responsible for opening the add habit dialog box
+     */
+    protected void openAddDialogBox() {
+        // not needed
+    }
+
+
+    public void openEditDialogBox(int position) {
+        // not needed
+    }
+
+    // note: add this to list fragment class once view is implemented for habitevents
+    protected void openViewWindowForItem(int position) {
+        // Get the selected habit
+        Habit currentHabit = _habitItemAdapter._snapshots.get(position);
+
+        // Create a bundle to be passed into the habitViewFragment
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("habit", currentHabit);
+        bundle.putSerializable("userId", _user.getId());
+        NavController controller = NavHostFragment.findNavController(this);
+
+        // Navigate to the habitViewFragment
+        controller.navigate(R.id.action_viewProfileFragment_to_habitViewFragment, bundle);
+    }
+
+    public void updateListAfterAdd(Habit addedHabit){
+        // not needed
+    }
+
+
+    public void updateListAfterEdit(Habit editedHabit, int pos) {
+        // not needed
+    }
+
+    public void updateListAfterDelete(int pos) {
+        // not needed
+    }
+
+}

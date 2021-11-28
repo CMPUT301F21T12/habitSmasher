@@ -41,15 +41,11 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
      * @param options the firestore entities
      */
     public HabitEventItemAdapter(@NonNull FirestoreRecyclerOptions<HabitEvent> options,
-                                 Habit parentHabit,
                                  String userId,
-                                 HabitEventList habitEvents,
-                                 HabitEventListFragment fragment) {
+                                 HabitEventList habitEvents) {
         super(options);
-        _parentHabit = parentHabit;
         _userId = userId;
         _habitEvents = habitEvents;
-        _habitEventListFragment = fragment;
     }
 
     @NonNull
@@ -58,7 +54,7 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         // Inflate view based on HabitEventViewHolder
         _context = parent.getContext();
         View view = LayoutInflater.from(_context).inflate(R.layout.habit_event_row, parent, false);
-        return new HabitEventViewHolder(view, _snapshots, _userId, _parentHabit, _context);
+        return new HabitEventViewHolder(view, _snapshots, _userId, _context);
     }
 
     @Override
@@ -67,8 +63,8 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
         imageDatabaseHelper.fetchImagesFromDB(holder._habitEventImage,
                 imageDatabaseHelper.getHabitEventStorageReference(
-                        _userId,
-                        _parentHabit.getId(),
+                        habitEvent.getUserID(),
+                        habitEvent.getParentHabitID(),
                         habitEvent.getId()));
 
         // Set UI elements of habit event
@@ -92,7 +88,6 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         public HabitEventViewHolder(@NonNull View itemView,
                                     ObservableSnapshotArray<HabitEvent> _snapshots,
                                     String userId,
-                                    Habit parentHabit,
                                     Context context) {
             super(itemView);
 

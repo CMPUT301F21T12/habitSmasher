@@ -1,7 +1,6 @@
 package com.example.habitsmasher;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -46,10 +45,12 @@ public class HabitEventList extends ArrayList{
      * @param comment (String): The comment of the habit event to add
      * @param id (String): The id of the habit event to add
      * @param location (String): The location of the habit event
+     * @param userID (String): The ID of the user that made the event
+     * @param parentHabitID (String): The ID of the parent habit
      */
-    public void addHabitEventLocally(Date startDate, String comment, String id, String location) {
+    public void addHabitEventLocally(Date startDate, String comment, String id, String location, String userID, String parentHabitID) {
         // Create habit event and add it to the list
-        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, location);
+        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, location, userID, parentHabitID);
         _habitEvents.add(eventToAdd);
     }
 
@@ -77,6 +78,8 @@ public class HabitEventList extends ArrayList{
         eventData.put("comment", addedHabitEvent.getComment());
         eventData.put("id", eventId);
         eventData.put("location", addedHabitEvent.getLocation());
+        eventData.put("userID", addedHabitEvent.getUserID());
+        eventData.put("parentHabitID", addedHabitEvent.getParentHabitID());
         // Set data in database
         setHabitEventDataInDatabase(userId, parentHabit, eventId, eventData);
         addHabitEventLocally(addedHabitEvent);

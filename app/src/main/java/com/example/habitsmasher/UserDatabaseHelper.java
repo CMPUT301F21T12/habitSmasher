@@ -9,9 +9,12 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,8 +142,43 @@ public class UserDatabaseHelper {
         String userId = sharedPref.getString(USER_ID_SHARED_PREF_TAG, "id");
         String email = sharedPref.getString(USER_EMAIL_SHARED_PREF_TAG, "email");
         String password = sharedPref.getString(USER_PASSWORD_SHARED_PREF_TAG, "password");
+        ArrayList<String> followers = getFollowers(userId);
+        ArrayList<String> following = getFollowing(userId);
 
 
-        return new User(userId, username, email, password, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST);
+        return new User(userId, username, email, password, followers, following);
+    }
+
+    public static ArrayList<String> getFollowers(String userID){
+        DocumentSnapshot userSnapshot = getUserSnapshot(userID);
+
+        return (ArrayList<String>) userSnapshot.get("followers");
+    }
+
+    public static ArrayList<String> getFollowing(String userID){
+        DocumentSnapshot userSnapshot = getUserSnapshot(userID);
+
+        return (ArrayList<String>) userSnapshot.get("following");
+    }
+
+    public static User getUser(String userID){
+        DocumentSnapshot userSnapshot = getUserSnapshot(userID);
+
+        String username = (String) userSnapshot.get("username");
+        String email = (String) userSnapshot.get("email");
+        String password = (String) userSnapshot.get("password");
+
+        return new User(userID, username, email, password, getFollowers(userID), getFollowing(userID));
+    }
+
+    private static DocumentSnapshot getUserSnapshot(String userID){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference docRef = db.collection("Users").document(userID);
+
+        Task<DocumentSnapshot> documentSnapshotTask = docRef.get();
+        while (!documentSnapshotTask.isComplete()) ;
+
+        return documentSnapshotTask.getResult();
     }
 }

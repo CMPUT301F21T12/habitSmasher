@@ -1,34 +1,16 @@
 package com.example.habitsmasher.ui.history;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.Manifest;
-import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.habitsmasher.DatabaseEntity;
-import com.example.habitsmasher.DatePickerDialogFragment;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventDialog;
 import com.example.habitsmasher.R;
@@ -42,6 +24,8 @@ public class AddHabitEventDialog extends HabitEventDialog {
 
     private HabitEvent _newEvent;
     private AddHabitEventDialog _addFragment = this;
+    private String _userID;
+    private String _parentHabitID;
 
 
     @Nullable
@@ -52,6 +36,10 @@ public class AddHabitEventDialog extends HabitEventDialog {
         initializeUIElements(view);
         wrapBundle(savedInstanceState);
         spawnMapSnippet();
+
+        Bundle args = getArguments();
+        _userID = args.getString("userID");
+        _parentHabitID = args.getString("parentHabitID");
 
         // set header
         _header.setText("Add Habit Event");
@@ -96,7 +84,9 @@ public class AddHabitEventDialog extends HabitEventDialog {
                     _newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
                                 habitEventComment,
                                 DatabaseEntity.generateId(),
-                                _selectedLocation);
+                                _selectedLocation,
+                                _userID,
+                                _parentHabitID);
                     _errorText.setText("");
                     _habitEventListFragment.addHabitEvent(_newEvent, _selectedImage);
 

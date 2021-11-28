@@ -2,7 +2,6 @@ package com.example.habitsmasher.ui.history;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,8 +23,6 @@ import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
-import com.example.habitsmasher.listeners.FailureListener;
-import com.example.habitsmasher.listeners.SuccessListener;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
@@ -34,13 +31,9 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * HabitEventListFragment class
@@ -89,10 +82,9 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
             populateList(query);
             // Set item adapter and habit event list
             _habitEventItemAdapter = new HabitEventItemAdapter(options,
-                                                               _parentHabit,
-                                                               _userId,
-                                                               _habitEventList,
-                                                                       this);
+                    _userId,
+                                                               _habitEventList
+            );
         }
         catch (NullPointerException e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
@@ -210,7 +202,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
 
                 // create the new habit event from the snapshot data and add to local list
                 HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id,
-                                                          location);
+                                                          location, _userId, _parentHabit.getId());
                 Log.d(TAG, addHabitEvent.getId());
                 _habitEventList.addHabitEventLocally(addHabitEvent);
             }
@@ -237,6 +229,12 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
     protected void openAddDialogBox() {
         // Create new AddHabitEventDialog and show it
         AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("userID", _userId);
+        bundle.putSerializable("parentHabitID", _parentHabit.getId());
+        addHabitEventDialog.setArguments(bundle);
+
         addHabitEventDialog.setTargetFragment(HabitEventListFragment.this, 1);
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
@@ -244,6 +242,12 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
     public void openEditDialogBox(int position) {
         EditHabitEventDialog editHabitEventDialog = new EditHabitEventDialog(position, _habitEventItemAdapter._snapshots.get(position), _userId, _parentHabit);
         editHabitEventDialog.setCancelable(true);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("userID", _userId);
+        bundle.putSerializable("parentHabitID", _parentHabit.getId());
+        editHabitEventDialog.setArguments(bundle);
+
         editHabitEventDialog.setTargetFragment(this, 1);
         editHabitEventDialog.show(getFragmentManager(), "Edit Habit Event");
     }

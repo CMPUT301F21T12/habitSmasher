@@ -1161,7 +1161,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1203,7 +1203,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1297,7 +1297,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1383,7 +1383,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1441,7 +1441,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter date
         enterCurrentDateInAddHabitEventDialogBox();
@@ -1489,7 +1489,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment that is too long, and too many characters", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment that is too long, and too many characters", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1542,7 +1542,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1590,7 +1590,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1635,7 +1635,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1689,7 +1689,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1747,7 +1747,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1809,7 +1809,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());
@@ -1881,7 +1881,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_event_fab));
 
         // Create test habit event
-        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString());
+        HabitEvent testEvent = new HabitEvent(new Date(), "Test Comment", UUID.randomUUID().toString(), , );
 
         // Enter comment
         setFieldInAddHabitDialogBox(HABIT_EVENT_COMMENT_FIELD, testEvent.getComment());

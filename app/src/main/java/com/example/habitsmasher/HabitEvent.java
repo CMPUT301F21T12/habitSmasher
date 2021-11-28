@@ -1,5 +1,4 @@
 package com.example.habitsmasher;
-import android.location.Location;
 import android.net.Uri;
 import com.google.firebase.firestore.PropertyName;
 
@@ -16,6 +15,8 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     private Date _date;
     private String _comment;
     private Uri _pictureUri;
+    private String _userID;
+    private String _parentHabitID;
 
     /*
     String in the format of "latitude longitude" that stores the location
@@ -37,12 +38,16 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
      * @param startDate (Date): The start date of the habit event
      * @param comment (String): The comment of the habit event
      * @param id (String): The unique ID of the habit event
+     * @param userID (String): The ID of the user that made the event
+     * @param parentHabitID (String): The ID of the habit this event is part of
      */
-    public HabitEvent(Date startDate, String comment, String id) {
+    public HabitEvent(Date startDate, String comment, String id, String userID, String parentHabitID) {
         super(id);
         _date = startDate;
         _comment = comment;
         _location = "";
+        _userID = userID;
+        _parentHabitID = parentHabitID;
     }
 
     /**
@@ -51,12 +56,16 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
      * @param comment comment of habit event
      * @param id id of habit event
      * @param location location of habit event in form of string
+     * @param userID (String): The ID of the user that made the event
+     * @param parentHabitID (String): The ID of the habit this event is part of
      */
-    public HabitEvent(Date startDate, String comment, String id, String location) {
+    public HabitEvent(Date startDate, String comment, String id, String location, String userID, String parentHabitID) {
         super(id);
         _date = startDate;
         _comment = comment;
         _location = location;
+        _userID = userID;
+        _parentHabitID = parentHabitID;
     }
 
     /**
@@ -92,6 +101,34 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
     public void setComment(String comment) {
         this._comment = comment;
     }
+
+    /**
+     * Gets the ID of the user that made this event
+     * @return _userID (String): The ID of the user
+     */
+    public String getUserID(){
+        return _userID;
+    }
+
+    /**
+     * Sets the userID of the event
+     * @param userID (String): The ID of the user
+     */
+    public void setUserID(String userID){_userID = userID;}
+
+    /**
+     * Gets the ID of the parent habit
+     * @return parentHabitID (String): The ID of the habit
+     */
+    public String getParentHabitID(){
+        return _parentHabitID;
+    }
+
+    /**
+     * Sets the parent habit id of the event
+     * @param parentHabitID (String): The new parent ID
+     */
+    public void setParentHabitID(String parentHabitID){_parentHabitID = parentHabitID;}
 
     /**
      * Gets the picture URL of a habit event
