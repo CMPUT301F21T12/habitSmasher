@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/notifications_button"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_notification_foreground"
         android:title="@string/Notifications"
         app:showAsAction="always" />
     <item
