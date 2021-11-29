@@ -41,6 +41,8 @@ import java.util.Objects;
 public class FollowListFragment extends ListFragment<User> {
     // Initialize variables
     private static final String TAG = "FollowListFragment";
+    private static final String UNFOLLOW_MESSAGE = "Clicked unfollow";
+    private static final String CLICKED_FOLLOWER_MESSAGE = "Clicked on a row";
     // user who owns this list of habits displayed
     private User _user;
     // var to tell whether it is the following or followers list
@@ -216,7 +218,7 @@ public class FollowListFragment extends ListFragment<User> {
      */
     private void unfollowUser(int position) {
         // Toast message to let the user know you have unfollowed someone
-        Toast.makeText(_context, "Clicked unfollow", Toast.LENGTH_SHORT).show();
+        Toast.makeText(_context, UNFOLLOW_MESSAGE, Toast.LENGTH_SHORT).show();
         // get the Id of the user being unfollowed
         String followingId = _followItemAdapter.getItem(position).getId();
         // unfollow locally
@@ -253,7 +255,7 @@ public class FollowListFragment extends ListFragment<User> {
      * @param position Position of the user in the list
      */
     protected void openViewWindowForItem(int position) {
-        Toast.makeText(_context, "Clicked on a row", Toast.LENGTH_SHORT).show();
+        Toast.makeText(_context, CLICKED_FOLLOWER_MESSAGE, Toast.LENGTH_SHORT).show();
     }
 
     /**
