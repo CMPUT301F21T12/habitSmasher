@@ -88,6 +88,10 @@ public class MainActivityTest {
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String INVALID_USERNAME = "abcdefg";
     private static final String EDIT_HEADER = "EDIT LOCATION";
+    private static final String FOLLOWER_USER_ID = "2DovMQknRoSeqVsangKbIU64RY93";
+    private static final String FOLLOWER_USER_USERNAME = "follower";
+    private static final String FOLLOWER_USER_EMAIL = "follower@gmail.com";
+    private static final String FOLLOWER_USER_PASSWORD = "123456";
     private static final Long SAMPLE_SORT_INDEX = 0L;
     private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
@@ -98,6 +102,9 @@ public class MainActivityTest {
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
                                       TEST_USER_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST,
                                       EMPTY_REQUEST_LIST);
+    private User _follower = new User(FOLLOWER_USER_ID, FOLLOWER_USER_USERNAME, FOLLOWER_USER_EMAIL,
+                                        FOLLOWER_USER_PASSWORD, EMPTY_FOLLOWER_LIST, EMPTY_FOLLOWING_LIST,
+                                        EMPTY_REQUEST_LIST);
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -2185,6 +2192,120 @@ public class MainActivityTest {
 
     }
 
+    /**
+     * Ensure unfollow works
+     */
+    @Test
+    public void ensureUnfollowWorks(){
+        // log in to follower user
+        logInFollowerUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Notifications screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click follow user search button
+        _solo.clickOnView(_solo.getView(R.id.follow_user_search_button));
+
+        // enter username of test user
+        _solo.enterText(_solo.getEditText("Username"), TEST_USER_USERNAME);
+
+        // click follow button
+        _solo.clickOnButton(FOLLOW);
+
+        // ensure that the app has transitioned to the Notifications screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click on log out button
+        _solo.clickOnView(_solo.getView(R.id.logout_button));
+
+        // ensure HabitSmasher is displayed
+        assertTextOnScreen("HabitSmasher");
+
+        // login to test user
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // press notifications button
+        _solo.clickOnView(_solo.getView(R.id.notifications_button));
+
+        // swipe on follow request
+        swipeLeftOnFollowRequest(_follower);
+
+        // accept follow request
+        _solo.clickOnView(_solo.getView(R.id.accept_request_button));
+
+        _solo.goBack();
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Notifications screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // make sure number of followers is 1
+        TextView followers = (TextView) _solo.getView(R.id.number_followers);
+        assertEquals("1", followers.getText().toString());
+
+        // click on followers button
+        _solo.clickOnView(followers);
+
+        // check that the test user is being followed
+        assertTextOnScreen(FOLLOWER_USER_USERNAME);
+
+        _solo.goBack();
+
+        // click on log out button
+        _solo.clickOnView(_solo.getView(R.id.logout_button));
+
+        // ensure HabitSmasher is displayed
+        assertTextOnScreen("HabitSmasher");
+
+        // log in to follower user
+        logInFollowerUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Notifications screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // make sure number of following is 1
+        TextView following = (TextView) _solo.getView(R.id.number_following);
+        assertEquals("1", following.getText().toString());
+
+        // click on following button
+        _solo.clickOnView(following);
+
+        // check that the test user is being followed
+        assertTextOnScreen(TEST_USER_USERNAME);
+
+        // swipe on followed user
+        swipeLeftOnFollowing(_testUser);
+
+        // unfollow user
+        _solo.clickOnView(_solo.getView(R.id.unfollow_button));
+
+        // make sure unfollowed user is gone
+        assertTextNotOnScreen(TEST_USER_USERNAME);
+
+        _solo.goBack();
+
+        // make sure number of following is 0
+        following = (TextView) _solo.getView(R.id.number_following);
+        assertEquals("0", following.getText().toString());
+    }
+
     private void deleteTestHabit(Habit habitToDelete) {
         swipeLeftOnHabit(habitToDelete);
         _solo.waitForView(R.id.delete_habit_event_button);
@@ -2223,6 +2344,38 @@ public class MainActivityTest {
 
     private void swipeLeftOnHabitEvent(HabitEvent eventToDelete) {
         TextView view = _solo.getText(eventToDelete.getComment());
+
+        // locate row
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        // larger padding from righthand side of screen to ensure swipe functions
+        int displayWidth = _solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int fromX = displayWidth - 100;
+        int fromY = location[1];
+
+        // 0 so Robotium swipes to leftmost side of screen
+        _solo.drag(fromX, 0, fromY, fromY, 10);
+    }
+
+    private void swipeLeftOnFollowing(User userToUnfollow) {
+        TextView view = _solo.getText(userToUnfollow.getUsername());
+
+        // locate row
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        // larger padding from righthand side of screen to ensure swipe functions
+        int displayWidth = _solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int fromX = displayWidth - 100;
+        int fromY = location[1];
+
+        // 0 so Robotium swipes to leftmost side of screen
+        _solo.drag(fromX, 0, fromY, fromY, 10);
+    }
+
+    private void swipeLeftOnFollowRequest(User userWithRequest) {
+        TextView view = _solo.getText(userWithRequest.getUsername());
 
         // locate row
         int[] location = new int[2];
@@ -2387,6 +2540,14 @@ public class MainActivityTest {
     private void logInTestUser() {
         _solo.enterText(_solo.getEditText("Email"), _testUser.getEmail());
         _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
+        _solo.clickOnButton(LOGIN_TEXT);
+        // Wait for Profile fragment to load
+        _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
+    }
+
+    private void logInFollowerUser() {
+        _solo.enterText(_solo.getEditText("Email"), FOLLOWER_USER_EMAIL);
+        _solo.enterText(_solo.getEditText("Password"), FOLLOWER_USER_PASSWORD);
         _solo.clickOnButton(LOGIN_TEXT);
         // Wait for Profile fragment to load
         _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
