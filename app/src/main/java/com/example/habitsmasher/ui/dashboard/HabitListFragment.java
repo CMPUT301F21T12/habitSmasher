@@ -49,7 +49,7 @@ public class HabitListFragment extends ListFragment<Habit> {
 
     private static final String TAG = "HabitListFragment";
     private static final String CANCELLED_MESSAGE = "Cancelled swap";
-    private static final String SWAP_MESSAGE = "Please select another Habit to swap with.";
+    private static final String SWAP_MESSAGE = "Please select another Habit to swap with";
 
     // user who owns this list of habits displayed
     private User _user;
@@ -258,8 +258,8 @@ public class HabitListFragment extends ListFragment<Habit> {
     }
 
     /**
-     * This function gets the largest sort index in the list plus one
-     * @return Returns the largest sort index plus one
+     * This function gets the largest sort index in the list
+     * @return Returns the largest sort index
      */
     public Long getLargestSortIndex() {
         long maxSortIndex = 0;
@@ -269,7 +269,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                 maxSortIndex = habit.getSortIndex();
             }
         }
-        return maxSortIndex + 1;
+        return maxSortIndex;
     }
 
     // we can extract these two methods to list fragment once item adapter interface is done!
