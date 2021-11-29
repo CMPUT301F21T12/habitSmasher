@@ -48,6 +48,8 @@ import java.util.Map;
 public class HabitListFragment extends ListFragment<Habit> {
 
     private static final String TAG = "HabitListFragment";
+    private static final String CANCELLED_MESSAGE = "Cancelled swap";
+    private static final String SWAP_MESSAGE = "Please select another Habit to swap with.";
 
     // user who owns this list of habits displayed
     private User _user;
@@ -131,6 +133,12 @@ public class HabitListFragment extends ListFragment<Habit> {
                     int fromPosition = _longPressedPosition;
                     int toPosition = position;
 
+                    // handle case where you select the same habit to swap with
+                    if(fromPosition == toPosition) {
+                        Toast.makeText(_context, CANCELLED_MESSAGE, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     // get the correspondong habits
                     Habit fromHabit = _habitItemAdapter.getItem(fromPosition);
                     Habit toHabit = _habitItemAdapter.getItem(toPosition);
@@ -155,13 +163,18 @@ public class HabitListFragment extends ListFragment<Habit> {
             // this checks for long presses
             @Override
             public void onRowLongClicked(int longPosition) {
+                // handle case where you long press on same item twice
+                if(longPosition == _longPressedPosition) {
+                    Toast.makeText(_context, CANCELLED_MESSAGE, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // save position of long pressed habit item
                 _longPressedPosition = longPosition;
                 _longPressed = true;
                 // change background color of long pressed item
                 recyclerView.findViewHolderForAdapterPosition(longPosition).itemView.findViewById(R.id.habit_view_constraint).setBackgroundColor(Color.GRAY);
                 // send toast message to remind user of how to swap habits
-                Toast.makeText(_context, "Please select another Habit to swap with.", Toast.LENGTH_LONG).show();
+                Toast.makeText(_context, SWAP_MESSAGE, Toast.LENGTH_LONG).show();
             }
         });
         // connect listener to recycler view
@@ -175,10 +188,10 @@ public class HabitListFragment extends ListFragment<Habit> {
      * @param fromPosition The position of fromHabit
      * @param toPosition The position of toHabit
      */
-    private void swapSortIndex(Habit fromHabit, Habit toHabit, int fromPosition, int toPosition) {
+    private void swapSortIndex(Habit fromHabit, Habit toHabit, long fromPosition, long toPosition) {
         // Set sort indexes locally
-        fromHabit.setSortIndex((long) toPosition);
-        toHabit.setSortIndex(((long) fromPosition));
+        fromHabit.setSortIndex(toPosition);
+        toHabit.setSortIndex((fromPosition));
 
         // Set indexes in db
         _habitList.editHabitInDatabase(fromHabit, _user.getId());
