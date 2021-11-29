@@ -12,7 +12,7 @@ import com.example.habitsmasher.R;
 public class ClickListenerForFollowers implements View.OnClickListener{
     /**
      * This listener is used for the followers button, and leads to the list of people that
-     * follow the userMM.
+     * follow the user.
      */
     Fragment _fragment;
     int _navAction;

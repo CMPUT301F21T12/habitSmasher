@@ -224,8 +224,6 @@ public class FollowListFragment extends ListFragment<User> {
      * @param position Position of the user in the list
      */
     protected void openViewWindowForItem(int position) {
-        Toast.makeText(_context, "Clicked on a row", Toast.LENGTH_SHORT).show();
-
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", _followItemAdapter._snapshots.get(position).getId());
 
