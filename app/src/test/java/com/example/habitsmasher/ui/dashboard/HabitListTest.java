@@ -27,7 +27,7 @@ public class HabitListTest {
     @Test
     public void addHabit_validHabitAddition_expectHabitAddedToList() {
         String habitId = DatabaseEntity.generateId();
-        Habit habit = new Habit("Title 1", "Reason 1", new Date(), SAMPLE_DAYS_OF_THE_WEEK, true, habitId, EMPTY_HABIT_EVENTS_LIST);
+        Habit habit = new Habit("Title 1", "Reason 1", new Date(), SAMPLE_DAYS_OF_THE_WEEK, true, habitId, EMPTY_HABIT_EVENTS_LIST, getHabitListSize());
 
         _habitList.addHabitLocal(habit);
 
@@ -39,14 +39,14 @@ public class HabitListTest {
     public void editHabit_validEdit_expectHabitToBeEdited() {
         String habitId = DatabaseEntity.generateId();
 
-        Habit habit = new Habit("Title 1", "Reason 1", new Date(), "MO", PUBLIC_HABIT,  habitId, EMPTY_HABIT_EVENTS_LIST);
+        Habit habit = new Habit("Title 1", "Reason 1", new Date(), "MO", PUBLIC_HABIT,  habitId, EMPTY_HABIT_EVENTS_LIST, getHabitListSize());
         _habitList.addHabitLocal(habit);
         Date newDate = new Date();
         int habitToEdit = 0;
         String newTitle = "Title 2";
         String newReason = "Reason 2";
         DaysTracker tracker = new DaysTracker(SAMPLE_DAYS_OF_THE_WEEK);
-        Habit habitEdit = new Habit(newTitle, newReason, newDate, tracker.getDays(), PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST);
+        Habit habitEdit = new Habit(newTitle, newReason, newDate, tracker.getDays(), PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST, getHabitListSize());
         _habitList.editHabitLocal(habitEdit, habitToEdit);
         Habit editedHabit = _habitList.getHabitList().get(habitToEdit);
 
@@ -63,12 +63,12 @@ public class HabitListTest {
         ArrayList<Habit> localHabitList = _habitList.getHabitList();
 
         Habit habitToDelete = new Habit("Habit 2", "Reason 2", today, SAMPLE_DAYS_OF_THE_WEEK,
-                                        PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST);
+                                        PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST, getHabitListSize());
         _habitList.addHabitLocal(new Habit("Habit 1", "Reason 1", today,SAMPLE_DAYS_OF_THE_WEEK,
-                                PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST));
+                                PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST, getHabitListSize()));
         _habitList.addHabitLocal(habitToDelete);
         _habitList.addHabitLocal(new Habit("Habit 3", "Reason 3", today, SAMPLE_DAYS_OF_THE_WEEK,
-                                PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST));
+                                PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST, getHabitListSize()));
 
         assertEquals(3, localHabitList.size());
         int deleteIndex = 1;
@@ -86,11 +86,15 @@ public class HabitListTest {
         Date today = new Date();
 
         _habitList.addHabitLocal(new Habit("Habit 1", "Reason 1", today, SAMPLE_DAYS_OF_THE_WEEK,
-                                PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST));
+                                PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST, getHabitListSize()));
         _habitList.addHabitLocal(new Habit("Habit 2", "Reason 2", today, SAMPLE_DAYS_OF_THE_WEEK,
-                                PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST));
+                                PUBLIC_HABIT, DatabaseEntity.generateId(), EMPTY_HABIT_EVENTS_LIST, getHabitListSize()));
 
         // attempt to delete habit with invalid position
         _habitList.deleteHabitLocal(20);
+    }
+
+    private long getHabitListSize() {
+        return _habitList.size();
     }
 }
