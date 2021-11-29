@@ -195,10 +195,11 @@ public class HabitListFragment extends ListFragment<Habit> {
      * @param fromPosition The position of fromHabit
      * @param toPosition The position of toHabit
      */
-    private void swapSortIndex(Habit fromHabit, Habit toHabit, long fromPosition, long toPosition) {
+    private void swapSortIndex(Habit fromHabit, Habit toHabit, int fromPosition, int toPosition) {
         // Set sort indexes locally
-        fromHabit.setSortIndex(toPosition);
-        toHabit.setSortIndex((fromPosition));
+        long tempIndex = _habitItemAdapter._snapshots.get(fromPosition).getSortIndex();
+        fromHabit.setSortIndex(_habitItemAdapter._snapshots.get(toPosition).getSortIndex());
+        toHabit.setSortIndex(tempIndex);
 
         // Set indexes in db
         _habitList.editHabitInDatabase(fromHabit, _user.getId());
