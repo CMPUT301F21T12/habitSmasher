@@ -1,6 +1,8 @@
 package com.example.habitsmasher;
+import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -9,8 +11,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -71,9 +76,6 @@ public class UserAccountHelper {
             //UserDatabaseHelper dbHelper = new UserDatabaseHelper();
 
         }
-        /*for (int i = 0; i < user.getUsersFollowing().size(); i++) {
-            User willUnfollow = user.getUsersFollowing().get(i);
-        }*/
 
         // Delete user from data base
         FirebaseFirestore.getInstance()
@@ -84,12 +86,30 @@ public class UserAccountHelper {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            deleteUserFromAuth();
                             navigateToFragmentWithAction(R.id.action_logout);
                         } else {
                             showMessage(DELETE_USER_FAILED_MESSAGE);
                         }
                     }
                 });
+    }
+
+    private void deleteUserFromAuth() {
+        // Delete user from auth
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        currentUser.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "User deleted successfully.");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                showMessage(DELETE_USER_FAILED_MESSAGE);
+            }
+        });
     }
 
     /**
