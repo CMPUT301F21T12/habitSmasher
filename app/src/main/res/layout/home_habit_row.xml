@@ -53,6 +53,7 @@
                 android:id="@+id/habit_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="-16dp"
                 android:text="@string/habit_title"
                 android:textAlignment="center"
                 android:textColor="@color/habit_list_text"
@@ -60,14 +61,14 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/habit_home_progress_bar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ProgressBar
                 android:id="@+id/habit_home_progress_bar"
                 android:layout_width="64dp"
                 android:layout_height="61dp"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="8dp"
                 android:indeterminateOnly="false"
                 android:progressDrawable="@drawable/circular_progress_determinate"
                 app:layout_constraintBottom_toBottomOf="parent"
