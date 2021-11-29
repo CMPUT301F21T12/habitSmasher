@@ -142,6 +142,14 @@ public class User {
     }
 
     /**
+     * This allows a user to unfollow another user
+     * @param followingId
+     */
+    public void unFollowUser(String followingId) {
+        _following.remove(followingId);
+    }
+
+    /**
      * Gets the list of users in the form of usernames that
      * this user is following
      * @return list of usernames this user is following

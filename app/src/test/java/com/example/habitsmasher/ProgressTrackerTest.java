@@ -24,11 +24,12 @@ public class ProgressTrackerTest {
     private HabitEventList EMPTY_HABIT_EVENT_LIST = new HabitEventList();
     private static final String ALL_DAYS_OF_WEEK = "MO TU WE TH FR SA SU";
     private static final String SAMPLE_EVENT_COMMENT = "Test Comment";
+    private static final Long SAMPLE_SORT_INDEX = 0l;
 
 
     @Before
     public void setUp() {
-        _parentHabit = new Habit(SAMPLE_HABIT_TITLE, SAMPLE_HABIT_REASON, DATE_TODAY, SAMPLE_DAYS_OF_THE_WEEK, PUBLIC_HABIT, SAMPLE_HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        _parentHabit = new Habit(SAMPLE_HABIT_TITLE, SAMPLE_HABIT_REASON, DATE_TODAY, SAMPLE_DAYS_OF_THE_WEEK, PUBLIC_HABIT, SAMPLE_HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
     }
 
     @Test
@@ -56,7 +57,7 @@ public class ProgressTrackerTest {
     @Test
     public void calculateProgress_eventOnStartDate_expectNotZero() {
         // Set start date to be on a viable day
-        _parentHabit = new Habit(SAMPLE_HABIT_TITLE, SAMPLE_HABIT_REASON, SAMPLE_DATE_IN_DAYS_OF_WEEK, ALL_DAYS_OF_WEEK, PUBLIC_HABIT, SAMPLE_HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        _parentHabit = new Habit(SAMPLE_HABIT_TITLE, SAMPLE_HABIT_REASON, SAMPLE_DATE_IN_DAYS_OF_WEEK, ALL_DAYS_OF_WEEK, PUBLIC_HABIT, SAMPLE_HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
         _progressTracker = new ProgressTracker(_parentHabit);
 
         // Add habit event on the same day
@@ -69,7 +70,7 @@ public class ProgressTrackerTest {
     @Test
     public void calculateProgress_eventOnEndDate_expectNotZero() {
         // Set start date to be on a viable day
-        _parentHabit = new Habit(SAMPLE_HABIT_TITLE, SAMPLE_HABIT_REASON, DATE_TODAY, ALL_DAYS_OF_WEEK, PUBLIC_HABIT, SAMPLE_HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        _parentHabit = new Habit(SAMPLE_HABIT_TITLE, SAMPLE_HABIT_REASON, DATE_TODAY, ALL_DAYS_OF_WEEK, PUBLIC_HABIT, SAMPLE_HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
         _progressTracker = new ProgressTracker(_parentHabit);
 
         // Add habit event on the same day
@@ -82,7 +83,7 @@ public class ProgressTrackerTest {
     @Test
     public void calculateProgress_severalEvents_expectNotZero() {
         // Set start date to be on a viable day
-        _parentHabit = new Habit(SAMPLE_HABIT_TITLE, SAMPLE_HABIT_REASON, SAMPLE_START_DATE, ALL_DAYS_OF_WEEK, PUBLIC_HABIT, SAMPLE_HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        _parentHabit = new Habit(SAMPLE_HABIT_TITLE, SAMPLE_HABIT_REASON, SAMPLE_START_DATE, ALL_DAYS_OF_WEEK, PUBLIC_HABIT, SAMPLE_HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
         _progressTracker = new ProgressTracker(_parentHabit);
 
         // Add habit events on viable days

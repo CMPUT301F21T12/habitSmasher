@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -31,8 +32,10 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
 
     // defined constants
     private static final String TAG = "RecyclerTouchListener";
+    final Handler _handler = new Handler();
     private final long ANIMATION_STANDARD = 300;
     private final long ANIMATION_CLOSE = 150;
+    private int LONG_CLICK_DELAY = 800;
 
     // parent activity of RecyclerView
     Activity _activity;
@@ -43,6 +46,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
      * when swipe menu spawned
      */
     List<Integer> _swipeMenuOptions;
+    List<Integer> _unClickableRows;
 
     // amount finger must move in units before swipe is detected
     private int _touchSlop;
@@ -105,10 +109,30 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
     //listeners for clicking a row and clicking an option in swipe menu
     private OnRowClickListener _RowClickListener;
     private OnSwipeOptionsClickListener _swipeMenuOptionsClickListener;
+    private OnRowLongClickListener _rowLongClickListener;
 
     //flag variables indicating that RecyclerView is clickable or swipeable
     private boolean _clickable = false;
     private boolean _swipeable = false;
+    private boolean _longClickable = false;
+    private boolean _longClickVibrate;
+    private boolean _longClickPerformed;
+
+    /**
+     * On run sets whether a long click is performed
+     */
+    Runnable _longPressed = new Runnable() {
+        public void run() {
+            if (!_longClickable)
+                return;
+
+            _longClickPerformed = true;
+
+            if (!_backgroundVisible && _touchedPosition >= 0 && !_unClickableRows.contains(_touchedPosition) && !_recyclerViewScrolling) {
+                _rowLongClickListener.onRowLongClicked(_touchedPosition);
+            }
+        }
+    };
 
     /**
      * Interface used for listener handling clicking of row
@@ -119,6 +143,17 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
          * @param position position of row
          */
         void onRowClicked(int position);
+    }
+
+    /**
+     * Interface for listener handling long clicking of a row
+     */
+    public interface OnRowLongClickListener {
+        /**
+         * Action carried out when a row is long clicked
+         * @param position
+         */
+        void onRowLongClicked(int position);
     }
 
     /**
@@ -183,6 +218,8 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
         _backgroundVisibleView = null;
         _backgroundVisiblePosition = -1;
 
+        _unClickableRows = new ArrayList<>();
+
         _recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -226,6 +263,18 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
         return this;
     }
 
+    /**
+     * Allows elements of the recycler view to be long pressable
+     * @param vibrate Boolean to enable vibrate
+     * @param listener row long click listener
+     * @return itself
+     */
+    public RecyclerTouchListener setLongClickable(boolean vibrate, OnRowLongClickListener listener) {
+        _longClickable = true;
+        _rowLongClickListener = listener;
+        _longClickVibrate = vibrate;
+        return this;
+    }
     /**
      * Allows elements of the recycler view to be swiped and
      * sets the listener used to handle clicking of options in swipe menu
@@ -455,6 +504,12 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                         return false;
                     }
 
+                    // if long clickable
+                    if (_longClickable) {
+                        _longClickPerformed = false;
+                        _handler.postDelayed(_longPressed, LONG_CLICK_DELAY);
+                    }
+
                     // if swipes are allowed
                     if (_swipeable) {
                         _swipeVelocityTracker = VelocityTracker.obtain();
@@ -471,6 +526,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                          * shown on the screen if the options width is < device width
                          */
                         if (_backgroundVisible && _foregroundView != null) {
+                            _handler.removeCallbacks(_longPressed);
                             int x = (int) motionEvent.getRawX();
                             int y = (int) motionEvent.getRawY();
                             _foregroundView.getGlobalVisibleRect(rect);
@@ -489,6 +545,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                  */
                 _recyclerView.getHitRect(rect);
                 if (_swipeable && _backgroundVisible && _touchedPosition != _backgroundVisiblePosition) {
+                    _handler.removeCallbacks(_longPressed);
                     closeVisibleBG(null);
                 }
                 break;
@@ -496,6 +553,9 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
 
             // touch interaction is aborted
             case MotionEvent.ACTION_CANCEL: {
+                _handler.removeCallbacks(_longPressed);
+                if (_longClickPerformed)
+                    break;
                 if (_swipeVelocityTracker == null) {
                     break;
                 }
@@ -520,6 +580,10 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
 
             // When finger is lifted off the screen (after clicking, flinging, swiping, etc..)
             case MotionEvent.ACTION_UP: {
+
+                _handler.removeCallbacks(_longPressed);
+                if (_longClickPerformed)
+                    break;
 
                 if (_swipeVelocityTracker == null && _swipeable) {
                     break;
@@ -674,12 +738,12 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
 
                     // handling clicking of row
                     else if (_clickable && !_backgroundVisible && _touchedPosition >= 0
-                            && !_recyclerViewScrolling) {
+                            && !_recyclerViewScrolling && !_unClickableRows.contains(_touchedPosition)) {
                         _RowClickListener.onRowClicked(_touchedPosition);
                     }
 
                     // handling clicking of options in swipe menu
-                    else if (_swipeable && _backgroundVisible && !_foregroundPartialViewClicked) {
+                    else if (_swipeable && _backgroundVisible && !_foregroundPartialViewClicked && !_unClickableRows.contains(_touchedPosition)) {
                         final int optionID = getOptionViewID(motionEvent);
                         if (optionID >= 0 && _touchedPosition >= 0) {
                             final int downPosition = _touchedPosition;
@@ -717,7 +781,8 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
 
             // when finger is moving across the screen (and not yet lifted)
             case MotionEvent.ACTION_MOVE: {
-
+                if (_longClickPerformed)
+                    break;
                 // cancels gesture if paused, swiping is disallowed or fields are not set
                 if (_swipeVelocityTracker == null || _interactionPaused || !_swipeable) {
                     break;
@@ -732,6 +797,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
                  * swipedRightProper variables in "ACTION_UP" block by checking if user is actually swiping at present or not
                  */
                 if (!_foregroundSwiping && Math.abs(deltaX) > _touchSlop && Math.abs(deltaY) < Math.abs(deltaX) / 2) {
+                    _handler.removeCallbacks(_longPressed);
                     _foregroundSwiping = true;
                     _swipingSlop = (deltaX > 0 ? _touchSlop : -_touchSlop);
                 }
