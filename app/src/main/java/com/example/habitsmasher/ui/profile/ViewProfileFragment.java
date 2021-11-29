@@ -154,24 +154,6 @@ public class ViewProfileFragment extends ListFragment<Habit> {
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
     }
-
-    private void setUpHabitRecycler(View view){
-        // query firebase for all habits that correspond to the current user
-        Query query = getListFromFirebase();
-
-        // populate the list with existing items in the database
-        FirestoreRecyclerOptions<Habit> options = new FirestoreRecyclerOptions.Builder<Habit>()
-                .setQuery(query, Habit.class)
-                .build();
-
-        populateList(query);
-        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL,
-                false);
-        initializeRecyclerView(layoutManager, view);
-    }
-
     /**
      * This method queries the database for all habits that correspond to the specified user
      * @return resulting firebase query

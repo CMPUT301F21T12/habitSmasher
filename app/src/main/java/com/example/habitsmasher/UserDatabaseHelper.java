@@ -146,9 +146,6 @@ public class UserDatabaseHelper {
         ArrayList<String> followers = getFollowers(userId);
         ArrayList<String> following = getFollowing(userId);
 
-
-
-
         return new User(userId, username, email, password, followers, following, EMPTY_REQUEST_LIST);
     }
 
