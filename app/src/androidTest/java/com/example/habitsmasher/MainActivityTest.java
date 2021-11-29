@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -92,6 +91,7 @@ public class MainActivityTest {
     private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
+    private static final String TEST_USER_SUBSTRING = "testUs";
 
     private Solo _solo;
     private User _testUser = new User(TEST_USER_ID, TEST_USER_USERNAME, TEST_USER_EMAIL,
@@ -2150,6 +2150,38 @@ public class MainActivityTest {
         _solo.clickOnButton(CONFIRM_BUTTON);
 
         assertTextOnScreen(EMAIL_DOES_NOT_EXIST);
+    }
+
+    @Test
+    public void autoCompleteTextView_PartOfValidUsername_usernameSelected() {
+        logInTestUser();
+
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        _solo.assertCurrentActivity(WRONG_ACTIVITY_MESSAGE, MainActivity.class);
+
+        // click on the Notifications tab in the bottom navigation bar
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // ensure that the app has transitioned to the Profile screen
+        assertTextOnScreen(PROFILE_TEXT);
+
+        // click follow user search button
+        _solo.clickOnView(_solo.getView(R.id.follow_user_search_button));
+
+        // click on the auto complete text view
+        _solo.clickOnView(_solo.getView(R.id.auto_complete_text_view));
+
+        // enter part of the users username we wish to follow
+        _solo.enterText(_solo.getEditText("Username"), TEST_USER_SUBSTRING);
+
+        // click on the user name that we wish to follow
+        // Click on text does not work for item in autoCompleteTextView
+        // so I decided to go with click on screen at a specific location
+        _solo.clickOnScreen(540, 1170);
+
+        _solo.clickOnButton(FOLLOW);
+        assertTextOnScreen(CANNOT_FOLLOW_YOURSELF_MESSAGE);
+
     }
 
     private void deleteTestHabit(Habit habitToDelete) {
