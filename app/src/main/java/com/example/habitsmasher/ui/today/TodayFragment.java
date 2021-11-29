@@ -265,9 +265,10 @@ public class TodayFragment extends ListFragment {
         String id = (String) extractMap.get("id");
         String days = extractMap.get("days").toString();
         boolean isPublic = (boolean) extractMap.get("public");
+        Long sortIndex = (Long) extractMap.get("sortIndex");
 
         //return the new habit
-        return new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
+        return new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList(), sortIndex);
     }
 
     /**

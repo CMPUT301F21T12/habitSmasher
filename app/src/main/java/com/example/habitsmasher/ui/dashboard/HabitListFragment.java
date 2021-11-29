@@ -4,11 +4,13 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,6 +63,8 @@ public class HabitListFragment extends ListFragment<Habit> {
     // adapter that connects the RecyclerView to the database
     // note: can extract this to list fragment once adapter interface is done
     private HabitItemAdapter _habitItemAdapter;
+    private int _longPressedPosition;
+    private boolean _longPressed;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -124,14 +128,64 @@ public class HabitListFragment extends ListFragment<Habit> {
             @Override
             // if row at the specified position is clicked
             public void onRowClicked(int position) {
-                openViewWindowForItem(position);
+                // check if a row has been long pressed
+                if (_longPressed) {
+                    // store the to and from positions
+                    int fromPosition = _longPressedPosition;
+                    int toPosition = position;
+
+                    // get the correspondong habits
+                    Habit fromHabit = _habitItemAdapter.getItem(fromPosition);
+                    Habit toHabit = _habitItemAdapter.getItem(toPosition);
+
+                    // change habit item background color back to white
+                    recyclerView.findViewHolderForAdapterPosition(_longPressedPosition).itemView.findViewById(R.id.habit_view_constraint).setBackgroundColor(Color.WHITE);
+
+                    // swap the two habits
+                    swapSortIndex(fromHabit, toHabit, fromPosition, toPosition);
+                    _longPressed = false;
+                } else {
+                    openViewWindowForItem(position);
+                }
             }
         })
                 .setSwipeOptionViews(R.id.edit_button, R.id.delete_button)
                 .setSwipeable(R.id.habit_view, R.id.swipe_options,
                         new SwipeListener(this));
+
+        touchListener.setLongClickable(false, new RecyclerTouchListener.OnRowLongClickListener() {
+
+            // this checks for long presses
+            @Override
+            public void onRowLongClicked(int longPosition) {
+                // save position of long pressed habit item
+                _longPressedPosition = longPosition;
+                _longPressed = true;
+                // change background color of long pressed item
+                recyclerView.findViewHolderForAdapterPosition(longPosition).itemView.findViewById(R.id.habit_view_constraint).setBackgroundColor(Color.GRAY);
+                // send toast message to remind user of how to swap habits
+                Toast.makeText(_context, "Please select another Habit to swap with.", Toast.LENGTH_LONG).show();
+            }
+        });
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
+    }
+
+    /**
+     * This function swaps the position of two given habits in the list
+     * @param fromHabit The habit being swapped (long pressed)
+     * @param toHabit The habit to be swapped (clicked)
+     * @param fromPosition The position of fromHabit
+     * @param toPosition The position of toHabit
+     */
+    private void swapSortIndex(Habit fromHabit, Habit toHabit, int fromPosition, int toPosition) {
+        // Set sort indexes locally
+        fromHabit.setSortIndex((long) toPosition);
+        toHabit.setSortIndex(((long) fromPosition));
+
+        // Set indexes in db
+        _habitList.editHabitInDatabase(fromHabit, _user.getId());
+        _habitList.editHabitInDatabase(toHabit, _user.getId());
     }
 
     /**
@@ -142,7 +196,8 @@ public class HabitListFragment extends ListFragment<Habit> {
     public Query getListFromFirebase() {
         return _db.collection("Users")
                   .document(_user.getId())
-                  .collection("Habits");
+                  .collection("Habits")
+                    .orderBy("sortIndex",Query.Direction.ASCENDING);
     }
 
     protected void populateList(Query query) {
@@ -174,14 +229,23 @@ public class HabitListFragment extends ListFragment<Habit> {
                 String id = (String) extractMap.get("id");
                 String days = extractMap.get("days").toString();
                 boolean isPublic = (boolean) extractMap.get("public");
+                Long sortIndex = (long) extractMap.get("sortIndex");
 
                 // create a new habit with the snapshot data
-                Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
+                Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList(), sortIndex);
 
                 // add the habit to the local list
                 _habitList.addHabitLocal(addHabit);
             }
         }
+    }
+
+    /**
+     * This funcitons get the length of the list
+     * @return Returns the length of the list as a Long
+     */
+    public Long getItemCountLong() {
+        return (long) _habitItemAdapter.getItemCount();
     }
 
     // we can extract these two methods to list fragment once item adapter interface is done!
@@ -247,7 +311,7 @@ public class HabitListFragment extends ListFragment<Habit> {
      * @param pos
      */
     public void updateListAfterEdit(Habit editedHabit, int pos) {
-        _habitList.editHabitInDatabase(editedHabit, pos, _user.getId());
+        _habitList.editHabitInDatabase(editedHabit, _user.getId());
         _habitItemAdapter.notifyItemChanged(pos);
     }
 
@@ -261,6 +325,14 @@ public class HabitListFragment extends ListFragment<Habit> {
                 _user.getId(),
                 habitToDelete,
                 pos);
+
+        // This iterates through the habits to update their sort indexes
+        for (Habit habit : _habitItemAdapter._snapshots){
+            if (habit.getSortIndex() > habitToDelete.getSortIndex()) {
+                habit.setSortIndex(habit.getSortIndex() - 1);
+                _habitList.editHabitInDatabase(habit, _user.getId());
+            }
+        }
     }
 
     /**
