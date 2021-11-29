@@ -139,8 +139,8 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_location_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginTop="164dp"
         android:baselineAlignBottom="false"
         android:clickable="true"
@@ -148,7 +148,7 @@
         android:minHeight="48dp"
         android:tint="@color/white"
         app:backgroundTint="@color/menu_bar_variant"
-        app:fabCustomSize="80dp"
+        app:fabCustomSize="60dp"
         app:layout_constraintEnd_toEndOf="@+id/add_location_label"
         app:layout_constraintStart_toStartOf="@+id/add_location_label"
         app:layout_constraintTop_toTopOf="parent"
