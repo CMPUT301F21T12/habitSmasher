@@ -1,17 +1,28 @@
 package com.example.habitsmasher.ui.profile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.habitsmasher.AddPictureDialog;
+import com.example.habitsmasher.DeleteUserDialog;
+import com.example.habitsmasher.PictureSelectionUser;
+import com.example.habitsmasher.R;
+import com.example.habitsmasher.User;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
@@ -27,15 +38,11 @@ import java.util.ArrayList;
  * UI class that represents and specifies the behaviour of the user's profile screen
  * Currently, only displays information of a test user
  */
-public class ProfileFragment extends ListFragment<User> {
-    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
-    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+public class ProfileFragment extends ListFragment<User> implements PictureSelectionUser {
     private User _user;
-    private static ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
-
-    private ProfileFragment _fragment = this;
     private ImageView _userImageView;
-    private Bitmap _userImage;
+    private Uri _userImage;
+    private ImageDatabaseHelper _imageDatabaseHelper;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -59,8 +66,22 @@ public class ProfileFragment extends ListFragment<User> {
         userDatabaseHelper.setFollowerCountOfUser();
 
         // Fetch profile picture from database
-        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
-        imageDatabaseHelper.fetchImagesFromDB(_userImageView, imageDatabaseHelper.getUserStorageReference(_user.getId()));
+        _imageDatabaseHelper = new ImageDatabaseHelper();
+        _imageDatabaseHelper.fetchImagesFromDB(_userImageView, _imageDatabaseHelper.getUserStorageReference(_user.getId()));
+
+        // Add listener to allow users to change profile
+        setImageViewListener();
+
+        // Set listener for garbage button
+        ImageButton deleteButton = view.findViewById(R.id.delete_profile_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DeleteUserDialog deleteUserDialog = new DeleteUserDialog();
+                deleteUserDialog.setTargetFragment(ProfileFragment.this, 1);
+                deleteUserDialog.show(getFragmentManager(), "DeleteUserDialog");
+            }
+        });
 
         // Set click listeners for followers and following buttons
         numberOfFollowersButton.setOnClickListener(
@@ -138,6 +159,39 @@ public class ProfileFragment extends ListFragment<User> {
     }
 
     /**
+     * Adds listener to image view to allow user to select image
+     */
+    protected void setImageViewListener() {
+        _userImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Create add picture dialog
+                AddPictureDialog addPictureDialog = new AddPictureDialog();
+                addPictureDialog.setTargetFragment(ProfileFragment.this, 1);
+                addPictureDialog.show(getFragmentManager(), "AddPictureDialog");
+            }
+        });
+    }
+
+    /**
+     * Handles the selected image
+     * @param image (Uri) The image that the user has chosen
+     */
+    public void setImage(Uri image) {
+        _userImage = image;
+        _userImageView.setImageURI(_userImage);
+        updateUserImageInDatabase();
+    }
+
+    /**
+     * Updates the user profile picture in the database
+     */
+    public void updateUserImageInDatabase() {
+        _imageDatabaseHelper.deleteImageFromDatabase(_imageDatabaseHelper.getUserStorageReference(_user.getId()));
+        _imageDatabaseHelper.addImageToDatabase(_imageDatabaseHelper.getUserStorageReference(_user.getId()), _userImage);
+    }
+
+    /*
      * Not needed
      */
     @Override
@@ -167,6 +221,14 @@ public class ProfileFragment extends ListFragment<User> {
     @Override
     public void updateListAfterDelete(int pos) {
 
+    }
+
+    /**
+     * Deletes the current user
+     */
+    public void deleteUser() {
+        UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(_user.getId(), null, null);
+        userDatabaseHelper.deleteUserFromDatabase(_user, getContext(), this);
     }
 
 }
