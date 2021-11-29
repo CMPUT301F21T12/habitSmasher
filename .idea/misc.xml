@@ -5,6 +5,8 @@
       <map>
         <entry key="app/src/main/res/layout/add_habit_dialog_box.xml" value="0.1" />
         <entry key="app/src/main/res/layout/add_picture_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/confirm_delete_user_dialog.xml" value="0.36" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.4" />
         <entry key="app/src/main/res/drawable/baseline_group_add_18.xml" value="0.34791666666666665" />
         <entry key="app/src/main/res/drawable/circular_progress_determinate.xml" value="0.11574074074074074" />
         <entry key="app/src/main/res/drawable/circular_progress_determinate_white_background.xml" value="0.2708333333333333" />

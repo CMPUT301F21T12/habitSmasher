@@ -40,8 +40,6 @@ import java.util.ArrayList;
  */
 public class ProfileFragment extends ListFragment<User> implements PictureSelectionUser {
     private User _user;
-
-    private ProfileFragment _fragment = this;
     private ImageView _userImageView;
     private Uri _userImage;
     private ImageDatabaseHelper _imageDatabaseHelper;

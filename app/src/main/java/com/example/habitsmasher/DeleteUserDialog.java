@@ -18,6 +18,7 @@ import com.example.habitsmasher.ui.profile.ProfileFragment;
 
 /**
  * This class handles the dialog for deleting a user
+ * @author Julie Pilz
  */
 public class DeleteUserDialog extends DialogFragment {
     // UI elements
