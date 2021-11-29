@@ -26,7 +26,7 @@ import java.util.List;
  * Name: Velmurugan
  * Date: March 4, 2021
  * URL: https://howtodoandroid.com/android-recyclerview-swipe-menu
- * @author: Velmurugan
+ * @author: Jason Kim, Kaden Dreger, Velmurugan
  */
 public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, OnActivityTouchListener {
 

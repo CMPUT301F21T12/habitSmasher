@@ -8,6 +8,8 @@ import com.example.habitsmasher.DaysTracker;
  * This is the ClickListenerForDaysOfTheWeek class
  * It implements the View.OnClickListener
  * Its purpose is to perform the onClick listener actions
+ *
+ * @author Kaden Dreger
  */
 public class ClickListenerForDaysOfTheWeek implements View.OnClickListener{
     private DaysTracker _tracker;
@@ -21,6 +23,7 @@ public class ClickListenerForDaysOfTheWeek implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
+        // set up the days tracker based on the specific day
         switch (_day) {
             case "SU":
                 if (_tracker.getSunday()) {

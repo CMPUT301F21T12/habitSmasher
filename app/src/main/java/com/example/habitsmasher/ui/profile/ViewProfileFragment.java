@@ -35,7 +35,7 @@ import com.google.firebase.firestore.Query;
 /**
  * This class handles the logic for viewing some else's profile. This includes
  * Displaying their follower count, and their public habits.
- * Author: Cameron Matthew
+ * @author Cameron Matthew
  */
 public class ViewProfileFragment extends ListFragment<Habit> {
 

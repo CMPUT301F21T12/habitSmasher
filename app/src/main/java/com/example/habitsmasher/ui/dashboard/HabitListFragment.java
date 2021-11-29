@@ -44,9 +44,10 @@ import java.util.Map;
 /**
  * UI class that represents and specifies the behaviour of the user interface
  * displayed when a user is accessing their own habit list
+ *
+ * @author Kaden Dreger, Jason Kim, Rudy Patel
  */
 public class HabitListFragment extends ListFragment<Habit> {
-
     private static final String TAG = "HabitListFragment";
     private static final String CANCELLED_MESSAGE = "Cancelled swap";
     private static final String SWAP_MESSAGE = "Please select another Habit to swap with";
@@ -341,7 +342,10 @@ public class HabitListFragment extends ListFragment<Habit> {
         _habitItemAdapter.notifyItemChanged(pos);
     }
 
-    // add to list fragment class once swipe is fixed in habit events
+    /**
+     * Updates the local habit list after the deletion operation
+     * @param pos position of object in list
+     */
     public void updateListAfterDelete(int pos) {
         Habit habitToDelete = _habitItemAdapter._snapshots.get(pos);
 

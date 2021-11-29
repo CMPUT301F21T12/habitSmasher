@@ -25,7 +25,9 @@ import java.util.ArrayList;
 
 /**
  * UI class that represents and specifies the behaviour of the user's profile screen
- * Currently, only displays information of a test user
+ * Displays information of the user
+ *
+ * @author Rudy Patel, Cameron Matthew, Jason Kim, Julie Pilz, Kaden Dreger
  */
 public class ProfileFragment extends ListFragment<User> {
     private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();

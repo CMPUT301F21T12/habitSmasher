@@ -38,6 +38,8 @@ import java.util.Map;
 /**
  * HabitEventListFragment class
  * Responsible for data and UI handling of the habit event list
+ *
+ * @author Julie Pilz, Rudy Patel, Jason Kim
  */
 public class HabitEventListFragment extends ListFragment<HabitEvent> {
     // Initialize variables

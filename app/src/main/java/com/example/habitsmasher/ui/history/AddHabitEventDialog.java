@@ -19,13 +19,12 @@ import com.example.habitsmasher.R;
  * The AddHabitEventDialog
  * Deals with UI and information handling of the add habit event popup
  *
+ * @author Julie Pilz, Jason Kim
+ *
  */
 public class AddHabitEventDialog extends HabitEventDialog {
-
     private HabitEvent _newEvent;
     private AddHabitEventDialog _addFragment = this;
-
-
 
     @Nullable
     @Override
