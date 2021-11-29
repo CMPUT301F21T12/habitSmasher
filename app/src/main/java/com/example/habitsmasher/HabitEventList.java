@@ -45,10 +45,8 @@ public class HabitEventList extends ArrayList{
      * @param comment (String): The comment of the habit event to add
      * @param id (String): The id of the habit event to add
      * @param location (String): The location of the habit event
-     * @param userID (String): The ID of the user that made the event
-     * @param parentHabitID (String): The ID of the parent habit
      */
-    public void addHabitEventLocally(Date startDate, String comment, String id, String location, String userID, String parentHabitID) {
+    public void addHabitEventLocally(Date startDate, String comment, String id, String location) {
         // Create habit event and add it to the list
         HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, location);
         _habitEvents.add(eventToAdd);

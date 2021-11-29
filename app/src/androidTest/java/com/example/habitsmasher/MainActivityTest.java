@@ -1994,10 +1994,62 @@ public class MainActivityTest {
         // click on the test user
         _solo.clickOnText("publicTester");
 
+        // check that their username is on the screen
+        assertTextOnScreen("publicTester");
+
+        //assert that their public habit is on the screen
+        assertTextOnScreen("Public Habit");
+
+        //assert that their private habit is not on the screen
+        assertTextNotOnScreen("Private Habit");
+
+        // click on the public habit
+        _solo.clickOnText("Public Habit");
+
+        // assert that the habit name and privacy are correct
+        assertTextOnScreen("Public Habit");
+        CheckBox publicBox = (CheckBox) _solo.getView(R.id.public_button);
+        CheckBox privateBox = (CheckBox) _solo.getView(R.id.private_button);
+        assertTrue(publicBox.isChecked());
+        assertFalse(privateBox.isChecked());
+
 
 
     }
 
+    @Test
+    public void navigateToFollowing(){
+        logInTestUser();
+
+        // go to the profile
+        _solo.clickOnView(_solo.getView(R.id.navigation_notifications));
+
+        // click on the followers button
+        _solo.clickOnView(_solo.getView(R.id.number_following));
+
+        // click on the test user
+        _solo.clickOnText("publicTester");
+
+        // check that their username is on the screen
+        assertTextOnScreen("publicTester");
+
+        //assert that their public habit is on the screen
+        assertTextOnScreen("Public Habit");
+
+        //assert that their private habit is not on the screen
+        assertTextNotOnScreen("Private Habit");
+
+        // click on the public habit
+        _solo.clickOnText("Public Habit");
+
+        // assert that the habit name and privacy are correct
+        assertTextOnScreen("Public Habit");
+        CheckBox publicBox = (CheckBox) _solo.getView(R.id.public_button);
+        CheckBox privateBox = (CheckBox) _solo.getView(R.id.private_button);
+        assertTrue(publicBox.isChecked());
+        assertFalse(privateBox.isChecked());
+
+    }
 
 
 
