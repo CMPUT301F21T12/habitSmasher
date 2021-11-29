@@ -40,7 +40,7 @@ public class HabitEventViewFragment extends Fragment implements OnMapReadyCallba
     private MapView _mapView;
 
     // Date format
-    private static final String PATTERN = "dd-MM-yyyy";
+    private static final String PATTERN = "EEE, d MMM yyyy";
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 

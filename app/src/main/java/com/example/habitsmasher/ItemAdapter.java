@@ -12,7 +12,7 @@ import com.firebase.ui.firestore.ObservableSnapshotArray;
  * @author Jacob Nguyen, Jason Kim
  */
 public abstract class ItemAdapter<A, B extends RecyclerView.ViewHolder> extends FirestoreRecyclerAdapter<A, B> {
-    public final ObservableSnapshotArray<A> _snapshots;
+    public ObservableSnapshotArray<A> _snapshots;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -29,4 +29,9 @@ public abstract class ItemAdapter<A, B extends RecyclerView.ViewHolder> extends 
         return _snapshots.size();
     }
 
+    @Override
+    public void updateOptions(@NonNull FirestoreRecyclerOptions<A> options) {
+        super.updateOptions(options);
+        _snapshots = options.getSnapshots();
+    }
 }

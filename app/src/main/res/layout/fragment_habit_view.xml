@@ -9,180 +9,219 @@
     android:paddingBottom="100dp"
     android:outlineProvider="none">
 
-    <TextView
-        android:id="@+id/descriptionHabitTextBox"
-        android:layout_width="359dp"
-        android:layout_height="171dp"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/text_view_background"
-        android:ems="10"
-        android:text="@string/descriptionTextBoxLabel"
-        android:textSize="16sp"
+    <ProgressBar
+        android:id="@+id/habit_view_progress_bar"
+        android:layout_width="95dp"
+        android:layout_height="97dp"
+        android:indeterminateOnly="false"
+        android:progressDrawable="@drawable/circular_progress_determinate_white_background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/public_button" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.025" />
+
+    <TextView
+        android:id="@+id/habit_view_progress_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_progress"
+        android:textColor="@color/habit_list_text"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/habit_view_progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/habit_view_progress_bar"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="@+id/habit_view_progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/habit_view_progress_bar" />
+
+    <TextView
+        android:id="@+id/date_started_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date_started"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/dateHabitTextBox"
+        app:layout_constraintStart_toStartOf="@+id/dateHabitTextBox" />
+
+    <TextView
+        android:id="@+id/days_due_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="@string/days_due"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/dateHabitTextBox"
+        app:layout_constraintTop_toBottomOf="@+id/dateHabitTextBox" />
+
+    <TextView
+        android:id="@+id/privacy_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="@string/privacy"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/days_due_header"
+        app:layout_constraintTop_toBottomOf="@+id/monday_button" />
+
+    <TextView
+        android:id="@+id/descriptionHabitTextBox"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="132dp"
+        android:background="@drawable/text_view_background"
+        android:ems="10"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/dateHabitTextBox"
-        android:layout_width="359dp"
-        android:layout_height="48dp"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/text_view_background"
         android:ems="10"
-        android:text="@string/dateTextBoxLabel"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionHabitTextBox" />
 
-    <TextView
-        android:id="@+id/ratingHabitTextBox"
-        android:layout_width="359dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/text_view_background"
-        android:ems="10"
-        android:text="@string/ratingTextBoxLabel"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateHabitTextBox" />
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/eventHistoryButton"
-        android:layout_width="224dp"
-        android:layout_height="58dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:background="@drawable/text_button_background"
-        android:text="@string/historyButtonLabel"
+        android:text="@string/event_history"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ratingHabitTextBox" />
-
-    <CheckBox
-        android:id="@+id/monday_button"
-        style="@style/day_button"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="32dp"
-        android:clickable="false"
-        android:elevation="10dp"
-        android:text="Mo"
-        app:layout_constraintStart_toStartOf="@+id/descriptionHabitTextBox"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <CheckBox
-        android:id="@+id/tuesday_button"
-        style="@style/day_button"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="32dp"
-        android:clickable="false"
-        android:elevation="10dp"
-        android:paddingLeft="10sp"
-        android:paddingRight="10sp"
-        android:text="Tu"
-        app:layout_constraintStart_toEndOf="@+id/monday_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <CheckBox
-        android:id="@+id/wednesday_button"
-        style="@style/day_button"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="32dp"
-        android:clickable="false"
-        android:elevation="10dp"
-        android:text="We"
-        app:layout_constraintStart_toEndOf="@+id/tuesday_button"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/public_button" />
 
     <CheckBox
         android:id="@+id/thursday_button"
         style="@style/day_button"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
         android:clickable="false"
-        android:elevation="10dp"
-        android:paddingLeft="10sp"
-        android:paddingRight="10sp"
-        android:text="Th"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:text="@string/th"
         app:layout_constraintStart_toEndOf="@+id/wednesday_button"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/wednesday_button" />
+
+    <CheckBox
+        android:id="@+id/wednesday_button"
+        style="@style/day_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:clickable="false"
+        android:text="@string/we"
+        app:layout_constraintStart_toEndOf="@+id/tuesday_button"
+        app:layout_constraintTop_toTopOf="@+id/tuesday_button" />
+
+    <CheckBox
+        android:id="@+id/tuesday_button"
+        style="@style/day_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:clickable="false"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:text="@string/tu"
+        app:layout_constraintStart_toEndOf="@+id/monday_button"
+        app:layout_constraintTop_toTopOf="@+id/monday_button" />
+
+    <CheckBox
+        android:id="@+id/monday_button"
+        style="@style/day_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:clickable="false"
+        android:text="@string/mo"
+        app:layout_constraintStart_toStartOf="@+id/descriptionHabitTextBox"
+        app:layout_constraintTop_toBottomOf="@+id/days_due_header" />
 
     <CheckBox
         android:id="@+id/friday_button"
         style="@style/day_button"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
         android:clickable="false"
-        android:elevation="10dp"
-        android:paddingLeft="13sp"
-        android:paddingRight="13sp"
-        android:text="Fr"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:text="@string/fr"
         app:layout_constraintStart_toEndOf="@+id/thursday_button"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/thursday_button" />
 
     <CheckBox
         android:id="@+id/saturday_button"
         style="@style/day_button"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
         android:clickable="false"
-        android:elevation="10dp"
-        android:paddingLeft="10sp"
-        android:paddingRight="10sp"
-        android:text="Sa"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:text="@string/sa"
         app:layout_constraintStart_toEndOf="@+id/friday_button"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/friday_button" />
 
     <CheckBox
         android:id="@+id/sunday_button"
         style="@style/day_button"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
         android:clickable="false"
-        android:elevation="10dp"
-        android:paddingLeft="10sp"
-        android:paddingRight="10sp"
-        android:text="Su"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:text="@string/su"
         app:layout_constraintStart_toEndOf="@+id/saturday_button"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/saturday_button" />
 
     <CheckBox
         android:id="@+id/public_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="48dp"
         android:clickable="false"
         android:text="@string/public_habit"
-        app:layout_constraintStart_toStartOf="@+id/tuesday_button"
-        app:layout_constraintTop_toBottomOf="@+id/tuesday_button" />
+        app:layout_constraintStart_toEndOf="@+id/privacy_header"
+        app:layout_constraintTop_toBottomOf="@+id/privacy_header" />
 
     <CheckBox
         android:id="@+id/private_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
         android:clickable="false"
         android:text="@string/private_habit"
-        app:layout_constraintEnd_toEndOf="@+id/descriptionHabitTextBox"
-        app:layout_constraintTop_toBottomOf="@+id/saturday_button" />
+        app:layout_constraintStart_toEndOf="@+id/public_button"
+        app:layout_constraintTop_toTopOf="@+id/public_button" />
+
+    <TextView
+        android:id="@+id/habit_reason_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/habit_reason"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionHabitTextBox"
+        app:layout_constraintStart_toStartOf="@+id/descriptionHabitTextBox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

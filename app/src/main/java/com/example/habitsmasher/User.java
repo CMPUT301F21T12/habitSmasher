@@ -2,6 +2,8 @@ package com.example.habitsmasher;
 
 import android.media.Image;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.ArrayList;
 
 /**
@@ -15,8 +17,12 @@ public class User {
     private String _password;
     private String _email;
     private String _id;
-    private final ArrayList<String> _followers = new ArrayList<>();
-    private final ArrayList<String> _following = new ArrayList<>();
+    private ArrayList<String> _followers = new ArrayList<String>();
+    private ArrayList<String> _following = new ArrayList<String>();
+
+    // users who have sent follow requests to the user
+    private ArrayList<String> _followRequests = new ArrayList<String>();
+
     private Image _profilePicture;
     private static final HabitList _habits = new HabitList();
 
@@ -30,21 +36,30 @@ public class User {
      * @param password the password
      * @param id the id
      * @param username the username
+     * @param followers the followers
+     * @param following the following
      */
     public User(String id,
                 String username,
                 String email,
-                String password) {
+                String password,
+                ArrayList<String> followers,
+                ArrayList<String> following,
+                ArrayList<String> followRequests) {
         _email = email;
         _password = password;
         _username = username;
         _id = id;
+        _followers = followers;
+        _following = following;
+        _followRequests = followRequests;
     }
 
     /**
      * Gets the username of the user
      * @return username of the user
      */
+    @PropertyName("username")
     public String getUsername() {
         return _username;
     }
@@ -61,6 +76,7 @@ public class User {
      * Gets the id of the user
      * @return id of the user
      */
+    @PropertyName("id")
     public String getId() {
         return _id;
     }
@@ -77,6 +93,7 @@ public class User {
      * Gets the email of the user
      * @return email of the user
      */
+    @PropertyName("email")
     public String getEmail() {
         return _email;
     }
@@ -93,6 +110,7 @@ public class User {
      * Gets the password of the user
      * @return password of the user
      */
+    @PropertyName("password")
     public String getPassword() {
         return _password;
     }
@@ -110,6 +128,7 @@ public class User {
      * that this user is followed by
      * @return list of usernames following this user
      */
+    @PropertyName("followers")
     public ArrayList<String> getFollowers() {
         return _followers;
     }
@@ -127,6 +146,7 @@ public class User {
      * this user is following
      * @return list of usernames this user is following
      */
+    @PropertyName("following")
     public ArrayList<String> getUsersFollowing() {
         return _following;
     }
@@ -178,4 +198,21 @@ public class User {
     public HabitList getHabits() {
         return _habits;
     }
+
+    @PropertyName("followRequests")
+    public ArrayList<String> getFollowRequests() {
+        return _followRequests;
+    }
+
+    public void addFollowRequest(String followingUser) {
+        if (_followRequests.contains(followingUser)) {
+            return;
+        }
+        _followRequests.add(followingUser);
+    }
+
+    public void deleteFollowRequest(String followingUser) {
+        _followRequests.remove(followingUser);
+    }
+
 }

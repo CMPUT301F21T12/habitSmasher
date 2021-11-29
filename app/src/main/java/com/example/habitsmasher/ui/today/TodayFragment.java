@@ -90,7 +90,7 @@ public class TodayFragment extends ListFragment {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HomeHabitItemAdapter(options, _habitList, _user.getUsername());
+        _habitItemAdapter = new HomeHabitItemAdapter(options, _habitList, _user.getId());
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                 LinearLayoutManager.VERTICAL,
                 false);
