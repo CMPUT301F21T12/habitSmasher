@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape android:shape="ring"
+            android:useLevel="false"
+            android:thicknessRatio="20"
+            >
+            <solid android:color="#ffffff"/>
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <rotate android:fromDegrees="270"
+            android:toDegrees="270">
+            <shape android:shape="ring"
+                android:thicknessRatio="20">
+                <gradient android:type="sweep"
+                    android:startColor="@color/habit_add_button"
+                    android:centerColor="@color/habit_day_selected"
+                    android:endColor="@color/menu_bar_variant"/>
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
+    <!--
+    Based on the tutorial provided at the following link:
+    https://www.simplifiedcoding.net/circular-progress-bar-android-tutorial/
+    -->

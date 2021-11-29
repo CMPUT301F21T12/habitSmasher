@@ -1,6 +1,5 @@
 package com.example.habitsmasher.ui.history;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +17,8 @@ import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
-import com.google.firebase.firestore.core.Query;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
 
 /**
  * The HabitEventItemAdapter class
@@ -32,7 +27,7 @@ import java.util.Queue;
  */
 public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
     // Initialize variables
-    private static String DATE_FORMAT = "dd/MM/yyyy";
+    private static String DATE_FORMAT = "EEE, d MMM yyyy";
     private Context _context;
     private static Habit _parentHabit;
     private static String _userId;
@@ -45,11 +40,12 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
      * FirestoreRecyclerOptions} for configuration options.
      *
      * @param options the firestore entities
+     * @param parentHabit
      */
     public HabitEventItemAdapter(@NonNull FirestoreRecyclerOptions<HabitEvent> options,
-                                 String userId,
-                                 HabitEventList habitEvents) {
+                                 Habit parentHabit, HabitEventList habitEvents, String userId) {
         super(options);
+        _parentHabit = parentHabit;
         _userId = userId;
         _habitEvents = habitEvents;
     }
@@ -69,8 +65,8 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
         imageDatabaseHelper.fetchImagesFromDB(holder._habitEventImage,
                 imageDatabaseHelper.getHabitEventStorageReference(
-                        habitEvent.getUserID(),
-                        habitEvent.getParentHabitID(),
+                        _userId,
+                        _parentHabit.getId(),
                         habitEvent.getId()));
 
         // Set UI elements of habit event

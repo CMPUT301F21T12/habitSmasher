@@ -59,6 +59,7 @@ public class LoginFragment extends Fragment {
     private static final String GOOGLE_USER_PWD = "GoogleUserNoPwd";
     private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
 
     private final LoginFragment _fragment = this;
     private FirebaseAuth _auth;
@@ -197,7 +198,8 @@ public class LoginFragment extends Fragment {
                                                             user.getEmail(),
                                                             GOOGLE_USER_PWD,
                                                             EMPTY_FOLLOWER_LIST,
-                                                            EMPTY_FOLLOWING_LIST);
+                                                            EMPTY_FOLLOWING_LIST,
+                                                            EMPTY_REQUEST_LIST);
 
                                  // once the user is successfully retrieved, add them to the db
                                  addUserToDatabaseIfUserDoesNotExist(googleUser);

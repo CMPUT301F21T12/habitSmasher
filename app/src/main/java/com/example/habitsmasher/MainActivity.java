@@ -117,7 +117,9 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             _navController.navigate(R.id.action_logout);
         }
-
+        if (item.getItemId() == R.id.notifications_button) {
+            _navController.navigate(R.id.open_notifications);
+        }
         return super.onOptionsItemSelected(item);
     }
 

@@ -81,10 +81,9 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                     .build();
             populateList(query);
             // Set item adapter and habit event list
-            _habitEventItemAdapter = new HabitEventItemAdapter(options,
-                    _userId,
-                                                               _habitEventList
-            );
+            _habitEventItemAdapter = new HabitEventItemAdapter(options,_parentHabit,
+                    _habitEventList,
+                    _userId);
         }
         catch (NullPointerException e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
@@ -109,6 +108,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
 
         // Initialize recycler view and return view
         initializeRecyclerView(layoutManager, view);
+
         return view;
     }
 
@@ -202,7 +202,7 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
 
                 // create the new habit event from the snapshot data and add to local list
                 HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id,
-                                                          location, _userId, _parentHabit.getId());
+                                                          location);
                 Log.d(TAG, addHabitEvent.getId());
                 _habitEventList.addHabitEventLocally(addHabitEvent);
             }

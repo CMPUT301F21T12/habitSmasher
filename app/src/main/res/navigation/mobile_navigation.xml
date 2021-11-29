@@ -99,6 +99,13 @@
         android:label="HabitEventViewFragment"
         />
     <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.example.habitsmasher.NotificationFragment"
+        android:label="NotificationFragment" />
+    <action
+        android:id="@+id/open_notifications"
+        app:destination="@id/notificationFragment" />
+    <fragment
         android:id="@+id/followListFragment"
         android:name="com.example.habitsmasher.ui.profile.FollowListFragment"
         android:label="FollowListFragment">

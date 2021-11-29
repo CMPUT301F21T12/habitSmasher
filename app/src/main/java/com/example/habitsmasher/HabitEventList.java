@@ -50,7 +50,7 @@ public class HabitEventList extends ArrayList{
      */
     public void addHabitEventLocally(Date startDate, String comment, String id, String location, String userID, String parentHabitID) {
         // Create habit event and add it to the list
-        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, location, userID, parentHabitID);
+        HabitEvent eventToAdd = new HabitEvent(startDate, comment, id, location);
         _habitEvents.add(eventToAdd);
     }
 
@@ -78,8 +78,6 @@ public class HabitEventList extends ArrayList{
         eventData.put("comment", addedHabitEvent.getComment());
         eventData.put("id", eventId);
         eventData.put("location", addedHabitEvent.getLocation());
-        eventData.put("userID", addedHabitEvent.getUserID());
-        eventData.put("parentHabitID", addedHabitEvent.getParentHabitID());
         // Set data in database
         setHabitEventDataInDatabase(userId, parentHabit, eventId, eventData);
         addHabitEventLocally(addedHabitEvent);

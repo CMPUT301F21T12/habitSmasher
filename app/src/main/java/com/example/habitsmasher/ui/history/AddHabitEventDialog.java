@@ -84,9 +84,8 @@ public class AddHabitEventDialog extends HabitEventDialog {
                     _newEvent = new HabitEvent(habitEventValidator.checkHabitDateValid(habitEventDate),
                                 habitEventComment,
                                 DatabaseEntity.generateId(),
-                                _selectedLocation,
-                                _userID,
-                                _parentHabitID);
+                                _selectedLocation
+                    );
                     _errorText.setText("");
                     _habitEventListFragment.addHabitEvent(_newEvent, _selectedImage);
 

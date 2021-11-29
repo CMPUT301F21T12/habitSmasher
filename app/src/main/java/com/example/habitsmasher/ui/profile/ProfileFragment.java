@@ -54,6 +54,7 @@ public class ProfileFragment extends ListFragment<User> {
     private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
     private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
     private User _user;
+    private static ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
 
     private ProfileFragment _fragment = this;
     private ImageView _userImageView;

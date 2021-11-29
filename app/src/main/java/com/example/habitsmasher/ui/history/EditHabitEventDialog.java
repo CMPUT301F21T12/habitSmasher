@@ -120,9 +120,8 @@ public class EditHabitEventDialog extends HabitEventDialog {
                 editedHabitEvent = new HabitEvent(newDate,
                             eventComment,
                             _editHabitEvent.getId(),
-                            _selectedLocation,
-                            _userId,
-                            _parentHabit.getId());
+                            _selectedLocation
+                );
                 _errorText.setText("");
                 _habitEventListFragment.editHabitEvent(editedHabitEvent,_index, _selectedImage);
 

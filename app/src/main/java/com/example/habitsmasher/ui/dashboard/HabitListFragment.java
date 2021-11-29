@@ -1,9 +1,6 @@
 package com.example.habitsmasher.ui.dashboard;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,7 +79,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId());
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
