@@ -55,11 +55,7 @@ public class HabitViewFragment extends Fragment {
             _habit = (Habit) getArguments().getSerializable("habit");
             _userId = (String) getArguments().getSerializable("userId");
             // Whether the habit is owned by the current user
-            try {
-                _isOwner = (boolean) getArguments().getSerializable("isOwner");
-            } catch (NullPointerException e){
-                _isOwner = true;
-            }
+            _isOwner = (boolean) getArguments().getSerializable("isOwner");
         }
 
         //set the DaysTracker

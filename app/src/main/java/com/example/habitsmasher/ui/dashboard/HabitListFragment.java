@@ -224,6 +224,7 @@ public class HabitListFragment extends ListFragment<Habit> {
         Bundle bundle = new Bundle();
         bundle.putSerializable("habit", currentHabit);
         bundle.putSerializable("userId", _user.getId());
+        bundle.putSerializable("isOwner", true);
         NavController controller = NavHostFragment.findNavController(this);
 
         // Navigate to the habitViewFragment

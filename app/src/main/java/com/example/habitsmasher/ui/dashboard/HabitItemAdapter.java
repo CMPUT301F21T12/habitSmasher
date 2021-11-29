@@ -55,7 +55,8 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
                             HabitList habits,
-                            String userId, boolean swipable) {
+                            String userId,
+                            boolean swipable) {
         super(options);
         _habits = habits;
         _userId = userId;
