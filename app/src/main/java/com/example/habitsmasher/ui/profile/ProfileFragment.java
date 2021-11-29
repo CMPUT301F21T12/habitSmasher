@@ -1,10 +1,7 @@
 package com.example.habitsmasher.ui.profile;
 
-import static android.content.ContentValues.TAG;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,38 +10,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.habitsmasher.Habit;
-import com.example.habitsmasher.HabitEvent;
-import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.example.habitsmasher.UserDatabaseHelper;
-import com.example.habitsmasher.listeners.ClickListenerForFollowers;
-import com.example.habitsmasher.listeners.ClickListenerForFollowing;
-import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
-import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
-import com.example.habitsmasher.ui.history.HabitEventItemAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.Task;
+import com.example.habitsmasher.listeners.ClickListenerForFollowerButtons;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * UI class that represents and specifies the behaviour of the user's profile screen
@@ -87,9 +64,9 @@ public class ProfileFragment extends ListFragment<User> {
 
         // Set click listeners for followers and following buttons
         numberOfFollowersButton.setOnClickListener(
-                new ClickListenerForFollowers(this, R.id.action_navigation_notifications_to_followListFragment));
+                new ClickListenerForFollowerButtons(this, R.id.action_navigation_notifications_to_followListFragment, true));
         numberOfFollowingButton.setOnClickListener(
-                new ClickListenerForFollowing(this, R.id.action_navigation_notifications_to_followListFragment));
+                new ClickListenerForFollowerButtons(this, R.id.action_navigation_notifications_to_followListFragment, false));
 
         return view;
     }

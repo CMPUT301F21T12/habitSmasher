@@ -88,6 +88,7 @@ public class MainActivityTest {
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String INVALID_USERNAME = "abcdefg";
     private static final String EDIT_HEADER = "EDIT LOCATION";
+    private static final String VIEW_PROFILE_USER = "publicTester";
     private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
@@ -1992,10 +1993,10 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.number_followers));
 
         // click on the test user
-        _solo.clickOnText("publicTester");
+        _solo.clickOnText(VIEW_PROFILE_USER);
 
         // check that their username is on the screen
-        assertTextOnScreen("publicTester");
+        assertTextOnScreen(VIEW_PROFILE_USER);
 
         //assert that their public habit is on the screen
         assertTextOnScreen("Public Habit");
@@ -2028,10 +2029,10 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.number_following));
 
         // click on the test user
-        _solo.clickOnText("publicTester");
+        _solo.clickOnText(VIEW_PROFILE_USER);
 
         // check that their username is on the screen
-        assertTextOnScreen("publicTester");
+        assertTextOnScreen(VIEW_PROFILE_USER);
 
         //assert that their public habit is on the screen
         assertTextOnScreen("Public Habit");
@@ -2050,13 +2051,6 @@ public class MainActivityTest {
         assertFalse(privateBox.isChecked());
 
     }
-
-
-
-
-
-
-
 
     @Test
     public void signUpNewUser_emptyUsername_signUpFails() {

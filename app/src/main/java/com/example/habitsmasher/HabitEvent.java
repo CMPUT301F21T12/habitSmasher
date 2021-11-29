@@ -42,7 +42,6 @@ public class HabitEvent extends DatabaseEntity implements Serializable {
         _date = startDate;
         _comment = comment;
         _location = "";
-
     }
 
     /**

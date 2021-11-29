@@ -9,24 +9,30 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.habitsmasher.R;
 
-public class ClickListenerForFollowing implements View.OnClickListener {
+public class ClickListenerForFollowerButtons implements View.OnClickListener{
     /**
-     * This listener is used for the following button, and leads to the list of people the user
-     * is following.
+     * This listener is used for the followers button, and leads to the list of people that
+     * follow the user.
      */
     Fragment _fragment;
     int _navAction;
+    boolean _isFollowers;
 
-    public ClickListenerForFollowing(Fragment fragment, int navAction){
-        _navAction = navAction;
+    public ClickListenerForFollowerButtons(Fragment fragment, int navAction, boolean isFollowers){
         _fragment = fragment;
+        _navAction = navAction;
+        _isFollowers = isFollowers;
     }
 
     @Override
     public void onClick(View view) {
         // this is a bundle to tell the fragment whether its following or followers
         Bundle bundle = new Bundle();
-        bundle.putString("FollowType", "Following");
+        if (_isFollowers) {
+            bundle.putString("FollowType", "Followers");
+        } else{
+            bundle.putString("FollowType", "Following");
+        }
         // navigate to following fragment
         navigateToFragmentWithAction(_navAction, bundle);
     }
