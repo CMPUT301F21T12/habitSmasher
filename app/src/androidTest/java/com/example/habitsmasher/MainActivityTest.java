@@ -2164,6 +2164,7 @@ public class MainActivityTest {
      */
     @Test
     public void ensureUnfollowWorks(){
+        // log in to follower user
         logInFollowerUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
@@ -2184,12 +2185,13 @@ public class MainActivityTest {
         // click follow button
         _solo.clickOnButton(FOLLOW);
 
+        // ensure that the app has transitioned to the Notifications screen
         assertTextOnScreen(PROFILE_TEXT);
 
         // click on log out button
         _solo.clickOnView(_solo.getView(R.id.logout_button));
 
-        // ensure login button is displayed
+        // ensure HabitSmasher is displayed
         assertTextOnScreen("HabitSmasher");
 
         // login to test user
@@ -2201,8 +2203,10 @@ public class MainActivityTest {
         // press notifications button
         _solo.clickOnView(_solo.getView(R.id.notifications_button));
 
+        // swipe on follow request
         swipeLeftOnFollowRequest(_follower);
 
+        // accept follow request
         _solo.clickOnView(_solo.getView(R.id.accept_request_button));
 
         _solo.goBack();
@@ -2213,6 +2217,7 @@ public class MainActivityTest {
         // ensure that the app has transitioned to the Notifications screen
         assertTextOnScreen(PROFILE_TEXT);
 
+        // make sure number of followers is 1
         TextView followers = (TextView) _solo.getView(R.id.number_followers);
         assertEquals("1", followers.getText().toString());
 
@@ -2227,9 +2232,10 @@ public class MainActivityTest {
         // click on log out button
         _solo.clickOnView(_solo.getView(R.id.logout_button));
 
-        // ensure login button is displayed
-        //assertTextOnScreen("LOGIN");
+        // ensure HabitSmasher is displayed
+        assertTextOnScreen("HabitSmasher");
 
+        // log in to follower user
         logInFollowerUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
@@ -2241,23 +2247,28 @@ public class MainActivityTest {
         // ensure that the app has transitioned to the Notifications screen
         assertTextOnScreen(PROFILE_TEXT);
 
+        // make sure number of following is 1
         TextView following = (TextView) _solo.getView(R.id.number_following);
         assertEquals("1", following.getText().toString());
 
-        // click on followers button
+        // click on following button
         _solo.clickOnView(following);
 
         // check that the test user is being followed
         assertTextOnScreen(TEST_USER_USERNAME);
 
+        // swipe on followed user
         swipeLeftOnFollowing(_testUser);
 
+        // unfollow user
         _solo.clickOnView(_solo.getView(R.id.unfollow_button));
 
+        // make sure unfollowed user is gone
         assertTextNotOnScreen(TEST_USER_USERNAME);
 
         _solo.goBack();
 
+        // make sure number of following is 0
         following = (TextView) _solo.getView(R.id.number_following);
         assertEquals("0", following.getText().toString());
     }
