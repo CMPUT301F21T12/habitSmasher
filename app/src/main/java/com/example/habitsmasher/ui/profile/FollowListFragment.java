@@ -74,13 +74,12 @@ public class FollowListFragment extends ListFragment<User> {
                 .setQuery(query, User.class)
                 .build();
 
-            setFollowList();
-            // set the item adapter
-            _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getId(), _followType);
-            // Inflate follow list fragment
-            LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
-            initializeRecyclerView(layoutManager, view);
-        }
+        setFollowList();
+        // set the item adapter
+        _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getId(), _followType);
+        // Inflate follow list fragment
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
+        initializeRecyclerView(layoutManager, view);
         return view;
     }
 
