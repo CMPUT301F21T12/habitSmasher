@@ -2353,8 +2353,8 @@ public class MainActivityTest {
     }
 
     private void logInTestUser() {
-        _solo.enterText(_solo.getEditText("Email"), "kaden123@gmail.com");
-        _solo.enterText(_solo.getEditText("Password"), "123456");
+        _solo.enterText(_solo.getEditText("Email"), _testUser.getEmail());
+        _solo.enterText(_solo.getEditText("Password"), _testUser.getPassword());
         _solo.clickOnButton(LOGIN_TEXT);
         // Wait for Profile fragment to load
         _solo.waitForFragmentById(R.id.navigation_notifications, 4000);
