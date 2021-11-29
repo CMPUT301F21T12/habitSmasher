@@ -74,12 +74,13 @@ public class FollowListFragment extends ListFragment<User> {
                 .setQuery(query, User.class)
                 .build();
 
-        setFollowList();
-        // set the item adapter
-        _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getId());
-        // Inflate follow list fragment
-        LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
-        initializeRecyclerView(layoutManager, view);
+            setFollowList();
+            // set the item adapter
+            _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getId(), _followType);
+            // Inflate follow list fragment
+            LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
+            initializeRecyclerView(layoutManager, view);
+        }
         return view;
     }
 
@@ -200,13 +201,21 @@ public class FollowListFragment extends ListFragment<User> {
                         }
                     });
         } else {
+            // set a dummy swipe method to prevent issues
             touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                 @Override
                 // if row at the specified position is clicked
                 public void onRowClicked(int position) {
                     openViewWindowForItem(position);
                 }
-            });
+
+            }).setSwipeOptionViews()
+                    .setSwipeable(R.id.follow_view_not_swipeable, R.id.empty_swipeable_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                        @Override
+                        public void onSwipeOptionClicked(int viewID, int position) {
+                            return;
+                        }
+                    });
         }
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
