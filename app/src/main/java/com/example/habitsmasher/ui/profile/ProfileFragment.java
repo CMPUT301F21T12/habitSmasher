@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.habitsmasher.AddPictureDialog;
@@ -37,21 +38,13 @@ import java.util.ArrayList;
  * UI class that represents and specifies the behaviour of the user's profile screen
  * Currently, only displays information of a test user
  */
-public class ProfileFragment extends Fragment implements PictureSelectionUser {
-    private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
-    private static final String USERNAME_SHARED_PREF_TAG = "username";
-    private static final String USER_ID_SHARED_PREF_TAG = "userId";
-    private static ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
-    private static ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+public class ProfileFragment extends ListFragment<User> implements PictureSelectionUser {
     private User _user;
-    private static ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
 
     private ProfileFragment _fragment = this;
     private ImageView _userImageView;
     private Uri _userImage;
-    private User user = new User();
     private ImageDatabaseHelper _imageDatabaseHelper;
-    private String _currentUserId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +69,7 @@ public class ProfileFragment extends Fragment implements PictureSelectionUser {
 
         // Fetch profile picture from database
         _imageDatabaseHelper = new ImageDatabaseHelper();
-        _imageDatabaseHelper.fetchImagesFromDB(_userImageView, _imageDatabaseHelper.getUserStorageReference(_currentUserId));
+        _imageDatabaseHelper.fetchImagesFromDB(_userImageView, _imageDatabaseHelper.getUserStorageReference(_user.getId()));
 
         // Add listener to allow users to change profile
         setImageViewListener();
@@ -196,8 +189,8 @@ public class ProfileFragment extends Fragment implements PictureSelectionUser {
      * Updates the user profile picture in the database
      */
     public void updateUserImageInDatabase() {
-        _imageDatabaseHelper.deleteImageFromDatabase(_imageDatabaseHelper.getUserStorageReference(_currentUserId));
-        _imageDatabaseHelper.addImageToDatabase(_imageDatabaseHelper.getUserStorageReference(_currentUserId), _userImage);
+        _imageDatabaseHelper.deleteImageFromDatabase(_imageDatabaseHelper.getUserStorageReference(_user.getId()));
+        _imageDatabaseHelper.addImageToDatabase(_imageDatabaseHelper.getUserStorageReference(_user.getId()), _userImage);
     }
 
     /*
@@ -230,6 +223,14 @@ public class ProfileFragment extends Fragment implements PictureSelectionUser {
     @Override
     public void updateListAfterDelete(int pos) {
 
+    }
+
+    /**
+     * Deletes the current user
+     */
+    public void deleteUser() {
+        UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(_user.getId(), null, null);
+        userDatabaseHelper.deleteUserFromDatabase(_user, getContext(), this);
     }
 
 }
