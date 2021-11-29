@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class UserDatabaseHelper {
     private static final String DELETE_USER_FAILED_MESSAGE = "Failed to delete user!";
 
     private static ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
+    protected FirebaseFirestore _db = FirebaseFirestore.getInstance();
+
 
     private final String _userID;
     private final TextView _numberOfFollowers;
@@ -205,12 +208,14 @@ public class UserDatabaseHelper {
             user.getHabits().deleteHabit(context, user.getId(), user.getHabits().getHabit(i), i);
         }
 
+        // Get followers and following
         ArrayList<String> followers = getFollowers(user.getId());
         ArrayList<String> following = getFollowing(user.getId());
 
         // Unfollow all other users
         for (int i = 0; i < following.size(); i++) {
             user.unFollowUser(following.get(i));
+            removeFollower(user.getId(), following.get(i));
         }
 
         // Remove from all follower lists
@@ -218,6 +223,7 @@ public class UserDatabaseHelper {
             String willUnfollow = followers.get(i);
             User unfollow = getUser(willUnfollow);
             unfollow.unFollowUser(user.getId());
+            removeFollowing(user.getId(), willUnfollow);
         }
 
         // Delete user from data base
@@ -275,5 +281,25 @@ public class UserDatabaseHelper {
     private void navigateToFragmentWithAction(int actionId, Fragment fragment) {
         NavController controller = NavHostFragment.findNavController(fragment);
         controller.navigate(actionId);
+    }
+
+    /**
+     * This method is responsible for removing a user from following
+     * @param userId the user performing the operation
+     * @param userToRemove the user that is being removed
+     */
+    private void removeFollowing(String userId, String userToRemove) {
+        DocumentReference userRef = _db.collection("Users").document(userId);
+        userRef.update("following", FieldValue.arrayRemove(userToRemove));
+    }
+
+    /**
+     * This method is responsible for removing the follower of a user
+     * @param userId the user performing the operation
+     * @param userToRemove the user that is being removed
+     */
+    private void removeFollower(String userId, String userToRemove) {
+        DocumentReference userRef = _db.collection("Users").document(userId);
+        userRef.update("followers", FieldValue.arrayRemove(userToRemove));
     }
 }
