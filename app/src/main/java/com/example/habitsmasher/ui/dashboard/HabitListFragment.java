@@ -180,7 +180,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                 _longPressedPosition = longPosition;
                 _longPressed = true;
                 // change background color of long pressed item
-                recyclerView.findViewHolderForAdapterPosition(longPosition).itemView.findViewById(R.id.habit_view_constraint).setBackgroundColor(Color.GRAY);
+                recyclerView.findViewHolderForAdapterPosition(longPosition).itemView.findViewById(R.id.habit_view_constraint).setBackgroundColor(getResources().getColor(R.color.light_grey));
                 // send toast message to remind user of how to swap habits
                 Toast.makeText(_context, SWAP_MESSAGE, Toast.LENGTH_LONG).show();
             }
