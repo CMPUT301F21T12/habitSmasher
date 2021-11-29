@@ -76,7 +76,7 @@ public class FollowListFragment extends ListFragment<User> {
 
         setFollowList();
         // set the item adapter
-        _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getUsername());
+        _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getId());
         // Inflate follow list fragment
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
         initializeRecyclerView(layoutManager, view);
