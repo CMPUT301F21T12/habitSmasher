@@ -1,1 +1,1 @@
-Final UML diagram was partially generated using Visual Paradigm
+Final UML diagram was generated intially using Visual Paradigm before being modified to be more readable and organized
