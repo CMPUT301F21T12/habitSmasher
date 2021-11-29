@@ -35,6 +35,8 @@ public class HabitViewFragment extends Fragment {
     // user which owns this habit
     private String _userId;
 
+    private boolean _isOwner;
+
     private PublicPrivateButtons _publicPrivateButtons;
 
     private DaysTracker _tracker;
@@ -52,6 +54,8 @@ public class HabitViewFragment extends Fragment {
         if(getArguments() != null) {
             _habit = (Habit) getArguments().getSerializable("habit");
             _userId = (String) getArguments().getSerializable("userId");
+            // Whether the habit is owned by the current user
+            _isOwner = (boolean) getArguments().getSerializable("isOwner");
         }
 
         //set the DaysTracker
@@ -79,12 +83,16 @@ public class HabitViewFragment extends Fragment {
 
         // Get history button and add listener
         AppCompatButton historyButton = view.findViewById(R.id.eventHistoryButton);
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openHabitEventsView();
-            }
-        });
+        if (!_isOwner){
+            historyButton.setVisibility(View.INVISIBLE);
+        } else {
+            historyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openHabitEventsView();
+                }
+            });
+        }
 
         //set up the buttons for the days of the week
         setupDaysOfTheWeekButtons(view);
