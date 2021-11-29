@@ -233,7 +233,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void requestTofollowUserWithInvalidUsername(){
+    public void requestToFollowUserWithInvalidUsername(){
         logInTestUser();
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
