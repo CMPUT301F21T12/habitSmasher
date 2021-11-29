@@ -8,5 +8,10 @@ package com.example.habitsmasher;
  * @author Rudy Patel
  */
 public interface FirestoreCallback {
+    /**
+     * The method to implement which should take the current flag status and route to database
+     * dependent functionality accordingly
+     * @param flag is the database operation complete
+     */
     void onCallback(Boolean flag);
 }

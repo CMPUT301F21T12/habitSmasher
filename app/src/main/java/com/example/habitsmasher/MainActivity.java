@@ -25,10 +25,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Objects;
 
 /**
- * UI class that represents and specifies the behaviour of the main activity, which at the
- * moment has three fragments
- * The Main Activity only acts as a link between the three fragments, and has no real
- * behaviour
+ * This is the one and only main driver activity for this application
+ *
+ * @author Rudy Patel, Kaden Dreger, Jason Kim
  */
 public class MainActivity extends AppCompatActivity {
 

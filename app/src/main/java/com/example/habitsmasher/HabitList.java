@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 /**
  * Class that acts as a container for habits, allowing for edit, delete and add operations
+ *
+ * @author Rudy Patel, Jason Kim
  */
 public class HabitList extends ArrayList<Habit>{
     // arraylist of habits, auto-updates whenever Habit added or edited

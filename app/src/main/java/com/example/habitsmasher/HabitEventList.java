@@ -25,6 +25,8 @@ import java.util.HashMap;
 /**
  * Class that acts as a container for habit events, allowing for add, edit and delete
  * operations
+ *
+ * @author Julie Pilz, Jason Kim
  */
 public class HabitEventList extends ArrayList{
     private ArrayList<HabitEvent> _habitEvents = new ArrayList<>();

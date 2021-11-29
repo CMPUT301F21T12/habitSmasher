@@ -17,29 +17,6 @@ import com.google.firebase.firestore.Query;
  * @author Jason Kim
  */
 public abstract class ListFragment<T> extends Fragment {
-
-
-    /* once the ItemAdapter interface is complete, we can add this for
-     * even greater abstraction
-     */
-    /*
-    protected void ItemAdapter _itemAdapter;
-    protected void setItemAdapter(ItemAdapter itemAdapter) {
-        _itemAdapter = itemAdapter
-    }
-
-    @Override
-    public void onStart() {
-        super();
-        _itemAdapter.startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super();
-        _itemAdapter.stopListening();
-    }
-     */
     protected FirebaseFirestore _db = FirebaseFirestore.getInstance();
 
     /**

@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * The UserDatabaseHelper is a collection of common db operations relating to the current logged in
  * user like getting/setting the number of followers/following from the database
- * @author Rudy Patel
+ * @author Rudy Patel, Cameron Matthew
  */
 public class UserDatabaseHelper {
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";

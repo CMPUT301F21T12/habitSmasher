@@ -9,6 +9,8 @@ import java.util.Date;
 /**
  * This is the Habit class
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
+ *
+ * @author Rudy Patel, Kaden Dreger, Jason Kim, Cameron Matthew, Julie Pilz
  */
 public class Habit extends DatabaseEntity implements Serializable {
     private String _title;

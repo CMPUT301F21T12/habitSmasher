@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * This FollowUserDialog class implements the user search pop-up, where a user can follow another
  * user by specifying their username
- * @author Rudy Patel
+ * @author Rudy Patel, Jason Kim, Jacob Nguyen
  */
 public class FollowUserDialog extends DialogFragment implements DisplaysErrorMessages {
     private static final String TAG = "FollowUserDialog";

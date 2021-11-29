@@ -9,6 +9,8 @@ import java.util.Date;
  * This is the Habit Event class
  * Its purpose is to store and retrieve the start date, comments, picture, and location of a habit event
  * Pictures for habit events are not yet implemented
+ *
+ * @author Julie Pilz, Jason Kim
  */
 public class HabitEvent extends DatabaseEntity implements Serializable {
 

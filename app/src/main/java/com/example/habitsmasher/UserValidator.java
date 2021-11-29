@@ -3,6 +3,11 @@ package com.example.habitsmasher;
 import android.util.Patterns;
 import android.widget.EditText;
 
+/**
+ * This class is the validator that holds all the input checking when creating a user
+ *
+ * @author Rudy Patel, Jason Kim
+ */
 public class UserValidator {
     private static final String USERNAME_IS_REQUIRED_MESSAGE = "Username is required!";
     private static final String USERNAME_LENGTH_MUST_BE_LESS_THAN_16_MESSAGE = "Username length must be less than 16!";

@@ -22,6 +22,8 @@ import java.util.Date;
  *
  * https://stackoverflow.com/a/34589270
  * Post date: January 4, 2016
+ *
+ * @author Jacob Nguyen, Jason Kim, Cameron Matthew
  */
 public class DatePickerDialogFragment extends DialogFragment {
 

@@ -14,6 +14,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.ArrayList;
 
+/**
+ * This is the item adapter for the notification recycler view list
+ *
+ * @author Jason Kim
+ */
 public class NotificationItemAdapter extends
             ItemAdapter<User, NotificationItemAdapter.RequestViewHolder>{
 

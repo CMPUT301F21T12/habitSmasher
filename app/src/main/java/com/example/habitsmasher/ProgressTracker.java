@@ -9,6 +9,8 @@ import java.util.Date;
 /**
  * This class handles all of the logic related to calculating how much progress has been made on
  * a specified habit
+ *
+ * @author Julie Pilz
  */
 public class ProgressTracker {
     // Constants
