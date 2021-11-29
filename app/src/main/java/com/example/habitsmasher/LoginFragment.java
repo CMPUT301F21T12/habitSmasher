@@ -44,7 +44,7 @@ import java.util.ArrayList;
 
 /**
  * This class holds the front-end elements relating to the Login screen
- * Author: Rudy Patel
+ * @author Rudy Patel, Jacob Nguyen
  */
 public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";

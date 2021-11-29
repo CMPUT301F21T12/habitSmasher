@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Class that models a user of the app and holds their credentials and corresponding
  * information, such as their habits, followers and users who they are following
  *
- * Currently, profile picture is not used
+ * @author Rudy Patel, Jason Kim, Kaden Dreger
  */
 public class User {
     private String _username;

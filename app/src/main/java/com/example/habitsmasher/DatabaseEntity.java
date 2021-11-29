@@ -6,6 +6,8 @@ import java.util.UUID;
 /**
  * This is the DatabaseEntity abstract class
  * Its purpose is to store the ID's of classes that extend it
+ *
+ * @author Kaden Dreger, Rudy Patel, Jason Kim
  */
 public abstract class DatabaseEntity {
 

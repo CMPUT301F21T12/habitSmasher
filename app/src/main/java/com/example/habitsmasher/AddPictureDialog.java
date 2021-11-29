@@ -29,6 +29,8 @@ import java.util.Date;
 
 /**
  * This dialog allows user to either select an image from their gallery or take it with their camera
+ *
+ * @author Julie Pilz
  */
 public class AddPictureDialog extends DialogFragment {
     private String TAG;

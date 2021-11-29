@@ -14,6 +14,8 @@ import com.google.firebase.storage.UploadTask;
 
 /**
  * This class handles fetching images from the database
+ *
+ * @author Julie Pilz
  */
 public class ImageDatabaseHelper {
     // Firebase variables

@@ -40,7 +40,7 @@ import java.util.ArrayList;
 
 /**
  * This class holds the front-end elements related to the user sign up page
- * Author: Rudy Patel
+ * @author Rudy Patel, Julie Pilz
  */
 public class UserRegistrationFragment extends Fragment implements PictureSelectionUser {
     private static final String USER_REGISTERED_MESSAGE = "User registered!";
