@@ -83,4 +83,5 @@
     <string name="sa">Sa</string>
     <string name="su">Su</string>
     <string name="unfollow_label">UNFOLLOW</string>
+    <string name="confirm_delete_user_text">Delete Profile?</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.habitsmasher;
 import static android.content.ContentValues.TAG;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 /**
  * This class handles fetching images from the database
@@ -59,6 +61,43 @@ public class ImageDatabaseHelper {
 
         return _returnImage;
     }
+
+    /**
+     * Deletes an image from the database
+     * @param reference (StorageReference) The location of the image to delete in the database
+     */
+    public void deleteImageFromDatabase(StorageReference reference) {
+        reference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "Image deleted");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to delete image.");
+            }});
+    }
+
+    /**
+     * Adds an image to the database
+     * @param reference (StorageReference) The location of the new image in the database
+     * @param toUpload (Uri) The image to add
+     */
+    public void addImageToDatabase(StorageReference reference, Uri toUpload) {
+        reference.putFile(toUpload).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "Image uploaded.");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Image failed to upload");
+            }
+        });
+    }
+
 
     /**
      * Gets the storage reference of a habit event image
