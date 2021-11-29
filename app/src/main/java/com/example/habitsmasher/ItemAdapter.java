@@ -7,6 +7,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Abstract class for adapters to use.
  * @author Jacob Nguyen, Jason Kim

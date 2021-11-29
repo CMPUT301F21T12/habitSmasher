@@ -17,6 +17,7 @@ import com.example.habitsmasher.ItemAdapter;
 import com.example.habitsmasher.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+
 import java.text.SimpleDateFormat;
 
 /**
@@ -39,17 +40,14 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
      * FirestoreRecyclerOptions} for configuration options.
      *
      * @param options the firestore entities
+     * @param parentHabit
      */
     public HabitEventItemAdapter(@NonNull FirestoreRecyclerOptions<HabitEvent> options,
-                                 Habit parentHabit,
-                                 String userId,
-                                 HabitEventList habitEvents,
-                                 HabitEventListFragment fragment) {
+                                 Habit parentHabit, HabitEventList habitEvents, String userId) {
         super(options);
         _parentHabit = parentHabit;
         _userId = userId;
         _habitEvents = habitEvents;
-        _habitEventListFragment = fragment;
     }
 
     @NonNull
@@ -58,7 +56,7 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         // Inflate view based on HabitEventViewHolder
         _context = parent.getContext();
         View view = LayoutInflater.from(_context).inflate(R.layout.habit_event_row, parent, false);
-        return new HabitEventViewHolder(view, _snapshots, _userId, _parentHabit, _context);
+        return new HabitEventViewHolder(view, _snapshots, _userId, _context);
     }
 
     @Override
@@ -92,7 +90,6 @@ public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventIte
         public HabitEventViewHolder(@NonNull View itemView,
                                     ObservableSnapshotArray<HabitEvent> _snapshots,
                                     String userId,
-                                    Habit parentHabit,
                                     Context context) {
             super(itemView);
 

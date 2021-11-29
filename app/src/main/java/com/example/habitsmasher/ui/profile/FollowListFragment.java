@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -263,7 +265,13 @@ public class FollowListFragment extends ListFragment<User> {
      * @param position Position of the user in the list
      */
     protected void openViewWindowForItem(int position) {
-        Toast.makeText(_context, CLICKED_FOLLOWER_MESSAGE, Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", _followItemAdapter._snapshots.get(position).getId());
+
+        // Navigate to the profileFragment
+        NavController controller = NavHostFragment.findNavController(this);
+        controller.navigate(R.id.action_followListFragment_to_viewProfileFragment, bundle);
+
     }
 
     /**

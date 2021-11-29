@@ -1,5 +1,4 @@
 package com.example.habitsmasher;
-import android.location.Location;
 import android.net.Uri;
 import com.google.firebase.firestore.PropertyName;
 

@@ -1,7 +1,6 @@
 package com.example.habitsmasher;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
