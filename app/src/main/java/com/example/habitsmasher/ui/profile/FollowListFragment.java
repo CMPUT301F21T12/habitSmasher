@@ -26,9 +26,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,6 +43,8 @@ import java.util.Objects;
 public class FollowListFragment extends ListFragment<User> {
     // Initialize variables
     private static final String TAG = "FollowListFragment";
+    private static final String UNFOLLOW_MESSAGE = "Clicked unfollow";
+    private static final String CLICKED_FOLLOWER_MESSAGE = "Clicked on a row";
     // user who owns this list of habits displayed
     private User _user;
     // var to tell whether it is the following or followers list
@@ -62,24 +66,22 @@ public class FollowListFragment extends ListFragment<User> {
 
         getBundleArguments();
         // Set header title
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(_followType + " List");
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(_followType);
 
         // query firebase for all habits that correspond to the current user
         Query query = getListFromFirebase();
 
-        if(query != null){
-            // populate the list with existing items in the database
-            FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
-                    .setQuery(query, User.class)
-                    .build();
+        // populate the list with existing items in the database
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .build();
 
-            setFollowList();
-            // set the item adapter
-            _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getUsername());
-            // Inflate follow list fragment
-            LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
-            initializeRecyclerView(layoutManager, view);
-        }
+        setFollowList();
+        // set the item adapter
+        _followItemAdapter = new FollowItemAdapter(options, _followList, _user.getId(), _followType);
+        // Inflate follow list fragment
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context, LinearLayoutManager.VERTICAL, false);
+        initializeRecyclerView(layoutManager, view);
         return view;
     }
 
@@ -105,9 +107,7 @@ public class FollowListFragment extends ListFragment<User> {
      */
     public void onStart(){
         super.onStart();
-        if (_followItemAdapter != null) {
-            _followItemAdapter.startListening();
-        }
+        _followItemAdapter.startListening();
     }
 
     /**
@@ -115,9 +115,7 @@ public class FollowListFragment extends ListFragment<User> {
      */
     public void onStop(){
         super.onStop();
-        if (_followItemAdapter != null) {
-            _followItemAdapter.stopListening();
-        }
+        _followItemAdapter.stopListening();
     }
 
     /**
@@ -138,7 +136,12 @@ public class FollowListFragment extends ListFragment<User> {
         // get the list of followers/following
         ArrayList<String> followList = (ArrayList<String>) objectMap.get(_followType.toLowerCase());
 
-        return _db.collection("Users").whereIn("id", followList);
+        // ensure not empty and return
+        if(followList != null && !followList.isEmpty()) {
+            return _db.collection("Users").whereIn("id", followList);
+        }
+        // return an empty query
+        return _db.collection("Users").whereIn("id", Arrays.asList(""));
     }
 
     @Override
@@ -199,13 +202,21 @@ public class FollowListFragment extends ListFragment<User> {
                         }
                     });
         } else {
+            // set a dummy swipe method to prevent issues
             touchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                 @Override
                 // if row at the specified position is clicked
                 public void onRowClicked(int position) {
                     openViewWindowForItem(position);
                 }
-            });
+
+            }).setSwipeOptionViews()
+                    .setSwipeable(R.id.follow_view_not_swipeable, R.id.empty_swipeable_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                        @Override
+                        public void onSwipeOptionClicked(int viewID, int position) {
+                            return;
+                        }
+                    });
         }
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
@@ -216,7 +227,37 @@ public class FollowListFragment extends ListFragment<User> {
      * @param position The position in the list
      */
     private void unfollowUser(int position) {
-        Toast.makeText(_context, "Clicked unfollow", Toast.LENGTH_SHORT).show();
+        // Toast message to let the user know you have unfollowed someone
+        Toast.makeText(_context, UNFOLLOW_MESSAGE, Toast.LENGTH_SHORT).show();
+        // get the Id of the user being unfollowed
+        String userToRemove = _followItemAdapter.getItem(position).getId();
+        // unfollow locally
+        _user.unFollowUser(userToRemove);
+        // unfollow in db
+        removeFollowing(_user.getId(), userToRemove);
+        removeFollower(userToRemove, _user.getId());
+        // update adapter with new query
+        resetOptionsOfAdapter();
+    }
+
+    /**
+     * This method is responsible for removing a user from following
+     * @param userId the user performing the operation
+     * @param userToRemove the user that is being removed
+     */
+    private void removeFollowing(String userId, String userToRemove) {
+        DocumentReference userRef = _db.collection("Users").document(userId);
+        userRef.update("following", FieldValue.arrayRemove(userToRemove));
+    }
+
+    /**
+     * This method is responsible for removing the follower of a user
+     * @param userId the user performing the operation
+     * @param userToRemove the user that is being removed
+     */
+    private void removeFollower(String userId, String userToRemove) {
+        DocumentReference userRef = _db.collection("Users").document(userId);
+        userRef.update("followers", FieldValue.arrayRemove(userToRemove));
     }
 
     /**
@@ -231,6 +272,22 @@ public class FollowListFragment extends ListFragment<User> {
         NavController controller = NavHostFragment.findNavController(this);
         controller.navigate(R.id.action_followListFragment_to_viewProfileFragment, bundle);
 
+    }
+
+    /**
+     * This function updates the _followItemAdapter with any changes to the db
+     */
+    protected void resetOptionsOfAdapter() {
+        _followItemAdapter.stopListening();
+        // query firebase for all habits that correspond to the current user
+        Query query = getListFromFirebase();
+
+        // populate the list with existing items in the database
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .build();
+        _followItemAdapter.updateOptions(options);
+        _followItemAdapter.startListening();
     }
 
     @Override

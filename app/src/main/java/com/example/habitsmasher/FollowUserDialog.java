@@ -9,8 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -56,9 +57,10 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     private static final String FOLLOW_REQUEST_FIELD = "followRequests";
 
     private FirebaseFirestore _db;
-    private EditText _userToFollow;
+    private AutoCompleteTextView _userToFollowACTV;
     private Handler _handler;
     private Context _context;
+    private ArrayList<String> _usernames;
 
     public FollowUserDialog(Handler handler, Context context) {
         _handler = handler;
@@ -77,9 +79,34 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
         final Dialog followUserDialog = getDialog();
 
         // Attach UI elements
-        _userToFollow = view.findViewById(R.id.user_search_text);
+        _userToFollowACTV = view.findViewById(R.id.auto_complete_text_view);
         Button cancelButton = view.findViewById(R.id.cancel_user_follow);
         Button followButton = view.findViewById(R.id.follow_user_button);
+
+        _usernames = new ArrayList<String>();
+
+        _db.collection(USERS_COLLECTION_PATH)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            if (document.get(USERNAME_FIELD).toString().contains(_userToFollowACTV.getText().toString())) {
+                                Log.d(TAG, "Username exists");
+                                _usernames.add(document.get(USERNAME_FIELD).toString());
+                            }
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, _usernames);
+        _userToFollowACTV.setAdapter(adapter);
 
         // cancel button logic
         cancelButton.setOnClickListener(new ClickListenerForCancel(followUserDialog, TAG));
@@ -90,7 +117,7 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
             public void onClick(View view) {
                 Log.d(TAG, "Follow");
 
-                String usernameInput = _userToFollow.getText().toString().trim();
+                String usernameInput = _userToFollowACTV.getText().toString().trim();
 
                 if (usernameInput.isEmpty()) {
                     displayErrorMessage(EMPTY_USERNAME_ERROR);
@@ -131,7 +158,7 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                                             return;
                                         }
                                         userToFollow.addFollowRequest(currentUserId);
-                                        
+
                                         addUserToRequestsListInDatabase(currentUserId, userToFollow.getId());
 
                                         showFollowRequestSuccessMessage();
@@ -223,24 +250,24 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
     public void displayErrorMessage(int messageType) {
         switch(messageType) {
             case EMPTY_USERNAME_ERROR:
-                _userToFollow.setError(EMPTY_USERNAME_ERROR_MESSAGE);
-                _userToFollow.requestFocus();
+                _userToFollowACTV.setError(EMPTY_USERNAME_ERROR_MESSAGE);
+                _userToFollowACTV.requestFocus();
                 break;
             case INVALID_USERNAME_ERROR:
-                _userToFollow.setError(INVALID_USERNAME_ERROR_MESSAGE);
-                _userToFollow.requestFocus();
+                _userToFollowACTV.setError(INVALID_USERNAME_ERROR_MESSAGE);
+                _userToFollowACTV.requestFocus();
                 break;
             case CANNOT_FOLLOW_YOURSELF_ERROR:
-                _userToFollow.setError(CANNOT_FOLLOW_YOURSELF_MESSAGE);
-                _userToFollow.requestFocus();
+                _userToFollowACTV.setError(CANNOT_FOLLOW_YOURSELF_MESSAGE);
+                _userToFollowACTV.requestFocus();
                 break;
             case ALREADY_REQUESTED_TO_FOLLOW_USER:
-                _userToFollow.setError(ALREADY_REQUESTED_TO_FOLLOW_USER_MESSAGE);
-                _userToFollow.requestFocus();
+                _userToFollowACTV.setError(ALREADY_REQUESTED_TO_FOLLOW_USER_MESSAGE);
+                _userToFollowACTV.requestFocus();
                 break;
             case ALREADY_FOLLOWING:
-                _userToFollow.setError(ALREADY_FOLLOWING_MESSAGE);
-                _userToFollow.requestFocus();
+                _userToFollowACTV.setError(ALREADY_FOLLOWING_MESSAGE);
+                _userToFollowACTV.requestFocus();
         }
     }
 

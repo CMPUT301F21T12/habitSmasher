@@ -26,6 +26,7 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
     private static ArrayList<String> _followList;
     private final String _userId;
     private Context _context;
+    private String _followType;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -33,13 +34,16 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
      * @param options The options for the firestore recycler
      * @param followList The follow list
      * @param userId The current user id
+     * @param followType The follow type
      */
     public FollowItemAdapter(@NonNull FirestoreRecyclerOptions<User> options,
                              ArrayList<String> followList,
-                             String userId) {
+                             String userId,
+                             String followType) {
         super(options);
         _followList = followList;
         _userId = userId;
+        _followType = followType;
     }
 
 
@@ -67,7 +71,13 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
     @Override
     public FollowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         _context = parent.getContext();
-        View view = LayoutInflater.from(_context).inflate(R.layout.follow_row, parent, false);
+        View view;
+        if (_followType.equals("Following")) {
+            view = LayoutInflater.from(_context).inflate(R.layout.follow_row, parent, false);
+        }
+        else {
+            view = LayoutInflater.from(_context).inflate(R.layout.follow_row_not_swipe, parent, false);
+        }
         return new FollowItemAdapter.FollowViewHolder(view);
     }
 
@@ -77,7 +87,6 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
     public static class FollowViewHolder extends RecyclerView.ViewHolder {
         private final TextView _userName;
         private final ImageView _profilePicture;
-        private final ConstraintLayout _followRows;
 
         /**
          * Constructs a view holder
@@ -85,7 +94,6 @@ public class FollowItemAdapter extends ItemAdapter<User, FollowItemAdapter.Follo
          */
         public FollowViewHolder(@NonNull View itemView) {
             super(itemView);
-            _followRows = itemView.findViewById(R.id.follow_rows);
             _userName = itemView.findViewById(R.id.follow_username);
             _profilePicture = itemView.findViewById(R.id.follow_profile_picture);
         }

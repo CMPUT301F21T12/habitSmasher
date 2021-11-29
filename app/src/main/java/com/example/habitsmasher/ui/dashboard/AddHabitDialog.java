@@ -103,7 +103,8 @@ public class AddHabitDialog extends HabitDialog {
                                                _tracker.getDays(),
                                                habitPublic,
                                                DatabaseEntity.generateId(),
-                                                new HabitEventList());
+                                                new HabitEventList(),
+                                                _habitListFragment.getLargestSortIndex() + 1);
                     _habitListFragment.updateListAfterAdd(newHabit);
                     getDialog().dismiss();
                 }

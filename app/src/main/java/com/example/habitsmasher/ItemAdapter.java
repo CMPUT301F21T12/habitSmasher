@@ -32,6 +32,10 @@ public abstract class ItemAdapter<A, B extends RecyclerView.ViewHolder> extends 
         return _snapshots.size();
     }
 
+    /**
+     * This updates the options for the item adapter, this also updates the snapshots
+     * @param options the new options
+     */
     @Override
     public void updateOptions(@NonNull FirestoreRecyclerOptions<A> options) {
         super.updateOptions(options);
