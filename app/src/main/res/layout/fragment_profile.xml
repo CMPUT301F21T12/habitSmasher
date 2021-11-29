@@ -71,14 +71,4 @@
         app:layout_constraintStart_toStartOf="@+id/following_label"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/profile_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_picture"
-        tools:listitem="@layout/habit_row" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

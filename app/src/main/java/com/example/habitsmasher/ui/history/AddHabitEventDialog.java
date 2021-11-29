@@ -24,8 +24,7 @@ public class AddHabitEventDialog extends HabitEventDialog {
 
     private HabitEvent _newEvent;
     private AddHabitEventDialog _addFragment = this;
-    private String _userID;
-    private String _parentHabitID;
+
 
 
     @Nullable
@@ -36,10 +35,6 @@ public class AddHabitEventDialog extends HabitEventDialog {
         initializeUIElements(view);
         wrapBundle(savedInstanceState);
         spawnMapSnippet();
-
-        Bundle args = getArguments();
-        _userID = args.getString("userID");
-        _parentHabitID = args.getString("parentHabitID");
 
         // set header
         _header.setText("Add Habit Event");

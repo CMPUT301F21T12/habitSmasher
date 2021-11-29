@@ -229,12 +229,6 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
     protected void openAddDialogBox() {
         // Create new AddHabitEventDialog and show it
         AddHabitEventDialog addHabitEventDialog = new AddHabitEventDialog();
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("userID", _userId);
-        bundle.putSerializable("parentHabitID", _parentHabit.getId());
-        addHabitEventDialog.setArguments(bundle);
-
         addHabitEventDialog.setTargetFragment(HabitEventListFragment.this, 1);
         addHabitEventDialog.show(getFragmentManager(), "AddHabitEventDialog");
     }
@@ -242,12 +236,6 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
     public void openEditDialogBox(int position) {
         EditHabitEventDialog editHabitEventDialog = new EditHabitEventDialog(position, _habitEventItemAdapter._snapshots.get(position), _userId, _parentHabit);
         editHabitEventDialog.setCancelable(true);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("userID", _userId);
-        bundle.putSerializable("parentHabitID", _parentHabit.getId());
-        editHabitEventDialog.setArguments(bundle);
-
         editHabitEventDialog.setTargetFragment(this, 1);
         editHabitEventDialog.show(getFragmentManager(), "Edit Habit Event");
     }
