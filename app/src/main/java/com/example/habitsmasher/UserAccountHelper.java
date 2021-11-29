@@ -50,6 +50,20 @@ public class UserAccountHelper {
                          });
     }
 
+    public void deleteUserFromDatabase(User user) {
+        HabitList userHabitList = user.getHabits();
+
+        // Delete all of a users habits
+        for (int i = 0; i < userHabitList.getHabitList().size(); i++) {
+            user.getHabits().deleteHabit(_context, user.getId(), user.getHabits().getHabit(i), i);
+        }
+
+        // Unfollow all other users
+        for (int i = 0; i < user.getFollowerCount(); i++) {
+            user.unFollow()
+        }
+    }
+
     /**
      * This helper method shows a toast message to the screen
      * @param message message to display
