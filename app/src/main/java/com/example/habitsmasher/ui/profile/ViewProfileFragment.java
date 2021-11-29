@@ -166,43 +166,10 @@ public class ViewProfileFragment extends ListFragment<Habit> {
                   .whereEqualTo("public", true);
     }
 
+    /**
+     * Not Needed
+     */
     protected void populateList(Query query) {
-        //get all of the habits
-        Task<QuerySnapshot> querySnapshotTask = query.get();
-
-        /*
-        populate HabitList with current Habits and habit IDs to initialize state to match
-        database, fills when habitList is empty and snapshot is not, which is only
-        when app is initially launched
-        */
-        if (_habitList.getHabitList().isEmpty()) {
-            // wait for all the snapshots to come in
-            while (!querySnapshotTask.isComplete()) ;
-
-            // make a list of all of the habit snapshots
-            List<DocumentSnapshot> snapshotList = querySnapshotTask.getResult().getDocuments();
-
-            // convert all of the snapshots into proper habits
-            for (int i = 0; i < snapshotList.size(); i++) {
-                // get the data and convert to hashmap, also print to log
-                Map<String, Object> extractMap = snapshotList.get(i).getData();
-                Log.d(TAG, extractMap.toString());
-
-                // get all of the data from the snapshot
-                String title = (String) extractMap.get("title");
-                String reason = (String) extractMap.get("reason");
-                Timestamp date = (Timestamp) extractMap.get("date");
-                String id = (String) extractMap.get("id");
-                String days = extractMap.get("days").toString();
-                boolean isPublic = (boolean) extractMap.get("public");
-
-                // create a new habit with the snapshot data
-                Habit addHabit = new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
-
-                // add the habit to the local list
-                _habitList.addHabitLocal(addHabit);
-            }
-        }
     }
 
     @Override
