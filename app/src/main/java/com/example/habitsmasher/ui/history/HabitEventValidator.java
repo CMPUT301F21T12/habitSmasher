@@ -9,6 +9,8 @@ import java.util.Date;
 /**
  * Habit Event Validator, extends off habit validator to also add input validation
  * for habit events
+ *
+ * @author Julie Pilz, Jason Kim
  */
 public class HabitEventValidator extends HabitValidator {
     /**

@@ -7,6 +7,8 @@ import android.view.View;
  * This is the ClickListenerForCancel class
  * It implements the View.OnClickListener
  * Its purpose is to perform the onClick listener actions
+ *
+ * @author Kaden Dreger
  */
 public class ClickListenerForCancel implements View.OnClickListener{
     private Dialog _dialog;

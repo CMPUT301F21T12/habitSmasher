@@ -33,6 +33,8 @@ import java.util.Map;
 /**
  * Custom adapter class that is used to connect the Firestore database and the
  * RecyclerView displaying the habits
+ *
+ * @author Cameron Matthew
  */
 public class HomeHabitItemAdapter extends ItemAdapter<Habit, HomeHabitItemAdapter.HabitViewHolder> {
     private static HabitList _habits;

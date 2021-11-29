@@ -1,6 +1,5 @@
 package com.example.habitsmasher.ui.dashboard;
 
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,8 @@ import java.text.SimpleDateFormat;
 /**
  * UI class that represents and specifies the behaviour of the interface
  * displayed when a user is viewing the details of a certain habit
+ *
+ * @author Kaden Dreger, Cameron Matthew, Rudy Patel
  */
 public class HabitViewFragment extends Fragment {
 

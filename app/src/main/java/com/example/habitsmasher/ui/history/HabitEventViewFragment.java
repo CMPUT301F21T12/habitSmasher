@@ -29,6 +29,8 @@ import java.text.SimpleDateFormat;
  * Embedding a map into a fragment using a mapview found here:
  * https://github.com/googlemaps/android-samples/blob/main/ApiDemos/java/app/src/gms/java/com/example/
  * mapdemo/RawMapViewDemoActivity.java
+ *
+ * @author Julie Pilz, Jason Kim
  */
 public class HabitEventViewFragment extends Fragment implements OnMapReadyCallback {
     // Habit event being displayed

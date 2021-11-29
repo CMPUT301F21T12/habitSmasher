@@ -11,6 +11,8 @@ import com.google.android.gms.tasks.OnFailureListener;
  * This is the FailureListener class
  * It implements the OnFailureListener
  * Its purpose is to perform the onFailure listener actions
+ *
+ * @author Kaden Dreger
  */
 public class FailureListener implements OnFailureListener {
     private String _toastText;

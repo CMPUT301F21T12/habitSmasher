@@ -13,6 +13,8 @@ import java.util.Date;
 /**
  * Class that as a validator that checks if habit input fields are valid
  * when adding or editing a habit
+ *
+ * @author Rudy patel, Jason Kim, Cameron Matthew
  */
 public class HabitValidator {
 
@@ -85,7 +87,6 @@ public class HabitValidator {
         // return true if all checks pass
         return true;
     }
-
 
     /**
      * This helper method parses a given date in string form

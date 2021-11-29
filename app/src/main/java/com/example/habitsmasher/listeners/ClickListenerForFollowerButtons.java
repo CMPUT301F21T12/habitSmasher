@@ -7,6 +7,13 @@ import android.view.View;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+/**
+ * This is the ClickListenerForFollowButtons class
+ * It implements the View.OnClickListener
+ * Its purpose is to perform the onClick listener actions for the follow buttons
+ *
+ * @author Cameron Matthew
+ */
 public class ClickListenerForFollowerButtons implements View.OnClickListener{
     /**
      * This listener is used for the followers button, and leads to the list of people that

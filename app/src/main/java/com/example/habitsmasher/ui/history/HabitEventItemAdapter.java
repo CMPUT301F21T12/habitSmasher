@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
  * The HabitEventItemAdapter class
  * Based on HabitItemAdapter, extension of FirestoreRecycler that shows habit events list with
  * live updates
+ *
+ * @author Jacob Nguyen, Julie Pilz
  */
 public class HabitEventItemAdapter extends ItemAdapter<HabitEvent, HabitEventItemAdapter.HabitEventViewHolder> {
     // Initialize variables

@@ -9,6 +9,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
  * This is the SuccessListener class
  * It implements the OnSuccessListener
  * Its purpose is to perform the onSuccess listener actions
+ *
+ * @author Kaden Dreger
  */
 public class SuccessListener implements OnSuccessListener {
     private String _toastText;
