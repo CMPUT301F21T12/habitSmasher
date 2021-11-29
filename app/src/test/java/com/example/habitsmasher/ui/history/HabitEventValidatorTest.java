@@ -38,11 +38,6 @@ public class HabitEventValidatorTest {
     }
 
     @Test
-    public void isHabitEventValid_emptyComment_expectHabitEventIsInvalid() {
-        assertFalse(_validator.isHabitEventValid(EMPTY_STRING, TODAY));
-    }
-
-    @Test
     public void isHabitEventValid_invalidComment_expectHabitEventIsInvalid() {
         assertFalse(_validator.isHabitEventValid(INVALID_COMMENT, TODAY));
     }

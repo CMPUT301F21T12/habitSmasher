@@ -25,10 +25,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Objects;
 
 /**
- * UI class that represents and specifies the behaviour of the main activity, which at the
- * moment has three fragments
- * The Main Activity only acts as a link between the three fragments, and has no real
- * behaviour
+ * This is the one and only main driver activity for this application
+ *
+ * @author Rudy Patel, Kaden Dreger, Jason Kim
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -117,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             _navController.navigate(R.id.action_logout);
         }
-
+        if (item.getItemId() == R.id.notifications_button) {
+            _navController.navigate(R.id.open_notifications);
+        }
         return super.onOptionsItemSelected(item);
     }
 

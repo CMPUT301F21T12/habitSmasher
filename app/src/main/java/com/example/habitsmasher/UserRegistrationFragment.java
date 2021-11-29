@@ -1,12 +1,10 @@
 package com.example.habitsmasher;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +36,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * This class holds the front-end elements related to the user sign up page
- * Author: Rudy Patel
+ * @author Rudy Patel, Julie Pilz
  */
 public class UserRegistrationFragment extends Fragment implements PictureSelectionUser {
     private static final String USER_REGISTERED_MESSAGE = "User registered!";
@@ -53,6 +51,9 @@ public class UserRegistrationFragment extends Fragment implements PictureSelecti
     private static final String USERNAME_FIELD = "username";
     private static final String THIS_USERNAME_IS_ALREADY_TAKEN_MESSAGE = "This username is already taken!";
     private static final String PATH_TO_DEFAULT_USER_IMG = "android.resource://com.example.habitsmasher/drawable/placeholder_profile_picture";
+    private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
+    private ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
 
     private FirebaseAuth _auth;
     private ProgressBar _progressBar;
@@ -174,9 +175,6 @@ public class UserRegistrationFragment extends Fragment implements PictureSelecti
      * @param username the user's username
      */
     private void createNewUserWithEmailAndPassword(String email, String password, String username) {
-        PasswordEncrypt passwordEncrypt = new PasswordEncrypt();
-        password = passwordEncrypt.encrypt(password);
-        String encryptedPassword = password;
         _auth.createUserWithEmailAndPassword(email, password)
              .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                  @Override
@@ -185,7 +183,10 @@ public class UserRegistrationFragment extends Fragment implements PictureSelecti
                          User user = new User(_auth.getUid(),
                                               username,
                                               email,
-                                 encryptedPassword);
+                                            password,
+                                 EMPTY_FOLLOWER_LIST,
+                                 EMPTY_FOLLOWING_LIST,
+                                 EMPTY_REQUEST_LIST);
 
                          addNewUserToDatabase(user);
 

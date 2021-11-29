@@ -20,12 +20,14 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
         android:text="@string/username"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toEndOf="@+id/profile_picture"
-        app:layout_constraintTop_toTopOf="@+id/profile_picture" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/followers_label"
@@ -47,10 +49,11 @@
         app:layout_constraintBottom_toBottomOf="@+id/profile_picture"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/number_followers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:background="@drawable/text_button_background_white"
         android:text="@string/zero"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/followers_label"
@@ -58,26 +61,25 @@
         app:layout_constraintStart_toStartOf="@+id/followers_label"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/number_following"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:background="@drawable/text_button_background_white"
         android:text="@string/zero"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/following_label"
         app:layout_constraintEnd_toEndOf="@+id/following_label"
         app:layout_constraintStart_toStartOf="@+id/following_label"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/you_have_no_recent_activity"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:id="@+id/delete_profile_button"
+        android:layout_width="31dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="4dp"
+        android:src="@android:drawable/ic_menu_delete"
+        app:layout_constraintStart_toEndOf="@+id/username"
+        tools:layout_editor_absoluteY="2dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

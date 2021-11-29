@@ -9,6 +9,8 @@ import java.util.Date;
 /**
  * Habit Event Validator, extends off habit validator to also add input validation
  * for habit events
+ *
+ * @author Julie Pilz, Jason Kim
  */
 public class HabitEventValidator extends HabitValidator {
     /**
@@ -32,8 +34,7 @@ public class HabitEventValidator extends HabitValidator {
         Date parsedDate = checkHabitDateValid(habitEventDate);
 
         // check that the comment conforms to requirements
-        if ((habitEventComment.length() <= MINIMUM_COMMENT_LENGTH)
-                || (habitEventComment.length() > MAXIMUM_COMMENT_LENGTH)) {
+        if (habitEventComment.length() > MAXIMUM_COMMENT_LENGTH) {
             _fragment.displayErrorMessage(HabitEventDialog.INCORRECT_COMMENT);
             return false;
         }

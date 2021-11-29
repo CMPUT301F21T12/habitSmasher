@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import android.net.Uri;
-
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 

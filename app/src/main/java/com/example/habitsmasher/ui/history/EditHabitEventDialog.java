@@ -20,6 +20,8 @@ import java.util.Date;
 /**
  * The EditHabitEventFragment class
  * Based on EditEventFragment, dialog which pops up and allows a user to edit habit events
+ *
+ * @author Julie Pilz, Jason Kim
  */
 public class EditHabitEventDialog extends HabitEventDialog {
     // Initialize global variables
@@ -120,7 +122,8 @@ public class EditHabitEventDialog extends HabitEventDialog {
                 editedHabitEvent = new HabitEvent(newDate,
                             eventComment,
                             _editHabitEvent.getId(),
-                            _selectedLocation);
+                            _selectedLocation
+                );
                 _errorText.setText("");
                 _habitEventListFragment.editHabitEvent(editedHabitEvent,_index, _selectedImage);
 

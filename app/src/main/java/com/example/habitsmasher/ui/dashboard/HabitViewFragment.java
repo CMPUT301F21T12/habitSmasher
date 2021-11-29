@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.habitsmasher.DaysTracker;
@@ -15,6 +16,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.habitsmasher.Habit;
+import com.example.habitsmasher.ProgressTracker;
 import com.example.habitsmasher.PublicPrivateButtons;
 import com.example.habitsmasher.R;
 
@@ -23,6 +25,8 @@ import java.text.SimpleDateFormat;
 /**
  * UI class that represents and specifies the behaviour of the interface
  * displayed when a user is viewing the details of a certain habit
+ *
+ * @author Kaden Dreger, Cameron Matthew, Rudy Patel
  */
 public class HabitViewFragment extends Fragment {
 
@@ -32,12 +36,13 @@ public class HabitViewFragment extends Fragment {
     // user which owns this habit
     private String _userId;
 
+    private boolean _isOwner;
 
     private PublicPrivateButtons _publicPrivateButtons;
 
     private DaysTracker _tracker;
 
-    private static final String PATTERN = "dd-MM-yyyy";
+    private static final String PATTERN = "EEE, d MMM yyyy";
 
     public HabitViewFragment() {
         // Required empty public constructor
@@ -50,6 +55,8 @@ public class HabitViewFragment extends Fragment {
         if(getArguments() != null) {
             _habit = (Habit) getArguments().getSerializable("habit");
             _userId = (String) getArguments().getSerializable("userId");
+            // Whether the habit is owned by the current user
+            _isOwner = (boolean) getArguments().getSerializable("isOwner");
         }
 
         //set the DaysTracker
@@ -73,19 +80,38 @@ public class HabitViewFragment extends Fragment {
 
         // Setting text boxes
         descriptionHabitTextBox.setText(_habit.getReason());
-        dateHabitTextBox.setText(String.format(dateHabitTextBox.getText().toString(), simpleDateFormat.format(_habit.getDate())));
+        dateHabitTextBox.setText(simpleDateFormat.format(_habit.getDate()));
 
         // Get history button and add listener
         AppCompatButton historyButton = view.findViewById(R.id.eventHistoryButton);
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openHabitEventsView();
-            }
-        });
+        if (!_isOwner){
+            historyButton.setVisibility(View.INVISIBLE);
+        } else {
+            historyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openHabitEventsView();
+                }
+            });
+        }
 
         //set up the buttons for the days of the week
         setupDaysOfTheWeekButtons(view);
+
+        // Grab ProgressBar
+        ProgressBar progressBar = view.findViewById(R.id.habit_view_progress_bar);
+        TextView progressTextView = view.findViewById(R.id.habit_view_progress_text);
+
+        // Create a new progress tracker
+        ProgressTracker progressTracker = new ProgressTracker(_habit);
+
+        // Get integer representation of progress
+        int progress = (int) progressTracker.calculateProgressPercentage();
+
+        // Set progress in circular progress and text
+        progressBar.setProgress(progress);
+        String progressText = Integer.toString(progress) + "%";
+        progressTextView.setText(progressText);
 
         return view;
     }

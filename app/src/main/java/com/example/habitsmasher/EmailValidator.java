@@ -9,6 +9,8 @@ import androidx.core.util.PatternsCompat;
 /**
  * This class validates whether a email is of the correct format.
  * This class is based of the UserValidator class.
+ *
+ * @author Jacob Nguyen
  */
 public class EmailValidator {
     private static final String EMAIL_IS_REQUIRED_MESSAGE = "Email is required!";

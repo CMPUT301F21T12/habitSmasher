@@ -2,14 +2,16 @@ package com.example.habitsmasher;
 
 import static android.content.ContentValues.TAG;
 
-import android.nfc.Tag;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 
-import com.google.android.material.tabs.TabLayout;
 
+/**
+ * This class holds the public/private buttons to set the privacy for a given habit
+ *
+ * @author Cameron Matthew
+ */
 public class PublicPrivateButtons {
     /**
      * This class handles the logic behind the public and private buttons, which are used to

@@ -9,6 +9,8 @@ import java.util.Date;
 /**
  * This is the Habit class
  * Its purpose is to store and retrieve the title, reason, and date of a given habit
+ *
+ * @author Rudy Patel, Kaden Dreger, Jason Kim, Cameron Matthew, Julie Pilz
  */
 public class Habit extends DatabaseEntity implements Serializable {
     private String _title;
@@ -17,6 +19,7 @@ public class Habit extends DatabaseEntity implements Serializable {
     private HabitEventList _habitEvents;
     private ArrayList<String> _days;
     private boolean _isPublic;
+    private Long _sortIndex;
 
     /**
      * Empty constructor needed for FireStore storage
@@ -34,7 +37,7 @@ public class Habit extends DatabaseEntity implements Serializable {
      * @param habitEvents list holding habit events
      */
     public Habit (String title, String reason, Date date, String days, boolean isPublic,
-                  String habitId, HabitEventList habitEvents) {
+                  String habitId, HabitEventList habitEvents, Long sortIndex) {
         super(habitId);
         _title = title;
         _reason = reason;
@@ -42,6 +45,24 @@ public class Habit extends DatabaseEntity implements Serializable {
         _habitEvents = habitEvents;
         _isPublic = isPublic;
         _days = new DaysTracker(days).getListWithStrings();
+        _sortIndex = sortIndex;
+    }
+
+    /**
+     * Gets the sort index of the habit
+     * @return _sortIndex: The index of the habit
+     */
+    @PropertyName("sortIndex")
+    public Long getSortIndex() {
+        return _sortIndex;
+    }
+
+    /**
+     * Set the sort index of the habit
+     * @param sortIndex : The new index to be set
+     */
+    public void setSortIndex(Long sortIndex) {
+        _sortIndex = sortIndex;
     }
 
     /**

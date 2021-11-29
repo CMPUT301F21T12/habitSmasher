@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 /**
  * Class that acts as a container for habits, allowing for edit, delete and add operations
+ *
+ * @author Rudy Patel, Jason Kim
  */
 public class HabitList extends ArrayList<Habit>{
     // arraylist of habits, auto-updates whenever Habit added or edited
@@ -68,6 +70,7 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("id", habitId);
         habitData.put("days", newHabit.getDays());
         habitData.put("public", newHabit.getPublic());
+        habitData.put("sortIndex", newHabit.getSortIndex());
 
         // add habit to database, using it's habit ID as the document name
         setHabitDataInDatabase(userId, habitId, habitData);
@@ -92,10 +95,9 @@ public class HabitList extends ArrayList<Habit>{
     /**
      * Method that edits the habit at position pos in the database
      * @param editedHabit Habit containing the new fields of the editted habit
-     * @param pos Position of habit in the HabitList
      * @param userId id of user whose habits we are editing
      */
-    public void editHabitInDatabase(Habit editedHabit, int pos, String userId) {
+    public void editHabitInDatabase(Habit editedHabit, String userId) {
         // this acquires the unique habit ID of the habit to be edited
         String habitId = editedHabit.getId();
 
@@ -107,6 +109,7 @@ public class HabitList extends ArrayList<Habit>{
         habitData.put("id", habitId);
         habitData.put("days", editedHabit.getDays());
         habitData.put("public", editedHabit.getPublic());
+        habitData.put("sortIndex", editedHabit.getSortIndex());
 
         // replaces the old fields of the Habit with the new fields, using Habit ID to find document
         setHabitDataInDatabase(userId, habitId, habitData);

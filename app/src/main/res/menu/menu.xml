@@ -7,6 +7,11 @@
         android:title="@string/user_search"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/notifications_button"
+        android:icon="@drawable/ic_notification_foreground"
+        android:title="@string/Notifications"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/logout_button"
         android:icon="@drawable/ic_baseline_logout_24"
         android:title="@string/logout"

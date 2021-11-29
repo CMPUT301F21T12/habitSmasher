@@ -90,7 +90,7 @@ public class TodayFragment extends ListFragment {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HomeHabitItemAdapter(options, _habitList, _user.getUsername());
+        _habitItemAdapter = new HomeHabitItemAdapter(options, _habitList, _user.getId());
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                 LinearLayoutManager.VERTICAL,
                 false);
@@ -265,9 +265,10 @@ public class TodayFragment extends ListFragment {
         String id = (String) extractMap.get("id");
         String days = extractMap.get("days").toString();
         boolean isPublic = (boolean) extractMap.get("public");
+        Long sortIndex = (Long) extractMap.get("sortIndex");
 
         //return the new habit
-        return new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList());
+        return new Habit(title, reason, date.toDate(), days, isPublic, id, new HabitEventList(), sortIndex);
     }
 
     /**
@@ -304,6 +305,7 @@ public class TodayFragment extends ListFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable("habit", currentHabit);
         bundle.putSerializable("userId", _user.getId());
+        bundle.putSerializable("isOwner", true);
         NavController controller = NavHostFragment.findNavController(this);
 
         // Navigate to the habitViewFragment

@@ -46,7 +46,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * https://github.com/googlemaps/android-samples/blob/main/ApiDemos/java/app/src/gms/java/com/example/
  * mapdemo/RawMapViewDemoActivity.java
  *
- * @author Jason Kim
+ * @author Jason Kim, Julie Pilz
  */
 public abstract class HabitEventDialog extends DialogFragment implements DisplaysErrorMessages,
                                                                          OnMapReadyCallback,

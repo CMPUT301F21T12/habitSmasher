@@ -1,10 +1,7 @@
 package com.example.habitsmasher;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -25,8 +22,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 /**
  * Class that spawns a map dialog that can be scrolled through
@@ -39,6 +34,7 @@ import com.google.android.gms.tasks.Task;
  * Requesting a location came from following the tutorial here:
  * https://developer.android.com/training/location/retrieve-current
  *
+ * @author Jason Kim
  */
 public class MapDialog extends DialogFragment implements OnMapReadyCallback {
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
