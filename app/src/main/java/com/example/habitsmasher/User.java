@@ -141,8 +141,12 @@ public class User {
         _followers.add(followerUsername);
     }
 
-    public void unFollowUser(String followingUsername) {
-        _following.remove(followingUsername);
+    /**
+     * This allows a user to unfollow another user
+     * @param followingId
+     */
+    public void unFollowUser(String followingId) {
+        _following.remove(followingId);
     }
 
     /**

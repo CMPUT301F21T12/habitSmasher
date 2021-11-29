@@ -136,6 +136,7 @@ public class FollowListFragment extends ListFragment<User> {
         if(followList != null && !followList.isEmpty()) {
             return _db.collection("Users").whereIn("id", followList);
         }
+        // return an empty query
         return _db.collection("Users").whereIn("id", Arrays.asList(""));
     }
 
@@ -214,12 +215,16 @@ public class FollowListFragment extends ListFragment<User> {
      * @param position The position in the list
      */
     private void unfollowUser(int position) {
+        // Toast message to let the user know you have unfollowed someone
         Toast.makeText(_context, "Clicked unfollow", Toast.LENGTH_SHORT).show();
-        String followingUsername = _followItemAdapter.getItem(position).getId();
-        //_user.unFollowUser(followingUsername);
-        removeFollowingForUserInDatabase(_user.getId(), followingUsername);
-        removeFollowerForUserInDatabase(_user.getId(), followingUsername);
-
+        // get the Id of the user being unfollowed
+        String followingId = _followItemAdapter.getItem(position).getId();
+        // unfollow locally
+        _user.unFollowUser(followingId);
+        // unfollow in db
+        removeFollowingForUserInDatabase(_user.getId(), followingId);
+        removeFollowerForUserInDatabase(_user.getId(), followingId);
+        // update adapter with new query
         resetOptionsOfAdapter();
     }
 
@@ -251,6 +256,9 @@ public class FollowListFragment extends ListFragment<User> {
         Toast.makeText(_context, "Clicked on a row", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * This function updates the _followItemAdapter with any changes to the db
+     */
     protected void resetOptionsOfAdapter() {
         _followItemAdapter.stopListening();
         // query firebase for all habits that correspond to the current user
