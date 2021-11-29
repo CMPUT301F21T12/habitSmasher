@@ -19,6 +19,10 @@ public class User {
     private String _id;
     private ArrayList<String> _followers = new ArrayList<String>();
     private ArrayList<String> _following = new ArrayList<String>();
+
+    // users who have sent follow requests to the user
+    private ArrayList<String> _followRequests = new ArrayList<String>();
+
     private Image _profilePicture;
     private static final HabitList _habits = new HabitList();
 
@@ -40,13 +44,15 @@ public class User {
                 String email,
                 String password,
                 ArrayList<String> followers,
-                ArrayList<String> following) {
+                ArrayList<String> following,
+                ArrayList<String> followRequests) {
         _email = email;
         _password = password;
         _username = username;
         _id = id;
         _followers = followers;
         _following = following;
+        _followRequests = followRequests;
     }
 
     /**
@@ -196,4 +202,21 @@ public class User {
     public HabitList getHabits() {
         return _habits;
     }
+
+    @PropertyName("followRequests")
+    public ArrayList<String> getFollowRequests() {
+        return _followRequests;
+    }
+
+    public void addFollowRequest(String followingUser) {
+        if (_followRequests.contains(followingUser)) {
+            return;
+        }
+        _followRequests.add(followingUser);
+    }
+
+    public void deleteFollowRequest(String followingUser) {
+        _followRequests.remove(followingUser);
+    }
+
 }
