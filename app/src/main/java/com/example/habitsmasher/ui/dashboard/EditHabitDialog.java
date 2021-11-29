@@ -110,7 +110,8 @@ public class EditHabitDialog extends HabitDialog {
                         _tracker.getDays(),
                         isPublic,
                         _editHabit.getId(),
-                        _editHabit.getHabitEvents());
+                        _editHabit.getHabitEvents(),
+                        _editHabit.getSortIndex());
 
                 // update local list and display
                 _errorText.setText("");

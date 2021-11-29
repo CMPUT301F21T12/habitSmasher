@@ -88,6 +88,7 @@ public class MainActivityTest {
     private static final String INVALID_USERNAME_ERROR_MESSAGE = "Please enter a valid username!";
     private static final String INVALID_USERNAME = "abcdefg";
     private static final String EDIT_HEADER = "EDIT LOCATION";
+    private static final Long SAMPLE_SORT_INDEX = 0L;
     private ArrayList<String> EMPTY_FOLLOWING_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_FOLLOWER_LIST = new ArrayList<>();
     private ArrayList<String> EMPTY_REQUEST_LIST = new ArrayList<>();
@@ -315,7 +316,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("viewHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("viewHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -376,7 +377,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitSuccessTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -419,7 +420,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("habitHomeScreenTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("habitHomeScreenTest", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -481,7 +482,7 @@ public class MainActivityTest {
         }
 
         // Create test habit
-        Habit testHabit = new Habit("noHomeScreenTest", "Test Reason", new Date(), notToday, PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("noHomeScreenTest", "Test Reason", new Date(), notToday, PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -535,7 +536,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyTitle", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyTitle", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter reason
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testHabit.getReason());
@@ -584,7 +585,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("ExampleHabitTitleThatIsTooLong", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -638,7 +639,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitReasonLong", "AnExampleHabitReasonThatIsTooLong", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitReasonLong", "AnExampleHabitReasonThatIsTooLong", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -692,7 +693,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyReason", "", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyReason", "", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -745,7 +746,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitEmptyDate", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitEmptyDate", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -794,7 +795,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("addHabitNoDays", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("addHabitNoDays", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -846,7 +847,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create public test habit
-        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("publicHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -901,7 +902,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create public test habit
-        Habit testHabit = new Habit("privateHabitCheck", "Test Reason", new Date(), "MO WE FR", PRIVATE_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("privateHabitCheck", "Test Reason", new Date(), "MO WE FR", PRIVATE_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -958,7 +959,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create public test habit
-        Habit testHabit = new Habit("noPrivacyHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("noPrivacyHabitCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1019,7 +1020,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create public test habit
-        Habit testHabit = new Habit("bothPrivacyCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("bothPrivacyCheck", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1090,7 +1091,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("editHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("editHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1127,7 +1128,7 @@ public class MainActivityTest {
         _solo.clearEditText(0);
         _solo.clearEditText(1);
 
-        Habit testEditHabit = new Habit("editHabitWorked", "testReason1", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testEditHabit = new Habit("editHabitWorked", "testReason1", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
         // enter new values
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testEditHabit.getTitle());
         setFieldInAddHabitDialogBox(HABIT_REASON_FIELD, testEditHabit.getReason());
@@ -1153,7 +1154,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("deleteHabitTest", "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1312,7 +1313,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("habitEventNoLoc", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("habitEventNoLoc", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -1398,7 +1399,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit("homeScreenEventLoc", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit("homeScreenEventLoc", "Test Reason", new Date(), getCurrentDay(), PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
@@ -2248,7 +2249,7 @@ public class MainActivityTest {
         _solo.clickOnView(_solo.getView(R.id.add_habit_fab));
 
         // Create test habit
-        Habit testHabit = new Habit(testName, "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST);
+        Habit testHabit = new Habit(testName, "Test Reason", new Date(), "MO WE FR", PUBLIC_HABIT, HABIT_ID, EMPTY_HABIT_EVENT_LIST, SAMPLE_SORT_INDEX);
 
         // Enter title
         setFieldInAddHabitDialogBox(HABIT_TITLE_FIELD, testHabit.getTitle());
