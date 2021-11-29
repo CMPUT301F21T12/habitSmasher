@@ -94,14 +94,11 @@
         android:id="@+id/new_habit_date_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/date_start"
+        android:text="@string/date"
         android:textColor="@color/design_default_color_background"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/habit_event_date_selection"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/comment_label"
         app:layout_constraintTop_toBottomOf="@+id/add_habit_event_comment" />
 
     <TextView
@@ -151,7 +148,7 @@
         android:minHeight="48dp"
         android:tint="@color/white"
         app:backgroundTint="@color/menu_bar_variant"
-        app:fabCustomSize="80dp"
+        app:fabCustomSize="60dp"
         app:layout_constraintEnd_toEndOf="@+id/add_location_label"
         app:layout_constraintStart_toStartOf="@+id/add_location_label"
         app:layout_constraintTop_toTopOf="parent"
@@ -162,9 +159,9 @@
         android:id="@+id/habit_event_date_selection"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="40dp"
         android:background="@color/white"
         android:clickable="true"
         android:ems="10"
@@ -174,7 +171,6 @@
         android:textColor="@color/theme_dark_grey"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/new_habit_date_label"
         app:layout_constraintTop_toBottomOf="@+id/add_habit_event_comment" />
 

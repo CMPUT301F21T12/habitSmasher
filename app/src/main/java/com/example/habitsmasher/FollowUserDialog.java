@@ -93,9 +93,14 @@ public class FollowUserDialog extends DialogFragment implements DisplaysErrorMes
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         if (document.exists()) {
-                            if (document.get(USERNAME_FIELD).toString().contains(_userToFollowACTV.getText().toString())) {
-                                Log.d(TAG, "Username exists");
-                                _usernames.add(document.get(USERNAME_FIELD).toString());
+                            try {
+                                if (document.get(USERNAME_FIELD).toString().contains(_userToFollowACTV.getText().toString())) {
+                                    Log.d(TAG, "Username exists");
+                                    _usernames.add(document.get(USERNAME_FIELD).toString());
+                                }
+                            } catch (NullPointerException exception) {
+                                Log.d(TAG, "Username is null" + exception.getMessage(), task.getException());
+                                return;
                             }
                         }
                     }

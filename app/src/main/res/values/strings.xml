@@ -21,6 +21,7 @@
     <string name="name">Name:</string>
     <string name="reason">Reason:</string>
     <string name="date_start">Date start:</string>
+    <string name="date">Date:</string>
     <string name="add_habit">Add Habit</string>
     <string name="add_habit_event">Add Habit Event</string>
     <string name="habit_event_comment_label">Comment:</string>
