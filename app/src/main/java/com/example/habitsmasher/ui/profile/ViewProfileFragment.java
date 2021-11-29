@@ -91,7 +91,7 @@ public class ViewProfileFragment extends ListFragment<Habit> {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId());
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
@@ -145,7 +145,10 @@ public class ViewProfileFragment extends ListFragment<Habit> {
             @Override
             // if row at the specified position is clicked
             public void onRowClicked(int position) {
-                openViewWindowForItem(position);
+                if (_habitItemAdapter._snapshots.isEmpty()){}
+                else {
+                    openViewWindowForItem(position);
+                }
             }
         });
         // connect listener to recycler view
@@ -162,7 +165,7 @@ public class ViewProfileFragment extends ListFragment<Habit> {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getUsername());
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,
                 false);

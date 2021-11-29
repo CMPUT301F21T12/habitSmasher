@@ -138,11 +138,7 @@ public class FollowListFragment extends ListFragment<User> {
         // get the list of followers/following
         ArrayList<String> followList = (ArrayList<String>) objectMap.get(_followType.toLowerCase());
 
-        // ensure not empty and return
-        if(followList != null && !followList.isEmpty()) {
-            return _db.collection("Users").whereIn("id", followList);
-        }
-        return null;
+        return _db.collection("Users").whereIn("id", followList);
     }
 
     @Override
@@ -231,7 +227,7 @@ public class FollowListFragment extends ListFragment<User> {
         Toast.makeText(_context, "Clicked on a row", Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", _followList.get(position));
+        bundle.putSerializable("user", _followItemAdapter._snapshots.get(position).getId());
 
         // Navigate to the profileFragment
         NavController controller = NavHostFragment.findNavController(this);
