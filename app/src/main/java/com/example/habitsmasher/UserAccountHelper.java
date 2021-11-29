@@ -9,6 +9,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,6 +21,7 @@ import java.util.HashMap;
  */
 public class UserAccountHelper {
     private static final String LOGIN_FAILED_MESSAGE = "Login failed!";
+    private static final String DELETE_USER_FAILED_MESSAGE = "Failed to delete user!";
 
     private final Context _context;
     private final Fragment _fragment;
@@ -60,8 +62,34 @@ public class UserAccountHelper {
 
         // Unfollow all other users
         for (int i = 0; i < user.getFollowerCount(); i++) {
-            user.unFollow()
+            user.unFollowUser(user.getFollowers().get(i));
         }
+
+        // Remove from all follower lists
+        for (int i = 0; i< user.getFollowers().size(); i++) {
+            String willUnfollow = user.getFollowers().get(i);
+            //UserDatabaseHelper dbHelper = new UserDatabaseHelper();
+
+        }
+        /*for (int i = 0; i < user.getUsersFollowing().size(); i++) {
+            User willUnfollow = user.getUsersFollowing().get(i);
+        }*/
+
+        // Delete user from data base
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(user.getId())
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            navigateToFragmentWithAction(R.id.action_logout);
+                        } else {
+                            showMessage(DELETE_USER_FAILED_MESSAGE);
+                        }
+                    }
+                });
     }
 
     /**

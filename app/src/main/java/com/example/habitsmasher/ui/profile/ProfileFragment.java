@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.habitsmasher.AddPictureDialog;
+import com.example.habitsmasher.DeleteUserDialog;
 import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.PictureSelectionUser;
 import com.example.habitsmasher.R;
@@ -79,6 +81,17 @@ public class ProfileFragment extends Fragment implements PictureSelectionUser {
         // Set click listeners for followers and following buttons
         setClickListenerForFollowersButton(numberOfFollowersButton);
         setClickListenerForFollowingButton(numberOfFollowingButton);
+
+        // Set listener for garbage button
+        ImageButton deleteButton = view.findViewById(R.id.delete_profile_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DeleteUserDialog deleteUserDialog = new DeleteUserDialog();
+                deleteUserDialog.setTargetFragment(ProfileFragment.this, 1);
+                deleteUserDialog.show(getFragmentManager(), "DeleteUserDialog");
+            }
+        });
 
         return view;
     }
