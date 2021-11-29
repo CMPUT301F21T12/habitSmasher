@@ -78,6 +78,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_picture"
         tools:listitem="@layout/habit_row" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
