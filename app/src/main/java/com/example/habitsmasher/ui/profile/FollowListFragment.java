@@ -220,34 +220,34 @@ public class FollowListFragment extends ListFragment<User> {
         // Toast message to let the user know you have unfollowed someone
         Toast.makeText(_context, UNFOLLOW_MESSAGE, Toast.LENGTH_SHORT).show();
         // get the Id of the user being unfollowed
-        String followingId = _followItemAdapter.getItem(position).getId();
+        String userToRemove = _followItemAdapter.getItem(position).getId();
         // unfollow locally
-        _user.unFollowUser(followingId);
+        _user.unFollowUser(userToRemove);
         // unfollow in db
-        removeFollowingForUserInDatabase(_user.getId(), followingId);
-        removeFollowerForUserInDatabase(_user.getId(), followingId);
+        removeFollowing(_user.getId(), userToRemove);
+        removeFollower(userToRemove, _user.getId());
         // update adapter with new query
         resetOptionsOfAdapter();
     }
 
     /**
-     * This method is responsible for adding a new user to the follower array of the given user
+     * This method is responsible for removing a user from following
      * @param userId the user performing the operation
-     * @param followingId the user that is now a new follower of the given user
+     * @param userToRemove the user that is being removed
      */
-    private void removeFollowingForUserInDatabase(String userId, String followingId) {
+    private void removeFollowing(String userId, String userToRemove) {
         DocumentReference userRef = _db.collection("Users").document(userId);
-        userRef.update("following", FieldValue.arrayRemove(followingId));
+        userRef.update("following", FieldValue.arrayRemove(userToRemove));
     }
 
     /**
-     * This method is responsible for adding a new user to the follower array of the given user
+     * This method is responsible for removing the follower of a user
      * @param userId the user performing the operation
-     * @param followingId the user that is now a new follower of the given user
+     * @param userToRemove the user that is being removed
      */
-    private void removeFollowerForUserInDatabase(String userId, String followingId) {
-        DocumentReference userRef = _db.collection("Users").document(followingId);
-        userRef.update("followers", FieldValue.arrayRemove(userId));
+    private void removeFollower(String userId, String userToRemove) {
+        DocumentReference userRef = _db.collection("Users").document(userId);
+        userRef.update("followers", FieldValue.arrayRemove(userToRemove));
     }
 
     /**
