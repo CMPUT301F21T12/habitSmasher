@@ -43,6 +43,7 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
     private static HabitList _habits;
     private final String _userId;
     private Context _context;
+    private boolean _swipable;
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -50,13 +51,16 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
      * @param options the firestore entities
      * @param habits the habit list
      * @param userId the username of the current user
+     * @param swipable Whether the row is swipable or not
      */
     public HabitItemAdapter(@NonNull FirestoreRecyclerOptions<Habit> options,
                             HabitList habits,
-                            String userId) {
+                            String userId,
+                            boolean swipable) {
         super(options);
         _habits = habits;
         _userId = userId;
+        _swipable = swipable;
     }
 
 
@@ -65,7 +69,13 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
     @Override
     public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         _context = parent.getContext();
-        View view = LayoutInflater.from(_context).inflate(R.layout.habit_row, parent, false);
+        View view;
+        if (_swipable) {
+            view = LayoutInflater.from(_context).inflate(R.layout.habit_row, parent, false);
+        }
+        else {
+            view = LayoutInflater.from(_context).inflate(R.layout.habit_row_not_swipable, parent, false);
+        }
         return new HabitViewHolder(view);
     }
 
@@ -139,8 +149,11 @@ public class HabitItemAdapter extends ItemAdapter<Habit, HabitItemAdapter.HabitV
                 String id = extractMap.get("id").toString();
 
                 // create the new habit event from the snapshot data and add to local list
-                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id,
-                        location);
+                HabitEvent addHabitEvent = new HabitEvent(date.toDate(),
+                        comment,
+                        id,
+                        location
+                );
                 parentHabit.getHabitEvents().addHabitEventLocally(addHabitEvent);
             }
         }

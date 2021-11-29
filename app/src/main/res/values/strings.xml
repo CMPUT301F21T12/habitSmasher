@@ -36,7 +36,7 @@
     <string name="followers">Followers</string>
     <string name="following">Following</string>
     <string name="zero">0</string>
-    <string name="you_have_no_recent_activity">You have no recent activity!</string>
+    <string name="no_recent_activity">No recent activity!</string>
     <string name="edit_button_label">EDIT</string>
     <string name="delete_button_label">DELETE</string>
     <string name="edit_habit">Edit Habit</string>

@@ -134,8 +134,11 @@ public class HomeHabitItemAdapter extends ItemAdapter<Habit, HomeHabitItemAdapte
                 String id = extractMap.get("id").toString();
 
                 // create the new habit event from the snapshot data and add to local list
-                HabitEvent addHabitEvent = new HabitEvent(date.toDate(), comment, id,
-                        location);
+                HabitEvent addHabitEvent = new HabitEvent(date.toDate(),
+                        comment,
+                        id,
+                        location
+                );
                 parentHabit.getHabitEvents().addHabitEventLocally(addHabitEvent);
             }
         }

@@ -85,7 +85,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId());
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId(), true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
@@ -195,10 +195,11 @@ public class HabitListFragment extends ListFragment<Habit> {
      * @param fromPosition The position of fromHabit
      * @param toPosition The position of toHabit
      */
-    private void swapSortIndex(Habit fromHabit, Habit toHabit, long fromPosition, long toPosition) {
+    private void swapSortIndex(Habit fromHabit, Habit toHabit, int fromPosition, int toPosition) {
         // Set sort indexes locally
-        fromHabit.setSortIndex(toPosition);
-        toHabit.setSortIndex((fromPosition));
+        long tempIndex = _habitItemAdapter._snapshots.get(fromPosition).getSortIndex();
+        fromHabit.setSortIndex(_habitItemAdapter._snapshots.get(toPosition).getSortIndex());
+        toHabit.setSortIndex(tempIndex);
 
         // Set indexes in db
         _habitList.editHabitInDatabase(fromHabit, _user.getId());
@@ -315,6 +316,7 @@ public class HabitListFragment extends ListFragment<Habit> {
         Bundle bundle = new Bundle();
         bundle.putSerializable("habit", currentHabit);
         bundle.putSerializable("userId", _user.getId());
+        bundle.putSerializable("isOwner", true);
         NavController controller = NavHostFragment.findNavController(this);
 
         // Navigate to the habitViewFragment

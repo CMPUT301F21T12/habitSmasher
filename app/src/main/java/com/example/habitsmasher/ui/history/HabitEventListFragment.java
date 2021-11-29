@@ -22,7 +22,6 @@ import com.example.habitsmasher.Habit;
 import com.example.habitsmasher.HabitEvent;
 import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.ListFragment;
-import com.example.habitsmasher.ProgressTracker;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -82,11 +81,9 @@ public class HabitEventListFragment extends ListFragment<HabitEvent> {
                     .build();
             populateList(query);
             // Set item adapter and habit event list
-            _habitEventItemAdapter = new HabitEventItemAdapter(options,
-                                                               _parentHabit,
-                                                               _userId,
-                                                               _habitEventList,
-                                                                       this);
+            _habitEventItemAdapter = new HabitEventItemAdapter(options,_parentHabit,
+                    _habitEventList,
+                    _userId);
         }
         catch (NullPointerException e){
             // Try catch statement is needed so code doesn't break if there's no events yet, and thus no possible query
