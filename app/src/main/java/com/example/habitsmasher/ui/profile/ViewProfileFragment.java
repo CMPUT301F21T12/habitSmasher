@@ -3,7 +3,6 @@ package com.example.habitsmasher.ui.profile;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,34 +20,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.habitsmasher.Habit;
-import com.example.habitsmasher.HabitEventList;
 import com.example.habitsmasher.HabitList;
 import com.example.habitsmasher.ImageDatabaseHelper;
 import com.example.habitsmasher.ListFragment;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.example.habitsmasher.UserDatabaseHelper;
-import com.example.habitsmasher.listeners.ClickListenerForFollowers;
-import com.example.habitsmasher.listeners.ClickListenerForFollowing;
-import com.example.habitsmasher.listeners.SwipeListener;
-import com.example.habitsmasher.ui.dashboard.AddHabitDialog;
-import com.example.habitsmasher.ui.dashboard.EditHabitDialog;
 import com.example.habitsmasher.ui.dashboard.HabitItemAdapter;
 import com.example.habitsmasher.ui.dashboard.RecyclerTouchListener;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class handles the logic for viewing some else's profile. This includes
@@ -91,7 +73,7 @@ public class ViewProfileFragment extends ListFragment<Habit> {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId());
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId(), false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
@@ -150,7 +132,14 @@ public class ViewProfileFragment extends ListFragment<Habit> {
                     openViewWindowForItem(position);
                 }
             }
+        }).setSwipeOptionViews()
+                .setSwipeable(R.id.habit_rows_not_swipable, R.id.empty_swipe_options, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+            @Override
+            public void onSwipeOptionClicked(int viewID, int position) {
+                return;
+            }
         });
+
         // connect listener to recycler view
         recyclerView.addOnItemTouchListener(touchListener);
     }

@@ -79,7 +79,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                 .build();
 
         populateList(query);
-        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId());
+        _habitItemAdapter = new HabitItemAdapter(options, _habitList, _user.getId(), true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context,
                                                                     LinearLayoutManager.VERTICAL,
                                                                     false);
