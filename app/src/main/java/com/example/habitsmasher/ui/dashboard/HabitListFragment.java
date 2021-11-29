@@ -136,6 +136,9 @@ public class HabitListFragment extends ListFragment<Habit> {
                     // handle case where you select the same habit to swap with
                     if(fromPosition == toPosition) {
                         Toast.makeText(_context, CANCELLED_MESSAGE, Toast.LENGTH_SHORT).show();
+                        recyclerView.findViewHolderForAdapterPosition(_longPressedPosition).itemView.findViewById(R.id.habit_view_constraint).setBackgroundColor(Color.WHITE);
+                        _longPressedPosition = -1;
+                        _longPressed = false;
                         return;
                     }
 
@@ -149,6 +152,7 @@ public class HabitListFragment extends ListFragment<Habit> {
                     // swap the two habits
                     swapSortIndex(fromHabit, toHabit, fromPosition, toPosition);
                     _longPressed = false;
+                    _longPressedPosition = -1;
                 } else {
                     openViewWindowForItem(position);
                 }
@@ -166,6 +170,9 @@ public class HabitListFragment extends ListFragment<Habit> {
                 // handle case where you long press on same item twice
                 if(longPosition == _longPressedPosition) {
                     Toast.makeText(_context, CANCELLED_MESSAGE, Toast.LENGTH_SHORT).show();
+                    recyclerView.findViewHolderForAdapterPosition(_longPressedPosition).itemView.findViewById(R.id.habit_view_constraint).setBackgroundColor(Color.WHITE);
+                    _longPressedPosition = -1;
+                    _longPressed = false;
                     return;
                 }
                 // save position of long pressed habit item
@@ -251,11 +258,18 @@ public class HabitListFragment extends ListFragment<Habit> {
     }
 
     /**
-     * This funcitons get the length of the list
-     * @return Returns the length of the list as a Long
+     * This function gets the largest sort index in the list plus one
+     * @return Returns the largest sort index plus one
      */
-    public Long getItemCountLong() {
-        return (long) _habitItemAdapter.getItemCount();
+    public Long getLargestSortIndex() {
+        long maxSortIndex = 0;
+        // This iterates through the habits to update their sort indexes
+        for (Habit habit : _habitItemAdapter._snapshots){
+            if (habit.getSortIndex() > maxSortIndex) {
+                maxSortIndex = habit.getSortIndex();
+            }
+        }
+        return maxSortIndex + 1;
     }
 
     // we can extract these two methods to list fragment once item adapter interface is done!

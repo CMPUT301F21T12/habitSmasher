@@ -104,7 +104,7 @@ public class AddHabitDialog extends HabitDialog {
                                                habitPublic,
                                                DatabaseEntity.generateId(),
                                                 new HabitEventList(),
-                                                _habitListFragment.getItemCountLong());
+                                                _habitListFragment.getLargestSortIndex());
                     _habitListFragment.updateListAfterAdd(newHabit);
                     getDialog().dismiss();
                 }
