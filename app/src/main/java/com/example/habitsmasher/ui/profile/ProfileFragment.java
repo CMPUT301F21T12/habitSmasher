@@ -1,13 +1,9 @@
 package com.example.habitsmasher.ui.profile;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +16,14 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.habitsmasher.HabitEvent;
+import com.example.habitsmasher.AddPictureDialog;
 import com.example.habitsmasher.ImageDatabaseHelper;
+import com.example.habitsmasher.PictureSelectionUser;
 import com.example.habitsmasher.R;
 import com.example.habitsmasher.User;
 import com.example.habitsmasher.UserDatabaseHelper;
-import com.example.habitsmasher.ui.history.HabitEventItemAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
 
 import java.util.ArrayList;
 
@@ -39,7 +31,7 @@ import java.util.ArrayList;
  * UI class that represents and specifies the behaviour of the user's profile screen
  * Currently, only displays information of a test user
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements PictureSelectionUser {
     private static final String USER_DATA_PREFERENCES_TAG = "USER_DATA";
     private static final String USERNAME_SHARED_PREF_TAG = "username";
     private static final String USER_ID_SHARED_PREF_TAG = "userId";
@@ -49,8 +41,10 @@ public class ProfileFragment extends Fragment {
 
     private ProfileFragment _fragment = this;
     private ImageView _userImageView;
-    private Bitmap _userImage;
+    private Uri _userImage;
     private User user = new User();
+    private ImageDatabaseHelper _imageDatabaseHelper;
+    private String _currentUserId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +52,7 @@ public class ProfileFragment extends Fragment {
 
         SharedPreferences sharedPref = getContext().getSharedPreferences(USER_DATA_PREFERENCES_TAG, Context.MODE_PRIVATE);
         user.setUsername(sharedPref.getString(USERNAME_SHARED_PREF_TAG, "user"));
-        String currentUserId = sharedPref.getString(USER_ID_SHARED_PREF_TAG, "id");
+        _currentUserId = sharedPref.getString(USER_ID_SHARED_PREF_TAG, "id");
 
         // get the UI elements
         TextView usernameTextView = view.findViewById(R.id.username);
@@ -68,7 +62,7 @@ public class ProfileFragment extends Fragment {
         _userImageView = view.findViewById(R.id.profile_picture);
 
         // set the UI elements
-        UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(currentUserId,
+        UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(_currentUserId,
                                                                        numberOfFollowersButton,
                                                                        numberOfFollowingButton);
         usernameTextView.setText("@" + user.getUsername());
@@ -76,11 +70,16 @@ public class ProfileFragment extends Fragment {
         userDatabaseHelper.setFollowerCountOfUser();
 
         // Fetch profile picture from database
-        ImageDatabaseHelper imageDatabaseHelper = new ImageDatabaseHelper();
-        imageDatabaseHelper.fetchImagesFromDB(_userImageView, imageDatabaseHelper.getUserStorageReference(currentUserId));
+        _imageDatabaseHelper = new ImageDatabaseHelper();
+        _imageDatabaseHelper.fetchImagesFromDB(_userImageView, _imageDatabaseHelper.getUserStorageReference(_currentUserId));
+
+        // Add listener to allow users to change profile
+        setImageViewListener();
+
         // Set click listeners for followers and following buttons
         setClickListenerForFollowersButton(numberOfFollowersButton);
         setClickListenerForFollowingButton(numberOfFollowingButton);
+
         return view;
     }
 
@@ -131,5 +130,38 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    /**
+     * Adds listener to image view to allow user to select image
+     */
+    protected void setImageViewListener() {
+        _userImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Create add picture dialog
+                AddPictureDialog addPictureDialog = new AddPictureDialog();
+                addPictureDialog.setTargetFragment(ProfileFragment.this, 1);
+                addPictureDialog.show(getFragmentManager(), "AddPictureDialog");
+            }
+        });
+    }
+
+    /**
+     * Handles the selected image
+     * @param image (Uri) The image that the user has chosen
+     */
+    public void setImage(Uri image) {
+        _userImage = image;
+        _userImageView.setImageURI(_userImage);
+        updateUserImageInDatabase();
+    }
+
+    /**
+     * Updates the user profile picture in the database
+     */
+    public void updateUserImageInDatabase() {
+        _imageDatabaseHelper.deleteImageFromDatabase(_imageDatabaseHelper.getUserStorageReference(_currentUserId));
+        _imageDatabaseHelper.addImageToDatabase(_imageDatabaseHelper.getUserStorageReference(_currentUserId), _userImage);
     }
 }
